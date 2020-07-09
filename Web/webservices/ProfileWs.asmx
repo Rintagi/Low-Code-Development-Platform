@@ -399,7 +399,7 @@ public partial class ProfileWs : AsmxBase
         string site = Request.Url.Scheme + "://" + Request.Url.Host + Request.ApplicationPath + (bIncludeTitle ? " (" + Config.WebTitle + ")" : "");
         return site;
 #endif
-        string serverDomain = System.Configuration.ConfigurationManager.AppSettings["ERPMainSite"] ?? (Config.EnableSsl ? @"https://" : @"http://") + HttpContext.Current.Request.Url.Host + HttpContext.Current.Request.ApplicationPath;
+        string serverDomain = Config.MainSiteUrl ?? (Config.EnableSsl ? @"https://" : @"http://") + HttpContext.Current.Request.Url.Host + HttpContext.Current.Request.ApplicationPath;
         return serverDomain;
     }
 

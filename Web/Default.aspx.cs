@@ -25,7 +25,7 @@ namespace RO.Web
 		{
 			if (!IsPostBack)
 			{
-				Page.Title = System.Configuration.ConfigurationManager.AppSettings["WebTitle"];
+				Page.Title = Config.WebTitle;
 				if (Request.QueryString["wrn"] != null)
 				{
 					if (Request.QueryString["wrn"].ToString() == "1")

@@ -1715,7 +1715,7 @@
                         Session.Remove(payPalKeyName + "State");
                     }
                     catch { }
-                    PaypalExpress paypal = new RO.Common3.PaypalExpress(true, System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIUserName"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncPwd"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"]);
+                    PaypalExpress paypal = new RO.Common3.PaypalExpress(true, Config.PaypalExpressAPIUserName, Config.PaypalExpressAPIEncPwd, Config.PaypalExpressAPIEncSignature);
 
                     if (Request.QueryString["act"] == "1")
                     {
@@ -1799,7 +1799,7 @@
 ~@~~@~~@~~@~~@~~@~~@~~@~
 162~@~1~@~Paypal Express Checkout Button action~@~Paypal Payment: Paypal Express Checkout Button action~@~Setup to redirect to Paypal Express Checkout, the 'facilitator' account used must be setup first in Paypal Developer Portal. But the actual pay to account can be any valid paypal account and the option to pay as guest(credit card but not creating paypal account) depends on if the payee has guest option enabled. Only business pro account has this ability as it seems.~@~1021~@~4131~@~~@~1~@~            if (ValidPage())
             {
-                PaypalExpress paypal = new RO.Common3.PaypalExpress(true, System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIUserName"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncPwd"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"]);
+                PaypalExpress paypal = new RO.Common3.PaypalExpress(true, Config.PaypalExpressAPIUserName, Config.PaypalExpressAPIEncPwd, Config.PaypalExpressAPIEncSignature);
                 string payer = cPayFrom.Text ;    
                 string action = Request.QueryString["act"];
                 string myUrl = Request.Url.ToString();
@@ -1844,7 +1844,7 @@
 ~@~~@~~@~~@~~@~~@~~@~~@~
 163~@~1~@~Paypal Direct Payout button~@~Paypal Payment: Paypal Direct Payout button~@~this use paypal REST API to payout to paypal account directly(can be in the backend) from specific paypal account login for the REST API(with payout enabled in developer portal)~@~1021~@~4132~@~~@~1~@~            if (ValidPage())
             {
-                Paypal payPal = new RO.Common3.Paypal(System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"], System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"]);
+                Paypal payPal = new RO.Common3.Paypal(Config.PaypalRESTAPIClientID, Config.PaypalRESTAPIEncSecret);
                 payPal.Login();
                 try
                 {
@@ -1872,7 +1872,7 @@
 ~@~~@~~@~~@~~@~~@~~@~~@~
 165~@~1~@~Paypal Direct Credit Card Charge button~@~Paypal Payment: Paypal Direct Credit Card Charge button~@~this use paypal REST API to charge the supplied credit card information directly(can be in the backend) and the fund go directly to the specific paypal account used for the API login(with direct credit card enabled in developer portal, only available in selected country like US, check)~@~1021~@~4135~@~~@~1~@~            if (ValidPage())
             {
-                Paypal payPal = new RO.Common3.Paypal(System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"], System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"]);
+                Paypal payPal = new RO.Common3.Paypal(Config.PaypalRESTAPIClientID, Config.PaypalRESTAPIEncSecret);
                 payPal.Login();
                 try
                 {
@@ -2236,7 +2236,7 @@ document.Rintagi = {{
                 string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webRoot.Replace("/Web/", "");
 
-                string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+                string branch = Config.GitCheckoutBranch;
 
                 if ((branch ?? "").Contains("/"))
                 {
@@ -2378,7 +2378,7 @@ document.Rintagi = {{
 }}
 ", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName, systemId, siteApplicationPath);
 
-                if (System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"] != "N")
+                if (Config.AdvanceReactBuildVersion)
                 {
                     using (var sr = new System.IO.StreamReader(reactModuleDir + "/package.json", System.Text.UTF8Encoding.UTF8))
                     {
@@ -2529,7 +2529,7 @@ document.Rintagi = {{
                 PreMsgPopup(ex.Message);
             }
 ~@~~@~~@~~@~~@~~@~~@~~@~
-182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]) ? System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]
+182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(Config.LicenseServer) ? Config.LicenseServer
                                 : "https://www.rintagi.com";
             ShowLicenseDetail(LicenseServer, null);~@~~@~~@~~@~~@~~@~~@~~@~
 183~@~4~@~AcquireLicense~@~Rintagi Installation: AcquireLicense~@~renew license from license server~@~1022~@~4254~@~~@~1~@~            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text, cInstallID.Text, cAppID.Text, cAppNameSpace.Text);
@@ -2731,6 +2731,7 @@ document.Rintagi = {{
                     {
                         if (LUser == null) AnonymousLogin();
                         string[] config = qs["CreateInstaller"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        bool gitCommit = qs["GitCommit"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("gitcommit");
                         DataTable dt = (new RO.Rule3.Deploy()).GetRelease();
                         Dictionary<string, Tuple<short, short, string, string, string>> releases = new Dictionary<string, Tuple<short, short, string, string, string>>();
                         List<Task<Tuple<bool, string, string, string, string>>> installerTasks = new List<Task<Tuple<bool, string, string, string, string>>>();
@@ -2755,7 +2756,7 @@ document.Rintagi = {{
                             }
                         }
                         foreach (var x in releases) {
-                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo(), fixedInstallerName));
+                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo(), fixedInstallerName, gitCommit));
                         }
                         if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
                         {
@@ -2774,7 +2775,6 @@ document.Rintagi = {{
                     }
                 }
             }
-
 ~@~~@~~@~~@~~@~~@~~@~~@~
 190~@~4~@~Helper Functions RptTemplate Doc handling~@~Report Definition: Helper Functions RptTemplate Doc handling~@~~@~67~@~~@~~@~16~@~        protected string WrRptTemplateDoc(string MasterId, string DocId, string UsrId, string DocTableName, string MasterTableName, string MasterColumnName, string MasterKey, string dbConnectionString, string dbPassword)
         {
@@ -2801,3 +2801,32 @@ document.Rintagi = {{
         }
 
 ~@~~@~~@~~@~~@~~@~~@~~@~
+191~@~4~@~Button to launch flowchart editor~@~Flow Chart IDE: Button to launch flowchart editor~@~Button to launch flowchart editor~@~1027~@~~@~~@~9~@~if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "SearchLink('flowchart.html','myFlowChart','100%','90vh'); return false;"; }~@~~@~~@~~@~~@~~@~~@~~@~
+192~@~4~@~Generate Button~@~Flowchart IDE: Generate Button~@~Generate Button~@~1027~@~4383~@~~@~1~@~string chartData = cChartData1325.Text;
+            string chartHtmlContent = @"
+    //Currently this function is not in use. To enable function, copy the content from viewchart.ascx page
+";
+            string chartDir = Server.MapPath("~/chart");
+            if (!Directory.Exists(chartDir)) { Directory.CreateDirectory(chartDir); }
+            string xsdPath = Server.MapPath("~/chart/") + cChartName1325.Text + ".html";
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(xsdPath))
+            {
+                try { writer.Write(chartHtmlContent); }
+                finally { writer.Close(); }
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+193~@~4~@~Hide and show view button and add logic~@~Flowchart IDE: Hide and show view button and add logic~@~Hide and show view button and add logic~@~1027~@~~@~~@~11~@~  if (!string.IsNullOrEmpty(cChartId1325.Text))
+            {
+                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "'); return false;";
+            }
+
+ if (string.IsNullOrEmpty(cAdmFlowchart1027List.SelectedValue))
+            {
+                cGenerate.Visible = false;
+                cView.Visible = false;
+            }
+            else
+            {
+                cGenerate.Visible = false;
+                cView.Visible = true;
+            }~@~~@~~@~~@~~@~~@~~@~~@~

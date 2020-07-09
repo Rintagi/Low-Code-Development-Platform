@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/flowchart.css">
+	<script type="text/javascript" src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" data-auto-replace-svg="nest"></script>
+	<script type="text/javascript" src="scripts/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="scripts/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="scripts/raphael-min.js?version=1.0.3"></script>
+	<script type="text/javascript" src="scripts/flowchart.js?version=1.5.5"></script>
+    <script type='text/javascript'>
+        $(function () {
+            var flowdata = $("#ctl00_MHR_M1027_cChartData1325", window.parent.document).val();
+
+            $('#myflow')
+                .myflow($.extend(true, {
+                    basePath: '',
+                    restore: flowdata.length > 0 ? JSON.parse(flowdata) : "",
+                    editable: true
+                })
+            );
+        });
+    </script>
+</head>
+<body>
+	<div id="myflow_tools" class="ui-widget-content">
+	<div>
+	<div id="myflow_tools_handle" class="ui-widget-header"> Tasks </div>
+	</div>
+	<div class="node selectable selected" id="pointer">
+		<i class="fas fa-mouse-pointer fa-lg"></i>
+		<span>Select</span>
+		</div>
+	<div class="node selectable" id="path">
+		<i class="fas fa-long-arrow-alt-right fa-lg"></i>
+		<span>Line</span>
+	</div>
+	<div>
+	<div class="ui-widget-header"> Blocks </div>
+	</div>
+	<div class="node state dragdrop" id="start" type="start">
+        <i class="fas fa-circle fa-lg"></i>
+		<span>Start</span>
+	</div>
+	<div class="node state dragdrop" id="textSection" type="textSection">
+        <i class="fas fa-square fa-lg"></i>
+		<span>Text</span>
+	</div>
+	<div class="node state dragdrop" id="linkSection" type="linkSection">
+        <i class="fas fa-external-link-square-alt fa-lg"></i>
+		<span>Link</span>
+	</div>
+	<div class="node state dragdrop" id="fork" type="fork">
+        <i class="fas fa-plus-circle fa-lg"></i>
+		<span>Condition</span>
+	</div>
+	<div class="node state dragdrop" id="end" type="end">
+        <i class="fas fa-dot-circle fa-lg"></i>
+		<span>End</span>
+	</div>
+
+	<div class="ui-widget-header"> Actions </div>
+	<div class="node" id="myflow_revoke">
+		<i class="fas fa-undo fa-lg"></i>
+		<span>Undo</span>
+	</div>
+	<div class="node" id="myflow_redraw">
+		<i class="fas fa-backspace fa-lg"></i>
+		<span>Clear</span>
+	</div>
+	<div class="node" id="myflow_save">
+		<i class="fas fa-save fa-lg"></i>
+		<span>Save to IDE</span>
+	</div>
+	</div>
+
+	<div id="myflow_props" class="ui-widget-content">
+	<div id="myflow_props_handle" class="ui-widget-header">Property</div>
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+		</tr>
+	</table>
+	<div>&nbsp;</div>
+	</div>
+
+	<div id="myflow"></div>
+</body>
+</html>

@@ -7,7 +7,7 @@ namespace RO.Access3
     using RO.Common3.Data;
 	using RO.SystemFramewk;
 
-	public class GenScreensAccess : Encryption, IDisposable
+	public class GenScreensAccess : GenScreensAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -16,7 +16,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -43,7 +43,7 @@ namespace RO.Access3
 		}
 
         // Make sure there is at least one default row in ScreenTab.
-        public void SetScrTab(CurrSrc CSrc)
+        public override void SetScrTab(CurrSrc CSrc)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword));
@@ -56,7 +56,7 @@ namespace RO.Access3
             return;
         }
 
-        public void SetScrNeedRegen(Int32 screenId, CurrSrc CSrc)
+        public override void SetScrNeedRegen(Int32 screenId, CurrSrc CSrc)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword));
@@ -70,7 +70,7 @@ namespace RO.Access3
             return;
         }
 
-		public DataTable GetScreenById(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetScreenById(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
 		{
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("GetScreenById", new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword)));
@@ -85,7 +85,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetScreenColumns(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetScreenColumns(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -101,7 +101,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetDistinctScreenTab(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetDistinctScreenTab(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -117,7 +117,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetScreenCriteria(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetScreenCriteria(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -132,7 +132,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-        public DataTable GetObjGroupCol(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
+        public override DataTable GetObjGroupCol(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -147,7 +147,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void GetScreenObjDdlById(Int32 screenId, Int32 screenObjId, string procedureName, string createProcedure, string appDatabase, string sysDatabase, string desDatabase, string pKey, string multiDesignDb, CurrSrc CSrc)
+		public override void GetScreenObjDdlById(Int32 screenId, Int32 screenObjId, string procedureName, string createProcedure, string appDatabase, string sysDatabase, string desDatabase, string pKey, string multiDesignDb, CurrSrc CSrc)
 		{
 			if (da == null) { throw new System.ObjectDisposedException( GetType().FullName ); }
             OleDbConnection cn = new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword));
@@ -174,7 +174,7 @@ namespace RO.Access3
             return;
         }
 
-		public DataTable GetScreenCriDdlById(Int32 screenId, Int32 screenCriId, string procedureName, string createProcedure, string appDatabase, string sysDatabase, string desDatabase, string pKey, string multiDesignDb, CurrSrc CSrc)
+		public override DataTable GetScreenCriDdlById(Int32 screenId, Int32 screenCriId, string procedureName, string createProcedure, string appDatabase, string sysDatabase, string desDatabase, string pKey, string multiDesignDb, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -198,7 +198,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetScreenLisI1ById(Int32 screenId, string procedureName, string appDatabase, string sysDatabase, string desDatabase, string multiDesignDb, string sysProgram, CurrSrc CSrc)
+		public override DataTable GetScreenLisI1ById(Int32 screenId, string procedureName, string appDatabase, string sysDatabase, string desDatabase, string multiDesignDb, string sysProgram, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -220,7 +220,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetScreenLisI2ById(Int32 screenId, string procedureName, string appDatabase, string sysDatabase, string desDatabase, string multiDesignDb, string sysProgram, CurrSrc CSrc)
+		public override DataTable GetScreenLisI2ById(Int32 screenId, string procedureName, string appDatabase, string sysDatabase, string desDatabase, string multiDesignDb, string sysProgram, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -242,7 +242,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetScreenLisI3ById(Int32 screenId, string procedureName, string appDatabase, string sysDatabase, string desDatabase, string multiDesignDb, string sysProgram, CurrSrc CSrc)
+		public override DataTable GetScreenLisI3ById(Int32 screenId, string procedureName, string appDatabase, string sysDatabase, string desDatabase, string multiDesignDb, string sysProgram, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -279,7 +279,7 @@ namespace RO.Access3
         //    return dt;
         //}
 
-		public DataTable GetWebRule(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetWebRule(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -294,7 +294,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetServerRule(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc, UsrImpr ui, UsrCurr uc)
+		public override DataTable GetServerRule(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null)
 			{
@@ -330,7 +330,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-        public DataTable GetScreenAud(Int32 screenId, string screenTypeName, string desDatabase, string multiDesignDb, CurrSrc CSrc)
+        public override DataTable GetScreenAud(Int32 screenId, string screenTypeName, string desDatabase, string multiDesignDb, CurrSrc CSrc)
         {
             if (da == null)
             {
@@ -390,7 +390,7 @@ namespace RO.Access3
         //    return;
         //}
 
-		public void MkScreenUpdIn(Int32 screenId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
+		public override void MkScreenUpdIn(Int32 screenId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
 		{
 			if (da == null)
 			{
@@ -410,7 +410,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public DataTable GetScreenDel(string srcDatabase, string dbConnectionString, string dbPassword)
+		public override DataTable GetScreenDel(string srcDatabase, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -425,7 +425,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void DelScreenDel(string srcDatabase, string appDatabase, string desDatabase, string programName, Int32 screenId, string multiDesignDb, string sysProgram, string dbConnectionString, string dbPassword)
+		public override void DelScreenDel(string srcDatabase, string appDatabase, string desDatabase, string programName, Int32 screenId, string multiDesignDb, string sysProgram, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -447,7 +447,7 @@ namespace RO.Access3
 			finally {cn.Close();}
 		}
 
-		public DataTable GetScreenCriDel(Int32 ScreenId, string dbConnectionString, string dbPassword)
+		public override DataTable GetScreenCriDel(Int32 ScreenId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -462,7 +462,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void DelScreenCriDel(string appDatabase, string procedureName, string dbConnectionString, string dbPassword)
+		public override void DelScreenCriDel(string appDatabase, string procedureName, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -479,7 +479,7 @@ namespace RO.Access3
 			finally {cn.Close();}
 		}
 
-		public string GetSByteOle(string DataTypeName, CurrPrj CPrj)
+		public override string GetSByteOle(string DataTypeName, CurrPrj CPrj)
 		{
 			if (da == null)
 			{
@@ -498,7 +498,7 @@ namespace RO.Access3
 			return sbole;
 		}
 
-		public string GetDByteOle(string DataTypeName, CurrPrj CPrj)
+		public override string GetDByteOle(string DataTypeName, CurrPrj CPrj)
 		{
 			if (da == null)
 			{
@@ -517,7 +517,7 @@ namespace RO.Access3
 			return dbole;
 		}
 
-        public void MkScrAudit(string CudAction, Int32 ScreenId, string MasterTable, string Gen, string MultiDesignDb, CurrSrc CSrc, string appDatabase, string sysDatabase)
+        public override void MkScrAudit(string CudAction, Int32 ScreenId, string MasterTable, string Gen, string MultiDesignDb, CurrSrc CSrc, string appDatabase, string sysDatabase)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn =  new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword));

@@ -2,14 +2,27 @@ namespace RO.Facade3
 {
 	using System;
 	using System.Data;
-	using RO.Common3;
+    using RO.Access3;
+    using RO.Common3;
 	using RO.Common3.Data;
 
 	public class LoginSystem : MarshalByRefObject
 	{
-        public bool IsUsrSafeIP(int UsrId, string IpAddress)
+		private LoginAccessBase GetLoginAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new LoginAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.LoginAccess();
+			}
+		}
+
+		public bool IsUsrSafeIP(int UsrId, string IpAddress)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.IsUsrSafeIP(UsrId, IpAddress);
             }
@@ -17,7 +30,7 @@ namespace RO.Facade3
 
         public void SetUsrSafeIP(int UsrId, string IpAddress)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 dac.SetUsrSafeIP(UsrId, IpAddress);
             }
@@ -25,7 +38,7 @@ namespace RO.Facade3
 
         public bool IsNullLegacyPwd(string LoginName)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.IsNullLegacyPwd(LoginName);
 			}
@@ -33,7 +46,7 @@ namespace RO.Facade3
 
 		public bool ChkAdminLogin(string RowAuths)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.ChkAdminLogin(RowAuths);
 			}
@@ -41,7 +54,7 @@ namespace RO.Facade3
 
 		public bool ChkLoginStatus(string LoginName)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.ChkLoginStatus(LoginName);
 			}
@@ -49,7 +62,7 @@ namespace RO.Facade3
 
         public void SetLoginStatus(string LoginName, bool bLoginSuccess, string IpAddress, string Provider, string ProviderLoginName)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 dac.SetLoginStatus(LoginName, bLoginSuccess, IpAddress, Provider, ProviderLoginName);
             }
@@ -57,7 +70,7 @@ namespace RO.Facade3
 
         public DataTable GetLogins(string LoginName, string Provider)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.GetLogins(LoginName, Provider);
             }
@@ -65,7 +78,7 @@ namespace RO.Facade3
 
 		public LoginUsr GetLoginSecure(Credential cr)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetLoginSecure(cr);
 			}
@@ -73,7 +86,7 @@ namespace RO.Facade3
 
 		public LoginUsr GetLoginLegacy(string LoginName, string Password)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetLoginLegacy(LoginName, Password);
 			}
@@ -81,7 +94,7 @@ namespace RO.Facade3
 
         public void UpdUserLoginInfo(int UsrId, string LoginName, string UsrName, string UsrEmail)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 dac.UpdUserLoginInfo(UsrId, LoginName, UsrName, UsrEmail);
             }
@@ -89,7 +102,7 @@ namespace RO.Facade3
 
         public void CancelUserAccount(int UsrId)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 dac.CancelUserAccount(UsrId);
             }
@@ -97,7 +110,7 @@ namespace RO.Facade3
 
         public DataTable GetSaltedUserInfo(int UsrId, string LoginName, string UsrEmail)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.GetSaltedUserInfo(UsrId, LoginName, UsrEmail);
             }
@@ -105,7 +118,7 @@ namespace RO.Facade3
 
 		public UsrPref GetUsrPref(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetUsrPref(UsrId, CompanyId, ProjectId, SystemId);
 			}
@@ -113,7 +126,7 @@ namespace RO.Facade3
 
 		public UsrImpr GetUsrImpr(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetUsrImpr(UsrId, CompanyId, ProjectId, SystemId);
 			}
@@ -121,7 +134,7 @@ namespace RO.Facade3
 
 		public DataTable GetUsrImprNext(Int32 usrId)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetUsrImprNext(usrId);
 			}
@@ -129,7 +142,7 @@ namespace RO.Facade3
 
 		public DataTable GetCompanyList(string Usrs, string RowAuthoritys, string Companys)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetCompanyList(Usrs, RowAuthoritys, Companys);
 			}
@@ -137,7 +150,7 @@ namespace RO.Facade3
 
 		public DataTable GetProjectList(string Usrs, string RowAuthoritys, string Projects, string currCompanyId)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetProjectList(Usrs, RowAuthoritys, Projects, currCompanyId);
 			}
@@ -145,7 +158,7 @@ namespace RO.Facade3
 
 		public DataTable GetSystemsList(string dbConnectionString, string dbPassword)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetSystemsList(dbConnectionString, dbPassword);
 			}
@@ -153,7 +166,7 @@ namespace RO.Facade3
 
         public bool UpdUsrPassword(Credential cr, LoginUsr LUser, bool RemoveLink)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.UpdUsrPassword(cr, LUser, RemoveLink);
             }
@@ -161,7 +174,7 @@ namespace RO.Facade3
 
 		public string GetPwdExpMsg(string UsrId, String CultureId, string PwdExpDays)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetPwdExpMsg(UsrId, CultureId, PwdExpDays);
 			}
@@ -169,7 +182,7 @@ namespace RO.Facade3
 
 		public string GetHintAnswer(string UsrId)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetHintAnswer(UsrId);
 			}
@@ -177,7 +190,7 @@ namespace RO.Facade3
 
 		public string GetHintQuestionId(string UsrId)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetHintQuestionId(UsrId);
 			}
@@ -185,7 +198,7 @@ namespace RO.Facade3
 
 		public DataTable GetHintQuestion()
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetHintQuestion();
 			}
@@ -193,7 +206,7 @@ namespace RO.Facade3
 
 		public bool UpdHintQuestion(string UsrId, string HintQuestionId, string HintAnswer)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.UpdHintQuestion(UsrId, HintQuestionId, HintAnswer);
 			}
@@ -201,7 +214,7 @@ namespace RO.Facade3
 
 		public string GetRbtVersion()
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetRbtVersion();
 			}
@@ -209,7 +222,7 @@ namespace RO.Facade3
 
 		public string GetAppVersion(string dbConnectionString, string dbPassword)
 		{
-			using (Access3.LoginAccess dac = new Access3.LoginAccess())
+			using (LoginAccessBase dac = GetLoginAccess())
 			{
 				return dac.GetAppVersion(dbConnectionString, dbPassword);
 			}
@@ -217,21 +230,21 @@ namespace RO.Facade3
 
         public void LinkUserLogin(int UsrId, string ProviderCd, string LoginName)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 dac.LinkUserLogin(UsrId, ProviderCd, LoginName);
             }
         }
         public void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 dac.UnlinkUserLogin(UsrId, ProviderCd, LoginName);
             }
         }
         public DataTable GetLinkedUserLogin(int UsrId)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.GetLinkedUserLogin(UsrId);
             }
@@ -239,7 +252,7 @@ namespace RO.Facade3
 
         public DataTable WrAddUsr(string LoginName, string UsrName, string UsrPassword, int CultureId, int DefSystemId, string UsrEmail, string UsrGroups, bool ForcePwdChg, int? CustomerId, int? BrokerId, int? VendorId, bool Active, string SSOProviderCd, string SSOLoginName)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.WrAddUsr(LoginName, UsrName, UsrPassword, CultureId, DefSystemId, UsrEmail, UsrGroups, ForcePwdChg, CustomerId, BrokerId, VendorId, Active, SSOProviderCd, SSOLoginName);
             }
@@ -247,7 +260,7 @@ namespace RO.Facade3
 
         public void WrDelUsr(int UsrId)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 dac.WrDelUsr(UsrId);
             }
@@ -255,7 +268,7 @@ namespace RO.Facade3
 
         public string WrGetUsrOTPSecret(int UsrId, string hostSecret = null)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.WrGetUsrOTPSecret(UsrId, hostSecret);
             }
@@ -263,7 +276,7 @@ namespace RO.Facade3
 
         public string WrSetUsrOTPSecret(int UsrId, bool bEnable, string hostSecret = null)
         {
-            using (Access3.LoginAccess dac = new Access3.LoginAccess())
+            using (LoginAccessBase dac = GetLoginAccess())
             {
                 return dac.WrSetUsrOTPSecret(UsrId, bEnable, hostSecret);
             }

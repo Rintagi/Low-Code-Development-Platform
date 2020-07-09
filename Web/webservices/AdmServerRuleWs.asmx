@@ -19,6 +19,8 @@ namespace RO.Web
     using System.Collections.Generic;
     using System.Web.SessionState;
     using System.Linq;
+    using System.Numerics;
+
             
     public class AdmServerRule14 : DataSet
     {
@@ -92,7 +94,7 @@ namespace RO.Web
             {"RuleTypeId24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleTypeId3S151"},{"mKey","RuleTypeId24"},{"mVal","RuleTypeId24Text"}, }},
             {"ScreenId24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenId3S139"},{"mKey","ScreenId24"},{"mVal","ScreenId24Text"}, }},
             {"BeforeCRUD24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","BeforeCRUD24Text"}, }},
-            {"CrudTypeDesc1289", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","CrudTypeDesc1289"}, {"baseTbl", "CtCrudType"},{"baseKeyCol", "CrudTypeCd"},{"baseColName", "CrudTypeDesc"},}},
+            {"CrudTypeDesc1289", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlBeforeCRUD3S163"},{"mKey","BeforeCRUD24"},{"mVal","CrudTypeDesc1289"}, {"baseTbl", "CtCrudType"},{"baseKeyCol", "CrudTypeCd"},{"baseColName", "CrudTypeDesc"},{"baseSystemId", "3"},}},
             {"RunMode24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRunMode3S4354"},{"mKey","RunMode24"},{"mVal","RunMode24Text"}, }},
             {"ModifiedBy24", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlModifiedBy3S1397"},{"mKey","ModifiedBy24"},{"mVal","ModifiedBy24Text"}, }},
         };
@@ -326,6 +328,10 @@ namespace RO.Web
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string,AutoCompleteResponse>();
+                /* Get Master By Id After start here */
+
+
+                /* Get Master By Id After end here */
                 mr.data = DataTableToListOfObject(dt, mstBlob, colAuth, utcColumns);
                 mr.supportingData = includeDtl ? new SerializableDictionary<string, AutoCompleteResponse>() { { "dtl", new AutoCompleteResponse() { data = DataTableToListOfObject(_GetDtlById(keyId, 0), dtlBlob, colAuth, utcColumns) } } } : supportingData;
                 mr.status = "success";
@@ -455,6 +461,8 @@ namespace RO.Web
         {
             bool isAdd = false;
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            string screenButton = options.ContainsKey("ScreenButton") ? options["ScreenButton"] : "";
+            string actionButton = options.ContainsKey("OnClickColumeName") ? options["OnClickColumeName"] : "";
             bool noTrans = Config.NoTrans;
             int commandTimeOut = Config.CommandTimeOut;
 
@@ -467,10 +475,10 @@ namespace RO.Web
                 {
                     dtl.Add(mst.Clone());
                 }
-                /* AsmxRule: Save Data Before */
+                /* AsmxRule: Save Data Before Validation */
 
 
-                /* AsmxRule End: Save Data Before */
+                /* AsmxRule End: Save Data Before Validation */
 
                 var pid = mst["ServerRuleId24"];
                 isAdd = string.IsNullOrEmpty(pid);
@@ -498,6 +506,11 @@ namespace RO.Web
                         validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
                     };
                 }
+                /* AsmxRule: Save Data Before */
+
+
+                /* AsmxRule End: Save Data Before */
+
                 var ds = PrepAdmServerRuleData(mst, dtl, string.IsNullOrEmpty(mst["ServerRuleId24"]));
                 string msg = string.Empty;
 

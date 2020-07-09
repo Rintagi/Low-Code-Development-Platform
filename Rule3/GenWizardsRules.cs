@@ -12,7 +12,29 @@ namespace RO.Rule3
 
 	public class GenWizardsRules
 	{
-		public bool DeleteProgram(string programName, Int32 wizardId, string appDatabase, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar)
+        private GenWizardsAccessBase GetGenWizardsAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new GenWizardsAccess();
+            }
+            else
+            {
+                return new RO.Access3.Odbc.GenWizardsAccess();
+            }
+        }
+        private RobotAccessBase GetRobotAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new RobotAccess();
+            }
+            else
+            {
+                return new RO.Access3.Odbc.RobotAccess();
+            }
+        }
+        public bool DeleteProgram(string programName, Int32 wizardId, string appDatabase, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar)
 		{
 			try
 			{
@@ -71,7 +93,7 @@ namespace RO.Rule3
 
 		private void DeleteProgD(string dbDatabase, string appDatabase, string desDatabase, string programName, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+			using (GenWizardsAccessBase dac = GetGenWizardsAccess())
 			{
 				dac.DelWizardDel(dbDatabase, appDatabase, desDatabase, programName, dbConnectionString, dbPassword);
 			}
@@ -80,17 +102,17 @@ namespace RO.Rule3
 		public bool CreateProgram(Int32 wizardId, string wizardTitle, string dbAppDatabase, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
 		{
 			DataTable dt = null;
-			using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+			using (GenWizardsAccessBase dac = GetGenWizardsAccess())
 			{
 				dt = dac.GetWizardById(wizardId, CPrj, CSrc);
 			}
 			DataView dv = null;
-			using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+			using (GenWizardsAccessBase dac = GetGenWizardsAccess())
 			{
 				dv = new DataView(dac.GetWizardColumns(wizardId, CPrj, CSrc));
 			}
 			DataView dvRule = null;
-			using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+			using (GenWizardsAccessBase dac = GetGenWizardsAccess())
 			{
 				dvRule = new DataView(dac.GetWizardRule(wizardId, CPrj, CSrc));
 			}
@@ -113,7 +135,7 @@ namespace RO.Rule3
                     CreateProgC(dt.Rows[0], wizardId, dv, wizardTitle, CPrj, CSrc, CPrj.TarClientProgramPath, CPrj.TarClientFrwork);
 				}
 				// Create source data tier programs:
-				using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+				using (GenWizardsAccessBase dac = GetGenWizardsAccess())
 				{
 					dac.MkWizardW1Upd(wizardId, dt.Rows[0]["ProgramName"].ToString(), CSrc, dt.Rows[0]["dbAppDatabase"].ToString(), dt.Rows[0]["dbDesDatabase"].ToString());
 				}
@@ -123,7 +145,7 @@ namespace RO.Rule3
 					CreateProgD(dt.Rows[0], dbAppDatabase, dvRule, CPrj, CSrc, CTar, dbConnectionString, dbPassword);
 				}
                 // Reset regen flag to No:
-                using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+                using (GenWizardsAccessBase dac = GetGenWizardsAccess())
                 {
                     dac.SetWizNeedRegen(wizardId, CSrc);
                 }
@@ -135,7 +157,7 @@ namespace RO.Rule3
         //public void ProxyProgram(Int32 wizardId, CurrPrj CPrj, CurrSrc CSrc)
         //{
         //    DataTable dt = null;
-        //    using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+        //    using (GenWizardsAccessBase dac = GetGenWizardsAccess())
         //    {
         //        dt = dac.GetWizardById(wizardId, CPrj, CSrc);
         //    }
@@ -217,15 +239,15 @@ namespace RO.Rule3
 			if (ss != string.Empty)
 			{
 				if (CPrj.TarDesProviderCd == "S") {ss = pt.SqlToSybase (CPrj.EntityId,CPrj.TarDesDatabase,ss,dbConnectionString,dbPassword);}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql(ds.ScriptDropSp(SpName, SpType), CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql("SET QUOTED_IDENTIFIER ON", CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					if (CPrj.TarDesProviderCd == "S")
 					{
@@ -236,11 +258,11 @@ namespace RO.Rule3
 						dac.ExecSql("SET ANSI_NULLS ON", CTar.TarConnectionString, CTar.TarDbPassword);
 					}
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql(ss, CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql("SET QUOTED_IDENTIFIER OFF", CTar.TarConnectionString, CTar.TarDbPassword);
 				}
@@ -538,6 +560,10 @@ namespace RO.Rule3
 			sb.Append("			LcAppPw = base.AppPwd(SystemId);" + Environment.NewLine);
             sb.Append("			try" + Environment.NewLine);
             sb.Append("			{" + Environment.NewLine);
+            //better code but wait for later round of upgrade
+            //sb.Append("				DataTable dt = (new RobotSystem()).GetEntityList();" + Environment.NewLine);
+            //sb.Append("				if (dt.Rows.Count == 0) throw new Exception(\"Empty Entity Table\");" + Environment.NewLine);
+            //sb.Append("				base.CPrj = new CurrPrj(dt.Rows[0]);" + Environment.NewLine);
             sb.Append("				base.CPrj = new CurrPrj(((new RobotSystem()).GetEntityList()).Rows[0]);" + Environment.NewLine);
             sb.Append("				DataRow row = base.SystemsList.Rows.Find(SystemId);" + Environment.NewLine);
             sb.Append("				base.CSrc = new CurrSrc(true, row);" + Environment.NewLine);

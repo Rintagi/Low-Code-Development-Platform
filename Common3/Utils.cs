@@ -4,7 +4,7 @@
     using System.IO;
     using System.Text;
     using System.Data;
-    using System.Data.OleDb;
+    //using System.Data.OleDb;
     using System.Collections.Generic;
     using System.Threading;
     using System.Diagnostics;
@@ -29,6 +29,18 @@
         public static string StartFrom(this string s, int idx)
         {
             return s.Length <= idx ? "" : s.Substring(idx);
+        }
+
+        public static string IfEmpty(this string s, string replacement)
+        {
+            if (string.IsNullOrEmpty(s)) return replacement;
+            else return s;
+        }
+
+        public static string IfWhiteSpace(this string s, string replacement)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return replacement;
+            else return s;
         }
     }
 
@@ -284,7 +296,7 @@
             {
                 if (content == null || content.Length == 0) return null;
 
-                string fileContent = DecodeFileStream(content, true);
+                string fileContent = DecodeFileStream(content, false);
                 //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 //jss.MaxJsonLength = int.MaxValue;
                 try
@@ -501,6 +513,8 @@
                         ||
                         !string.IsNullOrWhiteSpace(fileInfo.previewUrl)
                         )
+                        &&
+                        (!string.IsNullOrEmpty(fileInfo.fileName) || !fileInfo.contentIsJSON)
                         )
                     {
                         return jss.Serialize(new FileUploadObj() { 

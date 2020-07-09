@@ -254,7 +254,7 @@ namespace RO.Web
                         bool pub = true;
                         if (LImpr != null)
                         {
-                            string[] allowedGroupId = (System.Configuration.ConfigurationManager.AppSettings["DownloadGroupLs"] ?? "5").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] allowedGroupId = (Config.DownloadGroupLs ?? "5").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                             string UsrGroup = (char)191 + base.LImpr.UsrGroups + (char)191;
                             foreach (var id in allowedGroupId)
                             {

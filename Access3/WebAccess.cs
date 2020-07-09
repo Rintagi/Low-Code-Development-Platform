@@ -8,7 +8,7 @@ namespace RO.Access3
 	using RO.SystemFramewk;
 
 	// Stock rules only. Written over by robot on each deployment.
-	public class WebAccess : Encryption, IDisposable
+	public class WebAccess : WebAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
         private DataRowCollection rows;
@@ -19,13 +19,12 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(true); // as a service to those who might inherit from us
-		}
-
-		protected virtual void Dispose(bool disposing)
+        public override void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(true); // as a service to those who might inherit from us
+        }
+        protected virtual void Dispose(bool disposing)
 		{
 			if (!disposing)
 				return;
@@ -45,7 +44,7 @@ namespace RO.Access3
 			}
 		}
 
-        public bool WrIsUniqueEmail(string UsrEmail)
+        public override bool WrIsUniqueEmail(string UsrEmail)
         {
             DataTable dt = new DataTable();
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -63,7 +62,7 @@ namespace RO.Access3
         }
 
         // Return TableId to capture uploads of documents:
-        public DataTable WrAddDocTbl(byte SystemId, string TableName, string dbConnectionString, string dbPassword)
+        public override DataTable WrAddDocTbl(byte SystemId, string TableName, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrAddDocTbl", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -78,7 +77,7 @@ namespace RO.Access3
         }
 
         // Return TableId to capture workflow status:
-        public DataTable WrAddWfsTbl(byte SystemId, string TableName, string dbConnectionString, string dbPassword)
+        public override DataTable WrAddWfsTbl(byte SystemId, string TableName, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrAddWfsTbl", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -93,7 +92,7 @@ namespace RO.Access3
         }
 
         // Get a list of active user emails.
-        public DataTable WrGetActiveEmails(string MaintMsgId)
+        public override DataTable WrGetActiveEmails(string MaintMsgId)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrGetActiveEmails", new OleDbConnection(GetDesConnStr()));
@@ -107,7 +106,7 @@ namespace RO.Access3
         }
 
         // Get email and other info for a specific user.
-        public DataTable WrGetUsrEmail(string UsrId)
+        public override DataTable WrGetUsrEmail(string UsrId)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrGetUsrEmail", new OleDbConnection(GetDesConnStr()));
@@ -121,7 +120,7 @@ namespace RO.Access3
         }
 
 		// Get default CultureId.
-		public string WrGetDefCulture(bool CultureIdOnly)
+		public override string WrGetDefCulture(bool CultureIdOnly)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetDefCulture", new OleDbConnection(GetDesConnStr()));
@@ -134,44 +133,43 @@ namespace RO.Access3
 			if (CultureIdOnly) {return dt.Rows[0][0].ToString();} else {return dt.Rows[0][1].ToString();}
 		}
 
-		// Obtain table-valued function from the physical database for virtual table.
-		public string WrGetVirtualTbl(string TableId, byte DbId, string dbConnectionString, string dbPassword)
-		{
-			string rtn = string.Empty;
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
-			cn.Open();
-			OleDbCommand cmd = new OleDbCommand("WrGetVirtualTbl", cn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@TableId", OleDbType.Numeric).Value = TableId;
-			cmd.Parameters.Add("@DbId", OleDbType.Numeric).Value = DbId.ToString();
-			cmd.CommandTimeout = 1800;
-			da.SelectCommand = cmd;
-			DataTable dt = new DataTable();
-			try
-			{
-				da.Fill(dt);
-				if (dt != null && dt.Rows.Count > 0)
-				{
-					DataView dv = new DataView(dt);
-					string ss = string.Empty;
-					foreach (DataRowView drv in dv)
-					{
-						ss = ss + drv[0].ToString();
-					}
-					rtn = ss.Trim();
-				}
-			}
-			catch (Exception e)
-			{
-				rtn = "Error: (WrGetVirtualTbl)" + e.Message;	// Application.Assert does not work in Ajax.
-			}
-			finally { cn.Close(); }
-			return rtn;
-		}
-
-		// Synchronize by physical database and return new TableId upon insert.
-		public string WrSyncByDb(int UsrId, byte SystemId, byte DbId, string TableId, string TableName, string TableDesc, bool MultiDesignDb, string dbConnectionString, string dbPassword)
+        // Obtain table-valued function from the physical database for virtual table.
+        public override string WrGetVirtualTbl(string TableId, byte DbId, string dbConnectionString, string dbPassword)
+        {
+            string rtn = string.Empty;
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
+            cn.Open();
+            OleDbCommand cmd = new OleDbCommand("WrGetVirtualTbl", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@TableId", OleDbType.Numeric).Value = TableId;
+            cmd.Parameters.Add("@DbId", OleDbType.Numeric).Value = DbId.ToString();
+            cmd.CommandTimeout = 1800;
+            da.SelectCommand = cmd;
+            DataTable dt = new DataTable();
+            try
+            {
+                da.Fill(dt);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    DataView dv = new DataView(dt);
+                    string ss = string.Empty;
+                    foreach (DataRowView drv in dv)
+                    {
+                        ss = ss + drv[0].ToString();
+                    }
+                    rtn = ss.Trim();
+                }
+            }
+            catch (Exception e)
+            {
+                rtn = "Error: (WrGetVirtualTbl)" + e.Message;   // Application.Assert does not work in Ajax.
+            }
+            finally { cn.Close(); }
+            return rtn;
+        }
+        // Synchronize by physical database and return new TableId upon insert.
+        public override string WrSyncByDb(int UsrId, byte SystemId, byte DbId, string TableId, string TableName, string TableDesc, bool MultiDesignDb, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) {throw new System.ObjectDisposedException( GetType().FullName );}
@@ -214,7 +212,7 @@ namespace RO.Access3
 		}
 
 		// Return error message if physical table has not been synchronized successfully.
-		public string WrSyncToDb(byte SystemId, string TableId, string TableName, bool MultiDesignDb, string dbConnectionString, string dbPassword)
+		public override string WrSyncToDb(byte SystemId, string TableId, string TableName, bool MultiDesignDb, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) {throw new System.ObjectDisposedException( GetType().FullName );}
@@ -246,7 +244,7 @@ namespace RO.Access3
 		}
 
 		// Obtain stored procedure from the physical database for Custom Content.
-		public string WrGetCustomSp(string CustomDtlId, byte DbId, string dbConnectionString, string dbPassword)
+		public override string WrGetCustomSp(string CustomDtlId, byte DbId, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -282,7 +280,7 @@ namespace RO.Access3
 		}
 
 		// Obtain stored procedure from the physical database for Server Rule.
-		public string WrGetSvrRule(string ServerRuleId, byte DbId, string dbConnectionString, string dbPassword)
+		public override string WrGetSvrRule(string ServerRuleId, byte DbId, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -314,7 +312,7 @@ namespace RO.Access3
 		}
 
         // Return databases information for Data Table.
-        public DataTable WrGetDbTableSys(string TableId, byte DbId, string dbConnectionString, string dbPassword)
+        public override DataTable WrGetDbTableSys(string TableId, byte DbId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrGetDbTableSys", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -328,23 +326,22 @@ namespace RO.Access3
             return dt;
         }
 
-		// Return databases affected for synchronization of this stored procedure to physical database.
-		public DataTable WrGetSvrRuleSys(string ScreenId, byte DbId, string dbConnectionString, string dbPassword)
-		{
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OleDbCommand cmd = new OleDbCommand("WrGetSvrRuleSys", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OleDbType.Numeric).Value = ScreenId;
-			cmd.Parameters.Add("@DbId", OleDbType.Numeric).Value = DbId.ToString();
-			cmd.CommandTimeout = 1800;
-			da.SelectCommand = cmd;
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
-
-		// Return error message if physical s.proc. has not been synchronized to database successfully.
-		public string WrSyncProc(string ProcedureName, string ProcCode, string dbConnectionString, string dbPassword)
+        // Return databases affected for synchronization of this stored procedure to physical database.
+        public override DataTable WrGetSvrRuleSys(string ScreenId, byte DbId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OleDbCommand cmd = new OleDbCommand("WrGetSvrRuleSys", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OleDbType.Numeric).Value = ScreenId;
+            cmd.Parameters.Add("@DbId", OleDbType.Numeric).Value = DbId.ToString();
+            cmd.CommandTimeout = 1800;
+            da.SelectCommand = cmd;
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+        // Return error message if physical s.proc. has not been synchronized to database successfully.
+        public override string WrSyncProc(string ProcedureName, string ProcCode, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -379,7 +376,7 @@ namespace RO.Access3
 		}
 
 		// Return error message if physical function has not been synchronized to database successfully.
-		public string WrSyncFunc(string FunctionName, string ProcCode, string dbConnectionString, string dbPassword)
+		public override string WrSyncFunc(string FunctionName, string ProcCode, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
             FunctionName = FunctionName.Replace("(", string.Empty).Replace(")", string.Empty);  // strip "()" from name;
@@ -415,7 +412,7 @@ namespace RO.Access3
 		}
 
 		// Update last synchronization date to the physical database.
-		public string WrUpdSvrRule(string ServerRuleId, string dbConnectionString, string dbPassword)
+		public override string WrUpdSvrRule(string ServerRuleId, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -439,7 +436,7 @@ namespace RO.Access3
 		}
 
 		// Return application database affected for synchronization of this stored procedure to physical database.
-		public DataTable WrGetReportApp(byte DbId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetReportApp(byte DbId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetReportApp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -453,7 +450,7 @@ namespace RO.Access3
 		}
 
 		// Obtain stored procedure from the physical database for Report Definition.
-		public string WrGetRptProc(string ProcName, byte DbId, string dbConnectionString, string dbPassword)
+		public override string WrGetRptProc(string ProcName, byte DbId, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -489,7 +486,7 @@ namespace RO.Access3
 		}
 
 		// Update last synchronization date to the physical database.
-		public string WrUpdRptProc(string ReportId, string dbConnectionString, string dbPassword)
+		public override string WrUpdRptProc(string ReportId, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -517,7 +514,7 @@ namespace RO.Access3
 		}
 
         // Search memorized translation assuming default culture.
-        public string WrGetMemTranslate(string InStr, string CultureId, string dbConnectionString, string dbPassword)
+        public override string WrGetMemTranslate(string InStr, string CultureId, string dbConnectionString, string dbPassword)
         {
             string rtn = string.Empty;
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -544,7 +541,7 @@ namespace RO.Access3
         }
 
 		// Return information needed for crawling target websites:
-		public DataTable WrGetCtCrawler(string CrawlerCd)
+		public override DataTable WrGetCtCrawler(string CrawlerCd)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetCtCrawler", new OleDbConnection(GetDesConnStr()));
@@ -559,7 +556,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from CtButtonHlp table:
-		public DataTable WrGetCtButtonHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetCtButtonHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetCtButtonHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -572,7 +569,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsCtButtonHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsCtButtonHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -591,7 +588,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from ScreenHlp table:
-		public DataTable WrGetButtonHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetButtonHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetButtonHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -604,7 +601,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsButtonHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsButtonHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -644,7 +641,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from MenuHlp table:
-		public DataTable WrGetMenuHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetMenuHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetMenuHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -657,7 +654,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsMenuHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsMenuHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -674,7 +671,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from MsgCenter table:
-		public DataTable WrGetMsgCenter(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetMsgCenter(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetMsgCenter", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -687,7 +684,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsMsgCenter(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsMsgCenter(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -704,7 +701,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from designated Culture table:
-		public DataTable WrGetCultureLbl(string CultureId)
+		public override DataTable WrGetCultureLbl(string CultureId)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetCultureLbl", new OleDbConnection(GetDesConnStr()));
@@ -717,7 +714,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsCultureLbl(DataRow dr, string CultureId)
+		public override void WrInsCultureLbl(DataRow dr, string CultureId)
 		{
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
 			cn.Open();
@@ -734,7 +731,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from ReportHlp table:
-		public DataTable WrGetReportHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetReportHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetReportHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -747,7 +744,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsReportHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsReportHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -765,7 +762,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from ScreenCriHlp table:
-		public DataTable WrGetReportCriHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetReportCriHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetReportCriHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -778,7 +775,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsReportCriHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsReportCriHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -802,7 +799,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from ScreenHlp table:
-		public DataTable WrGetScreenHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetScreenHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetScreenHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -815,7 +812,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsScreenHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsScreenHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -865,7 +862,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from ScreenCriHlp table:
-		public DataTable WrGetScreenCriHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetScreenCriHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetScreenCriHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -878,7 +875,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsScreenCriHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsScreenCriHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -902,7 +899,7 @@ namespace RO.Access3
 		}
 
 		// Return untranslated items from ScreenFilterHlp table:
-		public DataTable WrGetScreenFilterHlp(string CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable WrGetScreenFilterHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetScreenFilterHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -915,52 +912,52 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsScreenFilterHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
-		{
-			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
-			cn.Open();
-			OleDbCommand cmd = new OleDbCommand("WrInsScreenFilterHlp", cn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenFilterHlpId", OleDbType.Numeric).Value = dr["ScreenFilterHlpId"].ToString();
-			cmd.Parameters.Add("@CultureId", OleDbType.Numeric).Value = CultureId;
-			cmd.Parameters.Add("@FilterName", OleDbType.VarWChar).Value = dr["FilterName"].ToString();
-			cmd.CommandTimeout = 1800;
-			try { cmd.ExecuteNonQuery(); }
-			catch (Exception e) { ApplicationAssert.CheckCondition(false, "WrInsScreenFilterHlp", "", e.Message.ToString()); }
-			finally { cn.Close(); cmd.Dispose(); cmd = null; }
-			return;
-		}
+        public override void WrInsScreenFilterHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+        {
+            OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
+            cn.Open();
+            OleDbCommand cmd = new OleDbCommand("WrInsScreenFilterHlp", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenFilterHlpId", OleDbType.Numeric).Value = dr["ScreenFilterHlpId"].ToString();
+            cmd.Parameters.Add("@CultureId", OleDbType.Numeric).Value = CultureId;
+            cmd.Parameters.Add("@FilterName", OleDbType.VarWChar).Value = dr["FilterName"].ToString();
+            cmd.CommandTimeout = 1800;
+            try { cmd.ExecuteNonQuery(); }
+            catch (Exception e) { ApplicationAssert.CheckCondition(false, "WrInsScreenFilterHlp", "", e.Message.ToString()); }
+            finally { cn.Close(); cmd.Dispose(); cmd = null; }
+            return;
+        }
 
-		// Return untranslated items from ScreenObjHlp table:
-		public DataTable WrGetScreenObjHlp(string CultureId, string dbConnectionString, string dbPassword)
-		{
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OleDbCommand cmd = new OleDbCommand("WrGetScreenObjHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@CultureId", OleDbType.Numeric).Value = CultureId;
-			cmd.CommandTimeout = 1800;
-			da.SelectCommand = cmd;
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
+        // Return untranslated items from ScreenObjHlp table:
+        public override DataTable WrGetScreenObjHlp(string CultureId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OleDbCommand cmd = new OleDbCommand("WrGetScreenObjHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@CultureId", OleDbType.Numeric).Value = CultureId;
+            cmd.CommandTimeout = 1800;
+            da.SelectCommand = cmd;
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
 
-		public void WrInsScreenObjHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
-		{
-			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
-			cn.Open();
-			OleDbCommand cmd = new OleDbCommand("WrInsScreenObjHlp", cn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenObjHlpId", OleDbType.Numeric).Value = dr["ScreenObjHlpId"].ToString();
-			cmd.Parameters.Add("@CultureId", OleDbType.Numeric).Value = CultureId;
-			if (dr["ColumnHeader"].ToString() == string.Empty)
-			{
-				cmd.Parameters.Add("@ColumnHeader", OleDbType.VarWChar).Value = System.DBNull.Value;
-			}
-			else
-			{
-				cmd.Parameters.Add("@ColumnHeader", OleDbType.VarWChar).Value = dr["ColumnHeader"].ToString();
-			}
+        public override void WrInsScreenObjHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+        {
+            OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
+            cn.Open();
+            OleDbCommand cmd = new OleDbCommand("WrInsScreenObjHlp", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenObjHlpId", OleDbType.Numeric).Value = dr["ScreenObjHlpId"].ToString();
+            cmd.Parameters.Add("@CultureId", OleDbType.Numeric).Value = CultureId;
+            if (dr["ColumnHeader"].ToString() == string.Empty)
+            {
+                cmd.Parameters.Add("@ColumnHeader", OleDbType.VarWChar).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@ColumnHeader", OleDbType.VarWChar).Value = dr["ColumnHeader"].ToString();
+            }
             if (dr["TbHint"].ToString() == string.Empty)
             {
                 cmd.Parameters.Add("@TbHint", OleDbType.VarWChar).Value = System.DBNull.Value;
@@ -970,30 +967,29 @@ namespace RO.Access3
                 cmd.Parameters.Add("@TbHint", OleDbType.VarWChar).Value = dr["TbHint"].ToString();
             }
             if (dr["ToolTip"].ToString() == string.Empty)
-			{
-				cmd.Parameters.Add("@ToolTip", OleDbType.VarWChar).Value = System.DBNull.Value;
-			}
-			else
-			{
-				cmd.Parameters.Add("@ToolTip", OleDbType.VarWChar).Value = dr["ToolTip"].ToString();
-			}
-			if (dr["ErrMessage"].ToString() == string.Empty)
-			{
-				cmd.Parameters.Add("@ErrMessage", OleDbType.VarWChar).Value = System.DBNull.Value;
-			}
-			else
-			{
-				cmd.Parameters.Add("@ErrMessage", OleDbType.VarWChar).Value = dr["ErrMessage"].ToString();
-			}
-			cmd.CommandTimeout = 1800;
-			try { cmd.ExecuteNonQuery(); }
-			catch (Exception e) { ApplicationAssert.CheckCondition(false, "WrInsScreenObjHlp", "", e.Message.ToString()); }
-			finally { cn.Close(); cmd.Dispose(); cmd = null; }
-			return;
-		}
-
-		// Return untranslated items from ScreenTabHlp table:
-		public DataTable WrGetScreenTabHlp(string CultureId, string dbConnectionString, string dbPassword)
+            {
+                cmd.Parameters.Add("@ToolTip", OleDbType.VarWChar).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@ToolTip", OleDbType.VarWChar).Value = dr["ToolTip"].ToString();
+            }
+            if (dr["ErrMessage"].ToString() == string.Empty)
+            {
+                cmd.Parameters.Add("@ErrMessage", OleDbType.VarWChar).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@ErrMessage", OleDbType.VarWChar).Value = dr["ErrMessage"].ToString();
+            }
+            cmd.CommandTimeout = 1800;
+            try { cmd.ExecuteNonQuery(); }
+            catch (Exception e) { ApplicationAssert.CheckCondition(false, "WrInsScreenObjHlp", "", e.Message.ToString()); }
+            finally { cn.Close(); cmd.Dispose(); cmd = null; }
+            return;
+        }
+        // Return untranslated items from ScreenTabHlp table:
+        public override DataTable WrGetScreenTabHlp(string CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetScreenTabHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -1006,7 +1002,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void WrInsScreenTabHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+		public override void WrInsScreenTabHlp(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -1023,7 +1019,7 @@ namespace RO.Access3
 		}
 
         // Return untranslated items from label table:
-        public DataTable WrGetLabel(string CultureId, string dbConnectionString, string dbPassword)
+        public override DataTable WrGetLabel(string CultureId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrGetLabel", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -1036,7 +1032,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public void WrInsLabel(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
+        public override void WrInsLabel(DataRow dr, string CultureId, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -1052,7 +1048,7 @@ namespace RO.Access3
             return;
         }
 
-		public string WrRptwizGen(Int32 RptwizId, string SystemId, string AppDatabase, string dbConnectionString, string dbPassword)
+		public override string WrRptwizGen(Int32 RptwizId, string SystemId, string AppDatabase, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -1079,7 +1075,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-		public bool WrRptwizDel(Int32 ReportId, string dbConnectionString, string dbPassword)
+		public override bool WrRptwizDel(Int32 ReportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -1095,7 +1091,7 @@ namespace RO.Access3
 			return true;
 		}
 
-        public bool WrXferRpt(Int32 ReportId, string dbConnectionString, string dbPassword)
+        public override bool WrXferRpt(Int32 ReportId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -1111,7 +1107,7 @@ namespace RO.Access3
             return true;
         }
 
-		public DataTable WrGetDdlPermId(string PermKeyId, Int32 ScreenId, Int32 TableId, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
+		public override DataTable WrGetDdlPermId(string PermKeyId, Int32 ScreenId, Int32 TableId, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetDdlPermId", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -1157,7 +1153,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable WrGetAdmMenuPerm(Int32 screenId, string keyId58, string dbConnectionString, string dbPassword, Int32 screenFilterId, UsrImpr ui, UsrCurr uc)
+		public override DataTable WrGetAdmMenuPerm(Int32 screenId, string keyId58, string dbConnectionString, string dbPassword, Int32 screenFilterId, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("WrGetAdmMenuPerm", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -1182,7 +1178,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-        public Int32 CountEmailsSent()
+        public override Int32 CountEmailsSent()
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn;
@@ -1199,7 +1195,7 @@ namespace RO.Access3
 
         // For Report Generator:
 
-        public DataTable GetDdlOriColumnId33S1682(string rptwizCatId, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
+        public override DataTable GetDdlOriColumnId33S1682(string rptwizCatId, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd;
@@ -1251,7 +1247,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable GetDdlSelColumnId33S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
+        public override DataTable GetDdlSelColumnId33S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd;
@@ -1293,7 +1289,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable GetDdlSelColumnId44S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
+        public override DataTable GetDdlSelColumnId44S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd;
@@ -1335,7 +1331,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable GetDdlSelColumnId77S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
+        public override DataTable GetDdlSelColumnId77S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd;
@@ -1377,7 +1373,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable GetDdlRptGroupId3S1652(string dbConnectionString, string dbPassword)
+        public override DataTable GetDdlRptGroupId3S1652(string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd;
@@ -1399,7 +1395,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable GetDdlRptChart3S1652(string dbConnectionString, string dbPassword)
+        public override DataTable GetDdlRptChart3S1652(string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd;
@@ -1421,7 +1417,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable GetDdlOperator3S1652(string dbConnectionString, string dbPassword)
+        public override DataTable GetDdlOperator3S1652(string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd;
@@ -1441,7 +1437,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public string AddAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
+        public override string AddAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -1637,7 +1633,7 @@ namespace RO.Access3
             }
         }
 
-        public bool DelAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
+        public override bool DelAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -1677,7 +1673,7 @@ namespace RO.Access3
             }
         }
 
-        public bool UpdAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
+        public override bool UpdAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -1876,7 +1872,7 @@ namespace RO.Access3
             }
         }
 
-        public Int32 AddAdmRptWiz95Dt(string RptwizId183, string RptwizDtlId184, string ColumnId184, string ColHeader184, string CriOperName184, string CriSelect184, string CriHeader184, string ColSelect184, string ColGroup184, string ColSort184, string AggregateCd184, string RptChartCd184, OleDbConnection cn, OleDbTransaction tr)
+        private Int32 AddAdmRptWiz95Dt(string RptwizId183, string RptwizDtlId184, string ColumnId184, string ColHeader184, string CriOperName184, string CriSelect184, string CriHeader184, string ColSelect184, string ColGroup184, string ColSort184, string AggregateCd184, string RptChartCd184, OleDbConnection cn, OleDbTransaction tr)
         {
             OleDbCommand cmd = new OleDbCommand("AddAdmRptWiz95Dt", cn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -1973,7 +1969,7 @@ namespace RO.Access3
             return id;
         }
 
-        public void DelAdmRptWiz95Dt(string RptwizDtlId184, OleDbConnection cn, OleDbTransaction tr)
+        private void DelAdmRptWiz95Dt(string RptwizDtlId184, OleDbConnection cn, OleDbTransaction tr)
         {
             OleDbCommand cmd = new OleDbCommand("DelAdmRptWiz95Dt", cn);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -2006,7 +2002,7 @@ namespace RO.Access3
             return;
         }
 
-        public void RmTranslatedLbl(string LabelId, string dbConnectionString, string dbPassword)
+        public override void RmTranslatedLbl(string LabelId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -2024,7 +2020,7 @@ namespace RO.Access3
             return;
         }
 
-        public DataTable WrAddMenu(string MenuIndex, string ParentId, string dbConnectionString, string dbPassword)
+        public override DataTable WrAddMenu(string MenuIndex, string ParentId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -2052,7 +2048,7 @@ namespace RO.Access3
             return ds.Tables[0];
         }
 
-        public bool WrDelMenu(string MenuId, string dbConnectionString, string dbPassword)
+        public override bool WrDelMenu(string MenuId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -2070,7 +2066,7 @@ namespace RO.Access3
             return done;
         }
 
-        public void WrUpdMenu(string MenuId, string PMenuId, string ParentId, string MenuText, string CultureId, string dbConnectionString, string dbPassword)
+        public override void WrUpdMenu(string MenuId, string PMenuId, string ParentId, string MenuText, string CultureId, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -2090,7 +2086,7 @@ namespace RO.Access3
             return;
         }
 
-        public DataTable WrAddScreenTab(string TabFolderOrder, string ScreenId, string dbConnectionString, string dbPassword)
+        public override DataTable WrAddScreenTab(string TabFolderOrder, string ScreenId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -2118,7 +2114,7 @@ namespace RO.Access3
             return ds.Tables[0];
         }
 
-        public bool WrDelScreenTab(string ScreenTabId, string dbConnectionString, string dbPassword)
+        public override bool WrDelScreenTab(string ScreenTabId, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -2135,7 +2131,7 @@ namespace RO.Access3
             return done;
         }
 
-        public void WrUpdScreenTab(string ScreenTabId, string TabFolderOrder, string TabFolderName, string CultureId, string dbConnectionString, string dbPassword)
+        public override void WrUpdScreenTab(string ScreenTabId, string TabFolderOrder, string TabFolderName, string CultureId, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -2154,7 +2150,7 @@ namespace RO.Access3
             return;
         }
 
-        public DataTable WrAddScreenObj(string ScreenId, string PScreenObjId, string TabFolderId, bool IsTab, bool NewRow, string dbConnectionString, string dbPassword)
+        public override DataTable WrAddScreenObj(string ScreenId, string PScreenObjId, string TabFolderId, bool IsTab, bool NewRow, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -2185,7 +2181,7 @@ namespace RO.Access3
             return ds.Tables[0];
         }
 
-        public bool WrDelScreenObj(string ScreenObjId, string dbConnectionString, string dbPassword)
+        public override bool WrDelScreenObj(string ScreenObjId, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -2203,7 +2199,7 @@ namespace RO.Access3
             return done;
         }
 
-        public void WrUpdScreenObj(string ScreenObjId, string PScreenObjId, string TabFolderId, string ColumnHeader, string CultureId, string dbConnectionString, string dbPassword)
+        public override void WrUpdScreenObj(string ScreenObjId, string PScreenObjId, string TabFolderId, string ColumnHeader, string CultureId, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -2223,7 +2219,7 @@ namespace RO.Access3
             return;
         }
 
-        public string WrGetScreenId(string ProgramName, string dbConnectionString, string dbPassword)
+        public override string WrGetScreenId(string ProgramName, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrGetScreenId", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -2236,7 +2232,7 @@ namespace RO.Access3
             if (dt.Rows.Count >= 1) { return dt.Rows[0][0].ToString(); } else { return string.Empty; }
         }
 
-        public string WrGetMasterTable(string ScreenId, string ColumnId, string dbConnectionString, string dbPassword)
+        public override string WrGetMasterTable(string ScreenId, string ColumnId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrGetMasterTable", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -2257,7 +2253,7 @@ namespace RO.Access3
             if (dt.Rows.Count >= 1) { return dt.Rows[0][0].ToString(); } else { return string.Empty; }
         }
 
-        public DataTable WrGetScreenObj(string ScreenId, Int16 CultureId, string ScreenObjId, string dbConnectionString, string dbPassword)
+        public override DataTable WrGetScreenObj(string ScreenId, Int16 CultureId, string ScreenObjId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrGetScreenObj", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -2273,7 +2269,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public string WrCloneScreen(string ScreenId, string dbConnectionString, string dbPassword)
+        public override string WrCloneScreen(string ScreenId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrCloneScreen", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -2286,7 +2282,7 @@ namespace RO.Access3
             if (dt.Rows.Count >= 1) { return dt.Rows[0][0].ToString(); } else { return string.Empty; }
         }
 
-        public string WrCloneReport(string ReportId, string dbConnectionString, string dbPassword)
+        public override string WrCloneReport(string ReportId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("WrCloneReport", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -2299,7 +2295,7 @@ namespace RO.Access3
             if (dt.Rows.Count >= 1) { return dt.Rows[0][0].ToString(); } else { return string.Empty; }
         }
 
-        public void PurgeScrAudit(Int16 YearOld, string dbConnectionString, string dbPassword)
+        public override void PurgeScrAudit(Int16 YearOld, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -2313,7 +2309,7 @@ namespace RO.Access3
             return;
         }
 
-        public void WrUpdScreenReactGen(string ScreenId, string dbConnectionString, string dbPassword)
+        public override void WrUpdScreenReactGen(string ScreenId, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -2329,7 +2325,7 @@ namespace RO.Access3
             return;
         }
 
-        public DataTable WrGetWebRule(string ScreenId, string dbConnectionString, string dbPassword)
+        public override DataTable WrGetWebRule(string ScreenId, string dbConnectionString, string dbPassword)
         {
             if (da == null)
             {

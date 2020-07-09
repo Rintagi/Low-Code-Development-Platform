@@ -336,6 +336,7 @@ namespace RO.Web
                     {
                         if (LUser == null) AnonymousLogin();
                         string[] config = qs["CreateInstaller"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        bool gitCommit = qs["GitCommit"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("gitcommit");
                         DataTable dt = (new RO.Rule3.Deploy()).GetRelease();
                         Dictionary<string, Tuple<short, short, string, string, string>> releases = new Dictionary<string, Tuple<short, short, string, string, string>>();
                         List<Task<Tuple<bool, string, string, string, string>>> installerTasks = new List<Task<Tuple<bool, string, string, string, string>>>();
@@ -360,7 +361,7 @@ namespace RO.Web
                             }
                         }
                         foreach (var x in releases) {
-                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo(), fixedInstallerName));
+                            installerTasks.Add(CreateInstallerAsync(x.Value.Item1, x.Value.Item2, x.Value.Item3, x.Value.Item4, x.Value.Item5, LcSysConnString, LcAppConnString, GetRequestInfo(), fixedInstallerName, gitCommit));
                         }
                         if (qs["Wait"] != null || (qsFlags ?? "").ToLowerInvariant().Contains("wait"))
                         {
@@ -379,7 +380,6 @@ namespace RO.Web
                     }
                 }
             }
-
 
 			// *** WebRule End *** //
 			InitializeComponent();
@@ -1684,7 +1684,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(cAdmLicense1022List.FocusID);
 			ShowDirty(false); PanelTop.Update();
 			//WebRule: GrabLicenseDetail
-            var LicenseServer = !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]) ? System.Configuration.ConfigurationManager.AppSettings["LicenseServer"]
+            var LicenseServer = !string.IsNullOrEmpty(Config.LicenseServer) ? Config.LicenseServer
                                 : "https://www.rintagi.com";
             ShowLicenseDetail(LicenseServer, null);
 			// *** WebRule End *** //

@@ -349,6 +349,9 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
     )
 }
 
+export function SaveEmbeddedDoc(...args) { return SaveEmbeddedImage(...args) }
+
+
 export function GetDoc(mstId, dtlId, isMaster, docId, screenColumnName, accessScope) {
     const reqJson = JSON.stringify({
         mstId: mstId || null,

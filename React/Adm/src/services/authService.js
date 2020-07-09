@@ -1,11 +1,9 @@
 import { fetchService } from './fetchService';
 import log from '../helpers/logger';
 import { delay } from '../helpers/utils';
-import { getCookie, setCookie, eraseCookie, parsedUrl } from '../helpers/domutils';
+import { getCookie, setCookie, eraseCookie, parsedUrl, scrambleString, base64Decode, base64Encode, sha256, pbkdf2 } from '../helpers/domutils';
 import { setupRuntime, getRintagiConfig, getFingerPrint, myMachine } from '../helpers/config';
 import { LocalStorage, SessionStorage } from '../helpers/asyncStorage';
-var sjcl = require('sjcl');
-var pbkdf2 = require('pbkdf2');
 
 var currentAccessScope = {};
 
@@ -22,7 +20,7 @@ const rintagi = getRintagiConfig() || {};
 const runtimeConfig = rintagi;
 const debuglog = runtimeConfig.debugAlert ? alert : log.debug;
 const apiBasename = runtimeConfig.apiBasename;
-const appDomainUrl = runtimeConfig.appDomainUrl || runtimeConfig.apiBasename;
+const appDomainUrl = runtimeConfig.appDomainUrl || runtimeConfig.apiBasename || 'http://localhost';
 const appNS = (runtimeConfig.appNS || (parsedUrl(appDomainUrl) || {}).pathname || '/').toUpperCase();
 const baseUrl = apiBasename + "/webservices";
 const fetchAPIResult = fetchService.fetchAPIResult;
@@ -54,7 +52,9 @@ function wordArrayToByteArray(wordArray, length) {
         length = wordArray.sigBytes;
         wordArray = wordArray.words;
     }
-
+    else {
+        length = length * 4;
+    }
     var result = [],
         bytes,
         i = 0;
@@ -78,31 +78,27 @@ function arrayBufferToBase64(buffer) {
 }
 
 async function rememberUserHandle(userIdentity) {
-    const h = sjcl.hash.sha256.hash(userIdentity);
+    const h = sha256(userIdentity);
     const handle = arrayBufferToBase64(wordArrayToByteArray(h, h.length)).replace(/=/g, '_');
-    //localStorage.setItem(makeNameFromNS("user_handle"), handle);
     LocalStorage.setItem(makeNameFromNS("user_handle"), handle)
         .then(ret => {
-
         })
         .catch(error => {
-            log.error(error);
+            //log.error(error);
         })
     setCookie(makeNameFromNS("tokenInCookieJS"), handle, null, appNS);
 }
 async function getTokenName(name) {
     const userHandle = await getUserHandle();
-    const x = btoa(sjcl.hash.sha256.hash((appDomainUrl || "").toLowerCase() + name + (userHandle || "") + (myMachine || "")));
-    return x;
+    const x = (appDomainUrl || "").toLowerCase() + name + (userHandle || "") + (myMachine || "");
+    return scrambleString(x);
 }
 
 async function eraseUserHandle() {
-    //localStorage.removeItem(makeNameFromNS("user_handle"));
     LocalStorage.removeItem(makeNameFromNS("user_handle"));
     eraseCookie(makeNameFromNS("tokenInCookieJS"));
 }
 async function getUserHandle() {
-    //const x = localStorage[makeNameFromNS("user_handle")] || getCookie(makeNameFromNS("tokenInCookieJS"));
     const x = await LocalStorage.getItem(makeNameFromNS("user_handle")) || getCookie(makeNameFromNS("tokenInCookieJS"));
     return x;
 }
@@ -136,13 +132,20 @@ async function getAccessToken() {
                                     ||
                                     await LocalStorage.getItem(tokenName)
                                     ||
-                                    ((atob((getCookie(tokenName) || "").replace("_", '='))) && false)
+                                    ((base64Decode((getCookie(tokenName) || "").replace("_", '='))) && false)
                                     ;
-                return JSON.parse(accessToken);
+                if (accessToken)
+                    return JSON.parse(accessToken);
+                else 
+                    return {};
             }
             catch (e) {
+                log.error(e);
                 return {}
             }
+        })
+        .catch(error => {
+            log.debug(error);
         })
 };
 
@@ -153,10 +156,14 @@ async function getRefreshToken() {
                             ||
                             await LocalStorage.getItem(tokenName)
                             ||
-                            ((atob((getCookie(tokenName) || "").replace("_", '='))) && false)
+                            ((base64Decode((getCookie(tokenName) || "").replace("_", '='))) && false)
                             ;
-        var x = JSON.parse(refreshToken);
-        return x;
+        if (refreshToken) {
+            var x = JSON.parse(refreshToken);
+            return x;    
+        }
+        else 
+            return {};
     }
     catch (e) {
         log.error(e);
@@ -305,13 +312,15 @@ function login(username, password, options = {}) {
             }
             else {
                 if (apiResult.error === "access_denied" && (apiResult.message === "Your email or password is incorrect" || apiResult.message === "bot detected") && !challenge_answered) {
-                    let derivedKey = pbkdf2.pbkdf2Sync(apiResult.serverChallenge, apiResult.serverChallenge, apiResult.challengeCount, 32, 'sha1');
-                    let challengeResult = btoa(String.fromCharCode.apply(null, new Uint8Array(derivedKey)));
-                    return login(username, password, {
-                        ...options,
-                        client_id: challengeResult,
-                        challenge_answered: true,
-                    });
+                    return pbkdf2(apiResult.serverChallenge, apiResult.serverChallenge, apiResult.challengeCount, 32, 'sha1')
+                            .then(derivedKey=>{
+                                let challengeResult = btoa(String.fromCharCode.apply(null, new Uint8Array(derivedKey)));
+                                return login(username, password, {
+                                    ...options,
+                                    client_id: challengeResult,
+                                    challenge_answered: true,
+                                });            
+                            })
                 }
                 else {
                     return Promise.reject({

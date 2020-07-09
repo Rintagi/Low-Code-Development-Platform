@@ -75,14 +75,34 @@ If(!(test-path $path))
 
 Write-Output "Installing prerequisite software"
 
-#MS oledb sql
+#SQL server client(bcp/sqmcmd), would pull in ODBC driver as well
+#must have for the installer to run and/or development(installer creation)
+#https://www.microsoft.com/en-us/download/details.aspx?id=53591
+Write-Output "choco install sqlserver-cmdlineutils -y"
+choco install sqlserver-cmdlineutils
+
+#MS oledb sql, required for tls 1.2 connectivity
 # source url
 # https://www.microsoft.com/en-us/download/details.aspx?id=56730
 
-Write-Output "choco install msoledbsql -y"
-choco install msoledbsql -y
+#Write-Output "choco install msoledbsql -y"
+#choco install msoledbsql -y
 
-# microsoft access database engine runtime(needs 2010+)
+#MS odbc driver for SQL server(17)
+# source url 
+# https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver15
+# pull in by the client so no needed unless there is checksum issue
+#Write-Output "choco install sqlserver-odbcdriver -y"
+#choco install sqlserver-odbcdriver -y
+
+#MS odbc driver for SQL server(13)
+# source url 
+# https://www.microsoft.com/en-us/download/details.aspx?id=53339
+# default driver used, not needed if default changed to 17
+# Write-Output "choco install sqlserver-odbcdriver --version=13.1.4413.46 -y"
+# choco install sqlserver-odbcdriver --version=13.1.4413.46 -y
+
+# microsoft access database engine runtime(needs 2010+) for excel file import
 # source url (2016)
 # https://www.microsoft.com/en-us/download/details.aspx?id=54920
 # or (2010)
@@ -91,11 +111,14 @@ choco install msoledbsql -y
 Write-Output "choco install access2016runtime -y"
 choco install access2016runtime -y
 
-Write-Output "choco install made2010 --ignore-checksums -y "
-choco install made2010 --ignore-checksums -y
+
+#not needed anymore, included in access2016runtime
+#Write-Output "choco install made2010 --ignore-checksums -y "
+#choco install made2010 --ignore-checksums -y
 
 # SQL 2012 CLR types
 # source url 
+# must come before sql report viewer 2012 to avoid checksum error
 # https://www.microsoft.com/en-us/download/details.aspx?id=35580
 
 Write-Output "choco install SQL2012.ClrTypes --ignore-checksums -y"
@@ -109,7 +132,7 @@ choco install SQL2012.ClrTypes --ignore-checksums -y
 # https://www.microsoft.com/en-ca/download/details.aspx?id=35747
 
 Write-Output "choco install reportviewer2012 -y"
-choco install reportviewer2012 -y
+choco install reportviewer2012 --ignore-checksums -y
 
 # crystal report viewer runtime
 # source url
@@ -130,4 +153,8 @@ choco install urlrewrite -y
 Write-Output "choco install iis-arr -y"
 choco install iis-arr -y
 
-
+# .NET 4.6.2 devpack
+# required for installer compilation(can either be here or in devtools)
+# https://www.microsoft.com/en-us/download/details.aspx?id=53321
+# Write-Output "choco install netfx-4.6.2-devpack -y"
+# choco install netfx-4.6.2-devpack -y

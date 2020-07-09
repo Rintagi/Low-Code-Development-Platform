@@ -6,7 +6,7 @@ namespace RO.Access3
 	using RO.Common3;
     using RO.SystemFramewk;
 
-	public class DbPortingAccess : Encryption, IDisposable
+	public class DbPortingAccess : DbPortingAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -15,7 +15,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -41,7 +41,7 @@ namespace RO.Access3
 			}
 		}
 
-		public DataTable GetMapTable(Int32 ProjectId, string TableName, string dbConnectionString, string dbPassword)
+		public override DataTable GetMapTable(Int32 ProjectId, string TableName, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{

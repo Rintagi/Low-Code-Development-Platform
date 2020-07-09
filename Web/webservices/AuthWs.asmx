@@ -195,16 +195,17 @@ public partial class AuthWs : AsmxBase
         System.Web.Caching.Cache cache = HttpContext.Current.Cache;
         string storedToken = (Session != null ? Session["RintagiLoginAccessCode"] as string : null) ?? cache[code] as string;
         bool syncCookie = true;
-        string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+        string jwtMasterKey = Config.JWTMasterKey;
         Func<string, string> getStoredToken = (accessCode) =>
         {
             return storedToken;
         };
-        Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
+        Func<LoginUsr, UsrCurr, UsrImpr, UsrPref, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, usrPref, currentHandle, ignoreCache) =>
         {
             LUser = loginUsr;
             LCurr = usrCurr;
             LImpr = usrImpr;
+            LPref = usrPref;
             return ValidateScope(ignoreCache);
         };
         if (grant_type == "refresh_token")
@@ -227,6 +228,8 @@ public partial class AuthWs : AsmxBase
                 Session[KEY_CacheLUser] = LUser;
                 Session[KEY_CacheLImpr] = LImpr;
                 Session[KEY_CacheLCurr] = LCurr;
+                Session[KEY_CacheLPref] = LPref;
+                
             }
              
             SetJWTCookie(token["refresh_token"]);
@@ -245,15 +248,16 @@ public partial class AuthWs : AsmxBase
         System.Web.Caching.Cache cache = HttpContext.Current.Cache;
         string storedToken = (Session != null ? Session["RintagiLoginAccessCode"] as string : null) ?? cache[code] as string;
         bool syncCookie = true;
-        string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+        string jwtMasterKey = Config.JWTMasterKey;
         Func<string,string> getStoredToken = (accessCode)=>{
             return storedToken;
         };
-        Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
+        Func<LoginUsr, UsrCurr, UsrImpr, UsrPref, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, usrPref, currentHandle, ignoreCache) =>
         {
             LUser = loginUsr;
             LCurr = usrCurr;
             LImpr = usrImpr;
+            LPref = usrPref;
             if (re_auth == "Y")
             {
                 try
@@ -478,6 +482,7 @@ public partial class AuthWs : AsmxBase
                     LUser = usr;
                     LCurr = new UsrCurr(usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, usr.DefSystemId);
                     LImpr = SetImpersonation(null, usr.UsrId, usr.DefSystemId, usr.DefCompanyId, usr.DefProjectId);
+                    LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
                     
                     if (Session != null && ((Session[KEY_CacheLUser] as LoginUsr) == null || (Session[KEY_CacheLUser] as LoginUsr).UsrId == 1))
                     {
@@ -490,6 +495,7 @@ public partial class AuthWs : AsmxBase
                             Session[KEY_CacheLUser] = LUser;
                             Session[KEY_CacheLImpr] = LImpr;
                             Session[KEY_CacheLCurr] = LCurr;
+                            Session[KEY_CacheLPref] = LPref;
                         }
                         catch { }
                     }
@@ -633,11 +639,11 @@ public partial class AuthWs : AsmxBase
         Func<ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>> fn = () =>
         {
             byte resetPwdSystemId = 2;
-            byte.TryParse(System.Configuration.ConfigurationManager.AppSettings["PasswordResetModule"], out resetPwdSystemId);
+            byte.TryParse(Config.PasswordResetModule, out resetPwdSystemId);
             SwitchContext(resetPwdSystemId, LCurr.CompanyId, LCurr.ProjectId);
             ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> mr = new ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>();
             var Request = HttpContext.Current.Request;
-            string secret = System.Configuration.ConfigurationManager.AppSettings["ReCaptchaSecretKey"];
+            string secret = Config.ReCaptchaSecretKey;
             bool bypassRecaptcha = true;
             bool isHuman = bypassRecaptcha || ReCaptcha.Validate(secret, reCaptchaRequest);
             DataTable dt = (new LoginSystem()).GetSaltedUserInfo(0, emailAddress, emailAddress);
@@ -650,7 +656,7 @@ public partial class AuthWs : AsmxBase
                 string emlSubject = "";
                 string emlSenderTitle = "";
                 string emlHtml = "";
-                string emailTemplateId = System.Configuration.ConfigurationManager.AppSettings["ResetPwdEmailTemp"];
+                string emailTemplateId = Config.ResetPwdEmailTemp;
 
                 if (!string.IsNullOrEmpty(emailTemplateId))
                 {
@@ -693,7 +699,7 @@ public partial class AuthWs : AsmxBase
         Func<ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>> fn = () =>
         {
             byte resetPwdSystemId = 2;
-            byte.TryParse(System.Configuration.ConfigurationManager.AppSettings["PasswordResetModule"], out resetPwdSystemId);
+            byte.TryParse(Config.PasswordResetModule, out resetPwdSystemId);
             SwitchContext(resetPwdSystemId, LCurr.CompanyId, LCurr.ProjectId);
             ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>> mr = new ApiResponse<SerializableDictionary<string, string>, SerializableDictionary<string, string>>();
             bool isEmailVerified = GetAuthObject().VerifySignedToken(nounce, ticketLeft, ticketRight);

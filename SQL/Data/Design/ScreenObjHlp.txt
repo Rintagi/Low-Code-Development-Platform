@@ -9141,3 +9141,10 @@
 17191~@~AdmWizardObj [  110] Main Info: NoTrans (en-US)~@~4374~@~1~@~No Transaction Wrap!!~@~when checked, do not wrap operation with transactions(can leave data in intermediate state on failure). careful before you enable this~@~~@~
 17192~@~AdmWizardObj [  110] Main Info: CommandTimeOut (en-US)~@~4375~@~1~@~Command Timeout(sec)~@~SQL command time out in seconds, only enter something if you want to override otherwise it would be installation default~@~~@~
 17193~@~AdmReport [  100] Main Info: CommandTimeOut (en-US)~@~4376~@~1~@~Command Time Out(sec)~@~Command time out value in seconds, only enter something if you want to override, would use runtime installation default otherwise~@~SQL Command timeout, leave blank unless you really want to override~@~
+17195~@~AdmFlowchart [   10] Main: ChartId (en-US)~@~4378~@~1~@~Chart ID~@~~@~~@~
+17196~@~AdmFlowchart [   20] Main: ChartName (en-US)~@~4379~@~1~@~Chart Name~@~~@~Please enter a chart name.~@~
+17197~@~AdmFlowchart [   30] Main: ChartDesc (en-US)~@~4380~@~1~@~Chart Description~@~~@~~@~
+17198~@~AdmFlowchart [   40] Main: ChartData (en-US)~@~4381~@~1~@~Chart Data~@~~@~~@~
+17199~@~AdmFlowchart [   50] Main: launch (en-US)~@~4382~@~1~@~Launch Flowchart IDE~@~~@~~@~
+17200~@~AdmFlowchart [   60] Main: Generate (en-US)~@~4383~@~1~@~Generate Flowchart HTML File~@~~@~~@~
+17201~@~AdmFlowchart [   70] Main: View (en-US)~@~4384~@~1~@~View Flowchart~@~~@~~@~

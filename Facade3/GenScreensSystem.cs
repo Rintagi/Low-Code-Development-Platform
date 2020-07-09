@@ -5,9 +5,21 @@ namespace RO.Facade3
 	using RO.Common3;
 	using RO.Common3.Data;
 	using RO.Rule3;
+	using RO.Access3;
 
 	public class GenScreensSystem : MarshalByRefObject
 	{
+		private GenScreensAccessBase GetGenScreensAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new GenScreensAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.GenScreensAccess();
+			}
+		}
 		public bool CreateProgram(Int32 screenId, string screenTitle, string dbAppDatabase, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
 		{
             return (new GenScreensRules()).CreateProgram(screenId, screenTitle, dbAppDatabase, CPrj, CSrc, CTar, dbConnectionString, dbPassword);
@@ -25,7 +37,7 @@ namespace RO.Facade3
 
 		public DataTable GetScreenDel(string srcDatabase, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+			using (GenScreensAccessBase dac = GetGenScreensAccess())
 			{
 				return dac.GetScreenDel(srcDatabase, dbConnectionString, dbPassword);
 			}

@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Data.OleDb;
 using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
@@ -97,19 +96,13 @@ namespace RO.Web
         protected void cEncryptButton_Click(object sender, System.EventArgs e)
         {
             CheckAuthentication(false);
+            cOutstr.Text = (new AdminSystem()).EncryptString(cInstr.Text);
             if (cValidate.Checked)
             {
-                OleDbDataAdapter da = new OleDbDataAdapter();
                 var dbConnectionString = Config.GetConnStr(Config.DesProvider, Config.DesServer, Config.DesDatabase, "", Config.DesUserId);
-
-                OleDbCommand cmd = new OleDbCommand("GetSystemsList", new OleDbConnection(dbConnectionString + cInstr.Text));
-                cmd.CommandType = CommandType.StoredProcedure;
-                da.SelectCommand = cmd;
-                DataTable dt = new DataTable();
-                da.Fill(dt);
+                (new LoginSystem()).GetSystemsList(dbConnectionString, cOutstr.Text);
             }
 
-            cOutstr.Text = (new AdminSystem()).EncryptString(cInstr.Text);
         }
     }
 }

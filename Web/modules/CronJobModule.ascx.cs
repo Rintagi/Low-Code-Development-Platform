@@ -27,7 +27,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
         {
             string jobUrl = jobLink.StartsWith("http") ? jobLink : baseUrl + "/" + jobLink + (jobLink.Contains("?") ? "&" : "?");
             string url = jobUrl + "jid=" + jobId.ToString() + "&cron=" + Application.GetHashCode().ToString();
-            bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+            bool singleSQLCredential = Config.DesShareCred;
 
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
             wr.CookieContainer = new CookieContainer();
@@ -125,8 +125,8 @@ public partial class CronJobModule : RO.Web.ModuleBase
                     + (Request.Url.IsDefaultPort ? "://" : ":" + Request.Url.Port.ToString() + "//")
                     + Request.Url.Host;
         string cronjobBaseUrl =
-                !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"])
-                ? System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"]
+                !string.IsNullOrEmpty(Config.CronJobBaseUrl)
+                ? Config.CronJobBaseUrl
                 : (!string.IsNullOrEmpty(Config.IntBaseUrl) ? Config.IntBaseUrl
                 : ""
                 );
@@ -156,8 +156,8 @@ public partial class CronJobModule : RO.Web.ModuleBase
                     DateTime now = currentTime();
                     string admEmail = base.SysAdminEmail(3);
                     List<Tuple<Exception, Dictionary<string, string>>> errorList = new List<Tuple<Exception, Dictionary<string, string>>>();
-                    bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
-                    string RunCronJobModules = System.Configuration.ConfigurationManager.AppSettings["RunCronJob"] ?? "";
+                    bool singleSQLCredential = Config.DesShareCred;
+                    string RunCronJobModules = Config.RunCronJobModules;
                     try
                     {
                         foreach (DataRow dr in SystemList.Rows)

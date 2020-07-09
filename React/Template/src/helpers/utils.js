@@ -335,6 +335,13 @@ export function fromBlobToFileObject(blob) {
   }
 }
 
+export function imgPathTransform(imgPath) {
+  var fullUrl = (imgPath || '').match(/^[^:]:/i);
+  if (fullUrl) return imgPath;
+  var stockImg = (imgPath || '').replace(/^((~|\.\.)\/)images/,'/img');
+  return process.env.PUBLIC_URL + stockImg;
+}
+
 export function debounce(func, debObj, immediate) {
   // var timeout;
   return function () {
@@ -379,11 +386,11 @@ export function reviseEmbeddedFileObjectFromServer(list, o) {
   try {
     file = JSON.parse(o)
   } catch (e) {
-
     file = typeof o === "string" ? {
-      base64: o,
+      base64: (!o ? null : o.match(/^data:/) ? o.replace(/^data:[^,]+,/,"") : null),
+      iconUrl: (o||'').match(/^\w+:/) ? o : null,
       fileName: 'image',
-      mimeType: 'image/jpeg'
+      mimeType: (!o ? null : (o.match(/^data:([^;]);/) || [null])[0] || 'application/octet-stream')
     } : Array.isArray(o) && o.length > 0 ? o : undefined
   }
   return file ? (Array.isArray(file) ? file : [file]) : list;
@@ -400,9 +407,10 @@ export function decodeEmbeddedFileObjectFromServer(o, asList)
 
     file = typeof o === "string" 
       ? {
-        base64: o,
-        fileName: 'image',
-        mimeType: 'image/jpeg',
+          base64: (!o ? null : o.match(/^data:/) ? o.replace(/^data:[^,]+,/,"") : null),
+          iconUrl: (o||'').match(/^\w+:/) ? o : null,
+          fileName: 'image',
+          mimeType: (!o ? null : (o.match(/^data:([^;]);/) || [null])[0] || 'application/octet-stream')
         }
       : Array.isArray(o) && o.length > 0 ? o : undefined
   }
@@ -483,7 +491,7 @@ export function uploadEmbeddedDoc(saveEmbeddedService, mstId, dtlId, isMaster, s
     fileName: fileList && Array.isArray(fileList) && fileList.length > 0 ? fileList[0].fileName : '',
     uploadRequest: !fileList || (Array.isArray(fileList) && fileList.length > 0 && fileList.filter(f => f.ts).length === 0 && fileList.filter(f => !f.isEmptyFileObject).length > 0)
       ? Promise.resolve({ screenColumnName, reduxColumeName, result: fileList })
-      : saveEmbeddedService(mstId, dtlId, isMaster, screenColumnName, typeof fileList === "string" ? fileList : ((fileList.length > 0 && fileList.filter(f => !f.isEmptyFileObject).length === 0) ? null : JSON.stringify(fileList.filter(f => !f.isEmptyFileObject).map(f => ({ ...f, icon: undefined })))), options)
+      : saveEmbeddedService(mstId, dtlId, isMaster, screenColumnName, typeof fileList === "string" ? fileList : ((fileList.length > 0 && fileList.filter(f => !f.isEmptyFileObject).length === 0) ? null : JSON.stringify(fileList.filter(f => !f.isEmptyFileObject).map(f => ({ ...f, ts:undefined, icon: undefined })))), options)
   }
 }
 
@@ -519,7 +527,8 @@ export function uploadMultiDoc(uploadService, mstId, dtlId, isMaster, screenColu
       isMaster,
       file: { ...f
         , ts: undefined
-        , lastTS: f.ts || undefined,
+        , lastTS: f.ts || undefined
+        , src: undefined
        },
       removeList,
       actionTypeSuccess,
@@ -631,7 +640,8 @@ export function processMultiDoc(existingDocList, newDocList)
 
 export function reviseMultiDocFileObjectFromServer(list, o) {
   // update local multidoc file list from server multi-doc object
-  return !Array.isArray(list) ? list : list.map(d => (d.DocId === o.DocId ? { ...d, mimeType: o.MimeType, base64: o.DocImage } : d))
+  const result = (o || {}).result || o;
+  return !Array.isArray(list) ? list : list.map(d => (d.DocId === result.DocId ? { ...d, mimeType: result.MimeType, base64: result.DocImage } : d))
 }
 
 export function makeMultiDocFileObjectFromServer(o, MstKeyName) {

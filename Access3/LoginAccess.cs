@@ -8,7 +8,7 @@ namespace RO.Access3
 	using RO.SystemFramewk;
     using System.Linq;
 
-	public class LoginAccess : Encryption, IDisposable
+	public class LoginAccess : LoginAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -17,7 +17,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -43,7 +43,7 @@ namespace RO.Access3
 			}
 		}
 
-        public bool IsUsrSafeIP(int UsrId, string IpAddress)
+        public override bool IsUsrSafeIP(int UsrId, string IpAddress)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -60,7 +60,7 @@ namespace RO.Access3
             else { return true; }
         }
 
-        public void SetUsrSafeIP(int UsrId, string IpAddress)
+        public override void SetUsrSafeIP(int UsrId, string IpAddress)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -75,7 +75,7 @@ namespace RO.Access3
             cn.Close();
         }
 
-		public bool IsNullLegacyPwd(string LoginName)
+		public override bool IsNullLegacyPwd(string LoginName)
 		{
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -98,7 +98,7 @@ namespace RO.Access3
 			else {return true;}
 		}
 
-		public bool ChkAdminLogin(string RowAuths)
+		public override bool ChkAdminLogin(string RowAuths)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -114,7 +114,7 @@ namespace RO.Access3
 			else { return true; }
 		}
 
-		public bool ChkLoginStatus(string LoginName)
+		public override bool ChkLoginStatus(string LoginName)
 		{
 			if ( da == null )
 			{
@@ -140,7 +140,7 @@ namespace RO.Access3
 			else {return true;}
 		}
 
-        public void SetLoginStatus(string LoginName, bool bLoginSuccess, string IpAddress, string Provider, string ProviderLoginName)
+        public override void SetLoginStatus(string LoginName, bool bLoginSuccess, string IpAddress, string Provider, string ProviderLoginName)
         {
 			if ( da == null )
 			{
@@ -175,7 +175,7 @@ namespace RO.Access3
 			cn.Close();
 		}
 
-        public DataTable GetLogins(string LoginName, string Provider)
+        public override DataTable GetLogins(string LoginName, string Provider)
         {
             DataTable dt = new DataTable();
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -196,7 +196,7 @@ namespace RO.Access3
             return dt;
         }
 
-		public LoginUsr GetLoginSecure(Credential cr)
+		public override LoginUsr GetLoginSecure(Credential cr)
 		{
 			if ( da == null )
 			{
@@ -272,7 +272,7 @@ namespace RO.Access3
 			}
 		}
 
-		public LoginUsr GetLoginLegacy(string LoginName, string Password)
+		public override LoginUsr GetLoginLegacy(string LoginName, string Password)
 		{
 			if ( da == null )
 			{
@@ -322,7 +322,7 @@ namespace RO.Access3
 			}
 		}
 
-        public void CancelUserAccount(int UsrId)
+        public override void CancelUserAccount(int UsrId)
         {
             if (da == null)
             {
@@ -351,7 +351,7 @@ namespace RO.Access3
             }
         }
 
-        public void UpdUserLoginInfo(int UsrId, string LoginName, string UsrName, string UsrEmail)
+        public override void UpdUserLoginInfo(int UsrId, string LoginName, string UsrName, string UsrEmail)
         {
             if (da == null)
             {
@@ -383,7 +383,7 @@ namespace RO.Access3
             }
         }
 
-        public DataTable GetSaltedUserInfo(int UsrId, string LoginName, string UsrEmail)
+        public override DataTable GetSaltedUserInfo(int UsrId, string LoginName, string UsrEmail)
         {
             DataTable dt = new DataTable();
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -411,7 +411,7 @@ namespace RO.Access3
             return dt;
         }
 
-		public UsrPref GetUsrPref(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId)
+		public override UsrPref GetUsrPref(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId)
 		{
 			if ( da == null )
 			{
@@ -439,7 +439,7 @@ namespace RO.Access3
 			}
 		}
 
-		public UsrImpr GetUsrImpr(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId)
+		public override UsrImpr GetUsrImpr(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId)
 		{
 			if ( da == null )
 			{
@@ -469,7 +469,7 @@ namespace RO.Access3
 			}
 		}
 
-		public DataTable GetUsrImprNext(Int32 usrId)
+		public override DataTable GetUsrImprNext(Int32 usrId)
 		{
 			if ( da == null )
 			{
@@ -484,7 +484,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetCompanyList(string Usrs, string RowAuthoritys, string Companys)
+		public override DataTable GetCompanyList(string Usrs, string RowAuthoritys, string Companys)
 		{
 			if ( da == null )
 			{
@@ -519,7 +519,7 @@ namespace RO.Access3
             return dt;
 		}
 
-		public DataTable GetProjectList(string Usrs, string RowAuthoritys, string Projects, string currCompanyId)
+		public override DataTable GetProjectList(string Usrs, string RowAuthoritys, string Projects, string currCompanyId)
 		{
 			if (da == null)
 			{
@@ -564,7 +564,7 @@ namespace RO.Access3
             return dt;
 		}
 
-		public DataTable GetSystemsList(string dbConnectionString, string dbPassword)
+		public override DataTable GetSystemsList(string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = null;
@@ -603,7 +603,7 @@ namespace RO.Access3
             return dt;
 		}
 
-        public bool UpdUsrPassword(Credential cr, LoginUsr LUser, bool RemoveLink)
+        public override bool UpdUsrPassword(Credential cr, LoginUsr LUser, bool RemoveLink)
         {
 			if ( da == null )
 			{
@@ -632,7 +632,7 @@ namespace RO.Access3
 			else {return true;}
 		}
 
-		public string GetPwdExpMsg(string UsrId, string CultureId, string PwdExpDays)
+		public override string GetPwdExpMsg(string UsrId, string CultureId, string PwdExpDays)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -649,7 +649,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-		public string GetHintAnswer(string UsrId)
+		public override string GetHintAnswer(string UsrId)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -664,7 +664,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-		public string GetHintQuestionId(string UsrId)
+		public override string GetHintQuestionId(string UsrId)
 		{
 			if ( da == null ) { throw new System.ObjectDisposedException( GetType().FullName ); }
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -679,7 +679,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-		public DataTable GetHintQuestion()
+		public override DataTable GetHintQuestion()
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetHintQuestion", new OleDbConnection(GetDesConnStr()));
@@ -690,7 +690,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public bool UpdHintQuestion(string UsrId, string HintQuestionId, string HintAnswer)
+		public override bool UpdHintQuestion(string UsrId, string HintQuestionId, string HintAnswer)
 		{
 			if ( da == null )
 			{
@@ -725,7 +725,7 @@ namespace RO.Access3
 			else {return true;}
 		}
 
-		public string GetRbtVersion()
+		public override string GetRbtVersion()
 		{
 			if ( da == null )
 			{
@@ -742,7 +742,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-		public string GetAppVersion(string dbConnectionString, string dbPassword)
+		public override string GetAppVersion(string dbConnectionString, string dbPassword)
 		{
 			if ( da == null )
 			{
@@ -759,7 +759,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-        public void LinkUserLogin(int UsrId, string ProviderCd, string LoginName)
+        public override void LinkUserLogin(int UsrId, string ProviderCd, string LoginName)
         {
             if (da == null)
             {
@@ -790,7 +790,7 @@ namespace RO.Access3
             }
         }
 
-        public void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName)
+        public override void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName)
         {
             if (da == null)
             {
@@ -821,7 +821,7 @@ namespace RO.Access3
             }
         }
 
-        public DataTable GetLinkedUserLogin(int UsrId)
+        public override DataTable GetLinkedUserLogin(int UsrId)
         {
             if (da == null)
             {
@@ -836,7 +836,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable WrAddUsr(string LoginName, string UsrName, string UsrPassword, int CultureId, int DefSystemId, string UsrEmail, string UsrGroups, bool ForcePwdChg, int? CustomerId, int? BrokerId, int? VendorId, bool Active, string SSOProviderCd, string SSOLoginName)
+        public override DataTable WrAddUsr(string LoginName, string UsrName, string UsrPassword, int CultureId, int DefSystemId, string UsrEmail, string UsrGroups, bool ForcePwdChg, int? CustomerId, int? BrokerId, int? VendorId, bool Active, string SSOProviderCd, string SSOLoginName)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -876,7 +876,7 @@ namespace RO.Access3
             return ds.Tables[0];
         }
 
-        public void WrDelUsr(int UsrId)
+        public override void WrDelUsr(int UsrId)
         {
             if (da == null)
             {
@@ -905,7 +905,7 @@ namespace RO.Access3
             }
         }
 
-        public string WrGetUsrOTPSecret(int UsrId, string hostSecret = null)
+        public override string WrGetUsrOTPSecret(int UsrId, string hostSecret = null)
         {
 
             DataTable dt = new DataTable();
@@ -927,7 +927,7 @@ namespace RO.Access3
 
         }
 
-        public string WrSetUsrOTPSecret(int UsrId, bool bEnable, string hostSecret = null)
+        public override string WrSetUsrOTPSecret(int UsrId, bool bEnable, string hostSecret = null)
         {
             string Secret = Guid.NewGuid().ToString().Replace("-", "");
             string EncSecret = string.IsNullOrEmpty(hostSecret) ? EncryptString(Secret) : EncryptString(Secret, hostSecret);

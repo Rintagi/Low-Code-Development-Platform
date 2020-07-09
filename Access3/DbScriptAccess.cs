@@ -7,7 +7,7 @@ namespace RO.Access3
     using RO.Common3.Data;
 	using RO.SystemFramewk;
 
-	public class DbScriptAccess : Encryption, IDisposable
+	public class DbScriptAccess : DbScriptAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -16,7 +16,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -42,7 +42,7 @@ namespace RO.Access3
 			}
 		}
 
-		public DataTable GetData(string InSql, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
+		public override DataTable GetData(string InSql, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
 		{
 			OleDbCommand cmd = null;
 			if (da == null)
@@ -64,7 +64,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataSet GetDataSet(string InSql, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
+		public override DataSet GetDataSet(string InSql, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
 		{
 			OleDbCommand cmd = null;
 			if (da == null)
@@ -86,7 +86,7 @@ namespace RO.Access3
 			return ds;
 		}
 
-		public DataTable GetColumnInfo(string tbName, CurrSrc CSrc)
+		public override DataTable GetColumnInfo(string tbName, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -105,7 +105,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetPKInfo(string tbName, CurrSrc CSrc)
+		public override DataTable GetPKInfo(string tbName, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -122,7 +122,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetFKInfo(string tbName, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
+		public override DataTable GetFKInfo(string tbName, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
 		{
 			OleDbCommand cmd = null;
 			if (da == null)
@@ -147,7 +147,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public OleDbDataReader ExecScript(string DataTier, string CmdName, string IsqlFile, bool IsFrSource, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
+		public override object ExecScript(string DataTier, string CmdName, string IsqlFile, bool IsFrSource, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword, Func<object, string, bool> processResult)
 		{
 			if (da == null)
 			{
@@ -184,7 +184,17 @@ namespace RO.Access3
 			}
 			cmd.CommandTimeout = 6000;
 			OleDbDataReader odr = null;
-			try { odr = cmd.ExecuteReader(); }
+			try { 
+                odr = cmd.ExecuteReader();
+                bool stop = false;
+                if (processResult != null)
+                {
+                    while (!stop && odr.Read())
+                    {
+                        stop = processResult(odr.GetValue(0), odr.GetString(0));
+                    }
+                }
+            }
 			catch (Exception e) { ApplicationAssert.CheckCondition(false, "ExecScript", "ExecuteReader", e.Message.ToString()); }
 			return odr;
 			// cn.Close(); To be handled by garbage collection.

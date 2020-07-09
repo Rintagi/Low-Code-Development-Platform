@@ -23,6 +23,30 @@ namespace RO.Rule3
         private string fileDirectory;
         private byte DbId;
 
+        private RobotAccessBase GetRobotAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new RO.Access3.RobotAccess();
+            }
+            else
+            {
+                return new RO.Access3.Odbc.RobotAccess();
+            }
+        }
+
+        private AdminAccessBase GetAdminAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new RO.Access3.AdminAccess(CommandTimeout);
+            }
+            else
+            {
+                return new RO.Access3.Odbc.AdminAccess(CommandTimeout);
+            }
+        }
+
         public bool DirectSaveToDb(DataRow dr)
         {
             string DisplayMode = dr["DisplayMode"].ToString();
@@ -208,7 +232,7 @@ namespace RO.Rule3
             List<string> ExportDefaultResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
 
-            DataTable dt = (new RobotAccess()).GetScreenList("", dbConnectionString, dbPassword);
+            DataTable dt = (GetRobotAccess()).GetScreenList("", dbConnectionString, dbPassword);
             if (dt != null)
             {
                 string ImportInitialValue = "";
@@ -274,7 +298,7 @@ SuppressGenRoute ? [] : [
             List<string> ExportDefaultResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
 
-            DataTable dt = (new RobotAccess()).GetScreenList("", dbConnectionString, dbPassword);
+            DataTable dt = (GetRobotAccess()).GetScreenList("", dbConnectionString, dbPassword);
             if (dt != null)
             {
                 string ImportInitialValue = "";
@@ -490,7 +514,7 @@ export function getNaviBar(type, mst, dtl, label) {
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
 
             //Screen Criteria
-            DataTable dtScrCri = (new AdminAccess()).GetScrCriteria(screenId, dbConnectionString, dbPassword);
+            DataTable dtScrCri = (GetAdminAccess()).GetScrCriteria(screenId, dbConnectionString, dbPassword);
             foreach (DataRow dr in dtScrCri.Rows)
             {
                 string screenCriId = dr["ScreenCriId"].ToString();
@@ -4250,6 +4274,7 @@ import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
+import { default as FileInputField } from '../../components/custom/FileInput';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
@@ -4868,7 +4893,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
             }
 
             //Screen Criteria
-            DataTable dtScrCri = (new AdminAccess()).GetScrCriteria(screenId, dbConnectionString, dbPassword);
+            DataTable dtScrCri = (GetAdminAccess()).GetScrCriteria(screenId, dbConnectionString, dbPassword);
             foreach (DataRow dr in dtScrCri.Rows)
             {
                 string screenCriId = dr["ScreenCriId"].ToString();
@@ -5141,7 +5166,7 @@ export default new [[---ScreenName---]]Redux()
             string ServiceCustomFunctionCnt = string.Join(Environment.NewLine, ServiceCustomFunctionResults.Select(s => addIndent(s, 0)));
 
             //Screen Criteria
-            DataTable dtScrCri = (new AdminAccess()).GetScrCriteria(screenId, dbConnectionString, dbPassword);
+            DataTable dtScrCri = (GetAdminAccess()).GetScrCriteria(screenId, dbConnectionString, dbPassword);
             foreach (DataRow dr in dtScrCri.Rows)
             {
                 string screenCriId = dr["ScreenCriId"].ToString();
@@ -5628,6 +5653,9 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
         }
     )
 }
+
+export function SaveEmbeddedDoc(...args) { return SaveEmbeddedImage(...args) }
+
 ")
 +
 (
@@ -5731,6 +5759,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             string screenDetailKeyName = "";
             string screenDetailKey = "";
             string screenDetailTableName = "";
+            string customUsing = "";
+            string asmxBaseClass = "RO.Web.AsmxBase";
 
             foreach (DataRowView drv in dvAsmxRule)
             {
@@ -5738,6 +5768,15 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 {
                     string AsmxCustomFunctionValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     AsmxCustomFunctionResults.Add(AsmxCustomFunctionValue);
+                }
+                else if (drv["AsmxEventId"].ToString() == "6") // Base class
+                {
+                    asmxBaseClass = drv["AsmxRuleProg"].ToString();
+                    if (string.IsNullOrEmpty(asmxBaseClass)) asmxBaseClass = "RO.Web.AsmxBase";
+                }
+                else if (drv["AsmxEventId"].ToString() == "7") // extra using
+                {
+                    customUsing = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                 }
             }
 
@@ -5755,6 +5794,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             }
 
             StringBuilder sb = new StringBuilder();
+
             sb.Append(("<%@ WebService Language=\"C#\" Class=\"" + Config.AppNameSpace + ".Web.[[---ScreenName---]]Ws\" %>") + Environment.NewLine);
             sb.Append(("namespace " + Config.AppNameSpace + ".Web"));
             sb.Append(@"
@@ -5777,13 +5817,16 @@ export function GetDocZipDownload(keyId, options, accessScope) {
     using System.Collections.Generic;
     using System.Web.SessionState;
     using System.Linq;
+    using System.Numerics;
+"
++ customUsing + @"
             ");
             sb.Append(GetScreenDataSet(screenId, screenName, screenPrimaryKey, dvItms, screenTypeName));
             sb.Append(@"
     [ScriptService()]
     [WebService(Namespace = ""http://Rintagi.com/"")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    public partial class [[---ScreenName---]]Ws : RO.Web.AsmxBase
+    public partial class [[---ScreenName---]]Ws : "+ asmxBaseClass + @"
     {
         const int screenId = [[---ScreenId---]];
         const byte systemId = [[---systemId---]];
@@ -5924,6 +5967,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 string DdlBaseColumnName = drv["ColName"].ToString();
                 string DdlBaseTableId = drv["TableId"].ToString();
                 string DdlBaseTableName = drv["TableName"].ToString();
+                string DdlBaseSystemId = drv["SystemId"].ToString();
                 string DdlKeyColumnName = drv["DdlKeyColumnName"].ToString();
                 string DdlKeyTableId = drv["DdlKeyTableId"].ToString();
                 string RefColSrc = DdlFtrTableId == dvItms[0]["TableId"].ToString() ? "Mst" : "Dtl";
@@ -5970,6 +6014,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                                                 + "{\"baseTbl\", \"" + DdlBaseTableName + "\"},"
                                                 + "{\"baseKeyCol\", \"" + DdlPrimaryKey + "\"},"
                                                 + "{\"baseColName\", \"" + DdlBaseColumnName + "\"},"
+                                                + "{\"baseSystemId\", \"" + DdlBaseSystemId + "\"},"
                                                 + AdditionalColumn 
                                                 + "}},";
                     ScreenDdlDefResults.Add(ScreenDdlDefValue);
@@ -6162,7 +6207,10 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                                             || (DefaultValue.Contains("this."))
                                             || (DefaultValue.Contains("LCurr.")) 
                                             || (DefaultValue.Contains("LImpr.")) 
-                                            || (DefaultValue.Contains("LUser.")))
+                                            || (DefaultValue.Contains("LUser."))
+                                            || (DefaultValue.Contains("\""))
+                                            || (DefaultValue.Contains(".ToString("))
+                                            )
                                         {
                                             string InitMasterValue = "{\"" + ColumnId + "\"," + DefaultValue + "},";
                                             InitMasterResults.Add(InitMasterValue);
@@ -6455,14 +6503,17 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             List<string> DtlImgUploadResults = new List<string>();
             List<string> MstImgUploadResults = new List<string>();
             List<string> DtlResults = new List<string>();
+            List<string> AsmxSaveDataBeforeValidationResults = new List<string>();
             List<string> AsmxSaveDataBeforeResults = new List<string>();
             List<string> AsmxSaveDataAfterResults = new List<string>();
+            List<string> AsmxGetMstByIdAfterResults = new List<string>();
+            List<string> AsmxGetMstByIdBeforeResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
             bool hasDtlImageUpload = false;
             bool hasMstImageUpload = false;
             string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
             bool gridOnly = screenTypeName == "I3";
-
+            
             foreach (DataRowView drv in dvAsmxRule)
             {
                 if (drv["AsmxEventId"].ToString() == "3") //Save Data Before
@@ -6474,6 +6525,16 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 {
                     string AsmxSaveDataAfterValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
                     AsmxSaveDataAfterResults.Add(AsmxSaveDataAfterValue);
+                }
+                else if (drv["AsmxEventId"].ToString() == "8") // GetMstById After
+                {
+                    string AsmxGetMstByIdAfterValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
+                    AsmxGetMstByIdAfterResults.Add(AsmxGetMstByIdAfterValue);
+                }
+                else if (drv["AsmxEventId"].ToString() == "9") // Save Data Before Validation
+                {
+                    string AsmxSaveDataBeforeValidationValue = drv["AsmxRuleProg"].ToString().Replace("\r\n", "\r").Replace("\n", "\r").Replace("\r", Environment.NewLine);
+                    AsmxSaveDataBeforeValidationResults.Add(AsmxSaveDataBeforeValidationValue);
                 }
             }
 
@@ -6611,8 +6672,10 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             string DtlImgUploadCnt = string.Join(Environment.NewLine, DtlImgUploadResults.Select(s => addIndent(s, 0)));
             string MstImgUploadCnt = string.Join(Environment.NewLine, MstImgUploadResults.Select(s => addIndent(s, 0)));
             string DtlCnt = string.Join(Environment.NewLine, DtlResults.Select(s => addIndent(s, 16)));
+            string AsmxSaveDataBeforeValidationCnt = string.Join(Environment.NewLine, AsmxSaveDataBeforeValidationResults.Select(s => addIndent(s, 0)));
             string AsmxSaveDataBeforeCnt = string.Join(Environment.NewLine, AsmxSaveDataBeforeResults.Select(s => addIndent(s, 0)));
             string AsmxSaveDataAfterCnt = string.Join(Environment.NewLine, AsmxSaveDataAfterResults.Select(s => addIndent(s, 0)));
+            string AsmxGetMstByIdAfterCnt = string.Join(Environment.NewLine, AsmxGetMstByIdAfterResults.Select(s => addIndent(s, 0)));
             
             StringBuilder sb = new StringBuilder();
 
@@ -6692,6 +6755,10 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string,AutoCompleteResponse>();
+                /* Get Master By Id After start here */
+" + AsmxGetMstByIdAfterCnt + @"
+
+                /* Get Master By Id After end here */
                 mr.data = DataTableToListOfObject(dt, mstBlob, colAuth, utcColumns);
                 mr.supportingData = includeDtl ? new SerializableDictionary<string, AutoCompleteResponse>() { { ""dtl"", new AutoCompleteResponse() { data = DataTableToListOfObject(_GetDtlById(keyId, 0), dtlBlob, colAuth, utcColumns) } } } : supportingData;
                 mr.status = ""success"";
@@ -6839,6 +6906,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
         {
             bool isAdd = false;
             bool refreshUsrImpr = options.ContainsKey(""ReAuth"") && options[""ReAuth""] == ""Y"" ;
+            string screenButton = options.ContainsKey(""ScreenButton"") ? options[""ScreenButton""] : """";
+            string actionButton = options.ContainsKey(""OnClickColumeName"") ? options[""OnClickColumeName""] : """";
             bool noTrans = Config.NoTrans;
             int commandTimeOut = Config.CommandTimeOut;
 
@@ -6851,11 +6920,11 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 {
                     dtl.Add(mst.Clone());
                 }
-                /* AsmxRule: Save Data Before */
+                /* AsmxRule: Save Data Before Validation */
 ");
-            sb.Append(AsmxSaveDataBeforeCnt + Environment.NewLine);
+            sb.Append(AsmxSaveDataBeforeValidationCnt + Environment.NewLine);
             sb.Append(@"
-                /* AsmxRule End: Save Data Before */
+                /* AsmxRule End: Save Data Before Validation */
 
                 var pid = mst[""[[---ScreenPrimaryKey---]]""];"
     + (screenPrimaryKeyColumnIdentity == "N"
@@ -6891,6 +6960,12 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                         validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
                     };
                 }
+                /* AsmxRule: Save Data Before */
+");
+            sb.Append(AsmxSaveDataBeforeCnt + Environment.NewLine);
+            sb.Append(@"
+                /* AsmxRule End: Save Data Before */
+
                 var ds = Prep[[---ScreenName---]]Data(mst, dtl, string.IsNullOrEmpty(mst[""[[---ScreenPrimaryKey---]]""]));
                 string msg = string.Empty;
 

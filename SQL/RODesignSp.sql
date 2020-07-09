@@ -670,6 +670,22 @@ END
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fNullDec') AND type='FN')
+DROP FUNCTION dbo.fNullDec
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE FUNCTION [dbo].[fNullDec] (@v decimal(18,6)) RETURNS varchar(20)
+/* WITH ENCRYPTION */
+AS
+BEGIN
+	RETURN ISNULL(CONVERT(varchar(20),@v),'NULL')
+END
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fNullInt') AND type='FN')
 DROP FUNCTION dbo.fNullInt
 GO
@@ -8472,6 +8488,32 @@ SELECT @sClause = 'SELECT EntityId199=b199.EntityId'
 + ', EntityCode199=b199.EntityCode'
 + ', DeployPath199=b199.DeployPath'
 SELECT @wClause = 'WHERE b199.EntityId' + isnull('='+@KeyId1,' is null')
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmFlowchart1027ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmFlowchart1027ById AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetAdmFlowchart1027ById
+ @KeyId1		nvarchar(1000)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+SELECT @fClause = 'FROM dbo.Flowchart b1325'
+SELECT @sClause = 'SELECT ChartId1325=b1325.ChartId'
++ ', ChartName1325=b1325.ChartName'
++ ', ChartDesc1325=b1325.ChartDesc'
++ ', ChartData1325=b1325.ChartData'
+SELECT @wClause = 'WHERE b1325.ChartId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
 GO
@@ -40121,6 +40163,124 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmFlowchart1027') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmFlowchart1027 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetExpAdmFlowchart1027
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM dbo.Flowchart b1325 (NOLOCK)'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ChartId1325Text=b1325.ChartId'
++ ', ChartId1325=b1325.ChartId'
++ ', ChartName1325=b1325.ChartName'
++ ', ChartDesc1325=b1325.ChartDesc'
++ ', ChartData1325=b1325.ChartData'
+SELECT @oClause='ORDER BY b1325.ChartId'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1325.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1325.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1325.ChartId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmLabel112') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetExpAdmLabel112 AS SELECT 1')
 GO
@@ -51353,6 +51513,123 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmFlowchart1027') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmFlowchart1027 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetLisAdmFlowchart1027
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM dbo.Flowchart b1325 (NOLOCK)'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ChartId1325=b1325.ChartId, ChartId1325Text=b1325.ChartName, MatchCount=COUNT(1) OVER ()'
+SELECT @oClause='ORDER BY b1325.ChartName'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1325.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1325.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1325.ChartId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+
+SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
+IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1325.ChartName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmLabel112') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetLisAdmLabel112 AS SELECT 1')
 GO
@@ -58970,9 +59247,14 @@ a.ReleaseOs,a.EntityId,c.EntityCode
 FROM dbo.Release a
 INNER JOIN dbo.CtReleaseType b ON a.ReleaseTypeId = b.ReleaseTypeId
 INNER JOIN dbo.Entity c ON a.EntityId = c.EntityId
-WHERE a.ReleaseId = @ReleaseId
+WHERE 
+(a.ReleaseId = @ReleaseId
 OR
 @ReleaseId IS NULL
+)
+ORDER BY c.EntityId
+, CASE WHEN b.ReleaseTypeAbbr LIKE 'N%' THEN 2 ELSE 1 END
+, CASE WHEN b.ReleaseTypeAbbr LIKE 'N%' THEN SUBSTRING(b.ReleaseTypeAbbr,2,3) ELSE b.ReleaseTypeAbbr END
 
 RETURN 0
 GO
@@ -60616,6 +60898,7 @@ SELECT a.IgnoreConfirm,a.MasterTable,m.TableOrder,a.TabIndex,a.ScreenObjId,g1.Ro
 ,a.ColumnSize,ColumnHeight=CASE WHEN c.TypeName='ListBox' THEN ISNULL(a.ColumnHeight,1) ELSE a.ColumnHeight END, a.ResizeWidth, a.ResizeHeight
 ,DisplayMode=c.TypeDesc,DisplayName=c.TypeName,ColumnScale=ISNULL(b.ColumnScale,CASE WHEN b.DataType=6 THEN '4' WHEN b.DataType='7' THEN '2' ELSE '0' END),NumericData=ISNULL(d.NumericData,'N'),ColumnJustify=ISNULL(a.ColumnJustify,'L')
 ,DdlKeySystemId=t0.SystemId,DdlKeyTableId=x0.TableId,DdlKeyTableName=t0.TableName,DdlKeyColumnName=x0.ColumnName,a.DdlKeyColumnId,DdlKeyNumeric=ISNULL(d0.NumericData,'N')
+,DdlKeyDbAppDatabase = ks.dbAppDatabase
 ,DdlRefTableId=x3.TableId,a.DdlRefColumnId,DdlRefColLen=x3.ColumnLength,DdlRefColumnName=x3.ColumnName
 ,DdlRefDisplayName=(SELECT i3.TypeName FROM dbo.ScreenObj s3 INNER JOIN RODesign.dbo.CtDisplayType i3 ON s3.DisplayModeId = i3.TypeId WHERE s3.ScreenId = a.ScreenId AND s3.ColumnId = a.DdlRefColumnId)
 ,DdlAdnColumnName=x1.ColumnName,DdlFtrColumnName=x2.ColumnName,a.DdlFtrColumnId,DdlFtrTableId=x2.TableId,a.AggregateCd
@@ -60646,6 +60929,7 @@ LEFT OUTER JOIN RODesign.dbo.CtDisplayType c ON a.DisplayModeId = c.TypeId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d ON b.DataType = d.DataTypeId
 LEFT OUTER JOIN dbo.DbColumn x0 ON a.DdlKeyColumnId = x0.ColumnId
 LEFT OUTER JOIN dbo.DbTable t0 ON x0.TableId = t0.TableId
+LEFT OUTER JOIN RODesign.dbo.Systems ks on ks.SystemId = t0.SystemId
 LEFT OUTER JOIN RODesign.dbo.CtDataType d0 ON x0.DataType = d0.DataTypeId
 LEFT OUTER JOIN dbo.DbColumn x1 ON a.DdlAdnColumnId = x1.ColumnId
 LEFT OUTER JOIN dbo.DbColumn x2 ON a.DdlFtrColumnId = x2.ColumnId
@@ -74446,11 +74730,11 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE dbo.WrCloneReport
+ALTER PROCEDURE [dbo].[WrCloneReport]
  @ReportId		int
 /* WITH ENCRYPTION */
 AS
-DECLARE	 @iClause nvarchar(max)
+DECLARE	 @iClause nvarchar(max), @ReportCriId int, @ReportObjId int, @RptElmId int, @RptCtrId int, @RptTblId int, @RptCelId int
 		,@i01 int, @i02 int, @i03 int, @i04 int, @i05 int, @i06 int, @i07 int, @i08 int, @i09 int, @i10 int
 		,@i11 int, @i12 int, @i13 int, @i14 int, @i15 int, @i16 int, @i17 int, @i18 int, @i19 int, @i20 int
 		,@i21 int, @i22 int, @i23 int, @i24 int, @i25 int, @i26 int, @i27 int, @i28 int, @i29 int, @i30 int
@@ -74461,57 +74745,31 @@ DECLARE	 @iClause nvarchar(max)
 		,@c21 nvarchar(max), @c22 nvarchar(max), @c23 nvarchar(max), @c24 nvarchar(max), @c25 nvarchar(max), @c26 nvarchar(max), @c27 nvarchar(max), @c28 nvarchar(max), @c29 nvarchar(max), @c30 nvarchar(max)
 		,@c31 nvarchar(max), @c32 nvarchar(max), @c33 nvarchar(max), @c34 nvarchar(max), @c35 nvarchar(max), @c36 nvarchar(max), @c37 nvarchar(max), @c38 nvarchar(max), @c39 nvarchar(max), @c40 nvarchar(max)
 		,@c41 nvarchar(max), @c42 nvarchar(max), @c43 nvarchar(max), @c44 nvarchar(max), @c45 nvarchar(max), @c46 nvarchar(max), @c47 nvarchar(max), @c48 nvarchar(max), @c49 nvarchar(max), @c50 nvarchar(max)
+		,@d01 decimal(8,2), @d02 decimal(8,2), @d03 decimal(8,2), @d04 decimal(8,2), @d05 decimal(8,2), @d06 decimal(8,2), @d07 decimal(8,2), @d08 decimal(8,2), @d09 decimal(8,2), @d10 decimal(8,2)
+		,@d11 decimal(8,2), @d12 decimal(8,2), @d13 decimal(8,2), @d14 decimal(8,2), @d15 decimal(8,2), @d16 decimal(8,2), @d17 decimal(8,2), @d18 decimal(8,2), @d19 decimal(8,2), @d20 decimal(8,2)
+		,@d21 decimal(8,2), @d22 decimal(8,2), @d23 decimal(8,2), @d24 decimal(8,2), @d25 decimal(8,2), @d26 decimal(8,2), @d27 decimal(8,2), @d28 decimal(8,2), @d29 decimal(8,2), @d30 decimal(8,2)
+		,@d31 decimal(8,2), @d32 decimal(8,2), @d33 decimal(8,2), @d34 decimal(8,2), @d35 decimal(8,2), @d36 decimal(8,2), @d37 decimal(8,2), @d38 decimal(8,2), @d39 decimal(8,2), @d40 decimal(8,2)
+		,@d41 decimal(8,2), @d42 decimal(8,2), @d43 decimal(8,2), @d44 decimal(8,2), @d45 decimal(8,2), @d46 decimal(8,2), @d47 decimal(8,2), @d48 decimal(8,2), @d49 decimal(8,2), @d50 decimal(8,2)
 SET NOCOUNT ON
-SELECT @iClause = 'DECLARE @ReportId int, @ReportCriId int, @ReportObjId int'
-/*
-SELECT @c01=ProgramName, @c02=ScreenDesc, @i03=ScreenTypeId, @i04=MasterTableId, @i05=DetailTableId, @i06=SearchTableId, @i07=SearchId, @c07=SearchAscending, @i08=SearchDtlId, @i09=SearchUrlId, @i10=SearchImgId, @i11=GridRows, @c10=GenerateSc, @c11=GenerateSr, @c12=HasDeleteAll, @c13=ShowGridHead, @c14=ValidateReq, @c15=DeferError, @c16=AuthRequired, @c17=ViewOnly, @c18=NeedRegen
+SELECT @iClause = 'DECLARE @ReportId int, @ReportCriId int, @ReportObjId int, @RptElmId int, @RptCtrId int, @PRptCtrId int, @RptTblId int, @RptCelId int, @TableId int, @ColumnId int'
+SELECT @c01=ProgramName, @c02=ReportDesc, @c03=OrientationCd, @c04=ReportTypeCd, @c05=TemplateName, @i06=RptTemplate, @i07=CopyReportId, @d08=TopMargin, @d09=BottomMargin, @d10=LeftMargin, @d11=RightMargin, @d12=PageHeight, @d13=PageWidth, @c14=UnitCd, @c15=WhereClause, @c16=RegClause, @c17=RegCode, @c18=ValClause, @c19=ValCode, @c20=UpdClause, @c21=UpdCode, @c22=XlsClause, @c23=XlsCode, @c24=GenerateRp, @c25=AllowSelect, @c29=CompanyLs, @c30=NeedRegen, @c31=AuthRequired, @i32=CommandTimeOut
 	FROM dbo.Report WHERE ReportId=@ReportId
 SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Report */'
-+ char(13) + char(10) + 'INSERT dbo.Report (ProgramName,ScreenDesc,ScreenTypeId,MasterTableId,DetailTableId,SearchTableId,SearchId,SearchAscending,SearchDtlId,SearchUrlId,SearchImgId,GridRows,GenerateSc,GenerateSr,HasDeleteAll,ShowGridHead,ValidateReq,DeferError,AuthRequired,ViewOnly,NeedRegen)'
++ char(13) + char(10) + 'INSERT dbo.Report (ProgramName,ReportDesc,OrientationCd,ReportTypeCd,TemplateName,RptTemplate,CopyReportId,TopMargin,BottomMargin,LeftMargin,RightMargin,PageHeight,PageWidth,UnitCd,WhereClause,RegClause,RegCode,ValClause,ValCode,UpdClause,UpdCode,XlsClause,XlsCode,GenerateRp,AllowSelect,ModifiedBy,ModifiedOn,LastGenDt,CompanyLs,NeedRegen,AuthRequired,CommandTimeOut)'
 + char(13) + char(10) + 'SELECT'
 + ' ' + RODesign.dbo.fNullCha(@c01)
-+ ',' + RODesign.dbo.fNullCha(@c02)
-+ ',' + RODesign.dbo.fNullInt(@i03)
-+ ',' + RODesign.dbo.fNullInt(@i04)
-+ ',' + RODesign.dbo.fNullInt(@i05)
-+ ',' + RODesign.dbo.fNullInt(@i06)
-+ ',' + RODesign.dbo.fNullInt(@i07)
-+ ',' + RODesign.dbo.fNullCha(@c07)
-+ ',' + RODesign.dbo.fNullInt(@i08)
-+ ',' + RODesign.dbo.fNullInt(@i09)
-+ ',' + RODesign.dbo.fNullInt(@i10)
-+ ',' + RODesign.dbo.fNullInt(@i11)
-+ ',' + RODesign.dbo.fNullCha(@c10)
-+ ',' + RODesign.dbo.fNullCha(@c11)
-+ ',' + RODesign.dbo.fNullCha(@c12)
-+ ',' + RODesign.dbo.fNullCha(@c13)
-+ ',' + RODesign.dbo.fNullCha(@c14)
-+ ',' + RODesign.dbo.fNullCha(@c15)
-+ ',' + RODesign.dbo.fNullCha(@c16)
-+ ',' + RODesign.dbo.fNullCha(@c17)
-+ ',' + RODesign.dbo.fNullCha(@c18)
-+ char(13) + char(10) + 'SELECT @ScreenId=@@IDENTITY'
-
-SELECT @c01=DefaultHlpMsg, @c02=FootNote, @c03=ScreenTitle, @c04=AddMsg, @c05=UpdMsg, @c06=DelMsg, @c07=IncrementMsg, @c08=MasterLstTitle
-	, @c09=MasterLstSubtitle, @c10=MasterRecTitle, @c11=MasterRecSubtitle, @c12=DetailLstTitle, @c13=DetailLstSubtitle, @c14=DetailRecTitle
-	, @c15=DetailRecSubtitle, @c16=NoMasterMsg, @c17=NoDetailMsg, @c18=AddMasterMsg, @c19=AddDetailMsg, @c20=MasterFoundMsg, @c21=DetailFoundMsg
-	FROM dbo.ScreenHlp WHERE ScreenId=@ScreenId AND CultureId=1
-SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* ScreenHlp */'
-+ char(13) + char(10) + 'INSERT dbo.ScreenHlp (ScreenId,CultureId,DefaultHlpMsg,FootNote,ScreenTitle,AddMsg,UpdMsg,DelMsg,IncrementMsg,MasterLstTitle,MasterLstSubtitle,MasterRecTitle,MasterRecSubtitle,DetailLstTitle,DetailLstSubtitle,DetailRecTitle,DetailRecSubtitle,NoMasterMsg,NoDetailMsg,AddMasterMsg,AddDetailMsg,MasterFoundMsg,DetailFoundMsg)'
-+ char(13) + char(10) + 'SELECT @ScreenId,1'
-+ ',' + RODesign.dbo.fNullCha(@c01)
 + ',' + RODesign.dbo.fNullCha(@c02)
 + ',' + RODesign.dbo.fNullCha(@c03)
 + ',' + RODesign.dbo.fNullCha(@c04)
 + ',' + RODesign.dbo.fNullCha(@c05)
-+ ',' + RODesign.dbo.fNullCha(@c06)
-+ ',' + RODesign.dbo.fNullCha(@c07)
-+ ',' + RODesign.dbo.fNullCha(@c08)
-+ ',' + RODesign.dbo.fNullCha(@c09)
-+ ',' + RODesign.dbo.fNullCha(@c10)
-+ ',' + RODesign.dbo.fNullCha(@c11)
-+ ',' + RODesign.dbo.fNullCha(@c12)
-+ ',' + RODesign.dbo.fNullCha(@c13)
++ ',' + RODesign.dbo.fNullInt(@i06)
++ ',' + RODesign.dbo.fNullInt(@i07)
++ ',' + RODesign.dbo.fNullDec(@d08)
++ ',' + RODesign.dbo.fNullDec(@d09)
++ ',' + RODesign.dbo.fNullDec(@d10)
++ ',' + RODesign.dbo.fNullDec(@d11)
++ ',' + RODesign.dbo.fNullDec(@d12)
++ ',' + RODesign.dbo.fNullDec(@d13)
 + ',' + RODesign.dbo.fNullCha(@c14)
 + ',' + RODesign.dbo.fNullCha(@c15)
 + ',' + RODesign.dbo.fNullCha(@c16)
@@ -74520,140 +74778,248 @@ SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Scr
 + ',' + RODesign.dbo.fNullCha(@c19)
 + ',' + RODesign.dbo.fNullCha(@c20)
 + ',' + RODesign.dbo.fNullCha(@c21)
++ ',' + RODesign.dbo.fNullCha(@c22)
++ ',' + RODesign.dbo.fNullCha(@c23)
++ ',' + RODesign.dbo.fNullCha(@c24)
++ ',' + RODesign.dbo.fNullCha(@c25)
++ ',NULL,NULL,NULL'
++ ',' + RODesign.dbo.fNullCha(@c29)
++ ',' + RODesign.dbo.fNullCha(@c30)
++ ',' + RODesign.dbo.fNullCha(@c31)
++ ',' + RODesign.dbo.fNullInt(@i32)
++ char(13) + char(10) + 'SELECT @ReportId=@@IDENTITY'
+
+SELECT @c41=DefaultHlpMsg, @c42=ReportTitle FROM dbo.ReportHlp WHERE ReportId=@ReportId AND CultureId=1
+SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* ReportHlp */'
++ char(13) + char(10) + 'INSERT dbo.ReportHlp (ReportId,CultureId,DefaultHlpMsg,ReportTitle)'
++ char(13) + char(10) + 'SELECT @ReportId,1' + ',' + RODesign.dbo.fNullCha(@c41) + ',' + RODesign.dbo.fNullCha(@c42)
 
 SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* ReportCri */'
-+ char(13) + char(10) + 'IF object_id(''tempdb.dbo.#crihlp'') is not null DROP TABLE dbo.#crihlp'
-+ char(13) + char(10) + 'CREATE TABLE #crihlp (OCriHlpId int NOT NULL, NCriHlpId int NOT NULL)'
++ char(13) + char(10) + 'IF object_id(''tempdb.dbo.#cri'') is not null DROP TABLE dbo.#cri'
++ char(13) + char(10) + 'CREATE TABLE #cri (OCriId int NOT NULL, NCriId int NOT NULL)'
 DECLARE cur02 CURSOR FAST_FORWARD FOR
-	SELECT ReportCriId,ReportCriDesc,LabelCss,ContentCss,TableId,TableAbbr,ColumnName,TabIndex,DataTypeId,DataTypeSize,DisplayModeId,ColumnSize,RowSize,DdlKeyColumnName,DdlRefColumnName,DdlSrtColumnName,DdlFtrColumnId,RequiredValid,DefaultValue,WhereClause,RegClause
+	SELECT ReportCriId,ReportCriDesc,ReportGrpId,LabelCss,ContentCss,TableId,TableAbbr,ColumnName,TabIndex,DataTypeId,DataTypeSize,DisplayModeId,ColumnSize,RowSize,DdlKeyColumnName,DdlRefColumnName,DdlSrtColumnName,DdlFtrColumnId,RequiredValid,DefaultValue,WhereClause,RegClause
 	FROM dbo.ReportCri
 	WHERE ReportId=@ReportId
 	FOR READ ONLY
-OPEN cur02 FETCH NEXT FROM cur02 INTO @ScreenCriId,@c01,@c02,@c03,@i04,@i05,@i06,@i07,@c08,@i09,@i10,@i11,@i12,@i13,@i14,@c15
+OPEN cur02 FETCH NEXT FROM cur02 INTO @ReportCriId,@c01,@i02,@c03,@c04,@i05,@c06,@c07,@i08,@i09,@i10,@i11,@i12,@i13,@c14,@c15,@c16,@i17,@c18,@c19,@c20,@c21
 WHILE @@FETCH_STATUS=0
 BEGIN
 	SELECT @iClause = @iClause + char(13) + char(10)
-		+ 'INSERT dbo.ReportCri (ReportId,ReportCriDesc,LabelCss,ContentCss,ColumnId,OperatorId,TabIndex,DisplayModeId,ColumnJustify,ColumnSize,RowSize,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlFtrColumnId,RequiredValid)'
+		+ 'INSERT dbo.ReportCri (ReportId,ReportCriDesc,ReportGrpId,LabelCss,ContentCss,TableId,TableAbbr,ColumnName,TabIndex,DataTypeId,DataTypeSize,DisplayModeId,ColumnSize,RowSize,DdlKeyColumnName,DdlRefColumnName,DdlSrtColumnName,DdlFtrColumnId,RequiredValid,DefaultValue,WhereClause,RegClause)'
 		+ char(13) + char(10) + 'SELECT @ReportId'
 		+ ',' + RODesign.dbo.fNullCha(@c01)
-		+ ',' + RODesign.dbo.fNullCha(@c02)
+		+ ',' + RODesign.dbo.fNullInt(@i02)
 		+ ',' + RODesign.dbo.fNullCha(@c03)
-		+ ',' + RODesign.dbo.fNullInt(@i04)
+		+ ',' + RODesign.dbo.fNullCha(@c04)
 		+ ',' + RODesign.dbo.fNullInt(@i05)
-		+ ',' + RODesign.dbo.fNullInt(@i06)
-		+ ',' + RODesign.dbo.fNullInt(@i07)
-		+ ',' + RODesign.dbo.fNullCha(@c08)
+		+ ',' + RODesign.dbo.fNullCha(@c06)
+		+ ',' + RODesign.dbo.fNullCha(@c07)
+		+ ',' + RODesign.dbo.fNullInt(@i08)
 		+ ',' + RODesign.dbo.fNullInt(@i09)
 		+ ',' + RODesign.dbo.fNullInt(@i10)
 		+ ',' + RODesign.dbo.fNullInt(@i11)
 		+ ',' + RODesign.dbo.fNullInt(@i12)
 		+ ',' + RODesign.dbo.fNullInt(@i13)
-		+ ',' + RODesign.dbo.fNullInt(@i14)
+		+ ',' + RODesign.dbo.fNullCha(@c14)
 		+ ',' + RODesign.dbo.fNullCha(@c15)
+		+ ',' + RODesign.dbo.fNullCha(@c16)
+		+ ',' + RODesign.dbo.fNullInt(@i17)
+		+ ',' + RODesign.dbo.fNullCha(@c18)
+		+ ',' + RODesign.dbo.fNullCha(@c19)
+		+ ',' + RODesign.dbo.fNullCha(@c20)
+		+ ',' + RODesign.dbo.fNullCha(@c21)
 		+ char(13) + char(10) + 'SELECT @ReportCriId=@@IDENTITY'
-	SELECT @i01=ScreenCriHlpId FROM dbo.ScreenCriHlp WHERE ScreenCriId=@ScreenCriId AND CultureId=1
-	SELECT @iClause = @iClause + char(13) + char(10) + 'INSERT dbo.ScreenCriHlp (ScreenCriHlpDesc,ScreenCriId,CultureId,ColumnHeader)'
-	+ char(13) + char(10) + 'SELECT ' + RODesign.dbo.fNullCha(@c01) + ',@ScreenCriId,1,' + RODesign.dbo.fNullCha(@c02)
-	+ char(13) + char(10) + 'SELECT @ScreenCriHlpId=@@IDENTITY'
-	+ char(13) + char(10) + 'INSERT INTO #crihlp (OCriHlpId,NCriHlpId) SELECT ' + CONVERT(varchar(10),@i01) + ',@ScreenCriHlpId'
-	FETCH NEXT FROM cur02 INTO @ScreenCriId,@c01,@c02,@c03,@i04,@i05,@i06,@i07,@c08,@i09,@i10,@i11,@i12,@i13,@i14,@c15
+		+ char(13) + char(10) + 'INSERT INTO #cri (OCriId,NCriId) SELECT ' + CONVERT(varchar(10),@ReportCriId) + ',@ReportCriId'
+	IF @i05 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* TableId */' + dbo.fTable(@i05,'UPDATE dbo.ReportCri SET TableId=@TableId WHERE ReportCriId=@ReportCriId')
+	IF @i17 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlFtrColumnId */' + dbo.fColumn(@i17,'UPDATE dbo.ReportCri SET DdlFtrColumnId=@ColumnId WHERE ReportCriId=@ReportCriId')
+	SELECT @c22=ReportCriHlpDesc,@c23=ColumnHeader FROM dbo.ReportCriHlp WHERE ReportCriId=@ReportCriId AND CultureId=1
+	SELECT @iClause = @iClause + char(13) + char(10) + 'INSERT dbo.ReportCriHlp (ReportCriHlpDesc,ReportCriId,CultureId,ColumnHeader)'
+	+ char(13) + char(10) + 'SELECT ' + RODesign.dbo.fNullCha(@c22) + ',@ReportCriId,1,' + RODesign.dbo.fNullCha(@c23)
+	FETCH NEXT FROM cur02 INTO @ReportCriId,@c01,@i02,@c03,@c04,@i05,@c06,@c07,@i08,@i09,@i10,@i11,@i12,@i13,@c14,@c15,@c16,@i17,@c18,@c19,@c20,@c21
 END
 CLOSE cur02 DEALLOCATE cur02
-*/
-/*
+
 SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* ReportObj */'
-+ char(13) + char(10) + 'IF object_id(''tempdb.dbo.#obj'') is not null DROP TABLE dbo.#obj'
-+ char(13) + char(10) + 'CREATE TABLE #obj (OObjId int NOT NULL, NObjId int NOT NULL)'
-+ char(13) + char(10) + 'IF object_id(''tempdb.dbo.#objhlp'') is not null DROP TABLE dbo.#objhlp'
-+ char(13) + char(10) + 'CREATE TABLE #objhlp (OObjHlpId int NOT NULL, NObjHlpId int NOT NULL)'
-DECLARE cur04 CURSOR FAST_FORWARD FOR
-	SELECT ScreenObjId,MasterTable,NewGroupRow,GroupRowId,GroupColId,LabelVertical,LabelCss,ContentCss,ColumnId,ColumnName,ColumnDesc
-		,DefaultValue,HyperLinkUrl,DefAfter,SystemValue,DefAlways,ColumnWrap,GridGrpCd,HideOnTablet,HideOnMobile,ColumnJustify
-		,ColumnSize,ColumnHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId,DdlFtrColumnId,AggregateCd,GenerateSp
-		,TabFolderId,TabIndex,SortOrder,RequiredValid,MaskValid,RangeValidType,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD
-		,TrimOnEntry,MatchCd,IgnoreConfirm
-	FROM dbo.ScreenObj
-	WHERE ScreenId=@ScreenId ORDER BY TabIndex
+DECLARE cur03 CURSOR FAST_FORWARD FOR
+	SELECT ReportObjId,RptObjTypeCd,ColumnName,ColumnDesc,TabIndex,ColumnFormat,PaddSize,PaddChar,DataTypeId,OperatorId,ReportCriId
+	FROM dbo.ReportObj
+	WHERE ReportId=@ReportId
 	FOR READ ONLY
-OPEN cur04 FETCH NEXT FROM cur04 INTO @ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@c29,@c30,@i31,@i32,@i33,@c34,@c35,@c36,@c37,@c38,@c39,@c40,@c41,@c42,@c43
+OPEN cur03 FETCH NEXT FROM cur03 INTO @ReportObjId,@c01,@c02,@c03,@i04,@c05,@i06,@c07,@i08,@i09,@i10
 WHILE @@FETCH_STATUS=0
 BEGIN
-	IF @c06 is not null SELECT @NewCSS = @NewCSS + '; ' + @c06
-	IF @c07 is not null SELECT @NewCSS = @NewCSS + '; ' + @c07
-	IF @i31 IS NOT NULL	-- ScreenTabId map
-		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ScreenTabId=NTabId FROM #tab WHERE OTabId=' + CONVERT(varchar(10),@i31)
+	IF @i10 IS NOT NULL	-- ReportCriId map
+		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ReportCriId=NCriId FROM #cri WHERE OCriId=' + CONVERT(varchar(10),@i10)
 	ELSE
-		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ScreenTabId=NULL'
+		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ReportCriId=NULL'
 	SELECT @iClause = @iClause + char(13) + char(10)
-		+ 'INSERT dbo.ScreenObj (ScreenId,MasterTable,NewGroupRow,GroupRowId,GroupColId,LabelVertical,LabelCss,ContentCss,ColumnId,ColumnName,ColumnDesc,DefaultValue,HyperLinkUrl,DefAfter,SystemValue,DefAlways,ColumnWrap,GridGrpCd,HideOnTablet,HideOnMobile,ColumnJustify,ColumnSize,ColumnHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId,DdlFtrColumnId,AggregateCd,GenerateSp,TabFolderId,TabIndex,SortOrder,RequiredValid,MaskValid,RangeValidType,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD,TrimOnEntry,MatchCd,IgnoreConfirm)'
-		+ char(13) + char(10) + 'SELECT @ScreenId'
+		+ 'INSERT dbo.ReportObj (ReportId,RptObjTypeCd,ColumnName,ColumnDesc,TabIndex,ColumnFormat,PaddSize,PaddChar,DataTypeId,OperatorId,ReportCriId)'
+		+ char(13) + char(10) + 'SELECT @ReportId'
 		+ ',' + RODesign.dbo.fNullCha(@c01)
 		+ ',' + RODesign.dbo.fNullCha(@c02)
+		+ ',' + RODesign.dbo.fNullCha(@c03)
+		+ ',' + RODesign.dbo.fNullInt(@i04)
+		+ ',' + RODesign.dbo.fNullCha(@c05)
+		+ ',' + RODesign.dbo.fNullInt(@i06)
+		+ ',' + RODesign.dbo.fNullCha(@c07)
+		+ ',' + RODesign.dbo.fNullInt(@i08)
+		+ ',' + RODesign.dbo.fNullInt(@i09)
+		+ ',' + RODesign.dbo.fNullInt(@i10)
+		+ char(13) + char(10) + 'SELECT @ReportObjId=@@IDENTITY'
+	SELECT @c11=ReportObjHlpDesc,@c12=ColumnHeader,@i13=HeaderWidth FROM dbo.ReportObjHlp WHERE ReportObjId=@ReportObjId AND CultureId=1
+	SELECT @iClause = @iClause + char(13) + char(10) + 'INSERT dbo.ReportObjHlp (ReportObjHlpDesc,ReportObjId,CultureId,ColumnHeader,HeaderWidth)'
+	+ char(13) + char(10) + 'SELECT ' + RODesign.dbo.fNullCha(@c11) + ',@ReportObjId,1,' + RODesign.dbo.fNullCha(@c12) + ',' + RODesign.dbo.fNullInt(@i13)
+	FETCH NEXT FROM cur03 INTO @ReportObjId,@c01,@c02,@c03,@i04,@c05,@i06,@c07,@i08,@i09,@i10
+END
+CLOSE cur03 DEALLOCATE cur03
+
+SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* RptElm */'
++ char(13) + char(10) + 'IF object_id(''tempdb.dbo.#elm'') is not null DROP TABLE dbo.#elm'
++ char(13) + char(10) + 'CREATE TABLE #elm (OElmId int NOT NULL, NElmId int NOT NULL)'
+DECLARE cur04 CURSOR FAST_FORWARD FOR
+	SELECT RptElmId,RptElmDesc,RptElmTypeCd,RptStyleId,ElmHeight,ElmColumns,ElmColSpacing,ElmPrintFirst,ElmPrintLast
+	FROM dbo.RptElm
+	WHERE ReportId=@ReportId
+	FOR READ ONLY
+OPEN cur04 FETCH NEXT FROM cur04 INTO @RptElmId,@c01,@c02,@i03,@d04,@i05,@d06,@c07,@c08
+WHILE @@FETCH_STATUS=0
+BEGIN
+	SELECT @iClause = @iClause + char(13) + char(10)
+		+ 'INSERT dbo.RptElm (ReportId,RptElmDesc,RptElmTypeCd,RptStyleId,ElmHeight,ElmColumns,ElmColSpacing,ElmPrintFirst,ElmPrintLast)'
+		+ char(13) + char(10) + 'SELECT @ReportId'
+		+ ',' + RODesign.dbo.fNullCha(@c01)
+		+ ',' + RODesign.dbo.fNullCha(@c02)
+		+ ',' + RODesign.dbo.fNullInt(@i03)
+		+ ',' + RODesign.dbo.fNullDec(@d04)
+		+ ',' + RODesign.dbo.fNullInt(@i05)
+		+ ',' + RODesign.dbo.fNullDec(@d06)
+		+ ',' + RODesign.dbo.fNullCha(@c07)
+		+ ',' + RODesign.dbo.fNullCha(@c08)
+		+ char(13) + char(10) + 'SELECT @RptElmId=@@IDENTITY'
+		+ char(13) + char(10) + 'INSERT INTO #elm (OElmId,NElmId) SELECT ' + CONVERT(varchar(10),@RptElmId) + ',@RptElmId'
+	FETCH NEXT FROM cur04 INTO @RptElmId,@c01,@c02,@i03,@d04,@i05,@d06,@c07,@c08
+END
+CLOSE cur04 DEALLOCATE cur04
+
+SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* RptCtr */'
++ char(13) + char(10) + 'IF object_id(''tempdb.dbo.#ctr'') is not null DROP TABLE dbo.#ctr'
++ char(13) + char(10) + 'CREATE TABLE #ctr (OCtrId int NOT NULL, NCtrId int NOT NULL)'
+DECLARE cur05 CURSOR FAST_FORWARD FOR
+	SELECT RptCtrId,RptCtrDesc,PRptCtrId,RptElmId,RptCelId,RptCtrTypeCd,RptCtrName,RptStyleId,CtrTop,CtrLeft,CtrHeight,CtrWidth,CtrZIndex,CtrAction,CtrGrouping,CtrVisibility,CtrToggle,CtrToolTip,CtrPgBrStart,CtrPgBrEnd,CtrValue,CtrCanGrow,CtrCanShrink,CtrTogether
+	FROM dbo.RptCtr
+	WHERE ReportId=@ReportId
+	FOR READ ONLY
+OPEN cur05 FETCH NEXT FROM cur05 INTO @RptCtrId,@c01,@i02,@i03,@i04,@c05,@c06,@i07,@d08,@d09,@d10,@d11,@i12,@c13,@i14,@c15,@i16,@c17,@c18,@c19,@c20,@c21,@c22,@c23
+WHILE @@FETCH_STATUS=0
+BEGIN
+	SELECT @iClause = @iClause + char(13) + char(10)
+		+ 'INSERT dbo.RptCtr (ReportId,RptCtrDesc,PRptCtrId,RptElmId,RptCelId,RptCtrTypeCd,RptCtrName,RptStyleId,CtrTop,CtrLeft,CtrHeight,CtrWidth,CtrZIndex,CtrAction,CtrGrouping,CtrVisibility,CtrToggle,CtrToolTip,CtrPgBrStart,CtrPgBrEnd,CtrValue,CtrCanGrow,CtrCanShrink,CtrTogether)'
+		+ char(13) + char(10) + 'SELECT @ReportId'
+		+ ',' + RODesign.dbo.fNullCha(@c01)
+		+ ',' + RODesign.dbo.fNullInt(@i02)
 		+ ',' + RODesign.dbo.fNullInt(@i03)
 		+ ',' + RODesign.dbo.fNullInt(@i04)
 		+ ',' + RODesign.dbo.fNullCha(@c05)
 		+ ',' + RODesign.dbo.fNullCha(@c06)
-		+ ',' + RODesign.dbo.fNullCha(@c07)
-		+ ',' + RODesign.dbo.fNullInt(@i08)
-		+ ',' + RODesign.dbo.fNullCha(@c09)
-		+ ',' + RODesign.dbo.fNullCha(@c10)
-		+ ',' + RODesign.dbo.fNullCha(@c11)
-		+ ',' + RODesign.dbo.fNullCha(@c12)
+		+ ',' + RODesign.dbo.fNullInt(@i07)
+		+ ',' + RODesign.dbo.fNullDec(@d08)
+		+ ',' + RODesign.dbo.fNullDec(@d09)
+		+ ',' + RODesign.dbo.fNullDec(@d10)
+		+ ',' + RODesign.dbo.fNullDec(@d11)
+		+ ',' + RODesign.dbo.fNullInt(@i12)
 		+ ',' + RODesign.dbo.fNullCha(@c13)
-		+ ',' + RODesign.dbo.fNullCha(@c14)
+		+ ',' + RODesign.dbo.fNullInt(@i14)
 		+ ',' + RODesign.dbo.fNullCha(@c15)
-		+ ',' + RODesign.dbo.fNullCha(@c16)
+		+ ',' + RODesign.dbo.fNullInt(@i16)
 		+ ',' + RODesign.dbo.fNullCha(@c17)
 		+ ',' + RODesign.dbo.fNullCha(@c18)
 		+ ',' + RODesign.dbo.fNullCha(@c19)
 		+ ',' + RODesign.dbo.fNullCha(@c20)
-		+ ',' + RODesign.dbo.fNullInt(@i21)
-		+ ',' + RODesign.dbo.fNullInt(@i22)
-		+ ',' + RODesign.dbo.fNullInt(@i23)
-		+ ',' + RODesign.dbo.fNullInt(@i24)
-		+ ',' + RODesign.dbo.fNullInt(@i25)
-		+ ',' + RODesign.dbo.fNullInt(@i26)
-		+ ',' + RODesign.dbo.fNullInt(@i27)
-		+ ',' + RODesign.dbo.fNullInt(@i28)
-		+ ',' + RODesign.dbo.fNullCha(@c29)
-		+ ',' + RODesign.dbo.fNullCha(@c30)
-		+ ',@ScreenTabId'
-		+ ',' + RODesign.dbo.fNullInt(@i32)
-		+ ',' + RODesign.dbo.fNullInt(@i33)
-		+ ',' + RODesign.dbo.fNullCha(@c34)
-		+ ',' + RODesign.dbo.fNullCha(@c35)
-		+ ',' + RODesign.dbo.fNullCha(@c36)
-		+ ',' + RODesign.dbo.fNullCha(@c37)
-		+ ',' + RODesign.dbo.fNullCha(@c38)
-		+ ',' + RODesign.dbo.fNullCha(@c39)
-		+ ',' + RODesign.dbo.fNullCha(@c40)
-		+ ',' + RODesign.dbo.fNullCha(@c41)
-		+ ',' + RODesign.dbo.fNullCha(@c42)
-		+ ',' + RODesign.dbo.fNullCha(@c43)
-		+ char(13) + char(10) + 'SELECT @ScreenObjId=@@IDENTITY'
-	+ char(13) + char(10) + 'INSERT INTO #obj (OObjId,NObjId) SELECT ' + CONVERT(varchar(10),@ScreenObjId) + ',@ScreenObjId'
-	IF @i08 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* ColumnId */' + dbo.fColumn(@i08,'UPDATE dbo.ScreenObj SET ColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i24 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlKeyColumnId */' + dbo.fColumn(@i24,'UPDATE dbo.ScreenObj SET DdlKeyColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i25 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlRefColumnId */' + dbo.fColumn(@i25,'UPDATE dbo.ScreenObj SET DdlRefColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i26 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlSrtColumnId */' + dbo.fColumn(@i26,'UPDATE dbo.ScreenObj SET DdlSrtColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i27 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlAdnColumnId */' + dbo.fColumn(@i27,'UPDATE dbo.ScreenObj SET DdlAdnColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i28 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlFtrColumnId */' + dbo.fColumn(@i28,'UPDATE dbo.ScreenObj SET DdlFtrColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	SELECT @i01=ScreenObjHlpId, @c01=ScreenObjHlpDesc, @c02=ColumnHeader, @c03=ToolTip, @c04=ErrMessage, @c05=TbHint FROM dbo.ScreenObjHlp WHERE ScreenObjId=@ScreenObjId AND CultureId=1
-	SELECT @iClause = @iClause + char(13) + char(10) + 'INSERT dbo.ScreenObjHlp (ScreenObjId,CultureId,ScreenObjHlpDesc,ColumnHeader,ToolTip,ErrMessage,TbHint)'
-	+ char(13) + char(10) + 'SELECT @ScreenObjId,1,' + RODesign.dbo.fNullCha(@c01) + ',' + RODesign.dbo.fNullCha(@c02) + ',' + RODesign.dbo.fNullCha(@c03) + ',' + RODesign.dbo.fNullCha(@c04) + ',' + RODesign.dbo.fNullCha(@c05)
-	+ char(13) + char(10) + 'SELECT @ScreenObjHlpId=@@IDENTITY'
-	+ char(13) + char(10) + 'INSERT INTO #objhlp (OObjHlpId,NObjHlpId) SELECT ' + CONVERT(varchar(10),@i01) + ',@ScreenObjHlpId'
-	FETCH NEXT FROM cur04 INTO @ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@c29,@c30,@i31,@i32,@i33,@c34,@c35,@c36,@c37,@c38,@c39,@c40,@c41,@c42,@c43
+		+ ',' + RODesign.dbo.fNullCha(@c21)
+		+ ',' + RODesign.dbo.fNullCha(@c22)
+		+ ',' + RODesign.dbo.fNullCha(@c23)
+		+ char(13) + char(10) + 'SELECT @RptCtrId=@@IDENTITY'
+		+ char(13) + char(10) + 'INSERT INTO #ctr (OCtrId,NCtrId) SELECT ' + CONVERT(varchar(10),@RptCtrId) + ',@RptCtrId'
+	FETCH NEXT FROM cur05 INTO @RptCtrId,@c01,@i02,@i03,@i04,@c05,@c06,@i07,@d08,@d09,@d10,@d11,@i12,@c13,@i14,@c15,@i16,@c17,@c18,@c19,@c20,@c21,@c22,@c23
 END
-CLOSE cur04 DEALLOCATE cur04
-*/
+CLOSE cur05 DEALLOCATE cur05
+
+SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* RptTbl */'
++ char(13) + char(10) + 'IF object_id(''tempdb.dbo.#cel'') is not null DROP TABLE dbo.#cel'
++ char(13) + char(10) + 'CREATE TABLE #cel (OCelId int NOT NULL, NCelId int NOT NULL)'
+DECLARE cur06 CURSOR FAST_FORWARD FOR
+	SELECT RptTblId,RptTblDesc,ParentId,RptCtrId,RptTblTypeCd,TblRepeatNew,TblOrder,ColWidth,TblGrouping,TblVisibility,TblToggle
+	FROM dbo.RptTbl
+	WHERE ReportId=@ReportId
+	FOR READ ONLY
+OPEN cur06 FETCH NEXT FROM cur06 INTO @RptTblId,@c01,@i02,@i03,@c04,@c05,@i06,@d07,@i08,@c09,@i10
+WHILE @@FETCH_STATUS=0
+BEGIN
+	SELECT @iClause = @iClause + char(13) + char(10)
+		+ 'INSERT dbo.RptTbl (ReportId,RptTblDesc,ParentId,RptCtrId,RptTblTypeCd,TblRepeatNew,TblOrder,ColWidth,TblGrouping,TblVisibility,TblToggle)'
+		+ char(13) + char(10) + 'SELECT @ReportId'
+		+ ',' + RODesign.dbo.fNullCha(@c01)
+		+ ',' + RODesign.dbo.fNullInt(@i02)
+		+ ',' + RODesign.dbo.fNullInt(@i03)
+		+ ',' + RODesign.dbo.fNullCha(@c04)
+		+ ',' + RODesign.dbo.fNullCha(@c05)
+		+ ',' + RODesign.dbo.fNullInt(@i06)
+		+ ',' + RODesign.dbo.fNullDec(@d07)
+		+ ',' + RODesign.dbo.fNullInt(@i08)
+		+ ',' + RODesign.dbo.fNullCha(@c09)
+		+ ',' + RODesign.dbo.fNullInt(@i10)
+		+ char(13) + char(10) + 'SELECT @RptTblId=@@IDENTITY'
+
+	DECLARE cur07 CURSOR FAST_FORWARD FOR
+		SELECT RptCelId,RptCelDesc,RowNum,RowHeight,RowVisibility,CelNum,CelColSpan
+		FROM dbo.RptCel
+		WHERE RptTblId=@RptTblId
+		FOR READ ONLY
+	OPEN cur07 FETCH NEXT FROM cur07 INTO @RptTblId,@c01,@i02,@d03,@c04,@i05,@i06
+	WHILE @@FETCH_STATUS=0
+	BEGIN
+		SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* RptCel */'
+			+ char(13) + char(10)
+			+ 'INSERT dbo.RptCel (RptTblId,RptCelDesc,RowNum,RowHeight,RowVisibility,CelNum,CelColSpan)'
+			+ char(13) + char(10) + 'SELECT @RptTblId'
+			+ ',' + RODesign.dbo.fNullCha(@c01)
+			+ ',' + RODesign.dbo.fNullInt(@i02)
+			+ ',' + RODesign.dbo.fNullDec(@d03)
+			+ ',' + RODesign.dbo.fNullCha(@c04)
+			+ ',' + RODesign.dbo.fNullInt(@i05)
+			+ ',' + RODesign.dbo.fNullInt(@i06)
+			+ char(13) + char(10) + 'SELECT @RptCelId=@@IDENTITY'
+			+ char(13) + char(10) + 'INSERT INTO #cel (OCelId,NCelId) SELECT ' + CONVERT(varchar(10),@RptCtrId) + ',@RptCelId'
+			FETCH NEXT FROM cur07 INTO @RptTblId,@c01,@i02,@d03,@c04,@i05,@i06
+	END
+	CLOSE cur07 DEALLOCATE cur07
+
+	FETCH NEXT FROM cur06 INTO @RptTblId,@c01,@i02,@i03,@c04,@c05,@i06,@d07,@i08,@c09,@i10
+END
+CLOSE cur06 DEALLOCATE cur06
+
+SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Update RptCtr */'
++ char(13) + char(10) + 'DECLARE cur0 CURSOR FAST_FORWARD FOR SELECT RptCtrId,PRptCtrId,RptElmId,RptCelId FROM dbo.RptCtr WHERE ReportId = @ReportId FOR READ ONLY'
++ char(13) + char(10) + 'OPEN cur0 FETCH NEXT FROM cur0 INTO @RptCtrId,@PRptCtrId,@RptElmId,@RptCelId'
++ char(13) + char(10) + 'WHILE @@FETCH_STATUS=0'
++ char(13) + char(10) + 'BEGIN'
++ char(13) + char(10) + 'UPDATE dbo.RptCtr SET'
++ char(13) + char(10) + '  PRptCtrId = (SELECT NCtrId FROM #ctr WHERE OCtrId = @PRptCtrId)'
++ char(13) + char(10) + ', RptElmId = (SELECT NElmId FROM #elm WHERE OElmId = @RptElmId)'
++ char(13) + char(10) + ', RptCelId = (SELECT NCelId FROM #cel WHERE OCelId = @RptCelId)'
++ char(13) + char(10) + 'WHERE RptCtrId = @RptCtrId'
++ char(13) + char(10) + 'FETCH NEXT FROM cur0 INTO @RptCtrId,@PRptCtrId,@RptElmId,@RptCelId'
++ char(13) + char(10) + 'END'
++ char(13) + char(10) + 'CLOSE cur0 DEALLOCATE cur0'
 
 SELECT @iClause = @iClause + char(13) + char(10)
-+ char(13) + char(10) + 'DROP TABLE dbo.#crihlp'
-+ char(13) + char(10) + 'DROP TABLE dbo.#obj'
-+ char(13) + char(10) + 'DROP TABLE dbo.#objhlp'
++ char(13) + char(10) + 'DROP TABLE dbo.#cri'
++ char(13) + char(10) + 'DROP TABLE dbo.#elm'
++ char(13) + char(10) + 'DROP TABLE dbo.#ctr'
++ char(13) + char(10) + 'DROP TABLE dbo.#cel'
 + char(13) + char(10) + char(13) + char(10) + '/* WARNINGS */'
-+ char(13) + char(10) + '/* Please search and change screen ProgramName if necessary before running this script; */'
++ char(13) + char(10) + '/* Please search and change Report ProgramName if necessary before running this script; */'
 + char(13) + char(10) + '/* Check to see if Data Column has been added; get ready to push to physical database if yes; */'
 + char(13) + char(10) + '/* Check to see if Data Table has been added; if yes (ModifiedBy is null), verify SystemId and content of function/view and get ready to push to physical database; */'
 SELECT (@iClause)
@@ -74672,7 +75038,6 @@ ALTER PROCEDURE [dbo].[WrCloneScreen]
  @ScreenId		int
 /* WITH ENCRYPTION */
 AS
--- DSearchId, DSearchIdR, DSearchDtlId and DSearchDtlIdR may need to be added:
 DECLARE	 @iClause nvarchar(max), @rClause nvarchar(max), @HasRule char(1), @NewCSS nvarchar(max)
 		,@ScreenFilterId int, @ScreenCriId int, @ScreenTabId int, @ScreenObjId int
 		,@i01 int, @i02 int, @i03 int, @i04 int, @i05 int, @i06 int, @i07 int, @i08 int, @i09 int, @i10 int
@@ -74688,7 +75053,7 @@ DECLARE	 @iClause nvarchar(max), @rClause nvarchar(max), @HasRule char(1), @NewC
 SET NOCOUNT ON
 SELECT @rClause = ''
 SELECT @iClause = 'DECLARE @ScreenId int, @ScreenFilterId int, @ScreenCriId int, @ScreenTabId int, @ScreenObjId int, @TableId int, @ColumnId int, @DdlKeyColumnId int, @DdlRefColumnId int, @DdlSrtColumnId int, @DdlAdnColumnId int, @DdlFtrColumnId int, @ScreenObjHlpId int, @ScreenCriHlpId int'
-SELECT @c01=ProgramName, @c02=ScreenDesc, @i03=ScreenTypeId, @i04=MasterTableId, @i05=DetailTableId, @i06=SearchTableId, @i07=SearchId, @c07=SearchAscending, @i08=SearchIdR, @i09=SearchDtlId, @i10=SearchDtlIdR, @i11=SearchUrlId, @i12=SearchImgId, @i13=GridRows, @c14=ScreenObj, @c15=ScreenFilter, @c16=GenerateSc, @c17=GenerateSr, @c18=ReactGenerated, @c19=HasDeleteAll, @c20=ShowGridHead, @c21=ValidateReq, @c22=DeferError, @c23=AuthRequired, @c24=ViewOnly, @c25=GenAudit, @c26=NeedRegen, @c27=NeedReactRegen
+SELECT @c01=ProgramName, @c02=ScreenDesc, @i03=ScreenTypeId, @i04=MasterTableId, @i05=DetailTableId, @i06=SearchTableId, @i07=SearchId, @c08=SearchAscending, @i09=SearchIdR, @i10=SearchDtlId, @i11=SearchDtlIdR, @i12=SearchUrlId, @i13=SearchImgId, @i14=GridRows, @c15=ScreenObj, @c16=ScreenFilter, @c17=GenerateSc, @c18=GenerateSr, @c19=ReactGenerated, @c20=HasDeleteAll, @c21=ShowGridHead, @c22=ValidateReq, @c23=DeferError, @c24=AuthRequired, @c25=ViewOnly, @c26=GenAudit, @c27=NeedRegen, @c28=NeedReactRegen
 	FROM dbo.Screen WHERE ScreenId=@ScreenId
 SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Screen */'
 + char(13) + char(10) + 'INSERT dbo.Screen (ProgramName,ScreenDesc,ScreenTypeId,MasterTableId,DetailTableId,SearchTableId,SearchId,SearchAscending,SearchIdR,SearchDtlId,SearchDtlIdR,SearchUrlId,SearchImgId,GridRows,ScreenObj,ScreenFilter,GenerateSc,GenerateSr,ReactGenerated,HasDeleteAll,ShowGridHead,ValidateReq,DeferError,AuthRequired,ViewOnly,GenAudit,NeedRegen,NeedReactRegen)'
@@ -74700,14 +75065,13 @@ SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Scr
 + ',' + RODesign.dbo.fNullInt(@i05)
 + ',' + RODesign.dbo.fNullInt(@i06)
 + ',' + RODesign.dbo.fNullInt(@i07)
-+ ',' + RODesign.dbo.fNullCha(@c07)
-+ ',' + RODesign.dbo.fNullInt(@i08)
++ ',' + RODesign.dbo.fNullCha(@c08)
 + ',' + RODesign.dbo.fNullInt(@i09)
 + ',' + RODesign.dbo.fNullInt(@i10)
 + ',' + RODesign.dbo.fNullInt(@i11)
 + ',' + RODesign.dbo.fNullInt(@i12)
 + ',' + RODesign.dbo.fNullInt(@i13)
-+ ',' + RODesign.dbo.fNullCha(@c14)
++ ',' + RODesign.dbo.fNullInt(@i14)
 + ',' + RODesign.dbo.fNullCha(@c15)
 + ',' + RODesign.dbo.fNullCha(@c16)
 + ',' + RODesign.dbo.fNullCha(@c17)
@@ -74721,10 +75085,11 @@ SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Scr
 + ',' + RODesign.dbo.fNullCha(@c25)
 + ',' + RODesign.dbo.fNullCha(@c26)
 + ',' + RODesign.dbo.fNullCha(@c27)
++ ',' + RODesign.dbo.fNullCha(@c28)
 + char(13) + char(10) + 'SELECT @ScreenId=@@IDENTITY'
 IF @i04 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* MasterTableId */' + dbo.fTable(@i04,'UPDATE dbo.Screen SET MasterTableId=@TableId WHERE ScreenId=@ScreenId')
 IF @i05 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DetailTableId */' + dbo.fTable(@i05,'UPDATE dbo.Screen SET DetailTableId=@TableId WHERE ScreenId=@ScreenId')
-IF @i06 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* SearchId */' + dbo.fColumn(@i07,'UPDATE dbo.Screen SET SearchId=@ColumnId WHERE ScreenId=@ScreenId')
+IF @i07 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* SearchId */' + dbo.fColumn(@i07,'UPDATE dbo.Screen SET SearchId=@ColumnId WHERE ScreenId=@ScreenId')
 
 SELECT @c01=DefaultHlpMsg, @c02=FootNote, @c03=ScreenTitle, @c04=AddMsg, @c05=UpdMsg, @c06=DelMsg, @c07=IncrementMsg, @c08=MasterLstTitle
 	, @c09=MasterLstSubtitle, @c10=MasterRecTitle, @c11=MasterRecSubtitle, @c12=DetailLstTitle, @c13=DetailLstSubtitle, @c14=DetailRecTitle
@@ -74854,13 +75219,13 @@ SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Scr
 DECLARE cur04 CURSOR FAST_FORWARD FOR
 	SELECT ScreenObjId,MasterTable,NewGroupRow,GroupRowId,GroupColId,LabelVertical,LabelCss,ContentCss,ColumnId,ColumnName,ColumnDesc
 		,DefaultValue,HyperLinkUrl,DefAfter,SystemValue,DefAlways,ColumnWrap,GridGrpCd,HideOnTablet,HideOnMobile,ColumnJustify
-		,ColumnSize,ColumnHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId,DdlFtrColumnId,AggregateCd,GenerateSp
-		,TabFolderId,TabIndex,SortOrder,RequiredValid,MaskValid,RangeValidType,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD
+		,ColumnSize,ResizeWidth,ColumnHeight,ResizeHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId,DdlFtrColumnId,AggregateCd,GenerateSp
+		,TabFolderId,TabIndex,SortOrder,DtlLstPosId,RequiredValid,MaskValid,RangeValidType,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD
 		,TrimOnEntry,MatchCd,IgnoreConfirm
 	FROM dbo.ScreenObj
 	WHERE ScreenId=@ScreenId ORDER BY TabIndex
 	FOR READ ONLY
-OPEN cur04 FETCH NEXT FROM cur04 INTO @ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@c29,@c30,@i31,@i32,@i33,@c34,@c35,@c36,@c37,@c38,@c39,@c40,@c41,@c42,@c43
+OPEN cur04 FETCH NEXT FROM cur04 INTO @ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@i29,@i30,@c31,@c32,@i33,@i34,@i35,@i36,@c37,@c38,@c39,@c40,@c41,@c42,@c43,@c44,@c45,@c46
 WHILE @@FETCH_STATUS=0
 BEGIN
 	IF @c06 is not null SELECT @NewCSS = @NewCSS + '; ' + @c06
@@ -74870,7 +75235,7 @@ BEGIN
 	ELSE
 		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ScreenTabId=NULL'
 	SELECT @iClause = @iClause + char(13) + char(10)
-		+ 'INSERT dbo.ScreenObj (ScreenId,MasterTable,NewGroupRow,GroupRowId,GroupColId,LabelVertical,LabelCss,ContentCss,ColumnId,ColumnName,ColumnDesc,DefaultValue,HyperLinkUrl,DefAfter,SystemValue,DefAlways,ColumnWrap,GridGrpCd,HideOnTablet,HideOnMobile,ColumnJustify,ColumnSize,ColumnHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId,DdlFtrColumnId,AggregateCd,GenerateSp,TabFolderId,TabIndex,SortOrder,RequiredValid,MaskValid,RangeValidType,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD,TrimOnEntry,MatchCd,IgnoreConfirm)'
+		+ 'INSERT dbo.ScreenObj (ScreenId,MasterTable,NewGroupRow,GroupRowId,GroupColId,LabelVertical,LabelCss,ContentCss,ColumnId,ColumnName,ColumnDesc,DefaultValue,HyperLinkUrl,DefAfter,SystemValue,DefAlways,ColumnWrap,GridGrpCd,HideOnTablet,HideOnMobile,ColumnJustify,ColumnSize,ResizeWidth,ColumnHeight,ResizeHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId,DdlFtrColumnId,AggregateCd,GenerateSp,TabFolderId,TabIndex,SortOrder,DtlLstPosId,RequiredValid,MaskValid,RangeValidType,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD,TrimOnEntry,MatchCd,IgnoreConfirm)'
 		+ char(13) + char(10) + 'SELECT @ScreenId'
 		+ ',' + RODesign.dbo.fNullCha(@c01)
 		+ ',' + RODesign.dbo.fNullCha(@c02)
@@ -74900,14 +75265,14 @@ BEGIN
 		+ ',' + RODesign.dbo.fNullInt(@i26)
 		+ ',' + RODesign.dbo.fNullInt(@i27)
 		+ ',' + RODesign.dbo.fNullInt(@i28)
-		+ ',' + RODesign.dbo.fNullCha(@c29)
-		+ ',' + RODesign.dbo.fNullCha(@c30)
+		+ ',' + RODesign.dbo.fNullInt(@i29)
+		+ ',' + RODesign.dbo.fNullInt(@i30)
+		+ ',' + RODesign.dbo.fNullCha(@c31)
+		+ ',' + RODesign.dbo.fNullCha(@c32)
 		+ ',@ScreenTabId'
-		+ ',' + RODesign.dbo.fNullInt(@i32)
-		+ ',' + RODesign.dbo.fNullInt(@i33)
-		+ ',' + RODesign.dbo.fNullCha(@c34)
-		+ ',' + RODesign.dbo.fNullCha(@c35)
-		+ ',' + RODesign.dbo.fNullCha(@c36)
+		+ ',' + RODesign.dbo.fNullInt(@i34)
+		+ ',' + RODesign.dbo.fNullInt(@i35)
+		+ ',' + RODesign.dbo.fNullInt(@i36)
 		+ ',' + RODesign.dbo.fNullCha(@c37)
 		+ ',' + RODesign.dbo.fNullCha(@c38)
 		+ ',' + RODesign.dbo.fNullCha(@c39)
@@ -74915,20 +75280,23 @@ BEGIN
 		+ ',' + RODesign.dbo.fNullCha(@c41)
 		+ ',' + RODesign.dbo.fNullCha(@c42)
 		+ ',' + RODesign.dbo.fNullCha(@c43)
+		+ ',' + RODesign.dbo.fNullCha(@c44)
+		+ ',' + RODesign.dbo.fNullCha(@c45)
+		+ ',' + RODesign.dbo.fNullCha(@c46)
 		+ char(13) + char(10) + 'SELECT @ScreenObjId=@@IDENTITY'
 	+ char(13) + char(10) + 'INSERT INTO #obj (OObjId,NObjId) SELECT ' + CONVERT(varchar(10),@ScreenObjId) + ',@ScreenObjId'
 	IF @i08 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* ColumnId */' + dbo.fColumn(@i08,'UPDATE dbo.ScreenObj SET ColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i24 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlKeyColumnId */' + dbo.fColumn(@i24,'UPDATE dbo.ScreenObj SET DdlKeyColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i25 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlRefColumnId */' + dbo.fColumn(@i25,'UPDATE dbo.ScreenObj SET DdlRefColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i26 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlSrtColumnId */' + dbo.fColumn(@i26,'UPDATE dbo.ScreenObj SET DdlSrtColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i27 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlAdnColumnId */' + dbo.fColumn(@i27,'UPDATE dbo.ScreenObj SET DdlAdnColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
-	IF @i28 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlFtrColumnId */' + dbo.fColumn(@i28,'UPDATE dbo.ScreenObj SET DdlFtrColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
+	IF @i26 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlKeyColumnId */' + dbo.fColumn(@i26,'UPDATE dbo.ScreenObj SET DdlKeyColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
+	IF @i27 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlRefColumnId */' + dbo.fColumn(@i27,'UPDATE dbo.ScreenObj SET DdlRefColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
+	IF @i28 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlSrtColumnId */' + dbo.fColumn(@i28,'UPDATE dbo.ScreenObj SET DdlSrtColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
+	IF @i29 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlAdnColumnId */' + dbo.fColumn(@i29,'UPDATE dbo.ScreenObj SET DdlAdnColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
+	IF @i30 IS NOT NULL SELECT @iClause = @iClause + char(13) + char(10) + '/* DdlFtrColumnId */' + dbo.fColumn(@i30,'UPDATE dbo.ScreenObj SET DdlFtrColumnId=@ColumnId WHERE ScreenObjId=@ScreenObjId')
 	SELECT @i01=ScreenObjHlpId, @c01=ScreenObjHlpDesc, @c02=ColumnHeader, @c03=ToolTip, @c04=ErrMessage, @c05=TbHint FROM dbo.ScreenObjHlp WHERE ScreenObjId=@ScreenObjId AND CultureId=1
 	SELECT @iClause = @iClause + char(13) + char(10) + 'INSERT dbo.ScreenObjHlp (ScreenObjId,CultureId,ScreenObjHlpDesc,ColumnHeader,ToolTip,ErrMessage,TbHint)'
 	+ char(13) + char(10) + 'SELECT @ScreenObjId,1,' + RODesign.dbo.fNullCha(@c01) + ',' + RODesign.dbo.fNullCha(@c02) + ',' + RODesign.dbo.fNullCha(@c03) + ',' + RODesign.dbo.fNullCha(@c04) + ',' + RODesign.dbo.fNullCha(@c05)
 	+ char(13) + char(10) + 'SELECT @ScreenObjHlpId=@@IDENTITY'
 	+ char(13) + char(10) + 'INSERT INTO #objhlp (OObjHlpId,NObjHlpId) SELECT ' + CONVERT(varchar(10),@i01) + ',@ScreenObjHlpId'
-	FETCH NEXT FROM cur04 INTO @ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@c29,@c30,@i31,@i32,@i33,@c34,@c35,@c36,@c37,@c38,@c39,@c40,@c41,@c42,@c43
+	FETCH NEXT FROM cur04 INTO @ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@i29,@i30,@c31,@c32,@i33,@i34,@i35,@i36,@c37,@c38,@c39,@c40,@c41,@c42,@c43,@c44,@c45,@c46
 END
 CLOSE cur04 DEALLOCATE cur04
 IF @NewCSS <> '' SELECT @rClause = @rClause + char(13) + char(10) + '/* Please pay attention to CSS: ' + RIGHT(@NewCSS,LEN(@NewCSS)-2) + '; */'
@@ -75703,8 +76071,10 @@ SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDAT
 ,ModuleName='Cmon', CompanyCount = NULL, ProjectCount = NULL, UserCount = NULL, ModuleCount = NULL, Include='All',Exclude='CmnCompany,CmnProject'
 ,PerInstance='N'
 WHERE 1<>1
+UNION
 SELECT InstallID = @installID, AppID = @appID, Expiry = DATEADD(day,-2,GETUTCDATE()), PermLicense = NULL, Modules = NULL
 /* only Test1/Test2 screen */
+/* ModuleName must match app db suffix, i.e. XXCmon => Cmon */
 ,ModuleName='Test', CompanyCount = NULL, ProjectCount = NULL, UserCount = NULL, ModuleCount=NULL, Include='Test1,Test2',Exclude=NULL
 ,PerInstance='N'
 WHERE 1<>1

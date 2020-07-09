@@ -94,7 +94,8 @@ namespace RO.Web
         protected UsrImpr LImpr {get;set;}
         protected UsrCurr LCurr {get;set;}
         protected LoginUsr LUser {get;set;}
-        protected byte LcSystemId {get;set;}
+        protected UsrPref LPref { get; set; }
+        protected byte LcSystemId { get; set; }
         protected string LcSysConnString {get;set;}
         protected string LcAppConnString {get;set;}
         protected string LcAppDb {get;set;}
@@ -470,10 +471,10 @@ namespace RO.Web
         /* this is must be in-sync with ModuleBase.cs version */
         protected RO.Facade3.Auth GetAuthObject()
         {
-            string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+            string jwtMasterKey = Config.JWTMasterKey;
             if (string.IsNullOrEmpty(jwtMasterKey)) 
             {
-                RO.Facade3.Auth.GenJWTMasterKey();
+                jwtMasterKey = RO.Facade3.Auth.GenJWTMasterKey();
                 System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"] = jwtMasterKey;
                 Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
                 if (config.AppSettings.Settings["JWTMasterKey"] != null) config.AppSettings.Settings["JWTMasterKey"].Value = jwtMasterKey;
@@ -492,7 +493,7 @@ namespace RO.Web
 
                 if (_masterkey == null)
                 {
-                    string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+                    string jwtMasterKey = Config.JWTMasterKey;
                     if (string.IsNullOrEmpty(jwtMasterKey))
                     {
                         try
@@ -714,7 +715,7 @@ namespace RO.Web
             if (sysDict == null) {
                 sysDict = new Dictionary<byte, Dictionary<string, string>>();
                 DataTable dt = LoadSystemsList(ignoreCache);
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                bool singleSQLCredential = Config.DesShareCred;
                 dt.PrimaryKey = new DataColumn[] { dt.Columns["SystemId"] };
                 for (int i = dt.Rows.Count; i < dt.Rows.Count; i++)
                 {
@@ -899,7 +900,13 @@ namespace RO.Web
             LUser = new LoginUsr(token.LoginName, token.UsrId, token.UsrName, token.UsrEmail, "N", "N", 1, "English(US)", token.DefSystemId, token.DefProjectId, token.DefCompanyId, 9999, 0, false, null, null, false);
             LCurr = new UsrCurr(companyId ?? token.CompanyId, projectId ?? token.ProjectId, systemId ?? token.SystemId, dbId ?? token.DbId);
             LImpr = SetImpersonation(null, token.UsrId, systemId ?? token.SystemId, companyId ?? token.CompanyId, projectId ?? token.ProjectId);
-            Dictionary<string, object> userSession = new Dictionary<string, object> { { "LUser", LUser }, { "LCurr", LCurr }, { "LImpr", LImpr } };
+            LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
+            Dictionary<string, object> userSession = new Dictionary<string, object> { 
+                { "LUser", LUser }, 
+                { "LCurr", LCurr }, 
+                { "LImpr", LImpr }, 
+                { "LPref", LPref },
+            };
             return userSession;
         }
 
@@ -908,6 +915,7 @@ namespace RO.Web
             LUser = new LoginUsr("Anonymous", 1, "Anonymous", null, "N", "N", 1, "English(US)", 0, 0, 0, 9999, 0, false, null, null, false);
             LCurr = new UsrCurr(0, 0, 3, 3);
             LImpr = SetImpersonation(null, 1, LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId);
+            LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
             loginHandle = "Anonymous";
         }
 
@@ -919,10 +927,11 @@ namespace RO.Web
                 LCurr.ProjectId = projectId;
                 LCurr.SystemId = sysId;
                 LImpr = LoadUsrImpr(LUser.UsrId, sysId, companyId, projectId,ignoreCache);
+                LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
                 CPrj = new CurrPrj(((new RobotSystem()).GetEntityList()).Rows[0]);
                 DataRow row = LoadSystemsList().Rows.Find(sysId);
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
-                string RedirectProjectRoot = System.Configuration.ConfigurationManager.AppSettings["RedirectProjectRoot"];
+                bool singleSQLCredential = Config.DesShareCred;
+                string RedirectProjectRoot = Config.RedirectProjectRoot;
 
                 CSrc = new CurrSrc(true, row);
                 CTar = new CurrTar(true, row);
@@ -1024,10 +1033,16 @@ namespace RO.Web
                 }
                 if (hasSession && Session != null && Session[KEY_CacheLUser] != null)
                 {
-                    Dictionary<string, object> userSession = new Dictionary<string,object>(){{ "LUser", Session[KEY_CacheLUser] }, { "LCurr", Session[KEY_CacheLCurr] }, { "LImpr", Session[KEY_CacheLImpr] }};
+                    Dictionary<string, object> userSession = new Dictionary<string,object>(){
+                        { "LUser", Session[KEY_CacheLUser] }, 
+                        { "LCurr", Session[KEY_CacheLCurr] }, 
+                        { "LImpr", Session[KEY_CacheLImpr] },
+                        { "LPref", Session[KEY_CacheLPref] },
+                    };
                     LUser = userSession["LUser"] as LoginUsr;
                     LImpr = userSession["LImpr"] as UsrImpr;
                     LCurr = userSession["LCurr"] as UsrCurr;
+                    LPref = userSession["LPref"] as UsrPref;
                     return userSession;
                 }
                 else if (auth != null && auth.StartsWith("Bearer"))
@@ -1067,6 +1082,7 @@ namespace RO.Web
                             LUser = userSession["LUser"] as LoginUsr;
                             LImpr = userSession["LImpr"] as UsrImpr;
                             LCurr = userSession["LCurr"] as UsrCurr;
+                            LPref = userSession["LPref"] as UsrPref;
                             if (cultureId != null && LUser.CultureId != cultureId)
                             {
                                 SwitchLang(cultureId.Value);
@@ -1178,17 +1194,17 @@ namespace RO.Web
         {
             return (e, severity) =>
             {
-                string supportEmail = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"];
+                string supportEmail = Config.TechSuppEmail;
                 if (supportEmail != "none" && supportEmail != string.Empty)
                 {
                     try
                     {
-                        string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
-                        string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
+                        string webtitle = Config.WebTitle ?? "";
+                        string to = Config.TechSuppEmail ?? "cs@robocoder.com";
                         string from = "cs@robocoder.com";
                         string fromTitle = "";
                         string replyTo = "";
-                        string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+                        string smtpServer = Config.SmtpServer;
                         string[] smtpConfig = smtpServer.Split(new char[] { '|' });
                         bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
                         int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;
@@ -1257,18 +1273,18 @@ namespace RO.Web
             }
             catch (Exception e)
             {
-                string supportEmail = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"];
+                string supportEmail = Config.TechSuppEmail;
                 if (supportEmail != "none" && supportEmail != string.Empty)
                 {
                     try
                     {
                         HttpRequest Request = HttpContext.Current.Request;
-                        string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
-                        string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
+                        string webtitle = Config.WebTitle ?? "";
+                        string to = Config.TechSuppEmail ?? "cs@robocoder.com";
                         string from = "cs@robocoder.com";
                         string fromTitle = "";
                         string replyTo = "";
-                        string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+                        string smtpServer = Config.SmtpServer;
                         string[] smtpConfig = smtpServer.Split(new char[] { '|' });
                         bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
                         int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;
@@ -1331,18 +1347,18 @@ namespace RO.Web
             }
             catch (Exception e)
             {
-                string supportEmail = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"];
+                string supportEmail = Config.TechSuppEmail;
                 if (supportEmail != "none" && supportEmail != string.Empty)
                 {
                     try
                     {
                         HttpRequest Request = HttpContext.Current.Request;
-                        string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
-                        string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
+                        string webtitle = Config.WebTitle ?? "";
+                        string to = Config.TechSuppEmail ?? "cs@robocoder.com";
                         string from = "cs@robocoder.com";
                         string fromTitle = "";
                         string replyTo = "";
-                        string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+                        string smtpServer = Config.SmtpServer;
                         string[] smtpConfig = smtpServer.Split(new char[] { '|' });
                         bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
                         int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;
@@ -2297,10 +2313,10 @@ namespace RO.Web
             string isaHttps = Request.Headers["Front-End-Https"];
             string host = Request.Url.Host;
             string appPath = Request.ApplicationPath;
-            string behindProxy = System.Configuration.ConfigurationManager.AppSettings["BehindProxy"];
+            bool behindProxy = Config.BehindProxy;
 
             return
-                behindProxy == "Y"
+                behindProxy
                 ||
                 (
                 !string.IsNullOrEmpty(extBasePath)
@@ -2915,7 +2931,7 @@ namespace RO.Web
                                 {"labelL",rx.Replace(drv[valF].ToString(),"")}, // stripped desc
                                 {"value", valueIsKey ? drv[keyF].ToString() : drv[valF].ToString()}, // visible value shown in jquery's autocomplete box, react expect this to be the key not label
                                 {"iconUrl",iconUrlF !="" ? drv[iconUrlF].ToString() == "" ? "" : ResolveUrlCustom(GetUrlWithQSHashV2(drv[iconUrlF].ToString()),false,true) : null}, // optional icon url
-                                {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[], true))  : null}, // optional embedded image
+                                {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": BlobPlaceHolder(drv[imgF] as byte[], true))  : null}, // optional embedded image
                                 {"tooltips",tipF !="" ? drv[tipF].ToString() : ""},// optional alternative tooltips(say expanded description)
                                 {"detail",dtlF !="" ? ToStandardString(dtlF,drv.Row) : null}, // optional detail info
                                 {"labelR",valFR !="" ? ToStandardString(valFR,drv.Row) : null}, // optional title(right hand side for react presentation)
@@ -3134,17 +3150,17 @@ namespace RO.Web
             }
             return mCacheX.Item2;
         }
-        protected byte[] EncodeFileStreamHeader(_ReactFileUploadObj fileObj)
+        protected byte[] EncodeFileStreamHeader(_ReactFileUploadObj fileObj, bool contentIsJSON = false)
         {
             /* store as 256 byte UTF8 json header + actual binary file content 
               * if header info > 256 bytes use compact header(256 bytes) + actual header + actual binary file content
               */
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
             jss.MaxJsonLength = Int32.MaxValue;
-            string contentHeader = jss.Serialize(new FileInStreamObj() { fileName = fileObj.fileName, lastModified = fileObj.lastModified, mimeType = fileObj.mimeType, ver = "0100", height=fileObj.height, width=fileObj.width, size=fileObj.size, extensionSize = 0 });
+            string contentHeader = jss.Serialize(new FileInStreamObj() { fileName = fileObj.fileName, contentIsJSON = contentIsJSON, lastModified = fileObj.lastModified, mimeType = fileObj.mimeType, ver = "0100", height = fileObj.height, width = fileObj.width, size = fileObj.size, extensionSize = 0 });
             byte[] streamHeader = Enumerable.Repeat((byte)0x20, 256).ToArray();
             int headerLength = System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader).Length;
-            string compactHeader = jss.Serialize(new FileInStreamObj() { fileName = "", lastModified = fileObj.lastModified, mimeType = fileObj.mimeType, ver = "0100", height=fileObj.height, width=fileObj.width, size=fileObj.size, extensionSize = headerLength });
+            string compactHeader = jss.Serialize(new FileInStreamObj() { fileName = "", lastModified = fileObj.lastModified, contentIsJSON = contentIsJSON, mimeType = fileObj.mimeType, ver = "0100", height = fileObj.height, width = fileObj.width, size = fileObj.size, extensionSize = headerLength });
             int compactHeaderLength = System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader).Length;
             if (headerLength <= 256)
                 Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), streamHeader, headerLength);
@@ -3160,6 +3176,8 @@ namespace RO.Web
         {
             /* store as 256 byte UTF8 json header + actual JSON stream(whatever it is ) 
               */
+            if (fileObjList != null && fileObjList.Count == 1) return EncodeFileStreamHeader(fileObjList[0], true);
+
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
             jss.MaxJsonLength = Int32.MaxValue;
             byte[] streamHeader = Enumerable.Repeat((byte)0x20, 256).ToArray();
@@ -3207,6 +3225,8 @@ namespace RO.Web
                         ||
                         !string.IsNullOrWhiteSpace(fileInfo.previewUrl)
                         )
+                        &&
+                        (!string.IsNullOrEmpty(fileInfo.fileName) || !fileInfo.contentIsJSON)
                         )
                     {
                         retVal = jss.Serialize(new FileUploadObj()
@@ -3231,7 +3251,7 @@ namespace RO.Web
                         }
                         else
                             retVal = jss.Serialize(new FileUploadObj() { 
-                                base64 = fileContent != null ? Convert.ToBase64String(fileContent) : null
+                                base64 = fileContent != null && !headerOnly ? Convert.ToBase64String(fileContent) : null
                                 , mimeType = fileInfo.mimeType
                                 , lastModified = fileInfo.lastModified
                                 , fileName = fileInfo.fileName 
@@ -3329,7 +3349,7 @@ namespace RO.Web
         protected string BlobPlaceHolder(byte[] content, bool resize = true)
         {
             const int maxOriginalSize = 2000;
-            bool blobOnly = false;
+            bool blobOnly = resize;
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
             jss.MaxJsonLength = Int32.MaxValue;
 
@@ -3349,9 +3369,18 @@ namespace RO.Web
             {
                 if (mimeType.Contains("image"))
                 {
-                    if (icon != null) return "data:application/base64;base64," + Convert.ToBase64String(icon);
-                    else if (mimeType.Contains("svg") && (contentBase64 ?? "").Length < maxOriginalSize) return "data:" + mimeType + ";base64," + contentBase64;
-                    else return "../images/DefaultImg.png";
+                    if (icon != null)
+                    {
+                        return "data:application/base64;base64," + Convert.ToBase64String(icon);
+                    }
+                    else if (mimeType.Contains("svg") && (contentBase64 ?? "").Length < maxOriginalSize)
+                    {
+                        return "data:" + mimeType + ";base64," + contentBase64;
+                    }
+                    else
+                    {
+                        return "../images/DefaultImg.png";
+                    }
                 }
                 else if (mimeType.Contains("pdf"))
                 {
@@ -3433,7 +3462,7 @@ namespace RO.Web
             {
                 if (content == null || content.Length == 0) return null;
 
-                string fileContent = DecodeFileStream(content, false, true);
+                string fileContent = DecodeFileStream(content, false, false);
                 try
                 {
                     if ((fileContent ?? "").Length > 0)
@@ -3595,7 +3624,7 @@ namespace RO.Web
                         return GetUrlWithQSHashV2(url);
                     }
                     else if (includeBLOB == IncludeBLOB.Content || ((byte[])(dr[columnName])).Length < 256)
-                        return DecodeFileStream((byte[])(dr[columnName]), true);
+                        return DecodeFileStream((byte[])(dr[columnName]), false);
                     else if (includeBLOB == IncludeBLOB.Icon)
                         return BlobPlaceHolder((byte[])(dr[columnName]));
                     else if (includeBLOB == IncludeBLOB.DownloadLink && string.IsNullOrEmpty(tableName))
@@ -4170,7 +4199,7 @@ namespace RO.Web
                 }
                 catch (Exception ex)
                 {
-                    ErrorTracing(new Exception(string.Format("{0}, {1}, {2}-{3}({4})", mstId, docId, fileObj.fileName, fileObj.mimeType), ex));
+                    ErrorTracing(new Exception(string.Format("{0}, {1}, {2}-{3}", mstId, docId, fileObj.fileName, fileObj.mimeType), ex));
                     throw;
                 }
                 PostSaveMultiDoc(mstId, dtlId, isMaster, DocId, overwrite, screenColumnName, tableName, docJson, options);
@@ -4250,7 +4279,7 @@ namespace RO.Web
                 ScreenCriteria = DataTableToListOfObject(dtScreenCriteria),
                 ScreenFilter = DataTableToListOfObject(dtScreenFilter),
                 ScreenHlp = DataTableToListOfObject(dtScreenHlp),
-                SystemLabels = systemLabels == null ? new List<SerializableDictionary<string,string>>() : systemLabels.data.data,
+                SystemLabels = systemLabels == null || systemLabels.data == null ? new List<SerializableDictionary<string,string>>() : systemLabels.data.data,
             };
             return result;
         }
@@ -4770,7 +4799,7 @@ namespace RO.Web
                 if (!string.IsNullOrEmpty(price)) return price;
 
                 var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/tools/price-conversion");
-                var CmcAPIKey = System.Configuration.ConfigurationManager.AppSettings["CMCAPIKey"];
+                var CmcAPIKey = Config.CMCAPIKey;
 
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
                 queryString["amount"] = "1";
@@ -4796,8 +4825,22 @@ namespace RO.Web
 
                 return price.ToString();
             }
+            catch (WebException ex) {
+                if(ex.Status == WebExceptionStatus.ProtocolError) {
+                    using (StreamReader r = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()))
+                    {
+                        string responseContent = r.ReadToEnd();
+                        string errDetail = string.Format("Error Detail : {0}\r\n{1}\r\n{2}\r\n", 
+                            ((HttpWebResponse)ex.Response).StatusCode
+                            ,((HttpWebResponse)ex.Response).StatusDescription
+                            ,r.ReadToEnd());
+                        ErrorTracing(new Exception(string.Format("failed to get FX Rate ({0}) - ({1})\r\n {2}", FrISOCurrencySymbol, ToISOCurrencySymbol, errDetail), ex));
+                    }
+                }
+                throw ex;
+                //return string.Empty; 
+            }
             catch (Exception ex) {
-
                 ErrorTracing(new Exception(string.Format("failed to get FX Rate ({0}) - ({1})", FrISOCurrencySymbol, ToISOCurrencySymbol),ex));
                 throw ex;
                 //return string.Empty; 
@@ -5105,7 +5148,7 @@ namespace RO.Web
         {
             Func<ApiResponse<SerializableDictionary<string, string>, object>> fn = () =>
             {
-                string ServerIdentity = System.Configuration.ConfigurationManager.AppSettings["ServerIdentity"];
+                string ServerIdentity = Config.ServerIdentity;
 
                 ApiResponse<SerializableDictionary<string, string>, object> mr = new ApiResponse<SerializableDictionary<string, string>, object>();
 
@@ -5147,10 +5190,11 @@ namespace RO.Web
             {
                 SwitchContext(3, LCurr.CompanyId, LCurr.ProjectId);
                 DataTable dtS = _GetLabels("cSystem");
-                dtS.Merge(_GetLabels("QFilter"));
-                dtS.Merge(_GetLabels("cGrid"));
-                dtS.AcceptChanges();
-                return DataTableToApiResponse(dtS, "", 0);
+                DataTable dt = dtS.Copy();
+                dt.Merge(_GetLabels("QFilter"));
+                dt.Merge(_GetLabels("cGrid"));
+                dt.AcceptChanges();
+                return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, 3, 0, "R", null), AllowAnonymous());
             return ret;
@@ -5755,7 +5799,7 @@ namespace RO.Web
             return ret;
         }
 
-        protected Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>> LoadFirstOrDefault(DataTable dtScreenCriteria, bool loadFirst, string filterId, string keyId, string topN, SerializableDictionary<string, string> desiredScreenCriteria)
+        protected Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>> LoadFirstOrDefault(DataTable dtScreenCriteria, bool loadFirst, string filterId, string keyId, string topN, SerializableDictionary<string, string> desiredScreenCriteria, SerializableDictionary<string, string> options=null)
         {
             var NewMst = GetNewMst();
             var LastScreenCriteria = GetScreenCriteriaEX(true);
@@ -5788,7 +5832,9 @@ namespace RO.Web
                     SearchList = GetSearchList("**-1", 2, effectiveFilterId.ToString(), desiredScreenCriteria);
                 }
                 var firstMstId = (SearchList.data.data.FirstOrDefault() ?? new SerializableDictionary<string, string>() { { "key", "" } })["key"];
-                var filteringOptions = new SerializableDictionary<string, string>() { { "CurrentScreenCriteria", new JavaScriptSerializer().Serialize(currentScrCriteria.Item2) } };
+                var filteringOptions = new SerializableDictionary<string, string>() { 
+                        { "CurrentScreenCriteria", new JavaScriptSerializer().Serialize(currentScrCriteria.Item2) } 
+                    }.Clone(options,new List<string>(){"MstBlob","DtlBlob"});
                 var Mst = GetMstById(firstMstId, filteringOptions);
                 var Dtl = GetDtlById(firstMstId, filteringOptions, effectiveDtlFilterId).data;
                 return new Tuple<
@@ -5901,8 +5947,8 @@ namespace RO.Web
                 };
 
                 var req = MakeZipAllParam(keyId, jsonColumnParam, zipFileName ?? "abcd.zip");
-                string ZipViaDirectPost = System.Configuration.ConfigurationManager.AppSettings["ZipViaDirectPost"];
-                if (ZipViaDirectPost == "N")
+                bool ZipViaDirectPost = Config.ZipViaDirectPost;
+                if (!ZipViaDirectPost)
                 {
                     var f = ZipAllDoc(req);
                     result["base64"] = f.Item3 == null ? null : Convert.ToBase64String(f.Item3);

@@ -367,8 +367,8 @@ namespace RO
                         + (HttpContext.Current.Request.Url.IsDefaultPort ? "" : ":" + HttpContext.Current.Request.Url.Port.ToString())
                         + (appPath == "/" ? "" : appPath);
             string cronjobBaseUrl =
-                    !string.IsNullOrEmpty(System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"])
-                    ? System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"]
+                    !string.IsNullOrEmpty(Config.CronJobBaseUrl)
+                    ? Config.CronJobBaseUrl
                     : (!string.IsNullOrEmpty(Config.IntBaseUrl) ? Config.IntBaseUrl
                     : ""
                     );
@@ -428,14 +428,14 @@ namespace RO
             System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
             try
             {
-                string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
-                string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
+                string webtitle = Config.WebTitle ?? "";
+                string to = Config.TechSuppEmail ?? "cs@robocoder.com";
                 string from = "cs@robocoder.com";
                 string fromTitle = "";
                 string replyTo = "";
                 string LoginUsrId = null;
                 string LoginUserName = null;
-                string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+                string smtpServer = Config.SmtpServer;
                 string[] smtpConfig = smtpServer.Split(new char[] { '|' });
                 bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
                 int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;

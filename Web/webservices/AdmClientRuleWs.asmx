@@ -19,6 +19,8 @@ namespace RO.Web
     using System.Collections.Generic;
     using System.Web.SessionState;
     using System.Linq;
+    using System.Numerics;
+
             
     public class AdmClientRule79 : DataSet
     {
@@ -86,7 +88,7 @@ namespace RO.Web
             
         Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>() {
             {"RuleMethodId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleMethodId3S4073"},{"mKey","RuleMethodId127"},{"mVal","RuleMethodId127Text"}, }},
-            {"RuleMethodDesc1295", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleMethodId3S4073"},{"mKey","RuleMethodId127"},{"mVal","RuleMethodDesc1295"}, {"baseTbl", "CtRuleMethod"},{"baseKeyCol", "RuleMethodId"},{"baseColName", "RuleMethodDesc"},}},
+            {"RuleMethodDesc1295", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleMethodId3S4073"},{"mKey","RuleMethodId127"},{"mVal","RuleMethodDesc1295"}, {"baseTbl", "CtRuleMethod"},{"baseKeyCol", "RuleMethodId"},{"baseColName", "RuleMethodDesc"},{"baseSystemId", "3"},}},
             {"RuleTypeId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleTypeId3S1293"},{"mKey","RuleTypeId127"},{"mVal","RuleTypeId127Text"}, }},
             {"ScreenId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenId3S1258"},{"mKey","ScreenId127"},{"mVal","ScreenId127Text"}, }},
             {"ReportId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReportId3S1265"},{"mKey","ReportId127"},{"mVal","ReportId127Text"}, }},
@@ -95,9 +97,9 @@ namespace RO.Web
             {"ScreenCriHlpId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenCriHlpId3S1266"},{"mKey","ScreenCriHlpId127"},{"mVal","ScreenCriHlpId127Text"}, {"refCol","ScreenId"},{"refColDataType","Int"},{"refColSrc","Mst"},{"refColSrcName","ScreenId127"}}},
             {"ReportCriHlpId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReportCriHlpId3S1267"},{"mKey","ReportCriHlpId127"},{"mVal","ReportCriHlpId127Text"}, {"refCol","ReportId"},{"refColDataType","Int"},{"refColSrc","Mst"},{"refColSrcName","ReportId127"}}},
             {"RuleCntTypeId127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleCntTypeId3S4075"},{"mKey","RuleCntTypeId127"},{"mVal","RuleCntTypeId127Text"}, }},
-            {"RuleCntTypeDesc1294", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleCntTypeId3S4075"},{"mKey","RuleCntTypeId127"},{"mVal","RuleCntTypeDesc1294"}, {"baseTbl", "CtRuleCntType"},{"baseKeyCol", "RuleCntTypeId"},{"baseColName", "RuleCntTypeDesc"},}},
+            {"RuleCntTypeDesc1294", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlRuleCntTypeId3S4075"},{"mKey","RuleCntTypeId127"},{"mVal","RuleCntTypeDesc1294"}, {"baseTbl", "CtRuleCntType"},{"baseKeyCol", "RuleCntTypeId"},{"baseColName", "RuleCntTypeDesc"},{"baseSystemId", "3"},}},
             {"ClientScript127", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlClientScript3S1261"},{"mKey","ClientScript127"},{"mVal","ClientScript127Text"}, }},
-            {"ClientScriptHelp126", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlClientScript3S1261"},{"mKey","ClientScript127"},{"mVal","ClientScriptHelp126"}, {"baseTbl", "CtClientScript"},{"baseKeyCol", "ClientScriptId"},{"baseColName", "ClientScriptHelp"},}},
+            {"ClientScriptHelp126", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlClientScript3S1261"},{"mKey","ClientScript127"},{"mVal","ClientScriptHelp126"}, {"baseTbl", "CtClientScript"},{"baseKeyCol", "ClientScriptId"},{"baseColName", "ClientScriptHelp"},{"baseSystemId", "3"},}},
         };
 
         private DataRow MakeTypRow(DataRow dr)
@@ -315,6 +317,10 @@ namespace RO.Web
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string,AutoCompleteResponse>();
+                /* Get Master By Id After start here */
+
+
+                /* Get Master By Id After end here */
                 mr.data = DataTableToListOfObject(dt, mstBlob, colAuth, utcColumns);
                 mr.supportingData = includeDtl ? new SerializableDictionary<string, AutoCompleteResponse>() { { "dtl", new AutoCompleteResponse() { data = DataTableToListOfObject(_GetDtlById(keyId, 0), dtlBlob, colAuth, utcColumns) } } } : supportingData;
                 mr.status = "success";
@@ -444,6 +450,8 @@ namespace RO.Web
         {
             bool isAdd = false;
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            string screenButton = options.ContainsKey("ScreenButton") ? options["ScreenButton"] : "";
+            string actionButton = options.ContainsKey("OnClickColumeName") ? options["OnClickColumeName"] : "";
             bool noTrans = Config.NoTrans;
             int commandTimeOut = Config.CommandTimeOut;
 
@@ -456,10 +464,10 @@ namespace RO.Web
                 {
                     dtl.Add(mst.Clone());
                 }
-                /* AsmxRule: Save Data Before */
+                /* AsmxRule: Save Data Before Validation */
 
 
-                /* AsmxRule End: Save Data Before */
+                /* AsmxRule End: Save Data Before Validation */
 
                 var pid = mst["ClientRuleId127"];
                 isAdd = string.IsNullOrEmpty(pid);
@@ -487,6 +495,11 @@ namespace RO.Web
                         validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
                     };
                 }
+                /* AsmxRule: Save Data Before */
+
+
+                /* AsmxRule End: Save Data Before */
+
                 var ds = PrepAdmClientRuleData(mst, dtl, string.IsNullOrEmpty(mst["ClientRuleId127"]));
                 string msg = string.Empty;
 

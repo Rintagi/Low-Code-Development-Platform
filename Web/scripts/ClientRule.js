@@ -2634,7 +2634,8 @@ function sendFile(file, url, success, failure) {
         }
     });
 }
-
+/* below should be in-sync with React module version(web) as this is client side(js) sync of data
+ */
 function parsedUrl(url) {
     var parser = document.createElement("a");
     parser.href = url;
@@ -2687,6 +2688,9 @@ function wordArrayToByteArray(wordArray, length) {
         length = wordArray.sigBytes;
         wordArray = wordArray.words;
     }
+    else {
+        length = length * 4;
+    }
 
     var result = [],
         bytes,
@@ -2721,7 +2725,8 @@ function eraseUserHandle(appDomainUrl) {
 
 function rememberUserHandle(appDomainUrl, userIdentity) {
     var h = sjcl.hash.sha256.hash(userIdentity);
-    var v = arrayBufferToBase64(wordArrayToByteArray(h,h.length*4)).replace(/=/g, "_");
+    var b = wordArrayToByteArray(h, h.length);
+    var v = arrayBufferToBase64(b).replace(/=/g, "_");
     localStorage.setItem(makeNameFromNS(appDomainUrl, "user_handle"), v.replace(/=/g, "_"));
 }
 
@@ -2731,8 +2736,10 @@ function getUserHandle(appDomainUrl) {
 }
 
 function getTokenName(appDomainUrl, name) {
-    var x = btoa(sjcl.hash.sha256.hash((appDomainUrl || "").toLowerCase() + name + (getUserHandle(appDomainUrl) || "") + (myMachine || "")));
-    return x;
+    var x = ((appDomainUrl || "").toLowerCase() + name + (getUserHandle(appDomainUrl) || "") + (myMachine || ""));
+    var h = sjcl.hash.sha256.hash(x);
+    var n = arrayBufferToBase64(wordArrayToByteArray(h, h.length));
+    return n;
 }
 
 function setCookie(name, value, days, path) {
@@ -2758,6 +2765,7 @@ function getCookie(name) {
 function eraseCookie(name) {
     document.cookie = name + '=; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/;';
 }
+/* end of React sync section */
 
 //function MouseOverEffect(e, i) { e.src = i; }
 

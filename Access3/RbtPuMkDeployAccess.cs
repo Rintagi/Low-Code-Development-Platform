@@ -8,7 +8,7 @@ using RO.SystemFramewk;
 
 namespace RO.Access3
 {
-	public class AdmPuMkDeployAccess : Encryption, IDisposable
+	public class AdmPuMkDeployAccess : AdmPuMkDeployAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 
@@ -17,7 +17,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -71,7 +71,7 @@ namespace RO.Access3
 			}
 		}
 
-		public bool UpdReleaseBuild(Int16 ReleaseId, string ReleaseBuild)
+		public override bool UpdReleaseBuild(Int16 ReleaseId, string ReleaseBuild)
 		{
 			if (da == null) {throw new System.ObjectDisposedException( GetType().FullName );}
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());

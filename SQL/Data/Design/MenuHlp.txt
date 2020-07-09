@@ -1218,3 +1218,4 @@
 3024~@~1375~@~114~@~Exemple de paiement PayPal
 3025~@~1376~@~114~@~Installation de Rintagi
 3028~@~1377~@~1~@~Server Rule Override
+3029~@~1378~@~1~@~Flowchart IDE

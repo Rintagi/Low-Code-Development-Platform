@@ -1,4 +1,94 @@
 import { makeBlob } from './utils';
+import { v1 as v1uuid, v4 as v4uuid} from 'uuid';
+
+const sjcl = require('sjcl');
+const _pbkdf2 = require('pbkdf2');
+
+export function base64Encode(s) {
+  return btoa(s)
+}
+export function base64Decode(s) {
+  return atob(s)
+}
+
+export function sha256(s) {
+  const h = sjcl.hash.sha256.hash(s);
+  return h;
+}
+
+export function pbkdf2(password, salt, round, keyLength, hashType) {
+  return new Promise(function (resolve, reject) { 
+    _pbkdf2.pbkdf2(password, salt, round, keyLength, 
+      (err, derivedKey)=> {
+        if (err) reject(err);
+        else resolve(derivedKey);
+      }
+      )
+  });
+}
+
+function wordToByteArray(word, length) {
+  var ba = [], i, xFF = 0xFF;
+  if (length > 0)
+      ba.push(word >>> 24);
+  if (length > 1)
+      ba.push((word >>> 16) & xFF);
+  if (length > 2)
+      ba.push((word >>> 8) & xFF);
+  if (length > 3)
+      ba.push(word & xFF);
+  return ba;
+}
+
+function wordArrayToByteArray(wordArray, length) {
+  if (wordArray.hasOwnProperty("sigBytes") && wordArray.hasOwnProperty("words")) {
+      length = wordArray.sigBytes;
+      wordArray = wordArray.words;
+  }
+  else {
+      length = length * 4;
+  }
+  var result = [],
+      bytes,
+      i = 0;
+  while (length > 0) {
+      bytes = wordToByteArray(wordArray[i], Math.min(4, length));
+      length -= bytes.length;
+      result.push(bytes);
+      i++;
+  }
+  return [].concat.apply([], result);
+}
+
+export function arrayBufferToBase64(buffer) {
+  var binary = '';
+  var bytes = new Uint8Array(buffer);
+  var len = bytes.byteLength;
+  for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+export function scrambleString(s)
+{
+  const h = sha256(s);
+  return arrayBufferToBase64(wordArrayToByteArray(h, h.length));
+  return  s;
+}
+
+export function uuid() {
+  return v1uuid();  
+  //return Array.from((window.crypto || window.msCrypto).getRandomValues(new Uint32Array(4))).map(n => n.toString(16)).join('-');
+}
+
+export function uuidv4() {
+  return v4uuid();  
+  // return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+  //   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+  //   return v.toString(16);
+  // });
+}
 
 export function getCurrentReactUrlPath() {
   const href = window.location.href;
@@ -32,10 +122,6 @@ export function isHttps() {
   if (window.location.protocol === 'https:') {
     return true;
   }
-}
-
-export function uuid() {
-  return Array.from((window.crypto || window.msCrypto).getRandomValues(new Uint32Array(4))).map(n => n.toString(16)).join('-');
 }
 
 export function previewContent({ dataObj, winObj, containerUrl, download, isImage, features, replace, dataPromise, previewSig } = {}) {

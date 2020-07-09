@@ -345,3 +345,4 @@ FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1322~@~3~@~AtServerRuleOvrd~@~Adm - Server Rule Override~@~Y~@~N~@~~@~Server Rule override(enable/disable)~@~~@~2~@~2020-04-30 14:54:54.903~@~2020-04-30 07:55:07.210
 1323~@~3~@~utServerRuleOvrd~@~Adm - Server Rule Override (local COW)~@~Y~@~N~@~~@~Server Rule override(enable/disable), local setup copy on write~@~~@~2~@~2020-04-30 14:56:26.497~@~2020-04-30 07:56:45.640
 1324~@~3~@~utServerRuleOvrdPrm~@~Adm - Server Rule Override Permission(COW)~@~Y~@~N~@~~@~Server Rule suppression configuration(local copy on write, for merging)~@~~@~2~@~2020-04-30 15:26:55.353~@~2020-04-30 07:58:01.000
+1325~@~3~@~Flowchart~@~Adm - Flowchart~@~Y~@~N~@~~@~This captures the flowchart information.~@~~@~2~@~2020-07-07 16:38:58.473~@~2020-07-07 09:39:08.550

@@ -3,14 +3,27 @@ namespace RO.Rule3
 	using System;
 	using System.Text;
 	using System.Data;
-	using System.Data.OleDb;
+	//using System.Data.OleDb;
 	using System.Text.RegularExpressions;
 	using RO.Access3;
 	using RO.SystemFramewk;
+	using RO.Common3;
 
 	public class DbPorting
 	{
 		public StringBuilder sbWarning = new StringBuilder("");
+
+		private DbPortingAccessBase GetDbPortingAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new DbPortingAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.DbPortingAccess();
+			}
+		}
 
 		public DbPorting()
 		{
@@ -188,7 +201,7 @@ namespace RO.Rule3
 		{
 			string strMapped = InStr;
 			DataTable dt;
-			using (Access3.DbPortingAccess dac = new Access3.DbPortingAccess())
+			using (DbPortingAccessBase dac = GetDbPortingAccess())
 			{
 				dt = dac.GetMapTable(ProjectId, "dbo.SqlToSybMap", dbConnectionString, dbPassword);
 			}

@@ -11,16 +11,28 @@ namespace RO.Rule3
 
 	public class AdminRules
 	{
+		private AdminAccessBase GetAdminAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new AdminAccess(CommandTimeout);
+			}
+			else
+			{
+				return new RO.Access3.Odbc.AdminAccess(CommandTimeout);
+			}
+		}
+
 		public DataTable GetLastCriteria(Int32 rowsExpected, Int32 screenId, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
 		{
 			DataTable dt = null;
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				dt = dac.GetLastCriteria(screenId, reportId, usrId, dbConnectionString, dbPassword);
 			}
 			if (dt.Rows.Count != rowsExpected)
 			{
-				using (Access3.AdminAccess dac = new Access3.AdminAccess())
+				using (AdminAccessBase dac = GetAdminAccess())
 				{
 					dac.DelLastCriteria(screenId, reportId, usrId, dbConnectionString, dbPassword);
 					dac.IniLastCriteria(screenId, reportId, usrId, dbConnectionString, dbPassword);
@@ -33,7 +45,7 @@ namespace RO.Rule3
 		public string GetMsg(string Msg, Int16 CultureId, string TechnicalUsr, string dbConnectionString, string dbPassword)
 		{
 			string mm = Msg;
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				try 
 				{
@@ -82,21 +94,21 @@ namespace RO.Rule3
 		}
         public DataTable GetCronJob(int? jobId, string jobLink, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetCronJob(jobId, jobLink, dbConnectionString, dbPassword);
             }
         }
         public void UpdCronJob(int jobId, DateTime? lastRun, DateTime? nextRun, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdCronJob(jobId, lastRun, nextRun, dbConnectionString, dbPassword);
             }
         }
         public void UpdCronJobStatus(int jobId, string err, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdCronJobStatus(jobId, err, dbConnectionString, dbPassword);
             }

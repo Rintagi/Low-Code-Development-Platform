@@ -193,7 +193,7 @@ namespace RO.Facade3
             }
             return instance;
         }
-        public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret, string appPath, string appDomain, Func<string, string> getStoredToken, Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> ValidateScope, bool reAuth = false)
+        public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret, string appPath, string appDomain, Func<string, string> getStoredToken, Func<LoginUsr, UsrCurr, UsrImpr, UsrPref, string, bool, bool> ValidateScope, bool reAuth = false)
         {
             Dictionary<string, object> scopeContext = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(scope);
             byte? systemId = null;
@@ -244,6 +244,7 @@ namespace RO.Facade3
             UsrCurr LCurr;
             UsrImpr LImpr;
             LoginUsr LUser;
+            UsrPref LPref;
             var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             var currTime = DateTime.Now.ToUniversalTime().Subtract(utc0).TotalSeconds;
             var nbf = loginJWT.nbf - 20; // margin for multiple server clock skew(max 20s)
@@ -261,6 +262,7 @@ namespace RO.Facade3
                 LImpr = null;
 
                 LImpr = SetImpersonation(LImpr, loginToken.UsrId, systemId ?? loginToken.SystemId, companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId);
+
                 LUser = new LoginUsr();
                 LUser.UsrId = loginToken.UsrId;
                 LUser.LoginName = loginToken.LoginName;
@@ -271,9 +273,12 @@ namespace RO.Facade3
                 LUser.InternalUsr = "Y";
                 LUser.CultureId = 1;
                 LUser.HasPic = false;
+
+                LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
+
                 string refreshTag = keepRefreshToken ? currentHandle : Guid.NewGuid().ToString().Replace("-", "").ToLower();
                 string loginTag = Guid.NewGuid().ToString().Replace("-", "").ToLower();
-                if (ValidateScope(LUser, LCurr, LImpr, currentHandle, true))
+                if (ValidateScope(LUser, LCurr, LImpr, LPref, currentHandle, true))
                 {
                     string loginTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, access_token_validity, loginTag);
                     string refreshTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, keepRefreshToken ? remainingSeconds : refresh_token_validity, refreshTag);

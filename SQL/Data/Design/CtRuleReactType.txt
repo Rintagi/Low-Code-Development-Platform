@@ -6,3 +6,4 @@
 6~@~Detail Record Save
 7~@~Detail Record Render
 8~@~Detail Record Screen Column
+9~@~Extra Import

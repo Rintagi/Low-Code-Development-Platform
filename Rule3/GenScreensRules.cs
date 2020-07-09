@@ -13,6 +13,39 @@ namespace RO.Rule3
 
 	public class GenScreensRules
 	{
+        private GenScreensAccessBase GetGenScreensAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new GenScreensAccess();
+            }
+            else
+            {
+                return new RO.Access3.Odbc.GenScreensAccess();
+            }
+        }
+        private AdminAccessBase GetAdminAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new AdminAccess(CommandTimeout);
+            }
+            else
+            {
+                return new RO.Access3.Odbc.AdminAccess(CommandTimeout);
+            }
+        }
+        private RobotAccessBase GetRobotAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new RobotAccess();
+            }
+            else
+            {
+                return new RO.Access3.Odbc.RobotAccess();
+            }
+        }
         private string AlignmentTranslate(string justify)
         {
             if (justify == "C") return "text-align:center;";
@@ -92,12 +125,12 @@ namespace RO.Rule3
 
 		private void DeleteProgD(string dbDatabase, string appDatabase, string desDatabase, string programName, Int32 screenId, string multiDesignDb, string sysProgram, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+			using (GenScreensAccessBase dac = GetGenScreensAccess())
 			{
 				dac.DelScreenDel(dbDatabase, appDatabase, desDatabase, programName, screenId, multiDesignDb, sysProgram, dbConnectionString, dbPassword);
 			}
 			DataView dvCri = null;
-			using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+			using (GenScreensAccessBase dac = GetGenScreensAccess())
 			{
 				dvCri = new DataView(dac.GetScreenCriDel(screenId, dbConnectionString, dbPassword));
 			}
@@ -105,7 +138,7 @@ namespace RO.Rule3
 			{
 				foreach (DataRowView drv in dvCri)
 				{
-					using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+					using (GenScreensAccessBase dac = GetGenScreensAccess())
 					{
 						dac.DelScreenCriDel(appDatabase, drv["ProcedureName"].ToString(), dbConnectionString, dbPassword);
 					}
@@ -116,14 +149,14 @@ namespace RO.Rule3
 		public bool CreateProgram(Int32 screenId, string screenTitle, string dbAppDatabase, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
 		{
 			DataTable dt = null;
-			using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+			using (GenScreensAccessBase dac = GetGenScreensAccess())
 			{
 				dt = dac.GetScreenById(screenId, CPrj, CSrc);
 			}
             if (dt.Rows[0]["GenerateSc"].ToString() == "Y" || dt.Rows[0]["GenerateSr"].ToString() == "Y")
 			{
 				DataView dv = null;
-				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+				using (GenScreensAccessBase dac = GetGenScreensAccess())
 				{
 					dv = new DataView(dac.GetScreenColumns(screenId, CPrj, CSrc));
                     if (!dv.Table.AsEnumerable().Any(x => x.Field<string>("MasterTable") == "Y" && x.Field<string>("PrimaryKey") == "Y"))
@@ -138,26 +171,26 @@ namespace RO.Rule3
 				DataView dvTab = null;
 				if ("I1,I2".IndexOf(dt.Rows[0]["ScreenTypeName"].ToString()) >= 0)
 				{
-					using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+					using (GenScreensAccessBase dac = GetGenScreensAccess())
 					{
 						dvTab = new DataView(dac.GetDistinctScreenTab(screenId, CPrj, CSrc));
 					}
 				}
 				DataView dvCri = null;
-				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+				using (GenScreensAccessBase dac = GetGenScreensAccess())
 				{
 					dvCri = new DataView(dac.GetScreenCriteria(screenId, CPrj, CSrc));
 				}
 				DataView dvGroupCol = null;
 				if ("I1,I2".IndexOf(dt.Rows[0]["ScreenTypeName"].ToString()) >= 0)
 				{
-					using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+					using (GenScreensAccessBase dac = GetGenScreensAccess())
 					{
                         dvGroupCol = new DataView(dac.GetObjGroupCol(screenId, CPrj, CSrc));
 					}
 				}
 				DataTable dtLis = null;
-				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+				using (GenScreensAccessBase dac = GetGenScreensAccess())
 				{
 					if ("I1,I2".IndexOf(dt.Rows[0]["ScreenTypeName"].ToString()) >= 0)
 					{
@@ -169,7 +202,7 @@ namespace RO.Rule3
 					}
 				}
 				DataTable dtDtl = null;
-				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+				using (GenScreensAccessBase dac = GetGenScreensAccess())
 				{
 					if (dt.Rows[0]["ScreenTypeName"].ToString() == "I2")
 					{
@@ -177,12 +210,12 @@ namespace RO.Rule3
 					}
 				}
                 //DataView dvARule = null;
-                //using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+                //using (GenScreensAccessBase dac = GetGenScreensAccess())
                 //{
                 //    dvARule = new DataView(dac.GetAdvRule(screenId, CPrj, CSrc));
                 //}
 				DataView dvWRule = null;
-				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+				using (GenScreensAccessBase dac = GetGenScreensAccess())
 				{
 					dvWRule = new DataView(dac.GetWebRule(screenId, CPrj, CSrc));
 				}
@@ -191,14 +224,14 @@ namespace RO.Rule3
                 MkScrAudit(dt.Rows[0]["GenAudit"].ToString(), dt.Rows[0]["MultiDesignDb"].ToString(), screenId, dt.Rows[0]["ScreenTypeName"].ToString(), CSrc, dt.Rows[0]["dbAppDatabase"].ToString(), dt.Rows[0]["dbDesDatabase"].ToString());
 
                 DataView dvSRule = null;
-				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+				using (GenScreensAccessBase dac = GetGenScreensAccess())
 				{
 					dvSRule = new DataView(dac.GetServerRule(screenId, CPrj, CSrc, null, null));
 				}
                 try
 				{
                     // Make sure there is at least one default row in ScreenTab:
-                    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+                    using (GenScreensAccessBase dac = GetGenScreensAccess())
                     {
                         dac.SetScrTab(CSrc);
                     }
@@ -219,7 +252,7 @@ namespace RO.Rule3
                         CreateProgC(dt.Rows[0], screenId, screenTitle, dv, dvTab, dtLis, dtDtl, dvWRule, dvCri, dvGroupCol, CPrj, CSrc, CPrj.TarClientProgramPath, CPrj.TarClientFrwork);
                     }
                     // No need to create source data tier programs because inline query has been used to take care of 2GB columns.
-					//				using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+					//				using (GenScreensAccessBase dac = GetGenScreensAccess())
 					//				{
 					//					dac.MkScreenUpd(screenId, dt.Rows[0]["ScreenTypeName"].ToString(), dt.Rows[0]["ProgramName"].ToString() + screenId.ToString(), CSrc, dt.Rows[0]["dbAppDatabase"].ToString(), dt.Rows[0]["dbDesDatabase"].ToString(), CPrj.SrcDesDatabase, dt.Rows[0]["multiDesignDb"].ToString(), dt.Rows[0]["SysProgram"].ToString());
 					//				}
@@ -228,12 +261,12 @@ namespace RO.Rule3
                     {
                         if (dvCri.Count > 0)
                         {
-                            using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+                            using (GenScreensAccessBase dac = GetGenScreensAccess())
                             {
                                 dac.MkScreenUpdIn(screenId, dt.Rows[0]["ProgramName"].ToString() + screenId.ToString() + "In", CSrc, dt.Rows[0]["dbAppDatabase"].ToString(), dt.Rows[0]["dbDesDatabase"].ToString());
                             }
                             // generate all Ddl for criterias
-                            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+                            using (AdminAccessBase dac = GetAdminAccess())
                             {
                                 foreach (DataRowView drv in dvCri)
                                 {
@@ -256,7 +289,7 @@ namespace RO.Rule3
                         }
                     }
                     // Reset regen flag to No:
-                    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+                    using (GenScreensAccessBase dac = GetGenScreensAccess())
                     {
                         dac.SetScrNeedRegen(screenId, CSrc);
                     }
@@ -269,7 +302,7 @@ namespace RO.Rule3
 
         private void MkScrAudit(string Gen, string MultiDesignDb, Int32 ScreenId, string ScreenTypeName, CurrSrc CSrc, string AppDatabase, string DesDatabase)
         {
-            using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+            using (GenScreensAccessBase dac = GetGenScreensAccess())
             {
                 dac.MkScrAudit("D", ScreenId, "Y", Gen, MultiDesignDb, CSrc, AppDatabase, DesDatabase);
                 dac.MkScrAudit("A", ScreenId, "Y", Gen, MultiDesignDb, CSrc, AppDatabase, DesDatabase);
@@ -286,7 +319,7 @@ namespace RO.Rule3
         //public void ProxyProgram(Int32 screenId, CurrPrj CPrj, CurrSrc CSrc)
         //{
         //    DataTable dt = null;
-        //    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+        //    using (GenScreensAccessBase dac = GetGenScreensAccess())
         //    {
         //        dt = dac.GetScreenById(screenId, CPrj, CSrc);
         //    }
@@ -397,15 +430,15 @@ namespace RO.Rule3
 			if (ss != string.Empty)
 			{
 				if (CPrj.TarDesProviderCd == "S") {ss = pt.SqlToSybase (CPrj.EntityId,CPrj.TarDesDatabase,ss,dbConnectionString,dbPassword);}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql(ds.ScriptDropSp(SpName, SpType), CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql("SET QUOTED_IDENTIFIER ON", CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					if (CPrj.TarDesProviderCd == "S")
 					{
@@ -416,11 +449,11 @@ namespace RO.Rule3
 						dac.ExecSql("SET ANSI_NULLS ON", CTar.TarConnectionString, CTar.TarDbPassword);
 					}
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql(ss, CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql("SET QUOTED_IDENTIFIER OFF", CTar.TarConnectionString, CTar.TarDbPassword);
 				}
@@ -477,7 +510,7 @@ namespace RO.Rule3
         //        }
         //        //if (drv["ColumnIdentity"].ToString() != "Y" && (",ComboBox,DropDownList,ListBox,RadioButtonList,DataGrid,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 || drv["DisplayMode"].ToString().ToLower() == "document"))
         //        //{
-        //        //    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+        //        //    using (GenScreensAccessBase dac = GetGenScreensAccess())
         //        //    {
         //        //        dt = dac.GetScreenObjDdlById(screenId, Int32.Parse(drv["ScreenObjId"].ToString()), "GetDdl" + drv["ColumnName"].ToString() + CSrc.SrcSystemId.ToString() + "S" + drv["ScreenObjId"].ToString(), "N", appDatabase, sysDatabase, CPrj.SrcDesDatabase, pMKey, drv["MultiDesignDb"].ToString(), CSrc);
         //        //    }
@@ -2233,6 +2266,10 @@ namespace RO.Rule3
 			sb.Append("			LcAppPw = base.AppPwd(SystemId);" + Environment.NewLine);
             sb.Append("			try" + Environment.NewLine);
             sb.Append("			{" + Environment.NewLine);
+            //better code but wait for later round of upgrade
+            //sb.Append("				DataTable dt = (new RobotSystem()).GetEntityList();" + Environment.NewLine);
+            //sb.Append("				if (dt.Rows.Count == 0) throw new Exception(\"Empty Entity Table\");" + Environment.NewLine);
+            //sb.Append("				base.CPrj = new CurrPrj(dt.Rows[0]);" + Environment.NewLine);
             sb.Append("				base.CPrj = new CurrPrj(((new RobotSystem()).GetEntityList()).Rows[0]);" + Environment.NewLine);
             sb.Append("				DataRow row = base.SystemsList.Rows.Find(SystemId);" + Environment.NewLine);
             sb.Append("				base.CSrc = new CurrSrc(true, row);" + Environment.NewLine);
@@ -4268,7 +4305,7 @@ namespace RO.Rule3
 				if (drv["ColumnIdentity"].ToString() != "Y" && (",ComboBox,DropDownList,ListBox,RadioButtonList,DataGrid,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 || drv["DisplayMode"].ToString().ToLower() == "document"))
 				{
                     /* Need the following to create the appropriate s.proc. for master table */
-                    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+                    using (GenScreensAccessBase dac = GetGenScreensAccess())
                     {
                         dac.GetScreenObjDdlById(screenId, Int32.Parse(drv["ScreenObjId"].ToString()), "GetDdl" + drv["ColumnName"].ToString() + CSrc.SrcSystemId.ToString() + "S" + drv["ScreenObjId"].ToString(), drv["GenerateSp"].ToString(), appDatabase, sysDatabase, CPrj.SrcDesDatabase, pMKey, drv["MultiDesignDb"].ToString(), CSrc);
                     }
@@ -5503,6 +5540,9 @@ namespace RO.Rule3
 						}
                         else if (drv["DdlRefColumnId"].ToString() == string.Empty && drv["DisplayName"].ToString().ToLower() == "imagebutton")
                         {
+                            string pKeyDbAppDatabase = (CSrc.SrcSystemId.ToString() == drv["SystemId"].ToString() ? string.Empty : drv["dbAppDatabase"].ToString() + ".");
+                            string pKeySystemId = drv["SystemId"].ToString();
+
                             if (drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                             {
                                 sb.Append("					try { if (dr[\"" + drv["ColName"].ToString() + drv["TableId"].ToString() + "\"].Equals(System.DBNull.Value)) { c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ImageUrl = ");
@@ -5514,7 +5554,7 @@ namespace RO.Rule3
                                 {
                                     sb.Append("\"~/images/DefaultImg.png\"; }");
                                 }
-                                sb.Append(" else { c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dr[\"" + pMKey + drv["TableId"].ToString() + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"'); return false;\"; c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] as byte[],true);}");
+                                sb.Append(" else { c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dr[\"" + pMKey + drv["TableId"].ToString() + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + pKeySystemId + "\") + \"'); return false;\"; c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ImageUrl = RO.Common3.Utils.BlobPlaceHolder(dr[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] as byte[],true);}");
                             }
                             else
                             {
@@ -5731,6 +5771,7 @@ namespace RO.Rule3
 				sb.Append("			ShowDirty(false); PanelTop.Update();" + Environment.NewLine);
                 foreach (DataRowView drv in dv)
                 {
+
                     if (drv["DdlRefColumnId"].ToString() == string.Empty && drv["DisplayName"].ToString().ToLower() == "imagebutton" && drv["DataTypeSqlName"].ToString().ToLower() == "varbinary")
                     {
                         sb.Append("			c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi.Attributes[\"onchange\"] = \"if('\" + c" + pMKeyColumn + ".Text + \"'==''){PopDialog('','Please save the record first before upload','');}else{sendFile(this.files[0],'\" + GetUrlWithQSHash(\"UpLoad.aspx?key=\" + c" + pMKeyColumn + ".Text + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pMKey + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=\" + base.LCurr.SystemId.ToString()) + \"',refreshUploadCallback(this,'\" + c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + ".ClientID + \"')); return false;}\";" + Environment.NewLine);
@@ -6960,7 +7001,7 @@ namespace RO.Rule3
 					if (drv["PwdOvride"].ToString() == "Y" && drv["ColumnIdentity"].ToString() != "Y" && ",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf(","+drv["DisplayName"].ToString()+",") >= 0)
 					{
                         /* Need the following to create the appropriate s.proc. for detail table */
-                        using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+                        using (GenScreensAccessBase dac = GetGenScreensAccess())
                         {
                             dac.GetScreenObjDdlById(screenId, Int32.Parse(drv["ScreenObjId"].ToString()), "GetDdl" + drv["ColumnName"].ToString() + CSrc.SrcSystemId.ToString() + "S" + drv["ScreenObjId"].ToString(), "N", appDatabase, sysDatabase, CPrj.SrcDesDatabase, pMKey, drv["MultiDesignDb"].ToString(), CSrc);
                         }
@@ -7830,6 +7871,8 @@ namespace RO.Rule3
                             keyContentColumnName = !string.IsNullOrEmpty(keyContentColumnName) ? keyContentColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn);
                             string pKeyColumnName = drv["ColTblPK"].ToString();
                             pKeyColumnName = !string.IsNullOrEmpty(pKeyColumnName) ? pKeyColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey);
+                            string pKeyDbAppDatabase = (CSrc.SrcSystemId.ToString() == drv["SystemId"].ToString() ? string.Empty : drv["dbAppDatabase"].ToString() + ".");
+                            string pKeySystemId = drv["SystemId"].ToString();
 
                             sb.Append("			    try {" + Environment.NewLine);
                             sb.Append("			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"]);" + Environment.NewLine);
@@ -7842,13 +7885,13 @@ namespace RO.Rule3
                             sb.Append("			    ImageGridDisplay = e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") as ImageButton;" + Environment.NewLine);
                             if (drv["DdlRefColumnId"].ToString() == string.Empty)
                             {
-                                sb.Append("			    ((FileUpload)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi\")).Attributes[\"onchange\"] = \"if('\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"'==''){PopDialog('','Please save the record first before upload.','');}else{sendFile(this.files[0],'\" + GetUrlWithQSHash(\"UpLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"')); return false;} \";" + Environment.NewLine);
-                                sb.Append("			    ((ImageButton)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Del\")).Attributes[\"onclick\"] = \"sendFile('','\" + GetUrlWithQSHash(\"UpLoad.aspx?del=true&key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"'));return false;\";" + Environment.NewLine);
+                                sb.Append("			    ((FileUpload)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Fi\")).Attributes[\"onchange\"] = \"if('\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"'==''){PopDialog('','Please save the record first before upload.','');}else{sendFile(this.files[0],'\" + GetUrlWithQSHash(\"UpLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + pKeySystemId + "\") + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"')); return false;} \";" + Environment.NewLine);
+                                sb.Append("			    ((ImageButton)e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Del\")).Attributes[\"onclick\"] = \"sendFile('','\" + GetUrlWithQSHash(\"UpLoad.aspx?del=true&key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey) + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + pKeySystemId + "\") + \"',refreshUploadCallback(this,'\" + ImageGridDisplay.ClientID + \"'));return false;\";" + Environment.NewLine);
                             }
                             sb.Append("			    if (!hasImageContent || (hasImageContent && isImage)) {" + Environment.NewLine);
-                            sb.Append("			        ImageGridDisplay.OnClientClick = \"PopDialog('','<img src= \\\"\" + (!hasImageContent ?\"images/DefaultImg.png\": GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\")) + \"\\\" />',''); return false;\";" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"PopDialog('','<img src= \\\"\" + (!hasImageContent ?\"images/DefaultImg.png\": GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + pKeySystemId + "\")) + \"\\\" />',''); return false;\";" + Environment.NewLine);
                             sb.Append("			    } else {" + Environment.NewLine);
-                            sb.Append("			        ImageGridDisplay.OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"'); return false;\";" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + pKeySystemId + "\") + \"'); return false;\";" + Environment.NewLine);
                             sb.Append("			    }" + Environment.NewLine);
                         }
                     }
@@ -7864,6 +7907,8 @@ namespace RO.Rule3
                             keyContentColumnName = !string.IsNullOrEmpty(keyContentColumnName) ? keyContentColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn);
                             string pKeyColumnName = drv["ColTblPK"].ToString();
                             pKeyColumnName = !string.IsNullOrEmpty(pKeyColumnName) ? pKeyColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey);
+                            string pKeyDbAppDatabase = drv["dbAppDatabase"].ToString();
+                            string pKeySystemId = drv["SystemId"].ToString();
 
                             sb.Append("			    try {" + Environment.NewLine);
                             sb.Append("			        string fileContent = RO.Common3.Utils.DecodeFileStream((byte[])dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"]);" + Environment.NewLine);
@@ -7875,9 +7920,9 @@ namespace RO.Rule3
                             sb.Append("			    } catch { isImage = hasImageContent; }" + Environment.NewLine);
                             sb.Append("			    ImageGridDisplay = e.Item.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "l\") as ImageButton;" + Environment.NewLine);
                             sb.Append("			    if (!hasImageContent || (hasImageContent && isImage)) {" + Environment.NewLine);
-                            sb.Append("			        ImageGridDisplay.OnClientClick = \"PopDialog('','<img src= \\\"\" + (!hasImageContent? \"images/DefaultImg.png\": GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\")) + \"\\\" />',''); return false;\";" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"PopDialog('','<img src= \\\"\" + (!hasImageContent? \"images/DefaultImg.png\": GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + pKeySystemId + "\")) + \"\\\" />',''); return false;\";" + Environment.NewLine);
                             sb.Append("			    } else {" + Environment.NewLine);
-                            sb.Append("			        ImageGridDisplay.OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + CSrc.SrcSystemId.ToString() + "\") + \"'); return false;\";" + Environment.NewLine);
+                            sb.Append("			        ImageGridDisplay.OnClientClick = \"window.open('\" + GetUrlWithQSHash(\"DnLoad.aspx?key=\" + dv" + dw["ProgramName"].ToString() + "Grid[e.Item.DataItemIndex][\"" + keyContentColumnName + "\"].ToString() + \"&tbl=dbo." + drv["TableName"].ToString() + "&knm=" + pKeyColumnName + "&col=" + drv["ColumnName"].ToString() + (string.IsNullOrEmpty(drv["ResizeHeight"].ToString()) ? string.Empty : "&hgt=" + drv["ResizeHeight"].ToString()) + (string.IsNullOrEmpty(drv["ResizeWidth"].ToString()) ? string.Empty : "&wth=" + drv["ResizeWidth"].ToString()) + "&sys=" + pKeySystemId + "\") + \"'); return false;\";" + Environment.NewLine);
                             sb.Append("			    }" + Environment.NewLine);
                         }
                     }
@@ -8227,13 +8272,15 @@ namespace RO.Rule3
                         keyContentColumnName = !string.IsNullOrEmpty(keyContentColumnName) ? keyContentColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn);
                         string pKeyColumnName = drv["ColTblPK"].ToString();
                         pKeyColumnName = !string.IsNullOrEmpty(pKeyColumnName) ? pKeyColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey);
+                        string pKeyDbAppDatabase = (CSrc.SrcSystemId.ToString() == drv["SystemId"].ToString() ? string.Empty : drv["dbAppDatabase"].ToString() + ".");
+                        string pKeySystemId = drv["SystemId"].ToString();
 
                         if (firstIb) { sb.Append("		    DataTable dtImg = null;" + Environment.NewLine); firstIb = false; }
                         sb.Append("		    if (!string.IsNullOrEmpty(dr[\"" + (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn) + "\"].ToString()))" + Environment.NewLine);
                         sb.Append("		    {" + Environment.NewLine);
                         sb.Append("		        if (lvi.FindControl(\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\") != null)" + Environment.NewLine);
                         sb.Append("		        {" + Environment.NewLine);
-                        sb.Append("		            dtImg = (new AdminSystem()).GetDbImg(dr[\"" + keyContentColumnName + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + pKeyColumnName + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
+                        sb.Append("		            dtImg = (new AdminSystem()).GetDbImg(dr[\"" + keyContentColumnName + "\"].ToString(), \"" + pKeyDbAppDatabase + "dbo." + drv["TableName"].ToString() + "\", \"" + pKeyColumnName + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
                         sb.Append("		            if (dtImg != null && dtImg.Rows.Count > 0)" + Environment.NewLine);
                         sb.Append("		            {" + Environment.NewLine);
                         sb.Append("		                dr[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] = dtImg.Rows[0][0] as byte[];" + Environment.NewLine);
@@ -8279,9 +8326,11 @@ namespace RO.Rule3
                         keyContentColumnName = !string.IsNullOrEmpty(keyContentColumnName) ? keyContentColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKeyColumn : pDKeyColumn);
                         string pKeyColumnName = drv["ColTblPK"].ToString();
                         pKeyColumnName = !string.IsNullOrEmpty(pKeyColumnName) ? pKeyColumnName : (drv["MasterTable"].ToString() == "Y" ? pMKey : pDKey);
+                        string pKeyDbAppDatabase = (CSrc.SrcSystemId.ToString() == drv["SystemId"].ToString() ? string.Empty : drv["dbAppDatabase"].ToString() + ".");
+                        string pKeySystemId = drv["SystemId"].ToString();
 
                         if (firstIb) { sb.Append("			DataTable dtImg = null;" + Environment.NewLine); firstIb = false; }
-                        sb.Append("			dtImg = (new AdminSystem()).GetDbImg(dv.Count == 0 ? \"0\" : dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + keyContentColumnName + "\"].ToString(), \"dbo." + drv["TableName"].ToString() + "\", \"" + pKeyColumnName + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
+                        sb.Append("			dtImg = (new AdminSystem()).GetDbImg(dv.Count == 0 ? \"0\" : dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + keyContentColumnName + "\"].ToString(), \"" + pKeyDbAppDatabase + "dbo." + drv["TableName"].ToString() + "\", \"" + pKeyColumnName + "\", \"" + drv["ColumnName"].ToString() + "\", LcAppConnString, LcAppPw);" + Environment.NewLine);
                         sb.Append("			if (dtImg != null && dtImg.Rows.Count > 0)" + Environment.NewLine);
                         sb.Append("			{" + Environment.NewLine);
                         sb.Append("			    dv[GetDataItemIndex(e.ItemIndex)].Row[\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"] = dtImg.Rows[0][0] as byte[];" + Environment.NewLine);
@@ -9770,7 +9819,7 @@ namespace RO.Rule3
         //        }
         //        //if (drv["ColumnIdentity"].ToString() != "Y" && (",ComboBox,DropDownList,ListBox,RadioButtonList,DataGrid,".IndexOf(","+drv["DisplayName"].ToString()+",") >= 0 || drv["DisplayMode"].ToString().ToLower() == "document"))
         //        //{
-        //        //    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+        //        //    using (GenScreensAccessBase dac = GetGenScreensAccess())
         //        //    {
         //        //        dt = dac.GetScreenObjDdlById(screenId, Int32.Parse(drv["ScreenObjId"].ToString()), "GetDdl" + drv["ColumnName"].ToString() + CSrc.SrcSystemId.ToString() + "S" + drv["ScreenObjId"].ToString(), "N", appDatabase, sysDatabase, CPrj.SrcDesDatabase, pMKey, drv["MultiDesignDb"].ToString(), CSrc);
         //        //    }
@@ -10483,7 +10532,7 @@ namespace RO.Rule3
         //        }
         //        //if (drv["ColumnIdentity"].ToString() != "Y" && (",ComboBox,DropDownList,ListBox,RadioButtonList,DataGrid,".IndexOf(","+drv["DisplayName"].ToString()+",") >= 0 || drv["DisplayMode"].ToString().ToLower() == "document"))
         //        //{
-        //        //    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+        //        //    using (GenScreensAccessBase dac = GetGenScreensAccess())
         //        //    {
         //        //        dt = dac.GetScreenObjDdlById(screenId, Int32.Parse(drv["ScreenObjId"].ToString()), "GetDdl" + drv["ColumnName"].ToString() + CSrc.SrcSystemId.ToString() + "S" + drv["ScreenObjId"].ToString(), "N", appDatabase, sysDatabase, CPrj.SrcDesDatabase, pMKey, drv["MultiDesignDb"].ToString(), CSrc);
         //        //    }
@@ -10901,7 +10950,7 @@ namespace RO.Rule3
         //    // dtCud.Rows[3]: Del script for detail table
         //    // dtCud.Rows[4]: Add script for detail table
         //    // dtCud.Rows[5]: Upd script for detail table
-        //    using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+        //    using (GenScreensAccessBase dac = GetGenScreensAccess())
         //    {
         //        dtCud = dac.GetScreenCud(screenId, dw["ScreenTypeName"].ToString(),CPrj.SrcDesDatabase, dw["MultiDesignDb"].ToString(), CSrc);
         //    }
@@ -11263,7 +11312,7 @@ namespace RO.Rule3
         //            {
         //                param = Utils.PopFirstWord(parameterNames, (char)44);
         //                dtype = Utils.PopFirstWord(parameterTypes, (char)44);
-        //                using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess()) { sbole = dac.GetSByteOle(dtype, CPrj); dbole = dac.GetDByteOle(dtype, CPrj); }
+        //                using (GenScreensAccessBase dac = GetGenScreensAccess()) { sbole = dac.GetSByteOle(dtype, CPrj); dbole = dac.GetDByteOle(dtype, CPrj); }
         //                sb.Append("			if (" + param + " == string.Empty)" + Environment.NewLine);
         //                sb.Append("			{" + Environment.NewLine);
         //                sb.Append("				cmd.Parameters.Add(\"@" + param + "\", OleDbType." + sbole + ").Value = System.DBNull.Value;" + Environment.NewLine);

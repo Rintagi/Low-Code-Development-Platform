@@ -18,11 +18,22 @@ namespace RO.WebRules
 	// Stock rules only. Written over by Rintagi on each deployment.
 	public class WebRule : RO.Common3.Encryption
 	{
+		private WebAccessBase GetWebAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new WebAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.WebAccess();
+			}
+		}
 
-        // Return false if email already exists as login name:
-        public bool WrIsUniqueEmail(string UsrEmail)
+		// Return false if email already exists as login name:
+		public bool WrIsUniqueEmail(string UsrEmail)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrIsUniqueEmail(UsrEmail);
             }
@@ -31,7 +42,7 @@ namespace RO.WebRules
         // Add a table to capture uploads of documents:
         public DataTable WrAddDocTbl(byte SystemId, string TableName, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrAddDocTbl(SystemId, TableName, dbConnectionString, dbPassword);
             }
@@ -40,7 +51,7 @@ namespace RO.WebRules
         // Add a table to capture workflow status:
         public DataTable WrAddWfsTbl(byte SystemId, string TableName, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrAddWfsTbl(SystemId, TableName, dbConnectionString, dbPassword);
             }
@@ -49,7 +60,7 @@ namespace RO.WebRules
         // Get a list of active user emails.
         public DataTable WrGetActiveEmails(string MaintMsgId)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrGetActiveEmails(MaintMsgId);
             }
@@ -58,7 +69,7 @@ namespace RO.WebRules
         // Get email and other info for a specific user.
         public DataTable WrGetUsrEmail(string UsrId)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrGetUsrEmail(UsrId);
             }
@@ -67,7 +78,7 @@ namespace RO.WebRules
 		// Return default CultureId or CultureTypeName as a string.
 		public string WrGetDefCulture(bool bCultureId)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetDefCulture(bCultureId);
 			}
@@ -76,7 +87,7 @@ namespace RO.WebRules
 		// Obtain table-valued function from the physical database for virtual table.
 		public string WrGetVirtualTbl(string TableId, byte DbId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetVirtualTbl(TableId, DbId, dbConnectionString, dbPassword);
 			}
@@ -85,7 +96,7 @@ namespace RO.WebRules
 		// Return column details from physical database.
 		public string WrSyncByDb(int UsrId, byte SystemId, byte DbId, string TableId, string TableName, string TableDesc, bool MultiDesignDb, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrSyncByDb(UsrId, SystemId, DbId, TableId, TableName, TableDesc, MultiDesignDb, dbConnectionString, dbPassword);
 			}
@@ -94,7 +105,7 @@ namespace RO.WebRules
 		// Return true if physical table has been synchronized successfully.
 		public string WrSyncToDb(byte SystemId, string TableId, string TableName, bool MultiDesignDb, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrSyncToDb(SystemId,TableId,TableName,MultiDesignDb,dbConnectionString,dbPassword);
 			}
@@ -103,7 +114,7 @@ namespace RO.WebRules
 		// Obtain stored procedure from the physical database for Custom Content.
 		public string WrGetCustomSp(string CustomDtlId, byte DbId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetCustomSp(CustomDtlId, DbId, dbConnectionString, dbPassword);
 			}
@@ -112,7 +123,7 @@ namespace RO.WebRules
 		// Obtain stored procedure from the physical database for Server Rule.
 		public string WrGetSvrRule(string ServerRuleId, byte DbId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetSvrRule(ServerRuleId, DbId, dbConnectionString, dbPassword);
 			}
@@ -121,7 +132,7 @@ namespace RO.WebRules
         // Return databases information for Data Table.
         public DataTable WrGetDbTableSys(string TableId, byte DbId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrGetDbTableSys(TableId, DbId, dbConnectionString, dbPassword);
             }
@@ -130,7 +141,7 @@ namespace RO.WebRules
 		// Return databases affected for synchronization of this stored procedure to physical database.
 		public DataTable WrGetSvrRuleSys(string ScreenId, byte DbId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetSvrRuleSys(ScreenId, DbId, dbConnectionString, dbPassword);
 			}
@@ -139,7 +150,7 @@ namespace RO.WebRules
 		// Return true if physical s.proc. has been synchronized successfully.
 		public string WrSyncProc(string ProcedureName, string ProcCode, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrSyncProc(ProcedureName, ProcCode, dbConnectionString, dbPassword);
 			}
@@ -148,7 +159,7 @@ namespace RO.WebRules
 		// Return true if physical function has been synchronized successfully.
 		public string WrSyncFunc(string FunctionName, string ProcCode, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrSyncFunc(FunctionName, ProcCode, dbConnectionString, dbPassword);
 			}
@@ -157,7 +168,7 @@ namespace RO.WebRules
 		// Update last synchronization date to the physical database.
 		public string WrUpdSvrRule(string ServerRuleId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrUpdSvrRule(ServerRuleId, dbConnectionString, dbPassword);
 			}
@@ -166,7 +177,7 @@ namespace RO.WebRules
 		// Return databases affected for synchronization of this stored procedure to physical database.
 		public DataTable WrGetReportApp(byte DbId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetReportApp(DbId, dbConnectionString, dbPassword);
 			}
@@ -175,7 +186,7 @@ namespace RO.WebRules
 		// Obtain stored procedure from the physical database for Server Rule.
 		public string WrGetRptProc(string ProcName, byte DbId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetRptProc(ProcName, DbId, dbConnectionString, dbPassword);
 			}
@@ -184,7 +195,7 @@ namespace RO.WebRules
 		// Update last synchronization date to the physical database.
 		public string WrUpdRptProc(string ReportId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrUpdRptProc(ReportId, dbConnectionString, dbPassword);
 			}
@@ -230,7 +241,7 @@ namespace RO.WebRules
 			string OutStr = string.Empty;
             if (InStr != string.Empty)
 			{
-                using (Access3.WebAccess dac = new Access3.WebAccess())
+                using (WebAccessBase dac = GetWebAccess())
                 {
                     OutStr = dac.WrGetMemTranslate(InStr, CultureId, dbConnectionString, dbPassword);
                 }
@@ -279,7 +290,7 @@ namespace RO.WebRules
 			string posttext;
 			DataTable dt = null;
 			string rtn = string.Empty;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetCtCrawler(CrawlerCd);
 			}
@@ -345,7 +356,7 @@ namespace RO.WebRules
 			if (dbConnectionString.IndexOf("Design") >= 0)
 			{
 				DataTable dt;
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dt = dac.WrGetCtButtonHlp(CultureId, dbConnectionString, dbPassword);
 				}
@@ -354,7 +365,7 @@ namespace RO.WebRules
                     dr["ButtonName"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonName"].ToString().Trim(), dbConnectionString, dbPassword);
                     dr["ButtonLongNm"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonLongNm"].ToString().Trim(), dbConnectionString, dbPassword);
                     dr["ButtonToolTip"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonToolTip"].ToString().Trim(), dbConnectionString, dbPassword);
-					using (Access3.WebAccess dac = new Access3.WebAccess())
+					using (WebAccessBase dac = GetWebAccess())
 					{
 						dac.WrInsCtButtonHlp(dr, CultureId, dbConnectionString, dbPassword);
 					}
@@ -369,7 +380,7 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetButtonHlp(CultureId, dbConnectionString, dbPassword);
 			}
@@ -378,7 +389,7 @@ namespace RO.WebRules
                 dr["ButtonName"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonName"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["ButtonLongNm"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonLongNm"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["ButtonToolTip"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ButtonToolTip"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsButtonHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -392,14 +403,14 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetMenuHlp(CultureId, dbConnectionString, dbPassword);
 			}
 			foreach (DataRow dr in dt.Rows)
 			{
                 dr["MenuText"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["MenuText"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsMenuHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -413,14 +424,14 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetMsgCenter(CultureId, dbConnectionString, dbPassword);
 			}
 			foreach (DataRow dr in dt.Rows)
 			{
                 dr["Msg"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["Msg"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsMsgCenter(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -436,14 +447,14 @@ namespace RO.WebRules
 			if (dbConnectionString.IndexOf("Design") >= 0)
 			{
 				DataTable dt;
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dt = dac.WrGetCultureLbl(CultureId);
 				}
 				foreach (DataRow dr in dt.Rows)
 				{
                     dr["Label"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["Label"].ToString().Trim(), dbConnectionString, dbPassword);
-					using (Access3.WebAccess dac = new Access3.WebAccess())
+					using (WebAccessBase dac = GetWebAccess())
 					{
 						dac.WrInsCultureLbl(dr, CultureId);
 					}
@@ -458,7 +469,7 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetReportHlp(CultureId, dbConnectionString, dbPassword);
 			}
@@ -466,7 +477,7 @@ namespace RO.WebRules
 			{
                 dr["DefaultHlpMsg"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["DefaultHlpMsg"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["ReportTitle"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ReportTitle"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsReportHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -480,14 +491,14 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetReportCriHlp(CultureId, dbConnectionString, dbPassword);
 			}
 			foreach (DataRow dr in dt.Rows)
 			{
                 dr["ColumnHeader"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ColumnHeader"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsReportCriHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -501,7 +512,7 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetScreenHlp(CultureId, dbConnectionString, dbPassword);
 			}
@@ -513,7 +524,7 @@ namespace RO.WebRules
                 dr["AddMsg"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["AddMsg"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["UpdMsg"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["UpdMsg"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["DelMsg"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["DelMsg"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsScreenHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -527,14 +538,14 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetScreenCriHlp(CultureId, dbConnectionString, dbPassword);
 			}
 			foreach (DataRow dr in dt.Rows)
 			{
                 dr["ColumnHeader"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ColumnHeader"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsScreenCriHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -548,14 +559,14 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetScreenFilterHlp(CultureId, dbConnectionString, dbPassword);
 			}
 			foreach (DataRow dr in dt.Rows)
 			{
                 dr["FilterName"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["FilterName"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsScreenFilterHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -569,7 +580,7 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetScreenObjHlp(CultureId, dbConnectionString, dbPassword);
 			}
@@ -582,7 +593,7 @@ namespace RO.WebRules
                 dr["TbHint"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["TbHint"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["ToolTip"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ToolTip"].ToString().Trim(), dbConnectionString, dbPassword);
                 dr["ErrMessage"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["ErrMessage"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsScreenObjHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -596,14 +607,14 @@ namespace RO.WebRules
 		{
 			int cnt = 0;
 			DataTable dt;
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				dt = dac.WrGetScreenTabHlp(CultureId, dbConnectionString, dbPassword);
 			}
 			foreach (DataRow dr in dt.Rows)
 			{
                 dr["TabFolderName"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["TabFolderName"].ToString().Trim(), dbConnectionString, dbPassword);
-				using (Access3.WebAccess dac = new Access3.WebAccess())
+				using (WebAccessBase dac = GetWebAccess())
 				{
 					dac.WrInsScreenTabHlp(dr, CultureId, dbConnectionString, dbPassword);
 				}
@@ -617,14 +628,14 @@ namespace RO.WebRules
         {
             int cnt = 0;
             DataTable dt;
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 dt = dac.WrGetLabel(CultureId, dbConnectionString, dbPassword);
             }
             foreach (DataRow dr in dt.Rows)
             {
                 dr["LabelText"] = WrGetTranslation(DefCulture, CultureId, CultureName, dr["LabelText"].ToString().Trim(), dbConnectionString, dbPassword);
-                using (Access3.WebAccess dac = new Access3.WebAccess())
+                using (WebAccessBase dac = GetWebAccess())
                 {
                     dac.WrInsLabel(dr, CultureId, dbConnectionString, dbPassword);
                 }
@@ -636,7 +647,7 @@ namespace RO.WebRules
 		// Generate or synchronize report template based on report wizard.
 		public string WrRptwizGen(Int32 RptwizId, string SystemId, string AppDatabase, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrRptwizGen(RptwizId, SystemId, AppDatabase, dbConnectionString, dbPassword);
 			}
@@ -645,7 +656,7 @@ namespace RO.WebRules
 		// Delete report template based on report wizard.
 		public bool WrRptwizDel(Int32 ReportId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrRptwizDel(ReportId, dbConnectionString, dbPassword);
 			}
@@ -654,7 +665,7 @@ namespace RO.WebRules
         // Create a copy of report template based on report wizard in advanced report definition.
         public bool WrXferRpt(Int32 ReportId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrXferRpt(ReportId, dbConnectionString, dbPassword);
             }
@@ -663,7 +674,7 @@ namespace RO.WebRules
 		// Replace GetDdlPermId3S1751:
 		public DataTable WrGetDdlPermId(string PermKeyId, Int32 ScreenId, Int32 TableId, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetDdlPermId(PermKeyId, ScreenId, TableId, bAll, keyId, dbConnectionString, dbPassword, ui, uc);
 			}
@@ -671,7 +682,7 @@ namespace RO.WebRules
 
 		public DataTable WrGetAdmMenuPerm(Int32 screenId, string keyId58, string dbConnectionString, string dbPassword, Int32 screenFilterId, UsrImpr ui, UsrCurr uc)
 		{
-			using (Access3.WebAccess dac = new Access3.WebAccess())
+			using (WebAccessBase dac = GetWebAccess())
 			{
 				return dac.WrGetAdmMenuPerm(screenId, keyId58, dbConnectionString, dbPassword, screenFilterId, ui, uc);
 			}
@@ -679,7 +690,7 @@ namespace RO.WebRules
 
         public Int32 CountEmailsSent()
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.CountEmailsSent();
             }
@@ -701,7 +712,7 @@ namespace RO.WebRules
 
         public DataTable GetDdlOriColumnId33S1682(string rptwizCatId, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.GetDdlOriColumnId33S1682(rptwizCatId, bAll, keyId, dbConnectionString, dbPassword, ui, uc, cultureId);
             }
@@ -709,7 +720,7 @@ namespace RO.WebRules
 
         public DataTable GetDdlSelColumnId33S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.GetDdlSelColumnId33S1682(screenId, bAll, keyId, filterId, dbConnectionString, dbPassword, ui, uc, cultureId);
             }
@@ -717,7 +728,7 @@ namespace RO.WebRules
 
         public DataTable GetDdlSelColumnId44S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.GetDdlSelColumnId44S1682(screenId, bAll, keyId, filterId, dbConnectionString, dbPassword, ui, uc, cultureId);
             }
@@ -725,7 +736,7 @@ namespace RO.WebRules
 
         public DataTable GetDdlSelColumnId77S1682(Int32 screenId, bool bAll, string keyId, string filterId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc, Int16 cultureId)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.GetDdlSelColumnId77S1682(screenId, bAll, keyId, filterId, dbConnectionString, dbPassword, ui, uc, cultureId);
             }
@@ -733,7 +744,7 @@ namespace RO.WebRules
 
         public DataTable GetDdlRptGroupId3S1652(string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.GetDdlRptGroupId3S1652(dbConnectionString, dbPassword);
             }
@@ -741,7 +752,7 @@ namespace RO.WebRules
 
         public DataTable GetDdlRptChart3S1652(string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.GetDdlRptChart3S1652(dbConnectionString, dbPassword);
             }
@@ -749,7 +760,7 @@ namespace RO.WebRules
 
         public DataTable GetDdlOperator3S1652(string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.GetDdlOperator3S1652(dbConnectionString, dbPassword);
             }
@@ -757,7 +768,7 @@ namespace RO.WebRules
 
         public string AddAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.AddAdmRptWiz95(LUser, LCurr, ds, dbConnectionString, dbPassword);
             }
@@ -765,7 +776,7 @@ namespace RO.WebRules
 
         public bool DelAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.DelAdmRptWiz95(LUser, LCurr, ds, dbConnectionString, dbPassword);
             }
@@ -773,7 +784,7 @@ namespace RO.WebRules
 
         public bool UpdAdmRptWiz95(LoginUsr LUser, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.UpdAdmRptWiz95(LUser, LCurr, ds, dbConnectionString, dbPassword);
             }
@@ -781,7 +792,7 @@ namespace RO.WebRules
 
         public void RmTranslatedLbl(string LabelId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 dac.RmTranslatedLbl(LabelId, dbConnectionString, dbPassword);
             }
@@ -789,7 +800,7 @@ namespace RO.WebRules
 
         public DataTable WrAddMenu(string PMenuId, string ParentId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrAddMenu(PMenuId, ParentId, dbConnectionString, dbPassword);
             }
@@ -797,7 +808,7 @@ namespace RO.WebRules
 
         public bool WrDelMenu(string MenuId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrDelMenu(MenuId, dbConnectionString, dbPassword);
             }
@@ -805,7 +816,7 @@ namespace RO.WebRules
 
         public void WrUpdMenu(string MenuId, string PMenuId, string ParentId, string MenuText, string CultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 dac.WrUpdMenu(MenuId, PMenuId, ParentId, MenuText, CultureId, dbConnectionString, dbPassword);
             }
@@ -813,7 +824,7 @@ namespace RO.WebRules
 
         public DataTable WrAddScreenTab(string TabFolderOrder, string ScreenId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrAddScreenTab(TabFolderOrder, ScreenId, dbConnectionString, dbPassword);
             }
@@ -821,7 +832,7 @@ namespace RO.WebRules
 
         public bool WrDelScreenTab(string ScreenTabId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrDelScreenTab(ScreenTabId, dbConnectionString, dbPassword);
             }
@@ -829,7 +840,7 @@ namespace RO.WebRules
 
         public void WrUpdScreenTab(string ScreenTabId, string TabFolderOrder, string TabFolderName, string CultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 dac.WrUpdScreenTab(ScreenTabId, TabFolderOrder, TabFolderName, CultureId, dbConnectionString, dbPassword);
             }
@@ -837,7 +848,7 @@ namespace RO.WebRules
 
         public DataTable WrAddScreenObj(string ScreenId, string PScreenObjId, string TabFolderId, bool IsTab, bool NewRow, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrAddScreenObj(ScreenId, PScreenObjId, TabFolderId, IsTab, NewRow, dbConnectionString, dbPassword);
             }
@@ -845,7 +856,7 @@ namespace RO.WebRules
 
         public bool WrDelScreenObj(string ScreenObjId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrDelScreenObj(ScreenObjId, dbConnectionString, dbPassword);
             }
@@ -853,7 +864,7 @@ namespace RO.WebRules
 
         public void WrUpdScreenObj(string ScreenObjId, string PScreenObjId, string TabFolderId, string ColumnHeader, string CultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 dac.WrUpdScreenObj(ScreenObjId, PScreenObjId, TabFolderId, ColumnHeader, CultureId, dbConnectionString, dbPassword);
             }
@@ -862,7 +873,7 @@ namespace RO.WebRules
         // Return ScreenId given program name.
         public string WrGetScreenId(string ProgramName, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrGetScreenId(ProgramName, dbConnectionString, dbPassword);
             }
@@ -871,7 +882,7 @@ namespace RO.WebRules
         // Return MasterTable given Screen ID and DB Column Id.
         public string WrGetMasterTable(string ScreenId, string ColumnId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrGetMasterTable(ScreenId, ColumnId, dbConnectionString, dbPassword);
             }
@@ -879,7 +890,7 @@ namespace RO.WebRules
 
         public DataTable WrGetScreenObj(string ScreenId, Int16 CultureId, string ScreenObjId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrGetScreenObj(ScreenId, CultureId, ScreenObjId, dbConnectionString, dbPassword);
             }
@@ -888,7 +899,7 @@ namespace RO.WebRules
         // Return SQL script for cloning purpose given Screen ID.
         public string WrCloneScreen(string ScreenId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrCloneScreen(ScreenId, dbConnectionString, dbPassword);
             }
@@ -897,7 +908,7 @@ namespace RO.WebRules
         // Return SQL script for cloning purpose given Report ID.
         public string WrCloneReport(string ReportId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrCloneReport(ReportId, dbConnectionString, dbPassword);
             }
@@ -906,7 +917,7 @@ namespace RO.WebRules
         // Purge audit trails older than YearOld:
         public void PurgeScrAudit(Int16 YearOld, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 dac.PurgeScrAudit(YearOld, dbConnectionString, dbPassword);
             }
@@ -915,7 +926,7 @@ namespace RO.WebRules
         // Set a flag to indicate reactJS screen already generated:
         public void WrUpdScreenReactGen(string ScreenId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 dac.WrUpdScreenReactGen(ScreenId, dbConnectionString, dbPassword);
             }
@@ -923,7 +934,7 @@ namespace RO.WebRules
 
         public DataTable WrGetWebRule(string ScreenId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.WebAccess dac = new Access3.WebAccess())
+            using (WebAccessBase dac = GetWebAccess())
             {
                 return dac.WrGetWebRule(ScreenId, dbConnectionString, dbPassword);
             }

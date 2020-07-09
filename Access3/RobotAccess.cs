@@ -5,7 +5,7 @@ namespace RO.Access3
 	using System.Data.OleDb;
 	using RO.Common3;
 
-	public class RobotAccess : Encryption, IDisposable
+	public class RobotAccess : RobotAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -14,7 +14,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -40,7 +40,7 @@ namespace RO.Access3
 			}
 		}
 
-		public DataTable GetEntityList()
+		public override DataTable GetEntityList()
 		{
 			if (da == null)
 			{
@@ -54,7 +54,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetClientTier(Int16 EntityId)
+		public override DataTable GetClientTier(Int16 EntityId)
 		{
 			if (da == null)
 			{
@@ -69,7 +69,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetRuleTier(Int16 EntityId)
+		public override DataTable GetRuleTier(Int16 EntityId)
 		{
 			if (da == null)
 			{
@@ -84,7 +84,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetDataTier(Int16 EntityId)
+		public override DataTable GetDataTier(Int16 EntityId)
 		{
 			if (da == null)
 			{
@@ -99,7 +99,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetCustomList(string searchTxt, string dbConnectionString, string dbPassword)
+		public override DataTable GetCustomList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -114,7 +114,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetScreenList(string searchTxt, string dbConnectionString, string dbPassword)
+		public override DataTable GetScreenList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -129,7 +129,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportList(string searchTxt, string dbConnectionString, string dbPassword)
+		public override DataTable GetReportList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -144,7 +144,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetWizardList(string searchTxt, string dbConnectionString, string dbPassword)
+		public override DataTable GetWizardList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -159,7 +159,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public int ExecSql(string InSql, string dbConnectionString, string dbPassword)
+		public override int ExecSql(string InSql, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn =  new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();

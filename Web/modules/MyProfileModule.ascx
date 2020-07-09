@@ -61,7 +61,7 @@
 
     Sys.Application.add_load(function () {
         var rememberToken = function () {
-            var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();      
+            var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val(); 
             var user_handle = getCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
             var token = getCookie(makeNameFromNS(appDomainUrl, "tokenJS"));
             if (user_handle && token) {

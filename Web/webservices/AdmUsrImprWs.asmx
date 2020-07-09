@@ -19,6 +19,8 @@ namespace RO.Web
     using System.Collections.Generic;
     using System.Web.SessionState;
     using System.Linq;
+    using System.Numerics;
+
             
     public class AdmUsrImpr66 : DataSet
     {
@@ -77,14 +79,14 @@ namespace RO.Web
             
         Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>() {
             {"UsrId95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlUsrId3S986"},{"mKey","UsrId95"},{"mVal","UsrId95Text"}, }},
-            {"UPicMed1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlUsrId3S986"},{"mKey","UsrId95"},{"mVal","PicMed1"}, {"baseTbl", "Usr"},{"baseKeyCol", "UsrId"},{"baseColName", "PicMed"},}},
+            {"UPicMed1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlUsrId3S986"},{"mKey","UsrId95"},{"mVal","PicMed1"}, {"baseTbl", "Usr"},{"baseKeyCol", "UsrId"},{"baseColName", "PicMed"},{"baseSystemId", "3"},}},
             {"ImprUsrId95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","ImprUsrId95Text"}, }},
-            {"IPicMed1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","PicMed1"}, {"baseTbl", "Usr"},{"baseKeyCol", "UsrId"},{"baseColName", "PicMed"},}},
-            {"FailedAttempt1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","FailedAttempt1"}, {"baseTbl", "Usr"},{"baseKeyCol", "UsrId"},{"baseColName", "FailedAttempt"},}},
+            {"IPicMed1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","PicMed1"}, {"baseTbl", "Usr"},{"baseKeyCol", "UsrId"},{"baseColName", "PicMed"},{"baseSystemId", "3"},}},
+            {"FailedAttempt1", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlImprUsrId3S1002"},{"mKey","ImprUsrId95"},{"mVal","FailedAttempt1"}, {"baseTbl", "Usr"},{"baseKeyCol", "UsrId"},{"baseColName", "FailedAttempt"},{"baseSystemId", "3"},}},
             {"InputBy95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlInputBy3S3360"},{"mKey","InputBy95"},{"mVal","InputBy95Text"}, }},
             {"ModifiedBy95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlModifiedBy3S3362"},{"mKey","ModifiedBy95"},{"mVal","ModifiedBy95Text"}, }},
             {"TestCulture95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlTestCulture3S3076"},{"mKey","TestCulture95"},{"mVal","TestCulture95Text"}, }},
-            {"TestCurrency95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlTestCulture3S3076"},{"mKey","TestCulture95"},{"mVal","TestCurrency95"}, {"baseTbl", "UsrImpr"},{"baseKeyCol", "UsrImprId"},{"baseColName", "TestCurrency"},}},
+            {"TestCurrency95", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlTestCulture3S3076"},{"mKey","TestCulture95"},{"mVal","TestCurrency95"}, {"baseTbl", "UsrImpr"},{"baseKeyCol", "UsrImprId"},{"baseColName", "TestCurrency"},{"baseSystemId", "3"},}},
         };
 
         private DataRow MakeTypRow(DataRow dr)
@@ -277,6 +279,10 @@ namespace RO.Web
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string,AutoCompleteResponse>();
+                /* Get Master By Id After start here */
+
+
+                /* Get Master By Id After end here */
                 mr.data = DataTableToListOfObject(dt, mstBlob, colAuth, utcColumns);
                 mr.supportingData = includeDtl ? new SerializableDictionary<string, AutoCompleteResponse>() { { "dtl", new AutoCompleteResponse() { data = DataTableToListOfObject(_GetDtlById(keyId, 0), dtlBlob, colAuth, utcColumns) } } } : supportingData;
                 mr.status = "success";
@@ -406,6 +412,8 @@ namespace RO.Web
         {
             bool isAdd = false;
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            string screenButton = options.ContainsKey("ScreenButton") ? options["ScreenButton"] : "";
+            string actionButton = options.ContainsKey("OnClickColumeName") ? options["OnClickColumeName"] : "";
             bool noTrans = Config.NoTrans;
             int commandTimeOut = Config.CommandTimeOut;
 
@@ -418,10 +426,10 @@ namespace RO.Web
                 {
                     dtl.Add(mst.Clone());
                 }
-                /* AsmxRule: Save Data Before */
+                /* AsmxRule: Save Data Before Validation */
 
 
-                /* AsmxRule End: Save Data Before */
+                /* AsmxRule End: Save Data Before Validation */
 
                 var pid = mst["UsrImprId95"];
                 isAdd = string.IsNullOrEmpty(pid);
@@ -449,6 +457,11 @@ namespace RO.Web
                         validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
                     };
                 }
+                /* AsmxRule: Save Data Before */
+
+
+                /* AsmxRule End: Save Data Before */
+
                 var ds = PrepAdmUsrImprData(mst, dtl, string.IsNullOrEmpty(mst["UsrImprId95"]));
                 string msg = string.Empty;
 

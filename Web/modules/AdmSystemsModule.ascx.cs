@@ -1686,7 +1686,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                 string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webRoot.Replace("/Web/", "");
 
-                string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+                string branch = Config.GitCheckoutBranch;
 
                 if ((branch ?? "").Contains("/"))
                 {
@@ -2006,7 +2006,7 @@ document.Rintagi = {{
 }}
 ", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName, systemId, siteApplicationPath);
 
-                if (System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"] != "N")
+                if (Config.AdvanceReactBuildVersion)
                 {
                     using (var sr = new System.IO.StreamReader(reactModuleDir + "/package.json", System.Text.UTF8Encoding.UTF8))
                     {

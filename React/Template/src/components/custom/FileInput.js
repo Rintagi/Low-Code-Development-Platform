@@ -238,15 +238,15 @@ class FileInputField extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!prevState.files || !prevState.files.length) return { files: nextProps.files };
-    const revisedFiles = (nextProps.files || []).reduce((a, o) => { a[o.DocId || o.fileName] = o; return a; }, {});
+    var isMultiDoc = false;
 
-    // log.debug(prevState);
-
+    const revisedFiles = (nextProps.files || []).reduce((a, o) => { a[o.DocId || o.fileName] = o; isMultiDoc = isMultiDoc || (o.DocId && true); return a; }, {});
     const x = [
       ...prevState.files.map(o => ({
         ...o
-        , base64: o && (o.base64 || (revisedFiles[o.DocId || o.fileName] || {}).base64)
-        , mimeType: o && (o.mimeType || (revisedFiles[o.DocId || o.fileName] || {}).mimeType)
+        , base64: o && (o.base64 || (revisedFiles[o.DocId || o.fileName] || {}).base64 || (!isMultiDoc && (nextProps.files || []).length == 1 && nextProps.files[0].base64))
+        , mimeType: o && (o.mimeType || (revisedFiles[o.DocId || o.fileName] || {}).mimeType || (!isMultiDoc && (nextProps.files || []).length == 1 && nextProps.files[0].mimeType))
+        , fileName: o && (o.fileName || (!isMultiDoc && (nextProps.files || []).length == 1 && nextProps.files[0].mimeType))
       })),
     ];
     return {
@@ -685,7 +685,7 @@ class FileInputField extends Component {
                         }
                         {obj && obj.ts && <p className={`dropzone__img-name truncate-inline pb-17 ${this.props.disabled && 'bblr-4'}`}><u>{moment(obj.ts).format('MMM D, YYYY')}</u></p>}
                         {obj && obj.InputOn && <p className={`dropzone__img-name truncate-inline pb-17 ${this.props.disabled && 'bblr-4'}`}><u>{moment(obj.InputOn, moment.ISO_8601).format('MMM D, YYYY')}</u></p>}
-                        <p className={`dropzone__img-name truncate-inline ${this.props.disabled && 'bblr-4'}`}>{obj && (((!obj.base64 && !obj.icon) ? 'Loading...' : obj.fileName))}</p>
+                        <p className={`dropzone__img-name truncate-inline ${this.props.disabled && 'bblr-4'}`}>{obj && (((!obj.base64 && !obj.icon) ? 'Click to Load' : obj.fileName))}</p>
                       </div>
                       {!this.props.disabled
                         && <button type='button' className='dropzone__img-delete-custom' onClick={this.removeSelectedFile(i)}>{'Remove'}</button>

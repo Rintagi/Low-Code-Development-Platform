@@ -10,7 +10,7 @@ namespace RO.Access3
     using System.Collections.Generic;
     using System.Linq;
 
-	public class DeployAccess : Encryption, IDisposable
+	public class DeployAccess : DeployAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -19,7 +19,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -65,7 +65,7 @@ namespace RO.Access3
 		}
 
 		// Make sure the target file does not exist as this backup is not overwriting:
-		public void BackupDb(string dbProviderCd, string connStr, string pwd, string dbName, string bkFile)
+		public override void BackupDb(string dbProviderCd, string connStr, string pwd, string dbName, string bkFile)
 		{
 			if (da == null)
 			{
@@ -112,7 +112,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public void OnlineDb(string connStr, string pwd, string dbName)
+		public override void OnlineDb(string connStr, string pwd, string dbName)
 		{
 			if (da == null)
 			{
@@ -139,7 +139,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public void RestoreWaDb(string dbProviderCd, string connStr, string pwd, string waDb, string waFile, string waPath)
+		public override void RestoreWaDb(string dbProviderCd, string connStr, string pwd, string waDb, string waFile, string waPath)
 		{
 			if (da == null)
 			{
@@ -194,7 +194,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public string GenRestoreScript(string dbProviderCd, string connStr, string pwd, string dbName, string iFileAbs, string rsFileRel, string dbPath)
+		public override string GenRestoreScript(string dbProviderCd, string connStr, string pwd, string dbName, string iFileAbs, string rsFileRel, string dbPath)
 		{
 			string rsScript;
 			if (dbProviderCd == "S")
@@ -230,7 +230,7 @@ namespace RO.Access3
 			return rsScript;
 		}
 		
-		public void DropDb(string dbProviderCd, string connStr, string pwd, string dbName)
+		public override void DropDb(string dbProviderCd, string connStr, string pwd, string dbName)
 		{
 			if (da == null)
 			{
@@ -260,7 +260,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public void TruncateTable(string connStr, string pwd, string tableName)
+		public override void TruncateTable(string connStr, string pwd, string tableName)
 		{
 			if (da == null)
 			{
@@ -286,7 +286,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public bool DbExists(string connStr, string pwd)
+		public override bool DbExists(string connStr, string pwd)
 		{
 			if (da == null)
 			{
@@ -310,7 +310,7 @@ namespace RO.Access3
 			}
 			return ret;
 		}
-        public void MkDBOwner(string connStr, string usr, string pwd, string dbName)
+        public override void MkDBOwner(string connStr, string usr, string pwd, string dbName)
         {
             if (da == null)
             {
@@ -348,7 +348,7 @@ namespace RO.Access3
             return;
         }
 		// Makes sure on Sybase all design databases including ??Design are the same size as below.
-        public void DbCreate(string connStr, string pwd, string dbName)
+        public override void DbCreate(string connStr, string pwd, string dbName)
         {
             if (da == null)
             {
@@ -394,7 +394,7 @@ namespace RO.Access3
             return;
         }
 
-		public DataTable GetReleaseInf(int releaseId)
+		public override DataTable GetReleaseInf(int releaseId)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -409,7 +409,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReleaseDtl(int releaseId)
+		public override DataTable GetReleaseDtl(int releaseId)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -423,7 +423,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReleaseVer(int ReleaseId, string EntityCode)
+		public override DataTable GetReleaseVer(int ReleaseId, string EntityCode)
 		{
 			if (da == null) {throw new System.ObjectDisposedException(GetType().FullName);}
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -438,7 +438,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetYrReadme(int ReleaseId, string EntityCode)
+		public override DataTable GetYrReadme(int ReleaseId, string EntityCode)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -461,12 +461,12 @@ namespace RO.Access3
                 return dt;
             }
         }
-        public DataTable GetTables(string connStr, string pwd, string dbName)
+        public override DataTable GetTables(string connStr, string pwd, string dbName)
         {
             return GetData("USE " + dbName + " SELECT so.name AS tbName,(SELECT 1 FROM dbo.syscolumns WHERE id=so.id AND (status & 128) = 128) AS hasIdentity FROM dbo.sysobjects so WHERE type = 'U' AND name <> 'dtproperties' ORDER BY so.name", connStr, pwd);
         }
 
-        public void DbExec(string sql, string connStr, string pwd, string dbName)
+        public override void DbExec(string sql, string connStr, string pwd, string dbName)
         {
             using (OleDbConnection cn = new OleDbConnection(connStr + DecryptString(pwd)))
             {
@@ -489,7 +489,7 @@ namespace RO.Access3
             }
         }
 
-        public void UpdateRelease(string server, string desDBName, string user, string pwd, string nmSpace, string moduleName)
+        public override void UpdateRelease(string server, string desDBName, string user, string pwd, string nmSpace, string moduleName)
         {
             SqlConnectionStringBuilder connStr = new SqlConnectionStringBuilder();
             connStr.UserID = user;
@@ -551,7 +551,7 @@ namespace RO.Access3
                 }
             }
         }
-        public List<string> FixMetaReference(string connStr, string pwd, string desDBName, string srcNmSpace, string nmSpace, string moduleName, List<string> modifiedBy, List<string> systemId, DataTable srcSystemMap, DataTable tarSystemMap)
+        public override List<string> FixMetaReference(string connStr, string pwd, string desDBName, string srcNmSpace, string nmSpace, string moduleName, List<string> modifiedBy, List<string> systemId, DataTable srcSystemMap, DataTable tarSystemMap)
         {
             List<string> failedEntries = new List<string>();
 
@@ -622,7 +622,7 @@ where not exists(select top 1 1 from {2}.dbo.Usr u where u.UsrId = t.{0})
             }
 
         }
-        public int AddSystem(string server, string desDBName, string user, string pwd, string nmSpace, string moduleName, string oledbconnectionstring)
+        public override int AddSystem(string server, string desDBName, string user, string pwd, string nmSpace, string moduleName, string oledbconnectionstring)
         {
             SqlConnectionStringBuilder connStr = new SqlConnectionStringBuilder();
             connStr.UserID = user;
@@ -685,7 +685,7 @@ where not exists(select top 1 1 from {2}.dbo.Usr u where u.UsrId = t.{0})
                 return newSystemId;
             }
         }
-        public void TransferTable(string srcServer, string srcDb, string srcUser, string srcPwd, string tbName, string tarServer, string tarDb, string tarUser, string tarPwd, System.Collections.Generic.Dictionary<string, KeyValuePair<string, List<string[]>>> needTranslate, System.Collections.Generic.Dictionary<System.Text.RegularExpressions.Regex, System.Text.RegularExpressions.MatchEvaluator> reSimple, System.Collections.Generic.Dictionary<System.Text.RegularExpressions.Regex, System.Text.RegularExpressions.MatchEvaluator> reScript)
+        public override void TransferTable(string srcServer, string srcDb, string srcUser, string srcPwd, string tbName, string tarServer, string tarDb, string tarUser, string tarPwd, System.Collections.Generic.Dictionary<string, KeyValuePair<string, List<string[]>>> needTranslate, System.Collections.Generic.Dictionary<System.Text.RegularExpressions.Regex, System.Text.RegularExpressions.MatchEvaluator> reSimple, System.Collections.Generic.Dictionary<System.Text.RegularExpressions.Regex, System.Text.RegularExpressions.MatchEvaluator> reScript)
         {
             SqlConnectionStringBuilder srcConnStr = new SqlConnectionStringBuilder();
             srcConnStr.UserID = srcUser;

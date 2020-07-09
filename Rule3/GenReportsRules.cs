@@ -13,6 +13,29 @@ namespace RO.Rule3
 
 	public class GenReportsRules
 	{
+		private GenReportsAccessBase GetGenReportsAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new GenReportsAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.GenReportsAccess();
+			}
+		}
+		private RobotAccessBase GetRobotAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new RobotAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.RobotAccess();
+			}
+		}
+
 		public bool DeleteProgram(string GenPrefix, string programName, Int32 reportId, string appDatabase, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar)
 		{
 			try
@@ -90,12 +113,12 @@ namespace RO.Rule3
 
 		private void DeleteProgD(string GenPrefix, string dbDatabase, string appDatabase, string desDatabase, string programName, Int32 reportId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+			using (GenReportsAccessBase dac = GetGenReportsAccess())
 			{
 				dac.DelReportDel(GenPrefix, dbDatabase, appDatabase, desDatabase, programName, dbConnectionString, dbPassword);
 			}
 			DataView dvCri = null;
-			using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+			using (GenReportsAccessBase dac = GetGenReportsAccess())
 			{
 				dvCri = new DataView(dac.GetReportCriDel(GenPrefix, reportId, dbConnectionString, dbPassword));
 			}
@@ -103,7 +126,7 @@ namespace RO.Rule3
 			{
 				foreach (DataRowView drv in dvCri)
 				{
-					using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+					using (GenReportsAccessBase dac = GetGenReportsAccess())
 					{
 						dac.DelReportCriDel(GenPrefix, appDatabase, reportId, drv["ProcedureName"].ToString(), dbConnectionString, dbPassword);
 					}
@@ -114,24 +137,24 @@ namespace RO.Rule3
         public bool CreateProgram(string GenPrefix, Int32 reportId, string reportTitle, string dbAppDatabase, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
 		{
 			DataTable dt = null;
-			using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+			using (GenReportsAccessBase dac = GetGenReportsAccess())
 			{
 				dt = dac.GetReportById(GenPrefix, reportId, CPrj, CSrc);
 			}
 			if (dt.Rows[0]["GenerateRp"].ToString() == "Y")
 			{
 				DataView dvCri = null;
-				using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+				using (GenReportsAccessBase dac = GetGenReportsAccess())
 				{
 					dvCri = new DataView(dac.GetReportCriteria(GenPrefix, reportId, CPrj, CSrc));
 				}
 				DataView dvObj = null;
-				using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+				using (GenReportsAccessBase dac = GetGenReportsAccess())
 				{
 					dvObj = new DataView(dac.GetReportColumns(GenPrefix, reportId, CPrj, CSrc));
 				}
 				DataView dvGrp = null;
-				using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+				using (GenReportsAccessBase dac = GetGenReportsAccess())
 				{
 					dvGrp = new DataView(dac.GetCriReportGrp(GenPrefix, reportId, CPrj, CSrc));
 				}
@@ -154,7 +177,7 @@ namespace RO.Rule3
 						CreateProgC(GenPrefix, dt.Rows[0], reportId, reportTitle, dbAppDatabase, dvCri, dvObj, dvGrp, CPrj, CSrc, CPrj.TarClientProgramPath, CPrj.TarClientFrwork);
 					}
 					// Create source data tier programs:
-					using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+					using (GenReportsAccessBase dac = GetGenReportsAccess())
 					{
 						dac.MkReportGet(GenPrefix, reportId, dt.Rows[0]["ProgramName"].ToString(), CSrc, dt.Rows[0]["dbAppDatabase"].ToString(), dt.Rows[0]["dbDesDatabase"].ToString());
 						dac.MkReportUpd(GenPrefix, reportId, dt.Rows[0]["ProgramName"].ToString(), CSrc, dt.Rows[0]["dbAppDatabase"].ToString(), dt.Rows[0]["dbDesDatabase"].ToString());
@@ -165,7 +188,7 @@ namespace RO.Rule3
 						CreateProgD(dt.Rows[0], reportId, dbAppDatabase, dvCri, dvObj, CPrj, CSrc, CTar, dbConnectionString, dbPassword);
 					}
                     // Reset regen flag to No:
-                    using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+                    using (GenReportsAccessBase dac = GetGenReportsAccess())
                     {
                         dac.SetRptNeedRegen(reportId, CSrc);
                     }
@@ -178,7 +201,7 @@ namespace RO.Rule3
         //public void ProxyProgram(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
         //{
         //    DataTable dt = null;
-        //    using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+        //    using (GenReportsAccessBase dac = GetGenReportsAccess())
         //    {
         //        dt = dac.GetReportById(GenPrefix, reportId, CPrj, CSrc);
         //    }
@@ -300,15 +323,15 @@ namespace RO.Rule3
 			if (ss != string.Empty)
 			{
 				if (CPrj.TarDesProviderCd == "S") {ss = pt.SqlToSybase (CPrj.EntityId,CPrj.TarDesDatabase,ss,dbConnectionString,dbPassword);}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql(ds.ScriptDropSp(SpName, SpType), CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql("SET QUOTED_IDENTIFIER ON", CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					if (CPrj.TarDesProviderCd == "S")
 					{
@@ -319,11 +342,11 @@ namespace RO.Rule3
 						dac.ExecSql("SET ANSI_NULLS ON", CTar.TarConnectionString, CTar.TarDbPassword);
 					}
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql(ss, CTar.TarConnectionString, CTar.TarDbPassword);
 				}
-				using (Access3.RobotAccess dac = new Access3.RobotAccess())
+				using (RobotAccessBase dac = GetRobotAccess())
 				{
 					dac.ExecSql("SET QUOTED_IDENTIFIER OFF", CTar.TarConnectionString, CTar.TarDbPassword);
 				}
@@ -430,7 +453,7 @@ namespace RO.Rule3
 			}
 			sb.Append("	</ReportParameters>" + Environment.NewLine);
 			DataView dvElm = null;
-			using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+			using (GenReportsAccessBase dac = GetGenReportsAccess())
 			{
 				dvElm = new DataView(dac.GetReportElm(GenPrefix, reportId, CSrc));
 			}
@@ -549,7 +572,7 @@ namespace RO.Rule3
 			string pfix2;
 			string sfix;
 			DataView dvCtr = null;
-			using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+			using (GenReportsAccessBase dac = GetGenReportsAccess())
 			{
 				dvCtr = new DataView(dac.GetReportCtr(GenPrefix, PRptCtrId, RptElmId, RptCelId, CSrc));
 			}
@@ -624,7 +647,7 @@ namespace RO.Rule3
 		private void MakeReportCha(string GenPrefix, ref StringBuilder sb, string RptCtrId, string sIndent, CurrSrc CSrc)
 		{
 			DataView dvCha = null;
-			using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+			using (GenReportsAccessBase dac = GetGenReportsAccess())
 			{
 				dvCha = new DataView(dac.GetReportCha(GenPrefix, RptCtrId, CSrc));
 			}
@@ -681,7 +704,7 @@ namespace RO.Rule3
 			DataView dvTbl = null;
 			DataView dvTbg = null;
 			DataView dvCtr = null;
-			using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+			using (GenReportsAccessBase dac = GetGenReportsAccess())
 			{
 				dvTbl = new DataView(dac.GetReportTbl(GenPrefix, RptCtrId, string.Empty, CSrc));
 			}
@@ -731,7 +754,7 @@ namespace RO.Rule3
 						if (drv["TblGrouping"].ToString() != null && drv["TblGrouping"].ToString() != string.Empty)  { sb.Append(drv["TblGrouping"].ToString()); }
 						if (drv["TblVisibility"].ToString() != null && drv["TblVisibility"].ToString() != string.Empty) { sb.Append(drv["TblVisibility"].ToString()); }
 						sb.Append(Environment.NewLine);
-						using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+						using (GenReportsAccessBase dac = GetGenReportsAccess())
 						{
 							dvTbg = new DataView(dac.GetReportTbl(GenPrefix, RptCtrId, drv["RptTblId"].ToString(), CSrc));
 						}
@@ -759,7 +782,7 @@ namespace RO.Rule3
 									{
 										sb.Append(sIndent + "		</TableCells></TableRow>" + Environment.NewLine);
 									}
-									using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+									using (GenReportsAccessBase dac = GetGenReportsAccess())
 									{
                                         // Test to see if the first table cell is being used.
 										dvCtr = new DataView(dac.GetReportCtr(GenPrefix, null, null, drg["RptCelId"].ToString(), CSrc));
@@ -1333,7 +1356,7 @@ namespace RO.Rule3
 					if ("ComboBox,DropDownList,ListBox,RadioButtonList".IndexOf(drv["DisplayName"].ToString()) >= 0)
 					{
                         string ddlFtrColumeName = drv["DdlFtrColumnName"].ToString();
-                        using (Access3.GenReportsAccess dac = new Access3.GenReportsAccess())
+                        using (GenReportsAccessBase dac = GetGenReportsAccess())
 						{
 							dac.MkReportGetIn(string.Empty, Int32.Parse(drv["ReportCriId"].ToString()), reportId.ToString() + drv["ColumnName"].ToString(), CSrc, dw["dbAppDatabase"].ToString(), dw["dbDesDatabase"].ToString());
 						}
@@ -1589,6 +1612,10 @@ namespace RO.Rule3
 			sb.Append("			LcAppPw = base.AppPwd(SystemId);" + Environment.NewLine);
             sb.Append("			try" + Environment.NewLine);
             sb.Append("			{" + Environment.NewLine);
+            //better code but wait for later round of upgrade
+            //sb.Append("				DataTable dt = (new RobotSystem()).GetEntityList();" + Environment.NewLine);
+            //sb.Append("				if (dt.Rows.Count == 0) throw new Exception(\"Empty Entity Table\");" + Environment.NewLine);
+            //sb.Append("				base.CPrj = new CurrPrj(dt.Rows[0]);" + Environment.NewLine);
             sb.Append("				base.CPrj = new CurrPrj(((new RobotSystem()).GetEntityList()).Rows[0]);" + Environment.NewLine);
             sb.Append("				DataRow row = base.SystemsList.Rows.Find(SystemId);" + Environment.NewLine);
             sb.Append("				base.CSrc = new CurrSrc(true, row);" + Environment.NewLine);

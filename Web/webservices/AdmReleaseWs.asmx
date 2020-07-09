@@ -19,6 +19,8 @@ namespace RO.Web
     using System.Collections.Generic;
     using System.Web.SessionState;
     using System.Linq;
+    using System.Numerics;
+
             
     public class AdmRelease98 : DataSet
     {
@@ -91,7 +93,7 @@ namespace RO.Web
             {"ReleaseOs191", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReleaseOs3S1703"},{"mKey","ReleaseOs191"},{"mVal","ReleaseOs191Text"}, }},
             {"EntityId191", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlEntityId3S1704"},{"mKey","EntityId191"},{"mVal","EntityId191Text"}, }},
             {"ReleaseTypeId191", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReleaseTypeId3S1705"},{"mKey","ReleaseTypeId191"},{"mVal","ReleaseTypeId191Text"}, }},
-            {"DeployPath199", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlEntityId3S1704"},{"mKey","EntityId191"},{"mVal","DeployPath199"}, {"baseTbl", "Entity"},{"baseKeyCol", "EntityId"},{"baseColName", "DeployPath"},}},
+            {"DeployPath199", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlEntityId3S1704"},{"mKey","EntityId191"},{"mVal","DeployPath199"}, {"baseTbl", "Entity"},{"baseKeyCol", "EntityId"},{"baseColName", "DeployPath"},{"baseSystemId", "3"},}},
             {"ObjectType192", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlObjectType3S1715"},{"mKey","ObjectType192"},{"mVal","ObjectType192Text"}, }},
             {"SProcOnly192", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlSProcOnly3S1722"},{"mKey","SProcOnly192"},{"mVal","SProcOnly192Text"}, }},
             {"SrcClientTierId192", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlSrcClientTierId3S1716"},{"mKey","SrcClientTierId192"},{"mVal","SrcClientTierId192Text"}, }},
@@ -335,6 +337,10 @@ namespace RO.Web
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string,AutoCompleteResponse>();
+                /* Get Master By Id After start here */
+
+
+                /* Get Master By Id After end here */
                 mr.data = DataTableToListOfObject(dt, mstBlob, colAuth, utcColumns);
                 mr.supportingData = includeDtl ? new SerializableDictionary<string, AutoCompleteResponse>() { { "dtl", new AutoCompleteResponse() { data = DataTableToListOfObject(_GetDtlById(keyId, 0), dtlBlob, colAuth, utcColumns) } } } : supportingData;
                 mr.status = "success";
@@ -473,6 +479,8 @@ namespace RO.Web
         {
             bool isAdd = false;
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            string screenButton = options.ContainsKey("ScreenButton") ? options["ScreenButton"] : "";
+            string actionButton = options.ContainsKey("OnClickColumeName") ? options["OnClickColumeName"] : "";
             bool noTrans = Config.NoTrans;
             int commandTimeOut = Config.CommandTimeOut;
 
@@ -485,10 +493,10 @@ namespace RO.Web
                 {
                     dtl.Add(mst.Clone());
                 }
-                /* AsmxRule: Save Data Before */
+                /* AsmxRule: Save Data Before Validation */
 
 
-                /* AsmxRule End: Save Data Before */
+                /* AsmxRule End: Save Data Before Validation */
 
                 var pid = mst["ReleaseId191"];
                 isAdd = string.IsNullOrEmpty(pid);
@@ -516,6 +524,11 @@ namespace RO.Web
                         validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
                     };
                 }
+                /* AsmxRule: Save Data Before */
+
+
+                /* AsmxRule End: Save Data Before */
+
                 var ds = PrepAdmReleaseData(mst, dtl, string.IsNullOrEmpty(mst["ReleaseId191"]));
                 string msg = string.Empty;
 

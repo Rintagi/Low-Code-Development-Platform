@@ -8,7 +8,7 @@ using RO.SystemFramewk;
 
 namespace RO.Access3
 {
-	public class WebPartAccess : Encryption, IDisposable
+	public class WebPartAccess : WebPartAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 
@@ -17,7 +17,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -43,7 +43,7 @@ namespace RO.Access3
 			}
 		}
 
-        public DataTable GetDdlDshFldDtl(bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
+        public override DataTable GetDdlDshFldDtl(bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("GetDdlDshFldDtl", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -69,7 +69,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetDdlDshFld(bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
+		public override DataTable GetDdlDshFld(bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetDdlDshFld", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -96,7 +96,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-        public void UpdDshFldDtl(string PublicAccess, string DshFldDtlId, string DshFldId, string DshFldDtlName, string DshFldDtlDesc, Int32 UsrId, string SystemId, string dbConnectionString, string dbPassword)
+        public override void UpdDshFldDtl(string PublicAccess, string DshFldDtlId, string DshFldId, string DshFldDtlName, string DshFldDtlDesc, Int32 UsrId, string SystemId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));

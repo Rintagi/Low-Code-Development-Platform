@@ -3,7 +3,7 @@ namespace RO.Rule3
 	using System;
 	using System.Text;
 	using System.Data;
-	using System.Data.OleDb;
+//	using System.Data.OleDb;
 	using System.Text.RegularExpressions;
     using System.Linq;
     using RO.Common3;
@@ -18,6 +18,18 @@ namespace RO.Rule3
 		private bool bNewApp;
         private bool bIsMeta;
         private string[] exceptTables;
+
+		private DbScriptAccessBase GetDbScriptAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new DbScriptAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.DbScriptAccess();
+			}
+		}
 		public DbScript(string TablesExempt, bool NewApp, bool isMeta = false)
 		{
 			sTablesExempt = TablesExempt;
@@ -32,7 +44,7 @@ namespace RO.Rule3
 
 		public DataTable GetFKeys(string dbProviderCd, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
 		{
-			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+			using (DbScriptAccessBase dac = GetDbScriptAccess())
 			{
 				switch (dbProviderCd)
 				{
@@ -74,7 +86,7 @@ ORDER BY so1.name"
 					sInClause = " AND so.name not in " + sExempt;
 				}
 			}
-			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+			using (DbScriptAccessBase dac = GetDbScriptAccess())
 			{
 				return dac.GetData(@"
                         SELECT so.name AS tbName
@@ -154,7 +166,7 @@ ORDER BY so1.name"
                     sb.Append("BEGIN\r\n");
                 }
 
-                using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+                using (DbScriptAccessBase dac = GetDbScriptAccess())
 				{
 					dtIx = dac.GetData("EXEC sp_helpindex " + dr["tbName"].ToString(), IsFrSource, CSrc, CTar);
 				}
@@ -162,7 +174,8 @@ ORDER BY so1.name"
 				{
 					if (drIx[0].ToString().Substring(0,3) != "PK_")	// No primary key.
 					{
-						sb.Append("IF EXISTS (SELECT name FROM sysindexes WHERE name = '" + drIx[0].ToString() + "')\r\n");
+                        //why is this necessary ? dropping table would drop index anyway
+						sb.Append("IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = '" + drIx[0].ToString() + "' AND o.name = '" + dr["tbName"].ToString() + "')\r\n");
 						sb.Append("DROP INDEX " + dr["tbName"].ToString() + "." + drIx[0].ToString() + " \r\n");
 					}
 				}
@@ -188,7 +201,7 @@ ORDER BY so1.name"
 			StringBuilder sbPk = new StringBuilder("");
 			DataTable dtCol;
 			DataTable dtPk;
-			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+			using (DbScriptAccessBase dac = GetDbScriptAccess())
 			{
 				dtCol = dac.GetColumnInfo(tbName,CSrc);
 				dtPk = dac.GetPKInfo(tbName,CSrc);
@@ -236,7 +249,7 @@ ORDER BY so1.name"
 
 		public DataTable GetViews(string dbProviderCd, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
 		{
-			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+			using (DbScriptAccessBase dac = GetDbScriptAccess())
 			{
 				switch (dbProviderCd)
 				{
@@ -253,7 +266,7 @@ ORDER BY so1.name"
 		
 		public DataTable GetSps(string SrcDbProviderCd, string TarDbProviderCd, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
 		{
-			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+			using (DbScriptAccessBase dac = GetDbScriptAccess())
 			{
 				if (SrcDbProviderCd == "M" && TarDbProviderCd == "M")	// FN: Functions returning scalar; TF: Functions returning result set.; IF inline table function
 				{
@@ -313,7 +326,7 @@ ORDER BY so1.name"
 				DataTable dtIx;
 				foreach (DataRow dr in dt.Rows)
 				{
-					using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+					using (DbScriptAccessBase dac = GetDbScriptAccess())
 					{
 						dtIx = dac.GetData("EXEC sp_helpindex " + dr["tbName"].ToString(), false, CSrc, CTar);
 					}
@@ -321,7 +334,7 @@ ORDER BY so1.name"
 					{
 						if (drIx[0].ToString().Substring(0,3) != "PK_")	// No primary key.
 						{
-							sb.Append("IF EXISTS (SELECT name FROM sysindexes WHERE name = '" + drIx[0].ToString() + "')\r\n");
+                            sb.Append("IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = '" + drIx[0].ToString() + "' AND o.name = '" + dr["tbName"].ToString() + "')\r\n");
 							sb.Append("DROP INDEX " + dr["tbName"].ToString() + "." + drIx[0].ToString() + " \r\nGO\r\n");
 						}
 					}
@@ -356,7 +369,7 @@ ORDER BY so1.name"
 			string db = "";
 			string hasIdentity = "";
 			DataTable dt = GetTables(dbProviderCd, true, IsInExempt, true, CSrc, CTar);
-            bool bIntegratedSecurity = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y" && (System.Configuration.ConfigurationManager.AppSettings["SSPI"] ?? "N") == "Y";
+            bool bIntegratedSecurity = Config.IntegratedSecurity;
             if (ReleaseOs == "L")
 			{
 				str += "# !/bin/bash\n";
@@ -442,7 +455,7 @@ ORDER BY so1.name"
 			dt = GetTables(SrcDbProviderCd, IsFrSource, false, false, CSrc, CTar);
 			foreach (DataRow dr2 in dt.Rows)
 			{
-				using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+				using (DbScriptAccessBase dac = GetDbScriptAccess())
 				{
 					dtIx = dac.GetData("EXEC sp_helpindex " + dr2["tbName"].ToString(), IsFrSource, CSrc, CTar);
 				}
@@ -461,10 +474,9 @@ ORDER BY so1.name"
                             sbCrea.Append("IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo." + dr2["tbName"].ToString() + "') and type='" + "U" + "')\r\n");
                             sbCrea.Append("BEGIN\r\n");
                             inConditionalBlock = true;
-
                         }
                         hasContent = true;
-						sbDrop.Append("IF EXISTS (SELECT name FROM sysindexes WHERE name = '" + drIx[0].ToString() + "')\r\n");
+                        sbDrop.Append("IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = '" + drIx[0].ToString() + "' AND o.name = '" + dr2["tbName"].ToString() + "')\r\n");
 						sbDrop.Append("    DROP INDEX " + dr2["tbName"].ToString() + "." + drIx[0].ToString() + " \r\n\r\n");
 						strIx = "CREATE ";
 						if (drIx[1].ToString().LastIndexOf("unique") > 0) {strIx += " UNIQUE ";}
@@ -475,7 +487,7 @@ ORDER BY so1.name"
 						sbDrop.Remove(0,sbDrop.Length); //clear the drop statement
 					}
 				}
-				using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+				using (DbScriptAccessBase dac = GetDbScriptAccess())
 				{
 					dtFK = dac.GetFKInfo(dr2["tbName"].ToString(), IsFrSource, CSrc, CTar);
 				}
@@ -525,7 +537,7 @@ ORDER BY so1.name"
 			dt = GetViews(SrcDbProviderCd, IsFrSource, CSrc, CTar);
             foreach (DataRow dr in dt.Rows)
 			{
-				using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+				using (DbScriptAccessBase dac = GetDbScriptAccess())
 				{
 					dtVw = dac.GetData("EXEC sp_helptext " + dr[0].ToString(), IsFrSource, CSrc, CTar);
 				}
@@ -566,7 +578,7 @@ ORDER BY so1.name"
                     )
 				{
                     // we use the [name] form to distinguish between hand coded string from sp_helptext
-                    Regex rx = new Regex("(CREATE PROCEDURE)(\\s+[^+]*)((\\[)?" + dr[0].ToString() + "(\\])?)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                    Regex rx = new Regex("(CREATE\\s+PROCEDURE)(\\s+[^+]*)((\\[)?" + dr[0].ToString() + "(\\])?)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
                     sb.Append(ScriptDropSp(dr[0].ToString(), dr[1].ToString().Trim()));
 					sb.Append("GO\r\n");
 					sb.Append("SET QUOTED_IDENTIFIER ON\r\n");
@@ -611,7 +623,7 @@ ORDER BY so1.name"
 		{
 			StringBuilder sbCrea = new StringBuilder("");
 			DataTable dtSp;
-			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+			using (DbScriptAccessBase dac = GetDbScriptAccess())
 			{
 				try
 				{
@@ -643,7 +655,7 @@ ORDER BY so1.name"
 				DataTable dt = GetSps(SrcDbProviderCd, TarDbProviderCd, IsFrSource, CSrc, CTar);
 				foreach (DataRow dr in dt.Rows)
 				{
-					using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+					using (DbScriptAccessBase dac = GetDbScriptAccess())
 					{
 						dtSp = dac.GetData("EXEC sp_helptext " + dr[0].ToString(), IsFrSource, CSrc, CTar);
 					}
@@ -665,49 +677,84 @@ ORDER BY so1.name"
 		public void ExecScript(string dbProviderCd, string Source, string CmdName, string IsqlFile, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword)
 		{
 			StringBuilder sbError = new StringBuilder("");
-			sbWarning.Remove(0, sbWarning.Length);
-			OleDbDataReader drd;
-			using (Access3.DbScriptAccess dac = new Access3.DbScriptAccess())
+            Regex isqlWarningRule = new Regex(@"Level\s+([1-9],|1[0-1],)");
+            Regex isqlErrorRule = new Regex(@"(?i)(Level\s+(1[2-9]|2[0-9]))|(Library\serror:)|(not\srecognized\sas\san\sinternal)|(isql:\sunknown\soption)|(Syntax\sError\sin)");
+            Regex batErrorRule = new Regex(@"(?i)(\s+denied\.|\s+msg\s+|\s+error\s+|\s+failed)");
+            bool addToError = false;
+            bool addToWarning = false;
+
+            sbWarning.Remove(0, sbWarning.Length);
+			//OleDbDataReader drd;
+            Func<object, string, bool> processResult = (v, s) =>
+            {
+                if (!v.Equals(System.DBNull.Value))
+                {
+                    if (IsqlFile == string.Empty)	// batch bcp
+                    {
+                        if (batErrorRule.IsMatch(s)) { addToError = true; }
+                        if (addToError) { sbError.Append(Regex.Replace(s, @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n"); }
+                    }
+                    else
+                    {
+                        if (isqlErrorRule.IsMatch(s))
+                        {
+                            addToError = true;
+                            addToWarning = false;
+                        }
+                        else if (isqlWarningRule.IsMatch(s))
+                        {
+                            addToError = false;
+                            addToWarning = true;
+                        }
+                        if (addToError)
+                        {
+                            sbError.Append(Regex.Replace(s, @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n");
+                        }
+                        else if (addToWarning)
+                        {
+                            sbWarning.Append(Regex.Replace(s, @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n");
+                        }
+                    }
+                }
+                return true;
+            };
+
+			using (DbScriptAccessBase dac = GetDbScriptAccess())
 			{
-				drd = dac.ExecScript(dbProviderCd, CmdName, IsqlFile, dbProviderCd == string.Empty, CSrc, CTar, dbConnectionString, dbPassword);
+				dac.ExecScript(dbProviderCd, CmdName, IsqlFile, dbProviderCd == string.Empty, CSrc, CTar, dbConnectionString, dbPassword, processResult);
 			}
-			Regex isqlWarningRule = new Regex(@"Level\s+([1-9],|1[0-1],)");
-			Regex isqlErrorRule = new Regex(@"(?i)(Level\s+(1[2-9]|2[0-9]))|(Library\serror:)|(not\srecognized\sas\san\sinternal)|(isql:\sunknown\soption)|(Syntax\sError\sin)");
-			Regex batErrorRule = new Regex(@"(?i)(\s+denied\.|\s+msg\s+|\s+error\s+|\s+failed)");
-			bool addToError = false;
-			bool addToWarning = false;
-			while (drd.Read())
-			{
-				if (!drd.GetValue(0).Equals(System.DBNull.Value))
-				{
-					if (IsqlFile == string.Empty)	// batch bcp
-					{
-						if (batErrorRule.IsMatch(drd.GetString(0))) { addToError = true; }
-						if (addToError) { sbError.Append(Regex.Replace(drd.GetString(0), @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n"); }
-					}
-					else
-					{
-						if (isqlErrorRule.IsMatch(drd.GetString(0)))
-						{
-							addToError = true;
-							addToWarning = false;
-						}
-						else if (isqlWarningRule.IsMatch(drd.GetString(0)))
-						{
-							addToError = false;
-							addToWarning = true;
-						}
-						if (addToError)
-						{
-							sbError.Append(Regex.Replace(drd.GetString(0), @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n");
-						}
-						else if (addToWarning)
-						{
-							sbWarning.Append(Regex.Replace(drd.GetString(0), @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n");
-						}
-					}
-				}
-			}
+            //while (drd.Read())
+            //{
+            //    if (!drd.GetValue(0).Equals(System.DBNull.Value))
+            //    {
+            //        if (IsqlFile == string.Empty)	// batch bcp
+            //        {
+            //            if (batErrorRule.IsMatch(drd.GetString(0))) { addToError = true; }
+            //            if (addToError) { sbError.Append(Regex.Replace(drd.GetString(0), @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n"); }
+            //        }
+            //        else
+            //        {
+            //            if (isqlErrorRule.IsMatch(drd.GetString(0)))
+            //            {
+            //                addToError = true;
+            //                addToWarning = false;
+            //            }
+            //            else if (isqlWarningRule.IsMatch(drd.GetString(0)))
+            //            {
+            //                addToError = false;
+            //                addToWarning = true;
+            //            }
+            //            if (addToError)
+            //            {
+            //                sbError.Append(Regex.Replace(drd.GetString(0), @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n");
+            //            }
+            //            else if (addToWarning)
+            //            {
+            //                sbWarning.Append(Regex.Replace(drd.GetString(0), @"(-P\s*\w*\s|-U\s*\w*\s)", "") + "\r\n");
+            //            }
+            //        }
+            //    }
+            //}
 			if (IsqlFile == string.Empty)	// batch bcp
 			{
 				ApplicationAssert.CheckCondition(!batErrorRule.IsMatch(sbError.ToString()), Source, "DbScript.ExecScript()", sbError.ToString());

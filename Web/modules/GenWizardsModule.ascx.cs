@@ -258,7 +258,7 @@ namespace RO.Web
         protected void cSystemId_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             DataTable dt = (DataTable)Session[KEY_dtSystem];
-            bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+            bool singleSQLCredential = Config.DesShareCred;
             if (singleSQLCredential)
             {
                 dt.Rows[cSystemId.SelectedIndex]["dbAppProvider"] = Config.DesProvider;

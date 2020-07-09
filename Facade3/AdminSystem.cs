@@ -7,13 +7,26 @@ namespace RO.Facade3
     using RO.Common3;
     using RO.Common3.Data;
 	using RO.Rule3;
+    using RO.Access3;
 
-	public class AdminSystem : MarshalByRefObject
+    public class AdminSystem : MarshalByRefObject
 	{
+        private AdminAccessBase GetAdminAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new AdminAccess(CommandTimeout);
+            }
+            else
+            {
+                return new RO.Access3.Odbc.AdminAccess(CommandTimeout);
+            }
+        }
+        
 		// For screens:
 		public string GetMaintMsg()
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetMaintMsg();
 			}
@@ -21,7 +34,7 @@ namespace RO.Facade3
 
 		public DataTable GetHomeTabs(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetHomeTabs(UsrId, CompanyId, ProjectId, SystemId);
 			}
@@ -29,7 +42,7 @@ namespace RO.Facade3
 
 		public string SetCult(int UsrId, Int16 CultureId)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.SetCult(UsrId, CultureId);
 			}
@@ -37,7 +50,7 @@ namespace RO.Facade3
 
 		public byte GetCult(string lang)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetCult(lang);
 			}
@@ -45,7 +58,7 @@ namespace RO.Facade3
 
 		public DataTable GetLang(Int16 CultureId)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetLang(CultureId);
 			}
@@ -53,7 +66,7 @@ namespace RO.Facade3
 
         public DataTable GetLastPageInfo(Int32 screenId, Int32 usrId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetLastPageInfo(screenId, usrId, dbConnectionString, dbPassword);
             }
@@ -61,7 +74,7 @@ namespace RO.Facade3
 
         public void UpdLastPageInfo(Int32 screenId, Int32 usrId, string lastPageInfo, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdLastPageInfo(screenId, usrId, lastPageInfo, dbConnectionString, dbPassword);
             }
@@ -74,7 +87,7 @@ namespace RO.Facade3
 
         public void DelDshFldDtl(string DshFldDtlId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.DelDshFldDtl(DshFldDtlId, dbConnectionString, dbPassword);
             }
@@ -82,7 +95,7 @@ namespace RO.Facade3
 
         public void DelDshFld(string DshFldId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.DelDshFld(DshFldId, dbConnectionString, dbPassword);
             }
@@ -90,7 +103,7 @@ namespace RO.Facade3
 
         public string UpdDshFld(string PublicAccess, string DshFldId, string DshFldName, Int32 usrId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.UpdDshFld(PublicAccess, DshFldId, DshFldName, usrId, dbConnectionString, dbPassword);
             }
@@ -98,7 +111,7 @@ namespace RO.Facade3
 
         public string GetSchemaScrImp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetSchemaScrImp(screenId, cultureId, dbConnectionString, dbPassword);
             }
@@ -106,7 +119,7 @@ namespace RO.Facade3
 
         public string GetScrImpTmpl(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScrImpTmpl(screenId, cultureId, dbConnectionString, dbPassword);
             }
@@ -114,7 +127,7 @@ namespace RO.Facade3
 
         public DataTable GetButtonHlp(Int32 screenId, Int32 reportId, Int32 wizardId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetButtonHlp(screenId, reportId, wizardId, cultureId, dbConnectionString, dbPassword);
             }
@@ -122,7 +135,7 @@ namespace RO.Facade3
 
         public DataTable GetClientRule(Int32 screenId, Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetClientRule(screenId, reportId, cultureId, dbConnectionString, dbPassword);
             }
@@ -130,7 +143,7 @@ namespace RO.Facade3
 
         public DataTable GetScreenHlp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScreenHlp(screenId, cultureId, dbConnectionString, dbPassword);
             }
@@ -138,7 +151,7 @@ namespace RO.Facade3
 
         public DataTable GetGlobalFilter(Int32 usrId, Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetGlobalFilter(usrId, screenId, cultureId, dbConnectionString, dbPassword);
             }
@@ -146,7 +159,7 @@ namespace RO.Facade3
 
         public DataTable GetScreenFilter(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScreenFilter(screenId, cultureId, dbConnectionString, dbPassword);
             }
@@ -154,7 +167,7 @@ namespace RO.Facade3
 
         public DataTable GetScreenTab(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScreenTab(screenId, cultureId, dbConnectionString, dbPassword);
             }
@@ -162,7 +175,7 @@ namespace RO.Facade3
 
         public DataTable GetScreenCriHlp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScreenCriHlp(screenId, cultureId, dbConnectionString, dbPassword);
             }
@@ -170,7 +183,7 @@ namespace RO.Facade3
 
         public void LogUsage(Int32 UsrId, string UsageNote, string EntityTitle, Int32 ScreenId, Int32 ReportId, Int32 WizardId, string Miscellaneous, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.LogUsage(UsrId, UsageNote, EntityTitle, ScreenId, ReportId, WizardId, Miscellaneous, dbConnectionString, dbPassword);
             }
@@ -178,7 +191,7 @@ namespace RO.Facade3
 
         public DataTable GetInfoByCol(Int32 ScreenId, string ColumnName, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetInfoByCol(ScreenId, ColumnName, dbConnectionString, dbPassword);
             }
@@ -187,7 +200,7 @@ namespace RO.Facade3
 		// "string dbConnectionString, string dbPassword" is for backward compatibility and should be deleted:
         public bool IsValidOvride(Credential cr, Int32 usrId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.IsValidOvride(cr, usrId);
             }
@@ -213,7 +226,7 @@ namespace RO.Facade3
         // Obtain translated label one at a time from the table "Label" on system dependent database.
         public string GetLabel(Int16 CultureId, string LabelCat, string LabelKey, string CompanyId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetLabel(CultureId, LabelCat, LabelKey, CompanyId, dbConnectionString, dbPassword);
             }
@@ -222,7 +235,7 @@ namespace RO.Facade3
         // Obtain translated labels as one category from the table "Label" on system dependent database.
         public DataTable GetLabels(Int16 CultureId, string LabelCat, string CompanyId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetLabels(CultureId, LabelCat, CompanyId, dbConnectionString, dbPassword);
             }
@@ -230,7 +243,7 @@ namespace RO.Facade3
 
         public DataTable GetScrCriteria(string screenId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScrCriteria(screenId, dbConnectionString, dbPassword);
             }
@@ -238,7 +251,7 @@ namespace RO.Facade3
 
         public void MkGetScreenIn(string screenId, string screenCriId, string procedureName, string appDatabase, string sysDatabase, string multiDesignDb, string dbConnectionString, string dbPassword, bool reGen = true)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.MkGetScreenIn(screenId, screenCriId, procedureName, appDatabase, sysDatabase, multiDesignDb, dbConnectionString, dbPassword, reGen);
             }
@@ -247,7 +260,7 @@ namespace RO.Facade3
         /* revised to allow filtering by keyid at server level */
         public DataTable GetScreenIn(string screenId, string procedureName, int TotalCnt, string RequiredValid, int topN, string FilterTxt, bool bAll, string keyId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScreenIn(screenId, procedureName, TotalCnt, RequiredValid, topN, FilterTxt, bAll, keyId, ui, uc, dbConnectionString, dbPassword);
             }
@@ -256,7 +269,7 @@ namespace RO.Facade3
         /* always full list - backward compatiblity until all programs have been re-generated */
         public DataTable GetScreenIn(string screenId, string procedureName, int TotalCnt, string RequiredValid, int topN, string FilterTxt, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScreenIn(screenId, procedureName, TotalCnt, RequiredValid, topN, FilterTxt, true, string.Empty, ui, uc, dbConnectionString, dbPassword);
             }
@@ -265,7 +278,7 @@ namespace RO.Facade3
         /* For backward compatibility only - to be deleted */
         public DataTable GetScreenIn(string screenId, string procedureName, string RequiredValid, int topN, string FilterTxt, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetScreenIn(screenId, procedureName, 0, RequiredValid, topN, FilterTxt, true, string.Empty, ui, uc, dbConnectionString, dbPassword);
             }
@@ -273,7 +286,7 @@ namespace RO.Facade3
 
         public int CountScrCri(string ScreenCriId, string MultiDesignDb, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.CountScrCri(ScreenCriId, MultiDesignDb, dbConnectionString, dbPassword);
             }
@@ -281,7 +294,7 @@ namespace RO.Facade3
 
         public void UpdScrCriteria(string screenId, string programName, DataView dvCri, Int32 usrId, bool isCriVisible, DataSet ds, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdScrCriteria(screenId, programName, dvCri, usrId, isCriVisible, ds, dbConnectionString, dbPassword);
             }
@@ -294,7 +307,7 @@ namespace RO.Facade3
 
 		public DataTable GetAuthRow(Int32 ScreenId, string RowAuthoritys, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetAuthRow(ScreenId, RowAuthoritys, dbConnectionString, dbPassword);
 			}
@@ -302,7 +315,7 @@ namespace RO.Facade3
 
 		public DataTable GetAuthCol(Int32 ScreenId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetAuthCol(ScreenId, ui, uc, dbConnectionString, dbPassword);
 			}
@@ -310,7 +323,7 @@ namespace RO.Facade3
 
 		public DataTable GetAuthExp(Int32 ScreenId, Int16 CultureId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetAuthExp(ScreenId, CultureId, ui, uc, dbConnectionString, dbPassword);
 			}
@@ -318,7 +331,7 @@ namespace RO.Facade3
 
 		public DataTable GetScreenLabel(Int32 ScreenId, Int16 CultureId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetScreenLabel(ScreenId, CultureId, ui, uc, dbConnectionString, dbPassword);
 			}
@@ -326,7 +339,7 @@ namespace RO.Facade3
 
         public DataTable GetDdl(Int32 screenId, string procedureName, bool bAddNew, bool bAll, int topN, string keyId, string dbConnectionString, string dbPassword, string filterTxt, UsrImpr ui, UsrCurr uc)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetDdl(screenId, procedureName, bAddNew, bAll, topN, keyId, dbConnectionString, dbPassword, filterTxt, ui, uc);
             }
@@ -334,7 +347,7 @@ namespace RO.Facade3
 
         public DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans = false)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.RunWrRule(screenId, procedureName, dbConnectionString, dbPassword, parameterXML, ui, uc, noTrans);
             }
@@ -342,7 +355,7 @@ namespace RO.Facade3
 
         public DataTable GetExp(Int32 screenId, string procedureName, string useGlobalFilter, string dbConnectionString, string dbPassword, Int32 screenFilterId, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetExp(screenId, procedureName, useGlobalFilter, dbConnectionString, dbPassword, screenFilterId, dvCri, ui, uc, ds);
             }
@@ -350,7 +363,7 @@ namespace RO.Facade3
 
         public DataTable GetLis(Int32 screenId, string procedureName, bool bAddRow, string useGlobalFilter, int topN, string dbConnectionString, string dbPassword, Int32 screenFilterId, string key, string filterTxt, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetLis(screenId, procedureName, bAddRow, useGlobalFilter, topN, dbConnectionString, dbPassword, screenFilterId, key, filterTxt, dvCri, ui, uc, ds);
             }
@@ -358,7 +371,7 @@ namespace RO.Facade3
 
         public DataTable GetMstById(string procedureName, string keyId1, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetMstById(procedureName, keyId1, dbConnectionString, dbPassword);
             }
@@ -367,7 +380,7 @@ namespace RO.Facade3
         /* Albeit rare, this overload shall take care of more than one column as primary key */
         public DataTable GetMstById(string procedureName, string keyId1, string keyId2, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetMstById(procedureName, keyId1, keyId2, dbConnectionString, dbPassword);
             }
@@ -375,7 +388,7 @@ namespace RO.Facade3
 
         public DataTable GetDtlById(Int32 screenId, string procedureName, string keyId, string dbConnectionString, string dbPassword, Int32 screenFilterId, UsrImpr ui, UsrCurr uc)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetDtlById(screenId, procedureName, keyId, dbConnectionString, dbPassword, screenFilterId, ui, uc);
             }
@@ -383,7 +396,7 @@ namespace RO.Facade3
 
         public string AddData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
+            using (AdminAccessBase dac = GetAdminAccess(commandTimeOut))
             {
                 return dac.AddData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
@@ -391,7 +404,7 @@ namespace RO.Facade3
 
         public bool UpdData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
+            using (AdminAccessBase dac = GetAdminAccess(commandTimeOut))
             {
                 return dac.UpdData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
@@ -399,7 +412,7 @@ namespace RO.Facade3
 
         public bool DelData(Int32 ScreenId, bool bDeferError, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataSet ds, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
+            using (AdminAccessBase dac = GetAdminAccess(commandTimeOut))
             {
                 return dac.DelData(ScreenId, bDeferError, LUser, LImpr, LCurr, ds, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
@@ -407,7 +420,7 @@ namespace RO.Facade3
 
         public string DelDoc(string MasterId, string DocId, string UsrId, string DdlKeyTableName, string TableName, string ColumnName, string pMKey, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.DelDoc(MasterId, DocId, UsrId, DdlKeyTableName, TableName, ColumnName, pMKey, dbConnectionString, dbPassword);
             }
@@ -415,7 +428,7 @@ namespace RO.Facade3
 
         public bool IsRegenNeeded(string ProgramName, Int32 ScreenId, Int32 ReportId, Int32 WizardId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.IsRegenNeeded(ProgramName, ScreenId, ReportId, WizardId, dbConnectionString, dbPassword);
             }
@@ -425,7 +438,7 @@ namespace RO.Facade3
 
         public DataTable GetIn(Int32 reportId, string procedureName, int TotalCnt, string RequiredValid, bool bAll, string keyId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetIn(reportId, procedureName, TotalCnt, RequiredValid, bAll, keyId, ui, uc, dbConnectionString, dbPassword);
             }
@@ -433,7 +446,7 @@ namespace RO.Facade3
 
         public DataTable GetIn(Int32 reportId, string procedureName, int TotalCnt, string RequiredValid, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetIn(reportId, procedureName, TotalCnt, RequiredValid, true, string.Empty, ui, uc, dbConnectionString, dbPassword);
             }
@@ -442,7 +455,7 @@ namespace RO.Facade3
         // To be deleted: for backward compatibility only.
         public DataTable GetIn(Int32 reportId, string procedureName, bool bAddNew, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetIn(reportId, procedureName, bAddNew, ui, uc, dbConnectionString, dbPassword);
             }
@@ -450,7 +463,7 @@ namespace RO.Facade3
 
         public DataTable GetRptDt(Int32 reportId, string procedureName, UsrImpr ui, UsrCurr uc, DataSet ds, DataView dvCri, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
+            using (AdminAccessBase dac = GetAdminAccess(commandTimeOut))
             {
                 return dac.GetRptDt(reportId, procedureName, ui, uc, ds, dvCri, dbConnectionString, dbPassword, bUpd, bXls, bVal);
             }
@@ -458,7 +471,7 @@ namespace RO.Facade3
 
         public bool UpdRptDt(Int32 reportId, string procedureName, Int32 usrId, DataSet ds, DataView dvCri, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.UpdRptDt(reportId, procedureName, usrId, ds, dvCri, dbConnectionString, dbPassword);
             }
@@ -466,7 +479,7 @@ namespace RO.Facade3
 
         public DataTable GetPrinterList(string UsrGroups, string Members)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetPrinterList(UsrGroups, Members);
             }
@@ -474,7 +487,7 @@ namespace RO.Facade3
 
 		public void UpdLastCriteria(Int32 screenId, Int32 reportId, Int32 usrId, Int32 criId, string lastCriteria, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				dac.UpdLastCriteria(screenId, reportId, usrId, criId, lastCriteria, dbConnectionString, dbPassword);
 			}
@@ -482,7 +495,7 @@ namespace RO.Facade3
 
 		public DataTable GetReportHlp(Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetReportHlp(reportId, cultureId, dbConnectionString, dbPassword);
 			}
@@ -490,7 +503,7 @@ namespace RO.Facade3
 
 		public DataTable GetReportCriHlp(Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetReportCriHlp(reportId, cultureId, dbConnectionString, dbPassword);
 			}
@@ -498,7 +511,7 @@ namespace RO.Facade3
 
 		public DataTable GetReportSct()
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetReportSct();
 			}
@@ -506,7 +519,7 @@ namespace RO.Facade3
 
 		public DataTable GetReportItem(Int32 ReportId, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetReportItem(ReportId, dbConnectionString, dbPassword);
 			}
@@ -514,7 +527,7 @@ namespace RO.Facade3
 
 		public string GetRptPwd(string pwd)
 		{
-			using (Access3.AdminAccess dac = new Access3.AdminAccess())
+			using (AdminAccessBase dac = GetAdminAccess())
 			{
 				return dac.GetRptPwd(pwd);
 			}
@@ -524,7 +537,7 @@ namespace RO.Facade3
 
         public string GetSchemaWizImp(Int32 wizardId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetSchemaWizImp(wizardId, cultureId, dbConnectionString, dbPassword);
             }
@@ -532,7 +545,7 @@ namespace RO.Facade3
 
         public string GetWizImpTmpl(Int32 wizardId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetWizImpTmpl(wizardId, cultureId, dbConnectionString, dbPassword);
             }
@@ -540,7 +553,7 @@ namespace RO.Facade3
 
         public int ImportRows(Int32 wizardId, string procedureName, bool bOverwrite, Int32 usrId, DataSet ds, int iStart, string fileName, string dbConnectionString, string dbPassword, CurrPrj CPrj, CurrSrc CSrc, bool noTrans = false, int commandTimeOut = 1800)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess(commandTimeOut))
+            using (AdminAccessBase dac = GetAdminAccess(commandTimeOut))
             {
                 return dac.ImportRows(wizardId, procedureName, bOverwrite, usrId, ds, iStart, fileName, dbConnectionString, dbPassword, CPrj, CSrc, noTrans);
             }
@@ -548,7 +561,7 @@ namespace RO.Facade3
 
         public string AddDbDoc(string MasterId, string TblName, string DocName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr lu)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.AddDbDoc(MasterId, TblName, DocName, MimeType, DocSize, dc, dbConnectionString, dbPassword, lu);
             }
@@ -556,7 +569,7 @@ namespace RO.Facade3
 
         public string GetDocId(string MasterId, string TblName, string DocName, string UsrId, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetDocId(MasterId, TblName, DocName, UsrId, dbConnectionString, dbPassword);
             }
@@ -564,7 +577,7 @@ namespace RO.Facade3
 
         public void UpdDbDoc(string DocId, string TblName, string DocName, string MimeType, long DocSize, byte[] dc, string dbConnectionString, string dbPassword, LoginUsr lu, string MasterId = null)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdDbDoc(DocId, TblName, DocName, MimeType, DocSize, dc, dbConnectionString, dbPassword, lu);
             }
@@ -572,7 +585,7 @@ namespace RO.Facade3
 
         public void UpdDbImg(string DocId, string TblName, string KeyName, string ColName, byte[] dc, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdDbImg(DocId, TblName, KeyName, ColName, dc, dbConnectionString, dbPassword);
             }
@@ -580,7 +593,7 @@ namespace RO.Facade3
 
         public bool IsMDesignDb(string TblName)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.IsMDesignDb(TblName);
             }
@@ -588,7 +601,7 @@ namespace RO.Facade3
 
         public DataTable GetDbDoc(string DocId, string TblName, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetDbDoc(DocId, TblName, dbConnectionString, dbPassword);
             }
@@ -596,7 +609,7 @@ namespace RO.Facade3
 
         public DataTable GetDbImg(string DocId, string TblName, string KeyName, string ColName, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetDbImg(DocId, TblName, KeyName, ColName, dbConnectionString, dbPassword);
             }
@@ -604,7 +617,7 @@ namespace RO.Facade3
 
         public Dictionary<string, List<string>> HasOutstandRegen(string ns, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.HasOutstandRegen(ns, dbConnectionString, dbPassword);
             }
@@ -612,7 +625,7 @@ namespace RO.Facade3
 
         public List<string> HasOutstandReleaseContent(string ns, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.HasOutstandReleaseContent(ns, dbConnectionString, dbPassword);
             }
@@ -620,7 +633,7 @@ namespace RO.Facade3
 
         public string GetDesignVersion(string ns, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetDesignVersion(ns, dbConnectionString, dbPassword);
             }
@@ -628,7 +641,7 @@ namespace RO.Facade3
 
         public void UpdFxRate(string FrCurrency, string ToCurrency, string ToFxRate)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdFxRate(FrCurrency, ToCurrency, ToFxRate);
             }
@@ -636,7 +649,7 @@ namespace RO.Facade3
 
         public DataTable GetFxRate(string FrCurrency, string ToCurrency)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 return dac.GetFxRate(FrCurrency, ToCurrency);
             }
@@ -644,7 +657,7 @@ namespace RO.Facade3
 
         public void MkWfStatus(string ScreenObjId, string MasterTable, string appDatabase, string sysDatabase, string dbConnectionString, string dbPassword)
         {
-            using (Access3.AdminAccess dac = new Access3.AdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.MkWfStatus(ScreenObjId, MasterTable, appDatabase, sysDatabase, dbConnectionString, dbPassword);
             }

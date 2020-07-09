@@ -43,7 +43,7 @@ namespace RO.Web
 				Session.Remove(KEY_dtSrcSystems);
 				Session.Remove(KEY_dtTarSystems);
 				GetEntity();
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                bool singleSQLCredential = Config.DesShareCred;
                 if (singleSQLCredential)
                 {
                     throw new Exception("Please disable shared DB credential(DesShareCred) in web.config and make sure datatier is setup probably before doing porting");

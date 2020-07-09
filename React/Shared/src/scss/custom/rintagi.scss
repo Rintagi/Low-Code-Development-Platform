@@ -2769,6 +2769,9 @@ label {
 .dropzone__img > i {
   padding-left: calc(50% - 15px);
   padding-top: 28px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .dropzone__input-custom > i {

@@ -21,3 +21,8 @@
 34~@~1019~@~All dates~@~AdmScrAudit 040 All dates~@~1 = 1~@~40~@~Y
 35~@~1~@~Impersonated by me~@~AdmUsr 045 Impersonated by me~@~(UsrId in (@Usrs) AND '1' = '1')~@~45~@~Y
 37~@~1~@~Has impersonation~@~AdmUsr 046 Has impersonation~@~'@Usrs' LIKE '%,%'~@~46~@~Y
+38~@~9~@~All~@~AdmScreen 010 All~@~1=1~@~10~@~Y
+39~@~9~@~NoClient~@~AdmScreen 020 NoClient~@~GenerateSc = 'N'~@~20~@~Y
+41~@~9~@~NoSP~@~AdmScreen 030 NoSP~@~GenerateSr = 'N'~@~30~@~Y
+42~@~9~@~GenAudit~@~AdmScreen 040 GenAudit~@~GenAudit = 'Y'~@~40~@~Y
+43~@~9~@~NeedReGen~@~AdmScreen 050 NeedReGen~@~NeedReGen= 'Y'~@~50~@~Y

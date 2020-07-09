@@ -7,7 +7,7 @@ namespace RO.Access3
     using RO.Common3.Data;
 	using RO.SystemFramewk;
 
-	public class GenReportsAccess : Encryption, IDisposable
+	public class GenReportsAccess : GenReportsAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -16,7 +16,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -42,7 +42,7 @@ namespace RO.Access3
 			}
 		}
 
-        public void SetRptNeedRegen(Int32 reportId, CurrSrc CSrc)
+        public override void SetRptNeedRegen(Int32 reportId, CurrSrc CSrc)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword));
@@ -56,7 +56,7 @@ namespace RO.Access3
             return;
         }
 
-		public DataTable GetReportById(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetReportById(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -75,7 +75,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportColumns(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetReportColumns(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -92,7 +92,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetCriReportGrp(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetCriReportGrp(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -109,7 +109,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportCriteria(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetReportCriteria(string GenPrefix, Int32 reportId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -126,7 +126,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void MkReportGet(string GenPrefix, Int32 reportId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
+		public override void MkReportGet(string GenPrefix, Int32 reportId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
 		{
 			if (da == null)
 			{
@@ -148,7 +148,7 @@ namespace RO.Access3
 		}
 
 		// Do not erase stored procedure as this is also called from SqlReportAccess.cs differently:
-		public void MkReportGetIn(string GenPrefix, Int32 reportCriId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
+		public override void MkReportGetIn(string GenPrefix, Int32 reportCriId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
 		{
 			if (da == null)
 			{
@@ -169,7 +169,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public void MkReportUpd(string GenPrefix, Int32 reportId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
+		public override void MkReportUpd(string GenPrefix, Int32 reportId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
 		{
 			if (da == null)
 			{
@@ -190,7 +190,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public DataTable GetReportDel(string GenPrefix, string srcDatabase, string dbConnectionString, string dbPassword)
+		public override DataTable GetReportDel(string GenPrefix, string srcDatabase, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -206,7 +206,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void DelReportDel(string GenPrefix, string srcDatabase, string appDatabase, string desDatabase, string programName, string dbConnectionString, string dbPassword)
+		public override void DelReportDel(string GenPrefix, string srcDatabase, string appDatabase, string desDatabase, string programName, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -225,7 +225,7 @@ namespace RO.Access3
 			finally {cn.Close();}
 		}
 
-		public DataTable GetReportCriDel(string GenPrefix, Int32 reportId, string dbConnectionString, string dbPassword)
+		public override DataTable GetReportCriDel(string GenPrefix, Int32 reportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -241,7 +241,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void DelReportCriDel(string GenPrefix, string appDatabase, Int32 reportId, string procedureName, string dbConnectionString, string dbPassword)
+		public override void DelReportCriDel(string GenPrefix, string appDatabase, Int32 reportId, string procedureName, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -260,7 +260,7 @@ namespace RO.Access3
 			finally {cn.Close();}
 		}
 
-		public DataTable GetReportElm(string GenPrefix, Int32 reportId, CurrSrc CSrc)
+		public override DataTable GetReportElm(string GenPrefix, Int32 reportId, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -276,7 +276,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportCtr(string GenPrefix, string PRptCtrId, string RptElmId, string RptCelId, CurrSrc CSrc)
+		public override DataTable GetReportCtr(string GenPrefix, string PRptCtrId, string RptElmId, string RptCelId, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -315,7 +315,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportCha(string GenPrefix, string RptCtrId, CurrSrc CSrc)
+		public override DataTable GetReportCha(string GenPrefix, string RptCtrId, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -331,7 +331,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportTbl(string GenPrefix, string RptCtrId, string ParentId, CurrSrc CSrc)
+		public override DataTable GetReportTbl(string GenPrefix, string RptCtrId, string ParentId, CurrSrc CSrc)
 		{
 			if (da == null)
 			{

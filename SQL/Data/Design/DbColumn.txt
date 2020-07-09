@@ -1538,3 +1538,7 @@
 7660~@~71~@~120~@~~@~NoTrans~@~Wizard - NoTrans~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~When 'Y', there is no transaction wrap(no rollback on failure)~@~
 7661~@~71~@~130~@~~@~CommandTimeOut~@~Wizard - CommandTimeOut~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~SQL command timeout in seconds~@~
 7662~@~22~@~330~@~~@~CommandTimeOut~@~Report - CommandTimeOut~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~SQL command timeout in seconds~@~
+7663~@~1325~@~60~@~~@~ChartData~@~Flowchart - ChartData~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7664~@~1325~@~10~@~~@~ChartId~@~Flowchart - ChartId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this menu item~@~
+7665~@~1325~@~20~@~~@~ChartName~@~Flowchart - ChartName~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is an integer tab index order between 0 - 32767 with an interval of 10 starting at 10~@~
+7666~@~1325~@~50~@~~@~ChartDesc~@~Flowchart - ChartDesc~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the custom program or http:/https:/file:/mailto: this menu item should invoke, if applicable~@~

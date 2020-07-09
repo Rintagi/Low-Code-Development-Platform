@@ -13,9 +13,20 @@
 
     public class GenSectionRules
     {
+        private GenSectionAccessBase GetGenSectionAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+            {
+                return new GenSectionAccess();
+            }
+            else
+            {
+                return new RO.Access3.Odbc.GenSectionAccess();
+            }
+        }
         public bool CreateProgram(string SectionCd, CurrPrj CPrj, CurrSrc CSrc)
         {
-            using (Access3.GenSectionAccess dac = new Access3.GenSectionAccess())
+            using (GenSectionAccessBase dac = GetGenSectionAccess())
             {
                 StreamWriter sw;
                 StringBuilder Ascx;
@@ -80,7 +91,7 @@
                 }
             }
             // Reset regen flag to NO:
-            using (Access3.GenSectionAccess dac = new Access3.GenSectionAccess())
+            using (GenSectionAccessBase dac = GetGenSectionAccess())
             {
                 dac.SetSctNeedRegen(SectionCd);
             }
@@ -119,7 +130,7 @@
                 if (dtObj.Select("LinkTypeCd = 'LGO'").Count() > 0)
                 {
                     drObj = (dtObj.Select("LinkTypeCd = 'LGO'"))[0];
-                    using (Access3.GenSectionAccess dac = new Access3.GenSectionAccess())
+                    using (GenSectionAccessBase dac = GetGenSectionAccess())
                     {
                         dvLnk = dac.GetPageLnk(drObj["PageObjId"].ToString()).DefaultView;
                     }
@@ -211,7 +222,7 @@
                     {
                         tm.Append("        <div class=\"SctGrpDiv" + drv["SctGrpColId"].ToString() + "\">" + Environment.NewLine);
                     }
-                    using (Access3.GenSectionAccess dac = new Access3.GenSectionAccess())
+                    using (GenSectionAccessBase dac = GetGenSectionAccess())
                     {
                         dvLnk = dac.GetPageLnk(drv["PageObjId"].ToString()).DefaultView;
                     }
@@ -604,7 +615,7 @@
                     }
                 }
                 sb.Append(".PageObj" + drv["PageObjId"].ToString() + " { " + drv["PageObjCss"].ToString() + " }" + Environment.NewLine);
-                using (Access3.GenSectionAccess dac = new Access3.GenSectionAccess())
+                using (GenSectionAccessBase dac = GetGenSectionAccess())
                 {
                     dvLnk = dac.GetPageLnk(drv["PageObjId"].ToString()).DefaultView;
                 }

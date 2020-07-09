@@ -349,6 +349,9 @@ export function SaveEmbeddedImage(mstId, dtlId, isMaster, screenColumnName, docJ
     )
 }
 
+export function SaveEmbeddedDoc(...args) { return SaveEmbeddedImage(...args) }
+
+
 export function GetDocZipDownload(keyId, options, accessScope) {
     return fetchData(baseUrl + '/AdmServerRuleWs.asmx/GetDocZipDownload'
         , {

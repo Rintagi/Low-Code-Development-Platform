@@ -241,7 +241,7 @@ namespace RO.Web
                 DataTable dt = value;
                 Session[KEY_SystemsList] = dt;
                 dt.PrimaryKey = new DataColumn[] { dt.Columns["SystemId"] };
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                bool singleSQLCredential = Config.DesShareCred;
                 for (int i = dt.Rows.Count; i < dt.Rows.Count; i++)
                 {
                     DataRow dr = dt.Rows[i];
@@ -398,8 +398,8 @@ namespace RO.Web
             {
                 if (null == value) { Session.Remove(KEY_CacheCPrj); }
                 else { Session[KEY_CacheCPrj] = value; }
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
-                string RedirectProjectRoot = System.Configuration.ConfigurationManager.AppSettings["RedirectProjectRoot"];
+                bool singleSQLCredential = Config.DesShareCred;
+                string RedirectProjectRoot = Config.RedirectProjectRoot;
 
                 if (singleSQLCredential)
                 {
@@ -441,7 +441,7 @@ namespace RO.Web
             {
                 if (null == value) { Session.Remove(KEY_CacheCSrc); }
                 else { Session[KEY_CacheCSrc] = value; }
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                bool singleSQLCredential = Config.DesShareCred;
                 if (singleSQLCredential)
                 {
                     value.SrcDbProvider = Config.DesProvider;
@@ -464,7 +464,7 @@ namespace RO.Web
             {
                 if (null == value) { Session.Remove(KEY_CacheCTar); }
                 else { Session[KEY_CacheCTar] = value; }
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+                bool singleSQLCredential = Config.DesShareCred;
                 if (singleSQLCredential)
                 {
                     value.TarDbProvider = Config.DesProvider;
@@ -1785,7 +1785,7 @@ namespace RO.Web
             else
             {
                 if (LUser.LoginName.ToLower() != "anonymous" &&
-                    ((!LUser.OTPValidated && LUser.TwoFactorAuth && Config.EnableTwoFactorAuth == "Y")// block if second factor is not verified
+                    ((!LUser.OTPValidated && LUser.TwoFactorAuth && (Config.EnableTwoFactorAuth == "Y" || Config.EnableTwoFactorAuth == "M"))// block if second factor is not verified
                     ||
                     (string.IsNullOrEmpty(LUser.Provider) && (LUser.PwdChgDt == null || (LUser.PwdDuration == 0 ? false : (DateTime.Today > LUser.PwdChgDt.Value.AddDays(LUser.PwdDuration)))))
                     ))
@@ -2119,7 +2119,7 @@ namespace RO.Web
                 //var rate = Regex.Matches(sr.ReadToEnd(),"<span class=\"?bld\"?>([0-9.]+)(.*)</span>")[0].Groups[1].Value;
                 //return rate.Trim().Replace(",", ".");
                 var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/tools/price-conversion");
-                var CmcAPIKey = System.Configuration.ConfigurationManager.AppSettings["CMCAPIKey"];
+                var CmcAPIKey = Config.CMCAPIKey;
 
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
                 queryString["amount"] = "1";
@@ -2948,16 +2948,23 @@ namespace RO.Web
         /* this is must be in-sync with AsmxBase.cs version */
         protected RO.Facade3.Auth GetAuthObject()
         {
-            string jwtMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+            string jwtMasterKey = Config.JWTMasterKey;
             if (string.IsNullOrEmpty(jwtMasterKey))
             {
-                RO.Facade3.Auth.GenJWTMasterKey();
+                jwtMasterKey = RO.Facade3.Auth.GenJWTMasterKey();
                 System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"] = jwtMasterKey;
                 Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
                 if (config.AppSettings.Settings["JWTMasterKey"] != null) config.AppSettings.Settings["JWTMasterKey"].Value = jwtMasterKey;
                 else config.AppSettings.Settings.Add("JWTMasterKey", jwtMasterKey);
                 // save to web.config on production, but silently failed. this would remove comments in appsettings 
-                if (Config.DeployType == "PRD") config.Save(ConfigurationSaveMode.Modified);
+                if (Config.DeployType == "PRD")
+                {
+                    config.Save(ConfigurationSaveMode.Modified);
+                }
+                else
+                {
+                    throw new Exception(string.Format("require JWTMasterKey of value \"{0}\" in web.config", jwtMasterKey));
+                }
             }
 
             var auth = RO.Facade3.Auth.GetInstance(jwtMasterKey);
@@ -3164,12 +3171,12 @@ namespace RO.Web
             string isaHttps = Request.Headers["Front-End-Https"];
             string host = Request.Url.Host;
             string appPath = Request.ApplicationPath;
-            string behindProxy = System.Configuration.ConfigurationManager.AppSettings["BehindProxy"];
-            string behindSecureProxy = System.Configuration.ConfigurationManager.AppSettings["BehindSecureProxy"];
+            bool behindProxy = Config.BehindProxy;
+            bool behindSecureProxy = Config.BehindSecureProxy;
             return
-                behindProxy == "Y"
+                behindProxy
                 ||
-                behindSecureProxy == "Y"
+                behindSecureProxy
                 ||
                 (
                 !string.IsNullOrEmpty(extBasePath)
@@ -3324,7 +3331,7 @@ namespace RO.Web
                 || (xForwardedHttps ?? "").ToLower() == "on"
                 || (isaHttps ?? "").ToLower() == "on"
                 || Request.Cookies["secureChannelTest"] != null
-                || System.Configuration.ConfigurationManager.AppSettings["BehindSecureProxy"] == "Y"
+                || Config.BehindSecureProxy
                 ;
         }
 
@@ -3351,18 +3358,18 @@ namespace RO.Web
 
         protected void ErrorTrace(Exception e, string severity, Dictionary<string,string> requestInfo, HttpRequest request = null) 
         {
-            string supportEmail = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"];
+            string supportEmail = Config.TechSuppEmail;
             string subjectServerity = string.IsNullOrEmpty(severity) ? "Error" : severity.Substring(0, 1).ToUpper() + (severity.Length > 1 ? severity.Substring(1) : "");
             if (supportEmail != "none" && supportEmail != string.Empty)
             {
                 try
                 {
-                    string webtitle = System.Configuration.ConfigurationManager.AppSettings["WebTitle"] ?? "";
-                    string to = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"] ?? "cs@robocoder.com";
+                    string webtitle = Config.WebTitle ?? "";
+                    string to = Config.TechSuppEmail ?? "cs@robocoder.com";
                     string from = "cs@robocoder.com";
                     string fromTitle = "";
                     string replyTo = "";
-                    string smtpServer = System.Configuration.ConfigurationManager.AppSettings["SmtpServer"];
+                    string smtpServer = Config.SmtpServer;
                     string[] smtpConfig = smtpServer.Split(new char[] { '|' });
                     bool bSsl = smtpConfig[0].Trim() == "true" ? true : false;
                     int port = smtpConfig.Length > 1 ? int.Parse(smtpConfig[1].Trim()) : 25;
@@ -3545,7 +3552,7 @@ namespace RO.Web
                 string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webRoot.Replace("/Web/", "");
 
-                string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+                string branch = Config.GitCheckoutBranch;
 
                 if ((branch ?? "").Contains("/"))
                 {
@@ -3661,6 +3668,7 @@ namespace RO.Web
             string appRoot = webRoot.Replace("/Web/", "");
             return (Directory.Exists(appRoot + "/.git"));
         }
+
         protected Tuple<bool, List<string>, List<string>, List<string>, string> PublishReactModule(string systemAbbr, string systemId, bool gitCommit = true)
         {
             bool published = false;
@@ -3704,7 +3712,7 @@ document.Rintagi = {{
                     errMsg.Add(string.Format("React app for {0} not found at {1}", systemAbbr, reactModuleDir));
                     return new Tuple<bool, List<string>, List<string>, List<string>, string>(false, msg, errMsg, gitActions, reactModuleDir);
                 }
-                if (System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"] != "N")
+                if (Config.AdvanceReactBuildVersion)
                 {
                     using (var sr = new System.IO.StreamReader(reactModuleDir + "/package.json", System.Text.UTF8Encoding.UTF8))
                     {
@@ -3900,7 +3908,7 @@ document.Rintagi = {{
                     List<Task<Tuple<bool, List<string>, List<string>, List<string>, string>>> publishTasks = new List<Task<Tuple<bool, List<string>, List<string>, List<string>, string>>>()
                     {
                     };
-                    string[] ReactModules = (System.Configuration.ConfigurationManager.AppSettings["PublishReactModules"] ?? "").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] ReactModules = (Config.PublishReactModules ?? "").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     string[] RequestedModules = string.IsNullOrEmpty(modules) ? null : modules.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     DataTable dtSystems = SystemsList ?? (new LoginSystem()).GetSystemsList(string.Empty, string.Empty);
                     List<string> publishedModules = new List<string>();
@@ -4100,7 +4108,7 @@ document.Rintagi = {{
 
         }
 
-        protected Task<Tuple<bool, string, string, string, string>> CreateInstallerAsync(short upgradeReleaseId, short newReleaseId, string DeployPath, string releaseTypeAbbr, string package, string SysConnString, string SysAppPw, Dictionary<string, string> requestInfo, bool fixedInstallerName = false)
+        protected Task<Tuple<bool, string, string, string, string>> CreateInstallerAsync(short upgradeReleaseId, short newReleaseId, string DeployPath, string releaseTypeAbbr, string package, string SysConnString, string SysAppPw, Dictionary<string, string> requestInfo, bool fixedInstallerName = false, bool gitCommit = false)
         {
             string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
             string appRoot = webAppRoot.Replace("/Web/", "");
@@ -4174,11 +4182,18 @@ document.Rintagi = {{
                     string cmd_path = "\"" + Config.BuildExe + "\"";
                     string cmd_arg = "\"" + deployPath + "Install.sln\" /p:Configuration=Release /t:Rebuild /v:minimal /nologo";
                     string compileResult = Utils.WinProc(cmd_path, cmd_arg, true);
-                    string dropInstallerLocation = System.Configuration.ConfigurationManager.AppSettings["DeployDropLocation"];
+                    string dropInstallerLocation = Config.DropInstallerLocation;
                     string installerPath = "";
                     string dropError = "";
                     string dropToPathName = "";
                     string installerFileName = "";
+                    bool gitCommitSQL = (releaseTypeAbbr.ToUpper().Contains("PDT") 
+                                         ||
+                                         gitCommit
+                                         )
+                                        && System.IO.Directory.Exists(appRoot + "/SQL")
+                                        && System.IO.Directory.Exists(appRoot + "/.git")
+                                        ;
                     if (compileResult.IndexOf("failed") >= 0
                         || compileResult.Replace("errorreport", string.Empty).Replace("warnaserror", string.Empty).IndexOf("error") >= 0)
                     {
@@ -4200,6 +4215,26 @@ document.Rintagi = {{
                         }
                         catch (Exception ex) {
                             dropError = string.Join("\n", GetExceptionMessage(ex).ToArray());
+
+                        }
+
+                        if (gitCommitSQL)
+                        {
+                            try
+                            {
+                                string sqlPath = string.Format("{0}/SQL", appRoot);
+                                string gitAddAction = string.Format("add {0}", sqlPath);
+                                string gitCommitAction = string.Format("commit -m \"{0}\"", string.Format("DB metadata and SP snapshot"));
+
+                                var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitAddAction, true, appRoot);
+                                var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitCommitAction, true, appRoot);
+                                var cc = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("push"), true, appRoot);
+                            }
+                            catch (Exception ex)
+                            {
+                                // no git is fine
+                                RO.Common3.Utils.NeverThrow(ex);
+                            }
 
                         }
                     }
@@ -4271,7 +4306,7 @@ document.Rintagi = {{
 
         protected Task<string> GitCheckOutAsync(string _branch, Dictionary<string,string> requestInfo)
         {
-            string branch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+            string branch = Config.GitCheckoutBranch;
             string somethingRunning = Application["BuildRunning"] as string;
             Func<Task<string>> gitResetFromRepo = () =>
             {

@@ -18,13 +18,13 @@ const cpx = require('cpx');
 
 /* inter-module copy of shared services call, such as Cmn */
 /*
-cpx.copy('../Cmn/src/services/*.js','./src/services',{update:true,preserve:true,dereference:true},(error)=>{
+cpx.copy('../Cmn/src/services/*.js','./src/services',{update:false,preserve:true,dereference:true},(error)=>{
   console.log('cpx done for Cmn services');
 })
 */
 
-/* revised common files from Rintagi, only if newer, i.e. update:true */
-cpx.copy('../Shared/src/**/*.*','./src',{update:true,preserve:true,dereference:true},(error)=>{
+/* revised common files from Rintagi, ALWAYS override regardless of file date, i.e. update:false */
+cpx.copy('../Shared/src/**/*.*','./src',{update:false,preserve:true,dereference:true},(error)=>{
   console.log('cpx done for shared components');
 
   /* must be done AFTER shared ones as this is a final overwrite and cpx.copy is async

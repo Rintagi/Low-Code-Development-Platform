@@ -202,3 +202,5 @@
 1279~@~AdmServerRuleOvrd [   50] Main: ScreenId   100 [Default]~@~4367~@~1026~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 1280~@~AdmServerRuleOvrd [   10] Main: AtServerRuleOvrdId   100 [Default]~@~4356~@~1026~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 1282~@~AdmServerRuleOvrd [   80] Main: ServerRuledOvrdPrmId   100 [Default]~@~4361~@~1026~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1283~@~AdmFlowChart [   10] Main: ChartId   100 [Default]~@~4378~@~1027~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1284~@~AdmFlowChart [   60] Main: Generate   100 [Default]~@~4383~@~1027~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~

@@ -45,11 +45,17 @@ export default class ControlledPopover extends Component {
   render() {
     return (
       <span>
-        <i
+        {this.props.button && <button
+          id={this.props.id}
+          className={`${this.props.className}`}
+          onClick={this.toggle}>
+          {this.props.buttonName}
+        </button>}
+        {!this.props.button && <i
           id={this.props.id}
           className={`mdi mdi-help-box fs-20 color-light-grey v-align-sub pl-10 lh-23 pointer ${this.props.className}`}
           onClick={this.toggle}>
-        </i>
+        </i>}
         <Popover
           placement={this.props.placement || 'top-end'}
           hideArrow={true}

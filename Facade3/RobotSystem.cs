@@ -2,12 +2,26 @@ namespace RO.Facade3
 {
 	using System;
 	using System.Data;
+	using RO.Access3;
+	using RO.Common3;
 
 	public class RobotSystem : MarshalByRefObject
 	{
+		private RobotAccessBase GetRobotAccess(int CommandTimeout = 1800)
+		{
+			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
+			{
+				return new RobotAccess();
+			}
+			else
+			{
+				return new RO.Access3.Odbc.RobotAccess();
+			}
+		}
+
 		public DataTable GetEntityList()
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetEntityList();
 			}
@@ -15,7 +29,7 @@ namespace RO.Facade3
 
 		public DataTable GetClientTier(Int16 EntityId)
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetClientTier(EntityId);
 			}
@@ -23,7 +37,7 @@ namespace RO.Facade3
 
 		public DataTable GetRuleTier(Int16 EntityId)
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetRuleTier(EntityId);
 			}
@@ -31,7 +45,7 @@ namespace RO.Facade3
 
 		public DataTable GetDataTier(Int16 EntityId)
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetDataTier(EntityId);
 			}
@@ -39,7 +53,7 @@ namespace RO.Facade3
 
 		public DataTable GetCustomList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetCustomList(searchTxt, dbConnectionString, dbPassword);
 			}
@@ -47,7 +61,7 @@ namespace RO.Facade3
 
 		public DataTable GetScreenList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetScreenList(searchTxt, dbConnectionString, dbPassword);
 			}
@@ -55,7 +69,7 @@ namespace RO.Facade3
 
 		public DataTable GetReportList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetReportList(searchTxt, dbConnectionString, dbPassword);
 			}
@@ -63,7 +77,7 @@ namespace RO.Facade3
 
 		public DataTable GetWizardList(string searchTxt, string dbConnectionString, string dbPassword)
 		{
-			using (Access3.RobotAccess dac = new Access3.RobotAccess())
+			using (RobotAccessBase dac = GetRobotAccess())
 			{
 				return dac.GetWizardList(searchTxt, dbConnectionString, dbPassword);
 			}

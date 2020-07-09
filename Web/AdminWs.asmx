@@ -1290,7 +1290,8 @@ public partial class AdminWs : WebService
     [WebMethod]
     public Dictionary<string, string> GetLicenseDetail(string installID, string appID, string moduleName)
     {
-        string SysId = System.Configuration.ConfigurationManager.AppSettings["LicenseModule"] ?? "3";
+        /* old, not used */
+        string SysId = Config.LicenseModule ?? "3";
         KeyValuePair<string, string> conn = (from dr in ((new LoginSystem()).GetSystemsList(string.Empty, string.Empty)).AsEnumerable()
                                              where dr["SystemId"].ToString() == SysId
                                              select new KeyValuePair<string, string>(Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", dr["dbAppUserId"].ToString()), dr["dbAppPassword"].ToString())).First();
@@ -1313,7 +1314,7 @@ public partial class AdminWs : WebService
                 { "Modules",dr["Modules"].ToString()}
             }).ToList();
         string xxJSON = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(result);
-        string signerFileName = System.Configuration.ConfigurationManager.AppSettings["LicenseSignerPath"];
+        string signerFileName = Config.LicenseSignerPath;
         string sig = RO.Common3.Utils.SignData(UTF8Encoding.UTF8.GetBytes(xxJSON), signerFileName);
         license.Add("License", xxJSON);
         license.Add("LicenseSig", sig);
@@ -1324,8 +1325,9 @@ public partial class AdminWs : WebService
     [WebMethod]
     public string GetLicense(string installID, string appID, string moduleName)
     {
-        string SysId = System.Configuration.ConfigurationManager.AppSettings["LicenseModule"] ?? "3";
-        bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
+        /* new one, V2 */
+        string SysId = Config.LicenseModule ?? "3";
+        bool singleSQLCredential = Config.DesShareCred;
         KeyValuePair<string, string> conn = (from dr in ((new LoginSystem()).GetSystemsList(string.Empty, string.Empty)).AsEnumerable()
                                              where dr["SystemId"].ToString() == SysId
                                              select new KeyValuePair<string, string>(Config.GetConnStr(dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "",singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString()), singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString())).First();
@@ -1356,7 +1358,7 @@ public partial class AdminWs : WebService
         bool perInstance = result.Where(d => d["ModuleName"] == "Design").Select(d => d["PerInstance"] == "Y").Count() > 0;
         Dictionary<string, Dictionary<string, string>> ret = result.ToDictionary(m => m["ModuleName"], m => m);
         string xxJSON = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ret);
-        string signerFileName = System.Configuration.ConfigurationManager.AppSettings["LicenseSignerPath"];
+        string signerFileName = Config.LicenseSignerPath;
         Tuple<string, string, string> encodedLicense = RO.Common3.Utils.EncodeLicenseString(xxJSON, installID, appID, perInstance, true, signerFileName);
         return Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(new Dictionary<string, string>()
         {

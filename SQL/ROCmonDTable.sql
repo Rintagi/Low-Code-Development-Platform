@@ -89,7 +89,7 @@ AppItemId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_AppZip')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_AppZip' AND o.name = 'AppZip')
 DROP INDEX AppZip.IX_AppZip 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.AppZip') AND type='U')
 DROP TABLE dbo.AppZip
@@ -314,7 +314,7 @@ ColumnId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_DbKey_KeyName')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_DbKey_KeyName' AND o.name = 'DbKey')
 DROP INDEX DbKey.IX_DbKey_KeyName 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DbKey') AND type='U')
 DROP TABLE dbo.DbKey
@@ -332,7 +332,7 @@ KeyId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_DbTable')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IU_DbTable' AND o.name = 'DbTable')
 DROP INDEX DbTable.IU_DbTable 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DbTable') AND type='U')
 DROP TABLE dbo.DbTable
@@ -393,6 +393,23 @@ DocumentId
 END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Flowchart') and type='U')
+BEGIN
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Flowchart') AND type='U')
+DROP TABLE dbo.Flowchart
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Flowchart') and type='U')
+CREATE TABLE Flowchart ( 
+ChartId int IDENTITY(1,1) NOT NULL ,
+ChartName nvarchar (500) NOT NULL ,
+ChartDesc nvarchar (max) NULL ,
+ChartData nvarchar (max) NULL ,
+CONSTRAINT PK_Flowchart PRIMARY KEY CLUSTERED (
+ChartId
+)
+)
+END
+
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GlobalFilter') AND type='U')
 DROP TABLE dbo.GlobalFilter
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GlobalFilter') and type='U')
@@ -424,7 +441,7 @@ GlobalFilterKey
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Label')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_Label' AND o.name = 'Label')
 DROP INDEX Label.IX_Label 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Label') AND type='U')
 DROP TABLE dbo.Label
@@ -444,7 +461,7 @@ LabelId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_MemTrans')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IU_MemTrans' AND o.name = 'MemTrans')
 DROP INDEX MemTrans.IU_MemTrans 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MemTrans') AND type='U')
 DROP TABLE dbo.MemTrans
@@ -481,7 +498,7 @@ MenuId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_MenuHlp_MenuId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_MenuHlp_MenuId' AND o.name = 'MenuHlp')
 DROP INDEX MenuHlp.IX_MenuHlp_MenuId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MenuHlp') AND type='U')
 DROP TABLE dbo.MenuHlp
@@ -526,7 +543,7 @@ MsgId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_MsgCenter')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_MsgCenter' AND o.name = 'MsgCenter')
 DROP INDEX MsgCenter.IX_MsgCenter 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MsgCenter') AND type='U')
 DROP TABLE dbo.MsgCenter
@@ -618,7 +635,7 @@ ReportCriId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportCriHlp_ReportCriId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ReportCriHlp_ReportCriId' AND o.name = 'ReportCriHlp')
 DROP INDEX ReportCriHlp.IX_ReportCriHlp_ReportCriId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportCriHlp') AND type='U')
 DROP TABLE dbo.ReportCriHlp
@@ -668,7 +685,7 @@ ReportGrpId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportHlp_ReportId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ReportHlp_ReportId' AND o.name = 'ReportHlp')
 DROP INDEX ReportHlp.IX_ReportHlp_ReportId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportHlp') AND type='U')
 DROP TABLE dbo.ReportHlp
@@ -687,7 +704,7 @@ ReportHlpId
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportLstCri') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportLstCri')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ReportLstCri' AND o.name = 'ReportLstCri')
 DROP INDEX ReportLstCri.IX_ReportLstCri 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportLstCri') AND type='U')
 DROP TABLE dbo.ReportLstCri
@@ -727,7 +744,7 @@ ReportObjId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ReportObjHlp_ReportObjId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ReportObjHlp_ReportObjId' AND o.name = 'ReportObjHlp')
 DROP INDEX ReportObjHlp.IX_ReportObjHlp_ReportObjId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ReportObjHlp') AND type='U')
 DROP TABLE dbo.ReportObjHlp
@@ -871,7 +888,7 @@ RptElmId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_RptMemCri')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_RptMemCri' AND o.name = 'RptMemCri')
 DROP INDEX RptMemCri.IX_RptMemCri 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptMemCri') AND type='U')
 DROP TABLE dbo.RptMemCri
@@ -997,7 +1014,7 @@ RptTblId
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptTemplate') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_RptTemplate')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_RptTemplate' AND o.name = 'RptTemplate')
 DROP INDEX RptTemplate.IX_RptTemplate 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.RptTemplate') AND type='U')
 DROP TABLE dbo.RptTemplate
@@ -1273,7 +1290,7 @@ ScreenCriId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenCriHlp_ScreenCriId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ScreenCriHlp_ScreenCriId' AND o.name = 'ScreenCriHlp')
 DROP INDEX ScreenCriHlp.IX_ScreenCriHlp_ScreenCriId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenCriHlp') AND type='U')
 DROP TABLE dbo.ScreenCriHlp
@@ -1304,7 +1321,7 @@ ScreenDelId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenFilter_Id_Name')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ScreenFilter_Id_Name' AND o.name = 'ScreenFilter')
 DROP INDEX ScreenFilter.IX_ScreenFilter_Id_Name 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenFilter') AND type='U')
 DROP TABLE dbo.ScreenFilter
@@ -1323,7 +1340,7 @@ ScreenFilterId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenFilterHlp_FilterId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ScreenFilterHlp_FilterId' AND o.name = 'ScreenFilterHlp')
 DROP INDEX ScreenFilterHlp.IX_ScreenFilterHlp_FilterId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenFilterHlp') AND type='U')
 DROP TABLE dbo.ScreenFilterHlp
@@ -1376,7 +1393,7 @@ CultureId
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstCri') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenLstCri')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ScreenLstCri' AND o.name = 'ScreenLstCri')
 DROP INDEX ScreenLstCri.IX_ScreenLstCri 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstCri') AND type='U')
 DROP TABLE dbo.ScreenLstCri
@@ -1396,7 +1413,7 @@ END
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstInf') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenLstInf')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ScreenLstInf' AND o.name = 'ScreenLstInf')
 DROP INDEX ScreenLstInf.IX_ScreenLstInf 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenLstInf') AND type='U')
 DROP TABLE dbo.ScreenLstInf
@@ -1505,7 +1522,7 @@ ScreenTabId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ScreenTabHlp_ScreenTabId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ScreenTabHlp_ScreenTabId' AND o.name = 'ScreenTabHlp')
 DROP INDEX ScreenTabHlp.IX_ScreenTabHlp_ScreenTabId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ScreenTabHlp') AND type='U')
 DROP TABLE dbo.ScreenTabHlp
@@ -1549,7 +1566,7 @@ ScrMemCriDtlId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_ServerRule')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_ServerRule' AND o.name = 'ServerRule')
 DROP INDEX ServerRule.IX_ServerRule 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.ServerRule') AND type='U')
 DROP TABLE dbo.ServerRule
@@ -1660,7 +1677,7 @@ TbdRuleId
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Template') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Template_TmplDefault')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_Template_TmplDefault' AND o.name = 'Template')
 DROP INDEX Template.IX_Template_TmplDefault 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Template') AND type='U')
 DROP TABLE dbo.Template
@@ -1680,7 +1697,7 @@ END
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usage') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_Usage_UsrId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_Usage_UsrId' AND o.name = 'Usage')
 DROP INDEX Usage.IX_Usage_UsrId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usage') AND type='U')
 DROP TABLE dbo.Usage
@@ -1700,7 +1717,7 @@ END
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReport') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_UtReport_ProgramName')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_UtReport_ProgramName' AND o.name = 'UtReport')
 DROP INDEX UtReport.IX_UtReport_ProgramName 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UtReport') AND type='U')
 DROP TABLE dbo.UtReport
@@ -2153,7 +2170,7 @@ WebRuleId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IU_Wizard')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IU_Wizard' AND o.name = 'Wizard')
 DROP INDEX Wizard.IU_Wizard 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Wizard') AND type='U')
 DROP TABLE dbo.Wizard
@@ -2191,7 +2208,7 @@ WizardDelId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_WizardObj_WizardId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_WizardObj_WizardId' AND o.name = 'WizardObj')
 DROP INDEX WizardObj.IX_WizardObj_WizardId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WizardObj') AND type='U')
 DROP TABLE dbo.WizardObj
@@ -2208,7 +2225,7 @@ WizardObjId
 )
 
 GO
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_WizardRule_WizardId')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_WizardRule_WizardId' AND o.name = 'WizardRule')
 DROP INDEX WizardRule.IX_WizardRule_WizardId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WizardRule') AND type='U')
 DROP TABLE dbo.WizardRule

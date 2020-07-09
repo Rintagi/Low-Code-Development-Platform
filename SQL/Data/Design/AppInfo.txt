@@ -2579,4 +2579,40 @@ In default.master: replace section.css with the following:
 4. OTP cookie name cleanup
 5. proper column list in grid save dataset(Type/Display/Data)~@~~@~en-US~@~
 12621~@~  11. 184.00611~@~11~@~184~@~2020-06-11 00:00:00.000~@~~@~~@~1. Revise React Template and re-generate React Adm module~@~~@~en-US~@~
-12622~@~  11. 185~@~11~@~185~@~~@~~@~~@~~@~~@~~@~
+12622~@~  11. 185.00623~@~11~@~185~@~2020-06-23 00:00:00.000~@~~@~~@~1. revision to react/asmx for better backward compatibility
+2. fix cross module image button pull up~@~~@~en-US~@~
+12623~@~  11. 186.00624~@~11~@~186~@~2020-06-24 00:00:00.000~@~~@~~@~1. WrCloneScreen/WrCloneReport functionality
+2. add SQL auto snapshot to git during PTY creation DevOps~@~~@~en-US~@~
+12624~@~  11. 187.00625~@~11~@~187~@~2020-06-25 00:00:00.000~@~~@~~@~1. relax OTP cookie component to handle long lasting remember me(browser user agent change)
+2. avoid double precompilation of PDT build(cut prepare installer time)~@~~@~en-US~@~
+12625~@~  11. 188.00626~@~11~@~188~@~2020-06-26 00:00:00.000~@~~@~~@~1. add flowchart screen~@~~@~en-US~@~
+12626~@~  11. 189.00629~@~11~@~189~@~2020-06-29 00:00:00.000~@~~@~~@~1. refinement of deployment process for better backward compatibility of old projects~@~~@~en-US~@~
+12627~@~  11. 190.00630~@~11~@~190~@~2020-06-30 00:00:00.000~@~~@~~@~1. snapshot SQL on PDT package creation~@~~@~en-US~@~1.2300
+12628~@~  11. 191.00706~@~11~@~191~@~2020-07-06 00:00:00.000~@~~@~~@~1. support using odbc driver
+2. refined clone report functionality
+3. revised setup PS script(to install ODBC driver and fewer pre-req)
+4. flowchart functionality
+5. add app controlled web.config keys zapping~@~~@~en-US~@~
+12629~@~  11. 192.00707~@~11~@~192~@~2020-07-07 00:00:00.000~@~~@~~@~1. re-enable licensing mechanism~@~~@~en-US~@~
+12630~@~  11. 193.00707~@~11~@~193~@~2020-07-07 00:00:00.000~@~~@~~@~1. revision of flowchart screen(table change as well)
+2. re-enable license control functionality
+3. upgrade NewtonSoft.json.dll to 11, may require web.config runtime redirect
+
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-11.0.0.0" newVersion="11.0.0.0"/>
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+~@~~@~en-US~@~
+12631~@~  11. 194.00708~@~11~@~194~@~2020-07-08 00:00:00.000~@~~@~~@~1. refined flowchart screen~@~~@~en-US~@~
+12632~@~  11. 195.00708~@~11~@~195~@~2020-07-08 00:00:00.000~@~~@~~@~1. cleanup scattered web.config direct access and centralized in Config object
+2. minor fix to React multi-file control layer
+3. cleanup of flowchart program
+4. revised web.config appsetting sample comments.
+5. add sampleWeb.config for easier change tracking(and manual creation of web.config via git pull)~@~~@~en-US~@~
+12633~@~  11. 196.00709~@~11~@~196~@~2020-07-09 00:00:00.000~@~~@~~@~1. restructure React to make it more React Native friendly
+2. improve React login process to facilitate SSO from React side(when showpage is the site default, loading LPref in React)~@~~@~en-US~@~
+12634~@~  11. 197~@~11~@~197~@~~@~~@~~@~~@~~@~~@~

@@ -8,7 +8,7 @@ using RO.SystemFramewk;
 
 namespace RO.Access3
 {
-	public class SqlReportAccess : Encryption, IDisposable
+	public class SqlReportAccess : SqlReportAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
         private int _CommandTimeOut = 1800;
@@ -18,7 +18,7 @@ namespace RO.Access3
             _CommandTimeOut = 1800;
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -44,7 +44,7 @@ namespace RO.Access3
 			}
 		}
 
-		public DataTable GetDocImage(string ReportId, Int16 TemplateId, string dbConnectionString, string dbPassword)
+		public override DataTable GetDocImage(string ReportId, Int16 TemplateId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetDocImage", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -58,7 +58,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetGaugeValue(string reportId, string dbConnectionString, string dbPassword)
+		public override DataTable GetGaugeValue(string reportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetGaugeValue", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -71,7 +71,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetSqlReport(string reportId, string programName, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal)
+		public override DataTable GetSqlReport(string reportId, string programName, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal)
 		{
 			if (da == null) {throw new System.ObjectDisposedException( GetType().FullName );}
 			OleDbCommand cmd = new OleDbCommand("Get" + programName, new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -138,7 +138,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void UpdSqlReport(string reportId, string programName, DataView dvCri, Int32 usrId, DataSet ds, string dbConnectionString, string dbPassword)
+		public override void UpdSqlReport(string reportId, string programName, DataView dvCri, Int32 usrId, DataSet ds, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) {throw new System.ObjectDisposedException( GetType().FullName );}
 			OleDbConnection cn =  new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -210,7 +210,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public string MemSqlReport(string PublicAccess, string RptMemCriId, string RptMemFldId, string RptMemCriName, string RptMemCriDesc, string RptMemCriLink, string reportId, string programName, DataView dvCri, Int32 usrId, DataSet ds, string dbConnectionString, string dbPassword)
+		public override string MemSqlReport(string PublicAccess, string RptMemCriId, string RptMemFldId, string RptMemCriName, string RptMemCriDesc, string RptMemCriLink, string reportId, string programName, DataView dvCri, Int32 usrId, DataSet ds, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -319,7 +319,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-		public void UpdMemViewdt(string GenPrefix, string RptMemCriId, string dbConnectionString, string dbPassword)
+		public override void UpdMemViewdt(string GenPrefix, string RptMemCriId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -349,7 +349,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public void DelRptCriteria(string GenPrefix, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
+		public override void DelRptCriteria(string GenPrefix, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -367,7 +367,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public void IniRptCriteria(string GenPrefix, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
+		public override void IniRptCriteria(string GenPrefix, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -385,7 +385,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public DataTable GetRptCriteria(string GenPrefix, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
+		public override DataTable GetRptCriteria(string GenPrefix, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetRptCriteria", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -399,7 +399,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportCriteria(string GenPrefix, string reportId, string dbConnectionString, string dbPassword)
+		public override DataTable GetReportCriteria(string GenPrefix, string reportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetReportCriteria", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -413,7 +413,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportColumns(string GenPrefix, string reportId, string dbConnectionString, string dbPassword)
+		public override DataTable GetReportColumns(string GenPrefix, string reportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetReportColumns", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -427,7 +427,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetCriReportGrp(string GenPrefix, string reportId, string dbConnectionString, string dbPassword)
+		public override DataTable GetCriReportGrp(string GenPrefix, string reportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetCriReportGrp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -441,7 +441,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void MkReportGetIn(string GenPrefix, string reportCriId, string procedureName, string appDatabase, string sysDatabase, string dbConnectionString, string dbPassword)
+		public override void MkReportGetIn(string GenPrefix, string reportCriId, string procedureName, string appDatabase, string sysDatabase, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName);}
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
@@ -459,7 +459,7 @@ namespace RO.Access3
 			return;
 		}
 
-        public DataTable GetIn(string reportId, string programName, int TotalCnt, string RequiredValid, bool bAll, string keyId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
+        public override DataTable GetIn(string reportId, string programName, int TotalCnt, string RequiredValid, bool bAll, string keyId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetIn" + programName, new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -492,7 +492,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-        public int CountRptCri(string ReportCriId, string dbConnectionString, string dbPassword)
+        public override int CountRptCri(string ReportCriId, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn;
@@ -508,7 +508,7 @@ namespace RO.Access3
             return rtn;
         }
 
-        public DataTable GetDdlRptMemCri(string GenPrefix, string reportId, bool bAll, int topN, string keyId, string dbConnectionString, string dbPassword, string filterTxt, UsrImpr ui, UsrCurr uc)
+        public override DataTable GetDdlRptMemCri(string GenPrefix, string reportId, bool bAll, int topN, string keyId, string dbConnectionString, string dbPassword, string filterTxt, UsrImpr ui, UsrCurr uc)
         {
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetDdlRptMemCri", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -546,7 +546,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetDdlRptMemFld(string GenPrefix, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
+		public override DataTable GetDdlRptMemFld(string GenPrefix, bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetDdlRptMemFld", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -574,7 +574,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public string GetRptWizId(string reportId, string dbConnectionString, string dbPassword)
+		public override string GetRptWizId(string reportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetRptWizId", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -586,7 +586,7 @@ namespace RO.Access3
 			if (dt != null && dt.Rows.Count > 0) { return dt.Rows[0][0].ToString(); } else { return string.Empty; }
 		}
 
-		public DataTable GetAllowSelect(string reportId, string dbConnectionString, string dbPassword)
+		public override DataTable GetAllowSelect(string reportId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetAllowSelect", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -598,7 +598,7 @@ namespace RO.Access3
             return dt;
         }
 
-		public DataTable GetRptHlp(string GenPrefix, Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
+		public override DataTable GetRptHlp(string GenPrefix, Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = null;
@@ -621,7 +621,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetRptCriHlp(string GenPrefix, Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
+		public override DataTable GetRptCriHlp(string GenPrefix, Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetRptCriHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -636,7 +636,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void DelMemCri(string GenPrefix, string reportId, string MemCriId, string DelHeader, string dbConnectionString, string dbPassword)
+		public override void DelMemCri(string GenPrefix, string reportId, string MemCriId, string DelHeader, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -655,7 +655,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public void IniMemCri(string GenPrefix, string reportId, string MemCriId, string dbConnectionString, string dbPassword)
+		public override void IniMemCri(string GenPrefix, string reportId, string MemCriId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -673,7 +673,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public DataTable GetMemCri(string GenPrefix, string reportId, string MemCriId, string dbConnectionString, string dbPassword)
+		public override DataTable GetMemCri(string GenPrefix, string reportId, string MemCriId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetMemCri", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -687,7 +687,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetReportObjHlp(string GenPrefix, Int32 ReportId, Int16 CultureId, string dbConnectionString, string dbPassword)
+		public override DataTable GetReportObjHlp(string GenPrefix, Int32 ReportId, Int16 CultureId, string dbConnectionString, string dbPassword)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetReportObjHlp", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -701,7 +701,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetDdlAccessCd(bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
+		public override DataTable GetDdlAccessCd(bool bAll, string keyId, string dbConnectionString, string dbPassword, UsrImpr ui, UsrCurr uc)
 		{
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
 			OleDbCommand cmd = new OleDbCommand("GetDdlAccessCd", new OleDbConnection(dbConnectionString + DecryptString(dbPassword)));
@@ -725,7 +725,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void DelMemFld(string GenPrefix, string MemFldId, string dbConnectionString, string dbPassword)
+		public override void DelMemFld(string GenPrefix, string MemFldId, string dbConnectionString, string dbPassword)
 		{
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
@@ -742,7 +742,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public string UpdMemFld(string GenPrefix, string PublicAccess, string RptMemFldId, string RptMemFldName, Int32 usrId, string dbConnectionString, string dbPassword)
+		public override string UpdMemFld(string GenPrefix, string PublicAccess, string RptMemFldId, string RptMemFldName, Int32 usrId, string dbConnectionString, string dbPassword)
 		{
 			string rtn = string.Empty;
 			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }

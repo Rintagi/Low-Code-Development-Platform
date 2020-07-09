@@ -82,6 +82,38 @@ namespace RO.Common3
         private static bool wNoTrans = false;
         private static int wCommandTimeOut = 1800;
 
+        private static string wJWTMasterKey;
+        private static string wLicenseServer;
+        private static string wDesShareCred;
+        private static string wIntegratedSecurity;
+        private static string wODBCDriver;
+        private static string wLocalWebConfig;
+        private static string wTechSuppEmail;
+        private static string wBehindProxy;
+        private static string wBehindSecureProxy;
+        private static string wZipViaDirectPost;
+        private static string wCronJobBaseUrl;
+        private static string wRunCronJob;
+        private static string wDownloadGroupLs;
+        private static string wGitCheckoutBranch;
+        private static string wDropInstallerLocation;
+        private static string wPublishReactModules;
+        private static string wAdvanceReactBuildVersion;
+        private static string wServerIdentity;
+        private static string wLicenseModule;
+        private static string wLicenseSignerPath;
+        private static string wRunCronJobModules;
+        private static string wPasswordResetModule;
+        private static string wReCaptchaSecretKey;
+        private static string wResetPwdEmailTemp;
+        private static string wMainSiteUrl;
+        private static string wCMCAPIKey;
+        private static string wPaypalExpressAPIUserName;
+        private static string wPaypalExpressAPIEncPwd;
+        private static string wPaypalExpressAPIEncSignature;
+        private static string wPaypalRESTAPIClientID;
+        private static string wPaypalRESTAPIEncSecret;
+
         static Config()
 		{
             wConverterUrl = ConfigurationManager.AppSettings["WsConverterUrl"];
@@ -195,6 +227,38 @@ namespace RO.Common3
                 int.TryParse(ConfigurationManager.AppSettings["CommandTimeOut"], out wCommandTimeOut);
             }
             catch { }
+
+            wJWTMasterKey = System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"];
+            wLicenseServer = System.Configuration.ConfigurationManager.AppSettings["LicenseServer"];
+            wDesShareCred = System.Configuration.ConfigurationManager.AppSettings["DesShareCred"];
+            wIntegratedSecurity = System.Configuration.ConfigurationManager.AppSettings["SSPI"];
+            wODBCDriver = System.Configuration.ConfigurationManager.AppSettings["ODBCDriver"];
+            wLocalWebConfig = System.Configuration.ConfigurationManager.AppSettings["LocalWebConfig"];
+            wTechSuppEmail = System.Configuration.ConfigurationManager.AppSettings["TechSuppEmail"];
+            wBehindProxy = System.Configuration.ConfigurationManager.AppSettings["BehindProxy"];
+            wBehindSecureProxy = System.Configuration.ConfigurationManager.AppSettings["BehindSecureProxy"];
+            wZipViaDirectPost = System.Configuration.ConfigurationManager.AppSettings["ZipViaDirectPost"];
+            wCronJobBaseUrl = System.Configuration.ConfigurationManager.AppSettings["CronJobBaseUrl"];
+            wRunCronJob = System.Configuration.ConfigurationManager.AppSettings["RunCronJob"];
+            wDownloadGroupLs = System.Configuration.ConfigurationManager.AppSettings["DownloadGroupLs"];
+            wGitCheckoutBranch = System.Configuration.ConfigurationManager.AppSettings["GitCheckoutBranch"];
+            wDropInstallerLocation = System.Configuration.ConfigurationManager.AppSettings["DeployDropLocation"];
+            wPublishReactModules = System.Configuration.ConfigurationManager.AppSettings["PublishReactModules"];
+            wAdvanceReactBuildVersion = System.Configuration.ConfigurationManager.AppSettings["AdvanceReactBuildVersion"];
+            wServerIdentity = System.Configuration.ConfigurationManager.AppSettings["ServerIdentity"];
+            wLicenseModule = System.Configuration.ConfigurationManager.AppSettings["LicenseModule"];
+            wLicenseSignerPath = System.Configuration.ConfigurationManager.AppSettings["LicenseSignerPath"];
+            wRunCronJobModules = System.Configuration.ConfigurationManager.AppSettings["RunCronJobModules"];
+            wPasswordResetModule = System.Configuration.ConfigurationManager.AppSettings["PasswordResetModule"];
+            wReCaptchaSecretKey = System.Configuration.ConfigurationManager.AppSettings["ReCaptchaSecretKey"];
+            wResetPwdEmailTemp = System.Configuration.ConfigurationManager.AppSettings["ResetPwdEmailTemp"];
+            wMainSiteUrl = System.Configuration.ConfigurationManager.AppSettings["MainSiteUrl"];
+            wCMCAPIKey = System.Configuration.ConfigurationManager.AppSettings["CMCAPIKey"];
+            wPaypalExpressAPIUserName = System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIUserName"];
+            wPaypalExpressAPIEncPwd = System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncPwd"];
+            wPaypalExpressAPIEncSignature = System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"];
+            wPaypalRESTAPIClientID = System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"];
+            wPaypalRESTAPIEncSecret = System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"];
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -341,6 +405,40 @@ namespace RO.Common3
 
         public static int CommandTimeOut { get { return wCommandTimeOut; } }
 
+        public static string JWTMasterKey { get { return wJWTMasterKey; } }
+
+        public static string LicenseServer { get { return string.IsNullOrEmpty(wLicenseServer) ? "https://www.rintagi.com" : wLicenseServer; } }
+        public static bool DesShareCred { get { return (wDesShareCred ?? "N").ToUpper() == "Y" ; } }
+        public static bool IntegratedSecurity { get { return (wIntegratedSecurity ?? "").ToUpper() == "Y" ; } }
+        public static string ODBCDriver { get { return string.IsNullOrEmpty(wODBCDriver) ? "ODBC Driver 13 for SQL Server" : wODBCDriver; } }
+        public static string RedirectProjectRoot { get { return wRedirectProjectRoot; } }
+        public static string LocalWebConfig { get { return wLocalWebConfig ?? ""; } }
+        public static string TechSuppEmail { get { return wTechSuppEmail ?? ""; } }
+        public static bool BehindProxy { get { return (wBehindProxy ?? "").ToUpper() == "Y" ; } }
+        public static bool BehindSecureProxy { get { return (wBehindSecureProxy ?? "").ToUpper() == "Y" ; } }
+        public static bool ZipViaDirectPost { get { return (wZipViaDirectPost ?? "Y").ToUpper() == "Y" ; } }
+        public static bool RunCronJob { get { return (wRunCronJob ?? "").ToUpper() != "N"; } }
+        public static string CronJobBaseUrl { get { return wCronJobBaseUrl; } }
+        public static string DownloadGroupLs { get { return string.IsNullOrEmpty(wDownloadGroupLs) ? "5" : wDownloadGroupLs; } }
+        public static string GitCheckoutBranch { get { return wGitCheckoutBranch; } }
+        public static string DropInstallerLocation { get { return wDropInstallerLocation; } }
+        public static string PublishReactModules { get { return wPublishReactModules; } }
+        public static bool AdvanceReactBuildVersion { get { return (wAdvanceReactBuildVersion ?? "").ToUpper() == "Y" ; } } 
+        public static string ServerIdentity { get { return wServerIdentity; } }
+        public static string LicenseModule { get { return string.IsNullOrEmpty(wLicenseModule) ? "3" : wLicense; } }
+        public static string LicenseSignerPath { get { return wLicenseSignerPath; } }
+        public static string RunCronJobModules { get { return wRunCronJobModules; } }
+        public static string PasswordResetModule { get { return string.IsNullOrEmpty(wPasswordResetModule) ? "3" : wPasswordResetModule; } }
+        public static string ReCaptchaSecretKey { get { return wReCaptchaSecretKey; } }
+        public static string ResetPwdEmailTemp { get { return string.IsNullOrEmpty(wResetPwdEmailTemp) ? "3" : wResetPwdEmailTemp; } }
+        public static string MainSiteUrl { get { return wMainSiteUrl; } }
+        public static string CMCAPIKey { get { return wCMCAPIKey; } }
+        public static string PaypalExpressAPIUserName { get { return wPaypalExpressAPIUserName; } }
+        public static string PaypalExpressAPIEncPwd { get { return wPaypalExpressAPIEncPwd; } }
+        public static string PaypalExpressAPIEncSignature { get { return wPaypalExpressAPIEncSignature; } }
+        public static string PaypalRESTAPIClientID { get { return wPaypalRESTAPIClientID; } }
+        public static string PaypalRESTAPIEncSecret { get { return wPaypalRESTAPIEncSecret; } }
+
         public static string RintagiLicense
         { 
             get { return wLicense; } 
@@ -354,15 +452,60 @@ namespace RO.Common3
                 }
             } 
         }
+        public static string GetConnStr(string connectionString, string decryptedPasword)
+        {
+            if (connectionString.EndsWith("Pwd=") && false)
+            {
+                return connectionString.Replace("Pwd=", "Pwd=\"" + decryptedPasword + "\"");
+            }
+            else
+            {
+                return connectionString + decryptedPasword;
+            }
+        }
 
-		public static string GetConnStr(string dbProvider, string dbServer, string dbDatabase, string dbService, string dbUserId)
+        public static string ConvertOleDbConnStrToOdbcConnStr(string connectionString)
+        {
+            System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"Data Source=([^;]+);database=([^;]+);(Integrated Security=sspi;)*.*User ID=([^;]+);.*password=([^;]+)");
+            string odbcDriverVersion = string.IsNullOrEmpty(Config.ODBCDriver) ? "ODBC Driver 13 for SQL Server" : Config.ODBCDriver;
+            return rx.Replace(connectionString, m => {
+                var dbServer = m.Groups[1].Value;
+                var dbName = m.Groups[2].Value;
+                var bIntegratedSecurity = !string.IsNullOrEmpty(m.Groups[3].Value);
+                var uid = m.Groups[4].Value;
+                var pwd = m.Groups[5].Value;
+                return "Driver={" + odbcDriverVersion + "}; Server=" + dbServer + ";database=" + dbName + ";" + (bIntegratedSecurity ? "Trusted_Connection=Yes" : "Uid=" + uid + ";Pwd=" + pwd);
+            });
+        }
+
+		public static string GetConnStr(string dbProvider, string dbServer, string dbDatabase, string dbService, string dbUserId, string driverType = "oledb")
 		{
-            
-            if ((dbProvider??"").ToUpper() == "Sqloledb".ToUpper() || (dbProvider??"").ToUpper() == "MSOLEDBSQL")
+            bool useOdbc = (driverType??"").ToLower() == "odbc";
+            bool useSqlClient = (driverType ?? "").ToLower() == "sqlclient";
+            bool useOleDb = !useOdbc && !useSqlClient;
+            //string defaultOleDbProvider = "SQLOLEDB";
+            string defaultOleDbProvider = "MSOLEDBSQL";
+            if (useOdbc
+                || useOleDb
+                || useSqlClient
+                )
 			{
-                bool singleSQLCredential = (System.Configuration.ConfigurationManager.AppSettings["DesShareCred"] ?? "N") == "Y";
-                bool bIntegratedSecurity = singleSQLCredential && (System.Configuration.ConfigurationManager.AppSettings["SSPI"] ?? "N") == "Y";
-                return "Provider=" + (singleSQLCredential ? Config.DesProvider : dbProvider) + ((dbProvider ?? "").ToUpper() == "MSOLEDBSQL" && false ? ";DataTypeCompatibility=80" : "") + ";Data Source=" + (singleSQLCredential ? Config.DesServer : dbServer) + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + (bIntegratedSecurity ? "Integrated Security=sspi;" : "User ID=" + dbUserId + ";") + dbService + ";password=";
+                bool singleSQLCredential = Config.DesShareCred;
+                bool bIntegratedSecurity = singleSQLCredential && Config.IntegratedSecurity;
+                string odbcDriverVersion = string.IsNullOrEmpty(Config.ODBCDriver) ? "ODBC Driver 13 for SQL Server" : Config.ODBCDriver;
+                string sqlClientDriverVersion = System.Configuration.ConfigurationManager.AppSettings["SqlClientDriver"] ?? "SQL Server Native Client 11.0";
+                if (useOdbc)
+                {
+                    return "Driver={" + odbcDriverVersion + "}; Server=" + dbServer + ";database=" + dbDatabase + ";" + (bIntegratedSecurity ? "Trusted_Connection=Yes" : "Uid=" + dbUserId + ";Pwd=");
+                }
+                else if (useSqlClient)
+                {
+                    return "Driver={" + sqlClientDriverVersion + "}; Server=" + dbServer + ";database=" + dbDatabase + ";" + (bIntegratedSecurity ? "Trusted_Connection=Yes" : "Uid=" + dbUserId + ";Pwd=");
+                }
+                else
+                {
+                    return "Provider=" + (singleSQLCredential ? ((Config.DesProvider ?? "").ToLower() != "odbc" ? Config.DesProvider : defaultOleDbProvider) : ((dbProvider ?? "").ToLower() != "odbc" ? dbProvider : defaultOleDbProvider)) + ((dbProvider ?? "").ToUpper() == "MSOLEDBSQL" && false ? ";DataTypeCompatibility=80" : "") + ";Data Source=" + (singleSQLCredential ? Config.DesServer : dbServer) + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + (bIntegratedSecurity ? "Integrated Security=sspi;" : "User ID=" + dbUserId + ";") + dbService + ";password=";
+                }
 			}
 			else	// Sybase for now.
 			{

@@ -105,7 +105,37 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Base\AdminAccess.cs" />
+    <Compile Include="Base\DbPortingAccess.cs" />
+    <Compile Include="Base\DbScriptAccess.cs" />
+    <Compile Include="Base\DeployAccess.cs" />
+    <Compile Include="Base\GenReportsAccess.cs" />
+    <Compile Include="Base\GenScreensAccess.cs" />
+    <Compile Include="Base\GenSectionAccess.cs" />
+    <Compile Include="Base\GenWizardsAccess.cs" />
+    <Compile Include="Base\LoginAccess.cs" />
+    <Compile Include="Base\MenuAccess.cs" />
+    <Compile Include="Base\RbtPuMkDeployAccess.cs" />
+    <Compile Include="Base\RobotAccess.cs" />
+    <Compile Include="Base\SqlReportAccess.cs" />
+    <Compile Include="Base\WebAccess.cs" />
+    <Compile Include="Base\WebPartAccess.cs" />
     <Compile Include="GenSectionAccess.cs" />
+    <Compile Include="Odbc\AdminAccess.cs" />
+    <Compile Include="Odbc\DbPortingAccess.cs" />
+    <Compile Include="Odbc\DbScriptAccess.cs" />
+    <Compile Include="Odbc\DeployAccess.cs" />
+    <Compile Include="Odbc\GenReportsAccess.cs" />
+    <Compile Include="Odbc\GenScreensAccess.cs" />
+    <Compile Include="Odbc\GenSectionAccess.cs" />
+    <Compile Include="Odbc\GenWizardsAccess.cs" />
+    <Compile Include="Odbc\LoginAccess.cs" />
+    <Compile Include="Odbc\MenuAccess.cs" />
+    <Compile Include="Odbc\RbtPuMkDeployAccess.cs" />
+    <Compile Include="Odbc\RobotAccess.cs" />
+    <Compile Include="Odbc\SqlReportAccess.cs" />
+    <Compile Include="Odbc\WebAccess.cs" />
+    <Compile Include="Odbc\WebPartAccess.cs" />
     <Compile Include="RbtPuMkDeployAccess.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -802,3 +802,4 @@
 877~@~cSystem: 0010 WarningTitle (en-US)~@~1~@~cSystem~@~WarningTitle~@~Warning~@~~@~10
 878~@~cSystem: 0010 ErrorTitle (en-US)~@~1~@~cSystem~@~ErrorTitle~@~Error~@~~@~10
 879~@~cSystem: 0010 InfoTitle (en-US)~@~1~@~cSystem~@~InfoTitle~@~Information~@~~@~10
+880~@~MyAccountModule: 0470 cForgetOTPAccessCode (en-US)~@~1~@~MyAccountModule~@~cForgetOTPAccessCode~@~ Remove Access Code Cache~@~~@~470

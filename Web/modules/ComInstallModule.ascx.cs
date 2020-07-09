@@ -48,7 +48,7 @@ namespace RO.Web
                     cPrepare.Enabled = false;
                     cOkButton.Enabled = false;
                     cLoadButton.Enabled = false;
-                    cRegisterLink.NavigateUrl = (System.Configuration.ConfigurationManager.AppSettings["LicenseServer"] ?? "https://www.rintagi.com") + "/AcquireLicense.aspx?InstallID=" + license.Item1 + "&AppID=" + license.Item2 + "&ModuleName=" + "Design" + "&FromUrl=" + HttpUtility.UrlEncode(Request.Url.ToString());
+                    cRegisterLink.NavigateUrl = (Config.LicenseServer ?? "https://www.rintagi.com") + "/AcquireLicense.aspx?InstallID=" + license.Item1 + "&AppID=" + license.Item2 + "&ModuleName=" + "Design" + "&FromUrl=" + HttpUtility.UrlEncode(Request.Url.ToString());
                     cInstallID.Text = license.Item1;
                     cAppID.Text = license.Item2;
                     cRegisterLink.Visible = true;

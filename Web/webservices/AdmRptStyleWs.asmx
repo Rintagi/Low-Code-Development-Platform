@@ -19,6 +19,8 @@ namespace RO.Web
     using System.Collections.Generic;
     using System.Web.SessionState;
     using System.Linq;
+    using System.Numerics;
+
             
     public class AdmRptStyle89 : DataSet
     {
@@ -400,6 +402,10 @@ namespace RO.Web
                 HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
                 ApiResponse <List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 SerializableDictionary<string, AutoCompleteResponse> supportingData = new SerializableDictionary<string,AutoCompleteResponse>();
+                /* Get Master By Id After start here */
+
+
+                /* Get Master By Id After end here */
                 mr.data = DataTableToListOfObject(dt, mstBlob, colAuth, utcColumns);
                 mr.supportingData = includeDtl ? new SerializableDictionary<string, AutoCompleteResponse>() { { "dtl", new AutoCompleteResponse() { data = DataTableToListOfObject(_GetDtlById(keyId, 0), dtlBlob, colAuth, utcColumns) } } } : supportingData;
                 mr.status = "success";
@@ -529,6 +535,8 @@ namespace RO.Web
         {
             bool isAdd = false;
             bool refreshUsrImpr = options.ContainsKey("ReAuth") && options["ReAuth"] == "Y" ;
+            string screenButton = options.ContainsKey("ScreenButton") ? options["ScreenButton"] : "";
+            string actionButton = options.ContainsKey("OnClickColumeName") ? options["OnClickColumeName"] : "";
             bool noTrans = Config.NoTrans;
             int commandTimeOut = Config.CommandTimeOut;
 
@@ -541,10 +549,10 @@ namespace RO.Web
                 {
                     dtl.Add(mst.Clone());
                 }
-                /* AsmxRule: Save Data Before */
+                /* AsmxRule: Save Data Before Validation */
 
 
-                /* AsmxRule End: Save Data Before */
+                /* AsmxRule End: Save Data Before Validation */
 
                 var pid = mst["RptStyleId167"];
                 isAdd = string.IsNullOrEmpty(pid);
@@ -572,6 +580,11 @@ namespace RO.Web
                         validationErrors = validationResult.Item1.Count > 0 ? validationResult.Item1 : validationResult.Item2[0],
                     };
                 }
+                /* AsmxRule: Save Data Before */
+
+
+                /* AsmxRule End: Save Data Before */
+
                 var ds = PrepAdmRptStyleData(mst, dtl, string.IsNullOrEmpty(mst["RptStyleId167"]));
                 string msg = string.Empty;
 

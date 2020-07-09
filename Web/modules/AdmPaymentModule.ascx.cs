@@ -168,7 +168,7 @@ namespace RO.Web
                         Session.Remove(payPalKeyName + "State");
                     }
                     catch { }
-                    PaypalExpress paypal = new RO.Common3.PaypalExpress(true, System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIUserName"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncPwd"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"]);
+                    PaypalExpress paypal = new RO.Common3.PaypalExpress(true, Config.PaypalExpressAPIUserName, Config.PaypalExpressAPIEncPwd, Config.PaypalExpressAPIEncSignature);
 
                     if (Request.QueryString["act"] == "1")
                     {
@@ -1567,7 +1567,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			//WebRule: Paypal Express Checkout Button action
             if (ValidPage())
             {
-                PaypalExpress paypal = new RO.Common3.PaypalExpress(true, System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIUserName"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncPwd"], System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"]);
+                PaypalExpress paypal = new RO.Common3.PaypalExpress(true, Config.PaypalExpressAPIUserName, Config.PaypalExpressAPIEncPwd, Config.PaypalExpressAPIEncSignature);
                 string payer = cPayFrom.Text ;    
                 string action = Request.QueryString["act"];
                 string myUrl = Request.Url.ToString();
@@ -1619,7 +1619,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			//WebRule: Paypal Direct Payout button
             if (ValidPage())
             {
-                Paypal payPal = new RO.Common3.Paypal(System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"], System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"]);
+                Paypal payPal = new RO.Common3.Paypal(Config.PaypalRESTAPIClientID, Config.PaypalRESTAPIEncSecret);
                 payPal.Login();
                 try
                 {
@@ -1652,7 +1652,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			//WebRule: Paypal Direct Credit Card Charge button
             if (ValidPage())
             {
-                Paypal payPal = new RO.Common3.Paypal(System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"], System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"]);
+                Paypal payPal = new RO.Common3.Paypal(Config.PaypalRESTAPIClientID, Config.PaypalRESTAPIEncSecret);
                 payPal.Login();
                 try
                 {

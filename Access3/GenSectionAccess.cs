@@ -7,7 +7,7 @@ namespace RO.Access3
     using RO.Common3.Data;
 	using RO.SystemFramewk;
 
-	public class GenSectionAccess : Encryption, IDisposable
+	public class GenSectionAccess : GenSectionAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 
@@ -16,7 +16,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -42,7 +42,7 @@ namespace RO.Access3
 			}
 		}
 
-        public void SetSctNeedRegen(string SectionCd)
+        public override void SetSctNeedRegen(string SectionCd)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(GetDesConnStr());
@@ -56,7 +56,7 @@ namespace RO.Access3
             return;
         }
 
-        public DataTable GetPageObj(string SectionCd)
+        public override DataTable GetPageObj(string SectionCd)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("GetPageObj", new OleDbConnection(GetDesConnStr()));
@@ -68,7 +68,7 @@ namespace RO.Access3
             return dt;
         }
 
-        public DataTable GetPageLnk(string PageObjId)
+        public override DataTable GetPageLnk(string PageObjId)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbCommand cmd = new OleDbCommand("GetPageLnk", new OleDbConnection(GetDesConnStr()));

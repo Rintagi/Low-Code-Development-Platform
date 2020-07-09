@@ -8,7 +8,7 @@ namespace RO.Access3
     using RO.Common3.Data;
 	using RO.SystemFramewk;
 
-	public class MenuAccess : Encryption, IDisposable
+	public class MenuAccess : MenuAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -17,7 +17,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -44,7 +44,7 @@ namespace RO.Access3
 		}
 
         // Make a dummy new menu item for launching a new screen, report or wizard.
-        public void NewMenuItem(Int32 ScreenId, Int32 ReportId, Int32 WizardId, string ItemTitle, string dbConnectionString, string dbPassword)
+        public override void NewMenuItem(Int32 ScreenId, Int32 ReportId, Int32 WizardId, string ItemTitle, string dbConnectionString, string dbPassword)
         {
             OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
             cn.Open();
@@ -61,7 +61,7 @@ namespace RO.Access3
             return;
         }
 
-        public DataTable GetMenu(Int16 CultureId, byte SystemId, UsrImpr ui, string dbConnectionString, string dbPassword, int? ScreenId, int? ReportId, int? WizardId)
+        public override DataTable GetMenu(Int16 CultureId, byte SystemId, UsrImpr ui, string dbConnectionString, string dbPassword, int? ScreenId, int? ReportId, int? WizardId)
         {
             //if (!dbConnectionString.Contains("Design")) checkValidLicense();
             if (da == null) { throw new System.ObjectDisposedException( GetType().FullName ); }            
@@ -103,7 +103,7 @@ namespace RO.Access3
                 bool rowsRemoved = false;
                 foreach (DataRow dr in dt.Rows)
                 {
-                    if (ii >= licensedCount && dr["SystemId"].ToString() != "3" && dr["SystemId"].ToString() != "5")
+                    if (ii >= licensedCount && SystemId.ToString() != "3" && SystemId.ToString() != "5")
                     {
                         dr.Delete();
                         rowsRemoved = true;

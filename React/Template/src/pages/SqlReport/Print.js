@@ -13,6 +13,7 @@ import { GetReport } from '../../services/SqlReportService';
 import { LoadPage,ShowSpinner,changeReportFilterVisibility } from '../../redux/SqlReport';
 import { showNotification } from '../../redux/Notification';
 import log from '../../helpers/logger';
+import { base64Decode } from '../../helpers/domutils';
 
 class Print extends Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class Print extends Component {
     }, fmt).then(
       (result => {
         //_this.setState({ pdfbase64: 'data:application/pdf;base64,' + result.data });
-        var byteCharacters = atob(result.data);
+        var byteCharacters = base64Decode(result.data);
 
         var byteNumbers = new Array(byteCharacters.length);
         for (var i = 0; i < byteCharacters.length; i++) {

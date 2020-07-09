@@ -209,7 +209,7 @@ namespace RO.Common3
 		{
 			if (multiDesignDb == "Y" || sysProgram != "Y")
 			{
-				return "dbConnectionString + DecryptString(dbPassword)";
+				return "Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))";
 			}
 			else
 			{

@@ -7,7 +7,7 @@ namespace RO.Access3
     using RO.Common3.Data;
 	using RO.SystemFramewk;
 
-	public class GenWizardsAccess : Encryption, IDisposable
+	public class GenWizardsAccess : GenWizardsAccessBase, IDisposable
 	{
 		private OleDbDataAdapter da;
 	
@@ -16,7 +16,7 @@ namespace RO.Access3
 			da = new OleDbDataAdapter();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			Dispose(true);
 			GC.SuppressFinalize(true); // as a service to those who might inherit from us
@@ -42,7 +42,7 @@ namespace RO.Access3
 			}
 		}
 
-        public void SetWizNeedRegen(Int32 wizardId, CurrSrc CSrc)
+        public override void SetWizNeedRegen(Int32 wizardId, CurrSrc CSrc)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword));
@@ -56,7 +56,7 @@ namespace RO.Access3
             return;
         }
 
-		public DataTable GetWizardById(Int32 wizardId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetWizardById(Int32 wizardId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -74,7 +74,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetWizardColumns(Int32 wizardId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetWizardColumns(Int32 wizardId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -90,7 +90,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public DataTable GetWizardRule(Int32 wizardId, CurrPrj CPrj, CurrSrc CSrc)
+		public override DataTable GetWizardRule(Int32 wizardId, CurrPrj CPrj, CurrSrc CSrc)
 		{
 			if (da == null)
 			{
@@ -105,7 +105,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void MkWizardW1Upd(Int32 wizardId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
+		public override void MkWizardW1Upd(Int32 wizardId, string procedureName, CurrSrc CSrc, string appDatabase, string sysDatabase)
 		{
 			if (da == null)
 			{
@@ -125,7 +125,7 @@ namespace RO.Access3
 			return;
 		}
 
-		public DataTable GetWizardDel(string srcDatabase, string dbConnectionString, string dbPassword)
+		public override DataTable GetWizardDel(string srcDatabase, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{
@@ -140,7 +140,7 @@ namespace RO.Access3
 			return dt;
 		}
 
-		public void DelWizardDel(string srcDatabase, string appDatabase, string desDatabase, string programName, string dbConnectionString, string dbPassword)
+		public override void DelWizardDel(string srcDatabase, string appDatabase, string desDatabase, string programName, string dbConnectionString, string dbPassword)
 		{
 			if (da == null)
 			{

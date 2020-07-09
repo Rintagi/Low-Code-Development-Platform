@@ -104,11 +104,12 @@ namespace RO.Web
             {
                 return refresh_token;
             };
-            Func<LoginUsr, UsrCurr, UsrImpr,string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
+            Func<LoginUsr, UsrCurr, UsrImpr, UsrPref, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, usrPref, currentHandle, ignoreCache) =>
             {
                 LUser = loginUsr;
                 LCurr = usrCurr;
                 LImpr = usrImpr;
+                LPref = usrPref;
                 return true;
             };
             var access_token = auth.GetToken("", "", "refresh_token", refresh_token, "", "", "", appPath, domain, getStoredToken, validateScope);
@@ -133,7 +134,7 @@ namespace RO.Web
             {
                 return jwtToken;
             };
-            Func<LoginUsr, UsrCurr, UsrImpr, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, currentHandle, ignoreCache) =>
+            Func<LoginUsr, UsrCurr, UsrImpr, UsrPref, string, bool, bool> validateScope = (loginUsr, usrCurr, usrImpr, usrPref, currentHandle, ignoreCache) =>
             {
                 //LUser = loginUsr;
                 //LCurr = usrCurr;
@@ -142,7 +143,7 @@ namespace RO.Web
             };
             var access_token = auth.GetToken("", "", "authorization_code", guid, "", "", "", appPath, domain, getStoredToken, validateScope);
             var sha256 = new SHA256Managed();
-            var handle = Convert.ToBase64String(sha256.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(LUser.LoginName))).Replace("=","_");
+            var handle = Convert.ToBase64String(sha256.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(LUser.LoginName.ToLower()))).Replace("=","_");
             /* convention must match clientRule.js(and React side) */
             HttpCookie tokenInCookie = new HttpCookie((appPath??"/").Substring(1).ToUpper().Replace("/","") + "_" + "tokenInCookieJS", handle);
             HttpCookie refreshTokenCookie = new HttpCookie((appPath ?? "/").Substring(1).ToUpper().Replace("/", "") + "_" + "tokenJS", access_token["refresh_token"]);
@@ -175,7 +176,7 @@ namespace RO.Web
             }
             if (!IsPostBack)
             {
-                TwoFactorAuthenticationPanel.Visible = Config.EnableTwoFactorAuth == "Y";
+                TwoFactorAuthenticationPanel.Visible = Config.EnableTwoFactorAuth == "Y" || Config.EnableTwoFactorAuth == "M";
                 string extAppDomainUrl = 
                     !string.IsNullOrWhiteSpace(Config.ExtBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
                         ? Config.ExtBaseUrl 
@@ -259,12 +260,17 @@ namespace RO.Web
                 }
                 else
                 {
+                    if (!LUser.TwoFactorAuth && Config.EnableTwoFactorAuth == "M")
+                    {
+                        PreMsgPopup("Please enable two factor authentication.");
+                    }
+
                     bool bOTPRemembered = VerifyRememberedOTP();
                     LUser.OTPValidated = LUser.OTPValidated || bOTPRemembered;
                     
                     cForgetOTPCache.Visible = bOTPRemembered;
                     if (Request.QueryString["k"] != null) RecognizeIp();
-                    if (!(Request.QueryString["j"] != null) && !PasswordExpired(LUser) && !LUser.OTPValidated && LUser.TwoFactorAuth && Config.EnableTwoFactorAuth == "Y")
+                    if (!(Request.QueryString["j"] != null) && !PasswordExpired(LUser) && !LUser.OTPValidated && LUser.TwoFactorAuth && (Config.EnableTwoFactorAuth == "Y" || Config.EnableTwoFactorAuth == "M"))
                     {
                         ShowOTPPanel(bOTPRemembered);
                     }
@@ -689,7 +695,7 @@ namespace RO.Web
                     cDisableTwoFactor.Visible = false;
                     TranslateItem(cDisableTwoFactor, GetLabels().Rows, "OTPEnableBtn");
                 }
-                cHardenedLogin.Text = LUser.OTPValidated && Config.EnableTwoFactorAuth == "Y" ? "Y" : "N";
+                cHardenedLogin.Text = LUser.OTPValidated && (Config.EnableTwoFactorAuth == "Y" || Config.EnableTwoFactorAuth == "M") ? "Y" : "N";
                 cShowTwoFactorKey.Visible = LUser.TwoFactorAuth;
             }
         }
@@ -1161,7 +1167,12 @@ namespace RO.Web
                     PreMsgPopup(TranslateItem(GetLabels().Rows, "LoginFailedMsg"));
                     ShowLoginPanel();
                 });
-            if (success && !bBlocked && !string.IsNullOrEmpty(Request.QueryString["typ"]))
+            if (success && !LUser.TwoFactorAuth && Config.EnableTwoFactorAuth == "M")
+            {
+                //this.Redirect(Request.Path);
+                this.Redirect("~/MyAccount.aspx?typ=N");
+            }
+            else if (success && !bBlocked && !string.IsNullOrEmpty(Request.QueryString["typ"]))
             {
                 cRedirectParent.Value = Config.SslUrl;
             }
@@ -1673,23 +1684,34 @@ namespace RO.Web
            
         }
 
-        protected void RememberOTP(int days = 90)
+        protected string OTPComponents()
         {
-            Dictionary<string, string> otp = new Dictionary<string, string>();
             string secret = new LoginSystem().WrGetUsrOTPSecret(LUser.UsrId);
             System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(System.Text.UTF8Encoding.UTF8.GetBytes(secret));
 
-            otp["for"] = Convert.ToBase64String(hmac.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword + LUser.LoginName + Request.UserAgent)));
+            // the more components, the safer it is from brute force attack
+            // ideally some form of 'server side'(global reset) + client side(more variation)
+            
+            return Convert.ToBase64String(hmac.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(
+                    ""
+                    + Config.DesPassword // change would result in global reset
+                    + LUser.LoginName
+//                    + Request.UserAgent
+                    )));
+        }
+        protected void RememberOTP(int days = 90)
+        {
+            Dictionary<string, string> otp = new Dictionary<string, string>();
+
+            otp["for"] = OTPComponents();
             SetSecureCookie("otp" + LUser.UsrId.ToString(), otp, 3600 * 24 * days);
 
         }
         protected void ForgetOTP()
         {
             Dictionary<string, string> otp = new Dictionary<string, string>();
-            string secret = Guid.NewGuid().ToString();
-            System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(System.Text.UTF8Encoding.UTF8.GetBytes(secret));
 
-            otp["for"] = Convert.ToBase64String(hmac.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword + LUser.LoginName + Request.UserAgent)));
+            otp["for"] = Guid.NewGuid().ToString();
             SetSecureCookie("otp" + LUser.UsrId.ToString(), otp, 0);
 
         }
@@ -1698,9 +1720,8 @@ namespace RO.Web
             try
             {
                 Dictionary<string, string> otp = GetSecureCookie("otp" + LUser.UsrId.ToString());
-                string secret = new LoginSystem().WrGetUsrOTPSecret(LUser.UsrId);
-                System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(System.Text.UTF8Encoding.UTF8.GetBytes(secret));
-                return LUser.TwoFactorAuth && Convert.ToBase64String(hmac.ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword + LUser.LoginName + Request.UserAgent))) == otp["for"];
+                return LUser.TwoFactorAuth
+                    && OTPComponents() == otp["for"];
             }
             catch { return false; }
         }
