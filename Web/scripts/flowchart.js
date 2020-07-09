@@ -118,11 +118,11 @@
             pointer: {},
             path: {},
             states: {},
-            save: {
+            //save: {
                 //onclick: function (data) {
                 //    alert(data);
                 //}
-            }
+            //}
         },
         props: {
             attr: {
@@ -1019,7 +1019,6 @@
                 return [p, arr];
             };
             this.toJson = function () {
-                debugger;
                 var data = "[", d = _fromDot;
 
                 while (d) {
@@ -2002,8 +2001,11 @@ $(function () {
 		            var x = JSON.parse(data);
 		            //console.log("Save", x);
 		            //console.log("Save stringify2", JSON.stringify(x));
-		            $("#ctl00_MHR_M1027_cChartData1325", window.parent.document).val(JSON.stringify(x));
-                    alert("Flow Chart data has been saved to IDE.")
+		            
+		            if (data != '{"states":{},"paths":{}}') {
+		                $("#ctl00_MHR_M1027_cChartData1325", window.parent.document).val(JSON.stringify(x));
+		                alert("Flow Chart data has been saved to IDE.")
+		            }
 		        },
 		        // publish:function(data){
 		        // console.log("Publish",eval("("+data+")"));
