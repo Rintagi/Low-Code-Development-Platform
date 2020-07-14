@@ -74,7 +74,7 @@ function arrayBufferToBase64(buffer) {
     for (var i = 0; i < len; i++) {
         binary += String.fromCharCode(bytes[i]);
     }
-    return btoa(binary);
+    return base64Encode(binary);
 }
 
 async function rememberUserHandle(userIdentity) {
@@ -191,7 +191,7 @@ function getAccessScope() { return currentAccessScope; };
 const storeAccessToken = async (access_token, resources, scope, expires_in, isLogout) => {
     if (access_token) {
         const tokenString = JSON.stringify({ access_token: access_token, expires_in: expires_in });
-        const tokenStringForCookie = btoa(tokenString).replace(/=/g, '_');
+        const tokenStringForCookie = base64Encode(tokenString).replace(/=/g, '_');
         const tokenName = await getTokenName("access_token");
         //setCookie(getTokenName("access_token"),tokenStringForCookie);
         //sessionStorage.setItem(getTokenName("access_token"), tokenString);
@@ -216,7 +216,7 @@ const storeAccessToken = async (access_token, resources, scope, expires_in, isLo
 const storeRefreshToken = async (refresh_token, resources, isLogout) => {
     if (refresh_token) {
         const tokenString = JSON.stringify({ refresh_token: refresh_token });
-        const tokenStringForCookie = btoa(tokenString).replace(/=/g, '_');
+        const tokenStringForCookie = base64Encode(tokenString).replace(/=/g, '_');
         const tokenName = await getTokenName("refresh_token");
         //setCookie(getTokenName("refresh_token"),tokenStringForCookie);
         //sessionStorage.setItem(getTokenName("refresh_token"), tokenString);
@@ -314,7 +314,7 @@ function login(username, password, options = {}) {
                 if (apiResult.error === "access_denied" && (apiResult.message === "Your email or password is incorrect" || apiResult.message === "bot detected") && !challenge_answered) {
                     return pbkdf2(apiResult.serverChallenge, apiResult.serverChallenge, apiResult.challengeCount, 32, 'sha1')
                             .then(derivedKey=>{
-                                let challengeResult = btoa(String.fromCharCode.apply(null, new Uint8Array(derivedKey)));
+                                let challengeResult = base64Encode(String.fromCharCode.apply(null, new Uint8Array(derivedKey)));
                                 return login(username, password, {
                                     ...options,
                                     client_id: challengeResult,

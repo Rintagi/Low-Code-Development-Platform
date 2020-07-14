@@ -2615,4 +2615,8 @@ In default.master: replace section.css with the following:
 5. add sampleWeb.config for easier change tracking(and manual creation of web.config via git pull)~@~~@~en-US~@~
 12633~@~  11. 196.00709~@~11~@~196~@~2020-07-09 00:00:00.000~@~~@~~@~1. restructure React to make it more React Native friendly
 2. improve React login process to facilitate SSO from React side(when showpage is the site default, loading LPref in React)~@~~@~en-US~@~
-12634~@~  11. 197~@~11~@~197~@~~@~~@~~@~~@~~@~~@~
+12634~@~  11. 197.00710~@~11~@~197~@~2020-07-10 00:00:00.000~@~~@~~@~1. revision of installer to use odbc by default for new installation
+2. remove ODBC driver info in error message~@~~@~en-US~@~
+12635~@~  11. 198.00714~@~11~@~198~@~2020-07-14 00:00:00.000~@~~@~~@~1. fix an issue with ODBC connector
+2. first draft react native template project~@~~@~en-US~@~
+12636~@~  11. 199~@~11~@~199~@~~@~~@~~@~~@~~@~~@~

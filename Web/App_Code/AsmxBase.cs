@@ -984,7 +984,12 @@ namespace RO.Web
             if (checkSysId)
             {
                 DataTable dtMenu = _GetMenu(sysId);
-                if (dtMenu.Rows.Count == 0) throw new UnauthorizedAccessException("access_denied");
+                if (dtMenu.Rows.Count == 0 
+                    &&
+                    // rare test case for RO hitting systemId 5 (should never be used for real app development) and sysId != 3, remove confusion
+                    (Config.AppNameSpace != "RO" || sysId != 5)
+                    ) 
+                    throw new UnauthorizedAccessException("access_denied");
             }
             /* validate selected company/project */
             if (checkCompanyId && LCurr.CompanyId > 0)

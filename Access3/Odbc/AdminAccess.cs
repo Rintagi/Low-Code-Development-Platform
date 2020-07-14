@@ -2555,6 +2555,7 @@ namespace RO.Access3.Odbc
             }
             try
             {
+                da.UpdateCommand = TransformCmd(da.UpdateCommand);
                 da.UpdateCommand.ExecuteNonQuery();
                 tr.Commit();
             }
@@ -3010,6 +3011,7 @@ namespace RO.Access3.Odbc
             da.UpdateCommand.Transaction = tr;
             try
             {
+                da.UpdateCommand = TransformCmd(da.UpdateCommand);
                 da.UpdateCommand.ExecuteNonQuery();
                 tr.Commit();
             }

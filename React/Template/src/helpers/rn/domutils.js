@@ -23,7 +23,7 @@ export function arrayBufferToBase64(buffer) {
   for (var i = 0; i < len; i++) {
       binary += String.fromCharCode(bytes[i]);
   }
-  return btoa(binary);
+  return base64Encode(binary);
 }
 
 export function sha256(s) {

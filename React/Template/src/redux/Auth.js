@@ -481,17 +481,7 @@ export function logout(keepToken, currentSessionOnly) {
     return authService.logout(keepToken, currentSessionOnly).then(
       (result) => {
         dispatchWithNotification(dispatch, { type: LOGOUT.SUCCEEDED, payload: result });
-        authService.getMenu(systemId).then(
-          data => {
-            dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
-
-          },
-          error => {
-            dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
-          }
-        ).catch(error => {
-          console.log(error);
-        })
+        dispatch({ type: GET_MENU.SUCCEEDED, payload: [] });
         return true;
       }
     )
