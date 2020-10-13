@@ -25,6 +25,12 @@ namespace RO.Web
 		{
             if (!IsPostBack)
             {
+                string extAppDomainUrl =
+                    !string.IsNullOrWhiteSpace(Config.ExtBaseUrl)
+                        ? Config.ExtBaseUrl
+                        : string.IsNullOrEmpty(Request.Url.Query) ? Request.Url.AbsoluteUri.Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "")
+                        : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0, extAppDomainUrl.Length - 1) : extAppDomainUrl;
                 if (!Request.IsAuthenticated || LUser == null || LUser.LoginName.ToLower() == "anonymous")
                 {
                     string loginUrl = System.Web.Security.FormsAuthentication.LoginUrl;
@@ -32,17 +38,13 @@ namespace RO.Web
                     SignIn.Visible = true; SignIn.NavigateUrl = loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "logo=N";
                     SignoutPanel.Visible = false;
                     cLoginName.Visible = false;
-                    cAppDomainUrl.Visible = false;
+                    // for client side login sync between React and asp.net(only when served under the same app tree 
+                    // this controls react/asp.net login sync for 'showpage' like usage, turn this off would disable auto login(from react token) in show page and other public page
+                    cAppDomainUrl.Visible = true;
                     return;
                 }
                 else
                 {
-                    string extAppDomainUrl =
-                        !string.IsNullOrWhiteSpace(Config.ExtBaseUrl)
-                            ? Config.ExtBaseUrl
-                            : string.IsNullOrEmpty(Request.Url.Query) ? Request.Url.AbsoluteUri.Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "")
-                            : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
-                    cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0, extAppDomainUrl.Length - 1) : extAppDomainUrl;
                     cAppDomainUrl.Visible = true;
                     SignIn.Visible = false;
                     SignoutPanel.Visible = true;

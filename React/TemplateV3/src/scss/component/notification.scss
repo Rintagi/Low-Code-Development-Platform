@@ -1,0 +1,72 @@
+.notification {
+
+  &.notification--basic {
+
+    .notification {
+      max-height: 106px;
+
+      @include themify($themes) {
+        background-color: themed('colorBackground') !important;
+      }
+    }
+
+    .notification-dismiss {
+
+      @include themify($themes) {
+        color: themed('colorText') !important;
+      }
+    }
+  }
+
+  .notification__title {
+    margin-bottom: 5px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .notification__message {
+    margin: 0;
+  }
+
+  .notification__content-wrap {
+    display: flex;
+  }
+
+  .notification__content {
+    padding: 20px;
+  }
+
+  .notification__img {
+    width: 106px;
+    height: 106px;
+  }
+
+  &.notification--success, &.notification--warning,
+  &.notification--error, &.notification--info {
+
+    .notification__message, .notification__title {
+      color: white;
+    }
+  }
+
+  .notifications-tc {
+
+    .notification {
+      width: 100% !important;
+      margin: 0 !important;
+    }
+  }
+
+  .notifications-tl, .notifications-bl{
+    transition: left 0.3s;
+  }
+}
+
+.sidebar.sidebar--collapse + .container__wrap{
+
+  .notifications-tl, .notifications-bl{
+    left: 0 !important;
+  }
+}

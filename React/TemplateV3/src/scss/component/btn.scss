@@ -1,0 +1,466 @@
+.btn {
+  border-radius: 5px;
+  padding: 10px 10px;
+  // margin-bottom: 20px;
+  margin-right: 15px;
+  // transition: all 0.4s;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  font-family: 'Open Sans', sans-serif;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  // &:before {
+  //   position: absolute;
+  //   height: 0;
+  //   width: 0;
+  //   border-radius: 50%;
+  //   background-color: $color-accent;
+  //   transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+  //   transform: translate(-50%, -50%);
+  //   z-index: -1;
+  //   content: "";
+  //   top: 0;
+  //   left: 0;
+  // }
+
+  p {
+    // display: flex;
+    transition: all 0.3s;
+    font-weight: 600;
+    color: #444444;
+  }
+
+  svg {
+    height: 14px;
+    width: 14px;
+    margin: 2px 5px 0 0;
+    transition: all 0.3s;
+    fill: #444444;
+  }
+
+  &:hover,
+  &:focus, &:active, &:active:focus {
+    outline: none;
+    box-shadow: none !important;
+
+    &:before {
+      height: 500%;
+      width: 225%;
+    }
+  }
+
+  &:focus, &:active, &:active:focus {
+
+    &:before {
+      transition: all 0s;
+    }
+  }
+
+  &.square {
+    border-radius: 0;
+  }
+
+  &.rounded {
+    border-radius: 30px !important;
+  }
+
+  &.icon {
+    padding: 10px 15px;
+
+    &:hover {
+
+      p {
+        color: #555555;
+      }
+
+      svg {
+        fill: #555555;
+      }
+    }
+
+    &.icon--right {
+
+      svg {
+        margin: 2px 0 0 5px;
+      }
+    }
+  }
+
+  &.btn-sm {
+    padding: 5px 25px;
+    font-size: 14px;
+  }
+
+  &.btn-lg {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+
+  &.btn-secondary {
+    background-color: #efefef;
+    border-color: #efefef;
+    color: #555555;
+
+    &:before {
+      background-color: darken(#efefef, 10%);
+    }
+
+    &:hover, &:focus, &:active, &:active:focus {
+      // border-color: darken(#efefef, 10%);
+      border-color: #efefef;
+      color: #555555;
+    }
+
+    &:not([disabled]):not(.disabled):active, &:not([disabled]):not(.disabled).active {
+      background-color: #dddddd;
+      border-color: #dddddd;
+    }
+  }
+
+  &.btn-outline-secondary {
+    border: none;
+    border-color: transparent;
+
+    &, p {
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+
+    svg {
+
+      @include themify($themes) {
+        fill: themed('colorText');
+      }
+    }
+
+    &:before {
+      background-color: transparent;
+    }
+
+    &:hover, &:focus, &:active, &:active:focus {
+      background: transparent;
+      border-color: transparent;
+      color: #444444;
+
+      p {
+        color: #444444;
+      }
+
+      svg {
+        fill: #444444;
+      }
+    }
+  }
+
+  &.btn-primary {
+    background-color: $color-blue;
+    border-color: $color-blue;
+
+    &:before, &:hover, &:focus, &:active, &:active:focus {
+      border-color: $color-blue;
+      background-color: $color-blue;
+    }
+
+    @include hover-supported() {
+      background-color: $color-blue-hover;
+      border-color: $color-blue-hover;
+    }
+  }
+
+  &.btn-outline-primary {
+    color: $color-blue;
+    border-color: $color-blue;
+
+    p {
+      color: $color-blue;
+    }
+
+    svg {
+      fill: $color-blue;
+    }
+
+    &:before, &:hover, &:focus, &:active, &:active:focus {
+      color: $color-blue;
+      border-color: $color-blue;
+      background-color: #fff;
+    }
+
+    @include hover-supported() {
+      color: #fff;
+      background-color: $color-blue;
+      border-color: $color-blue;
+    }
+  }
+
+  &.btn-success {
+    background-color: $color-fintrux;
+    border-color: $color-fintrux;
+
+    &:before, &:hover, &:focus, &:active, &:active:focus {
+      background-color: $color-fintrux;
+      border-color: $color-fintrux;
+    }
+
+    @include hover-supported() {
+      background-color: $color-fintrux-hover;
+      border-color: $color-fintrux-hover;
+    }
+  }
+
+  &.btn-outline-success {
+    color: $color-fintrux;
+    border-color: $color-fintrux;
+
+    p {
+      color: $color-fintrux;
+    }
+
+    svg {
+      fill: $color-fintrux;
+    }
+
+    &:before, &:hover, &:focus, &:active, &:active:focus {
+      color: $color-fintrux;
+      border-color: $color-fintrux;
+      background-color: #fff;
+    }
+
+    @include hover-supported() {
+      color: #fff;
+      background-color: $color-fintrux;
+      border-color: $color-fintrux;
+    }
+  }
+
+  &.btn-warning {
+    background-color: $color-yellow;
+    border-color: $color-yellow;
+    color: #ffffff;
+
+    &:before {
+      background-color: $color-yellow-hover;
+    }
+
+    &:hover, &:focus, &:active, &:active:focus {
+      border-color: $color-yellow-hover;
+    }
+  }
+
+  &.btn-outline-warning {
+    color: $color-yellow;
+    border-color: $color-yellow;
+
+    p {
+      color: $color-yellow;
+    }
+
+    svg {
+      fill: $color-yellow;
+    }
+
+    &:before {
+      background-color: $color-yellow;
+    }
+  }
+
+  &.btn-danger {
+    background-color: $color-red;
+    border-color: $color-red;
+
+    &:before {
+      background-color: $color-red-hover;
+    }
+
+    &:hover, &:focus, &:active, &:active:focus {
+      border-color: $color-red-hover;
+    }
+  }
+
+  &.btn-outline-danger {
+    color: $color-red;
+    border-color: $color-red;
+
+    p {
+      color: $color-red;
+    }
+
+    svg {
+      fill: $color-red;
+    }
+
+    &:before {
+      background-color: $color-red;
+    }
+  }
+
+  &, &.btn-primary, &.btn-danger, &.btn-warning, &.btn-success, &.btn-outline-secondary, &.btn-secondary,
+  // &.btn-outline-primary, 
+  &.btn-outline-danger, &.btn-outline-warning,
+  // &.btn-outline-success,
+  &.icon, &.icon.btn-secondary {
+
+    &.disabled {
+      background-color: #f2f4f7;
+      border-color: #f2f4f7;
+      color: #dddddd;
+      pointer-events: none;
+
+      p {
+        color: #dddddd;
+      }
+
+      svg {
+        fill: #dddddd;
+      }
+
+    }
+  }
+
+  &.btn-primary, &.btn-danger, &.btn-warning, &.btn-success {
+    p {
+      color: #ffffff;
+    }
+
+    svg {
+      fill: #ffffff;
+    }
+  }
+
+  // &.btn-outline-primary, 
+  &.btn-outline-danger, &.btn-outline-warning
+  // &.btn-outline-success
+   {
+
+    &:hover, &:focus, &:active, &:active:focus {
+      color: #ffffff;
+      background: transparent;
+    }
+  }
+
+  &.btn-primary, &.btn-danger, &.btn-warning, &.btn-success,
+  // &.btn-outline-primary, 
+  &.btn-outline-danger, &.btn-outline-warning
+  // &.btn-outline-success
+   {
+
+    &:hover, &:focus,
+    &:active, &:active:focus {
+
+      p {
+        color: #ffffff;
+      }
+
+      svg {
+        fill: #ffffff;
+      }
+    }
+
+  }
+
+  &.expand {
+
+    svg {
+      width: 0;
+      transition: all 0.3s;
+    }
+
+    &.expand--load {
+
+      @keyframes rotating {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      svg {
+        width: 14px;
+        animation: rotating 2s linear infinite;
+      }
+    }
+  }
+}
+
+.btn-toolbar {
+  margin-top: 15px;
+  margin-bottom: 10px;
+
+  & > * {
+    margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: -10px;
+  }
+
+  &.btn-toolbar--center {
+
+    & > * {
+      margin-right: auto;
+      margin-left: auto;
+    }
+  }
+}
+
+.btn-group {
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 5px;
+  margin-bottom: -10px;
+
+  .btn {
+    margin-right: 0;
+    padding: 10px 15px;
+    font-weight: 600;
+  }
+
+  &.btn-group--justified {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  &.btn-group--icons {
+
+    .btn {
+      padding: 7px 8px;
+      line-height: 14px;
+    }
+  }
+
+  &.open .dropdown-toggle {
+    box-shadow: none;
+  }
+}
+
+button:focus, button:active {
+  outline: none;
+}
+
+.open > .dropdown-toggle.btn-default,
+.btn-default:active:focus, .btn-default:active:focus,
+.btn-default.focus, .btn-default:focus {
+
+  @include themify($themes) {
+    background-color: themed('colorBackground');
+  }
+}

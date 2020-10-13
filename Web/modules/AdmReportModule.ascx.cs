@@ -767,7 +767,7 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ReportTitle96"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmReport.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmReport.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{

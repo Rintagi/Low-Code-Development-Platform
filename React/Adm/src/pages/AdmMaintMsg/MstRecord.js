@@ -592,7 +592,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.EmailUsers || {}).readonly || !(authCol.EmailUsers || {}).visible}
                                         onClick={this.EmailUsers({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.EmailUsers || (columnLabel.EmailUsers || {}).ColumnName}
+                                        {auxLabels.EmailUsers || (columnLabel.EmailUsers || {}).ColumnHeader || (columnLabel.EmailUsers || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

@@ -680,7 +680,7 @@ if (this.Application["TranslateON"] == null || this.Application["TranslateON"].T
 						if (dtAu.Rows[10]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CultureTypeLabel242"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmCtCulture.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmCtCulture.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{

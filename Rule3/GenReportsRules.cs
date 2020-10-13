@@ -2130,7 +2130,7 @@ namespace RO.Rule3
 				}
 				sb.Append("					sb.Append(Environment.NewLine);" + Environment.NewLine);
 				sb.Append("				}" + Environment.NewLine);
-				sb.Append("				ExportToStream(null, reportName + \".xls\", sb.Replace(\"\\r\\n\",\"\\n\"), exportTo.TXT);" + Environment.NewLine);
+                sb.Append("				ExportToStream(null, reportName + \".csv\", sb.Insert(0, (Config.ExportExcelCSV ? \"sep=\\t\\n\": \"\")).Replace(\"\\r\\n\",\"\\n\"), exportTo.TXT);" + Environment.NewLine);
 				sb.Append("			}" + Environment.NewLine);
 				sb.Append("			else if (eExport == exportTo.XLS)" + Environment.NewLine);
 				sb.Append("			{" + Environment.NewLine);

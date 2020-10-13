@@ -6,7 +6,7 @@ import { Formik, Field, Form } from 'formik';
 import { Redirect, withRouter } from 'react-router-dom';
 import EyeIcon from 'mdi-react/EyeIcon';
 import LoadingIcon from 'mdi-react/LoadingIcon';
-import { login, logout, getCurrentUser, changePassword, ShowSpinner } from '../../redux/Auth';
+import { login, logout, getCurrentUser, changePassword, ShowSpinner, getWebAuthnRegistrationRequest, webauthnRegistration } from '../../redux/Auth';
 import { Row, Col } from 'reactstrap';
 import NaviBar from '../../components/custom/NaviBar';
 import { getNaviBar } from './index';
@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import log from '../../helpers/logger';
 import DocumentTitle from 'react-document-title';
 import { setTitle } from '../../redux/Global';
+import { parsedUrl, base64UrlEncode, base64UrlDecode, base64Codec, coerceToArrayBuffer, IsMobile } from '../../helpers/domutils';
 
 class NewPassword extends Component {
   constructor(props) {
@@ -32,11 +33,26 @@ class NewPassword extends Component {
 
     this.showPassword = this.showPassword.bind(this);
     this.changePassword = this.changePassword.bind(this);
+    this.webauthnRegistration = this.webauthnRegistration.bind(this);
   }
 
   componentDidMount() {
     const qs = queryString.parse(this.props.location.search);
-
+    const fido2 = typeof window != 'undefined' && window.PublicKeyCredential;
+    if (fido2) {
+      const _this = this;
+      const myUrl = parsedUrl(window.location);
+      this.props.getWebAuthnRegistrationRequest(myUrl.href)
+              .then(result=>{
+                log.debug(result);
+                _this.setState({
+                  registrationRequest: ((result || {}).data || {}).registrationRequest,
+                });
+              })
+              .catch(error=>{
+                log.debug(error);
+              })
+    }
     this.setState({
       j: qs.j,
       p: qs.p,
@@ -101,8 +117,106 @@ class NewPassword extends Component {
         confirmPwd: values.cConfirmPwd,
       }
     );
-
   }
+
+  transformWebAuthRequest(request) {
+    request.status = undefined;
+    request.errorMessage = undefined;
+    request.challenge = coerceToArrayBuffer(request.challenge, 'challenge');
+    if (request.user && request.user.id) {
+        request.user.id = coerceToArrayBuffer(request.user.id, 'user.id');
+    }
+    if (request.excludeCredentials && request.excludeCredentials) {
+        request.excludeCredentials = (request.excludeCredentials || []).map(function (c, i) {
+            c.id = coerceToArrayBuffer(c.id, 'excludeCredentials.' + i + '.id');
+            return c;
+        });
+    }
+    if (request.allowCredentials && request.allowCredentials) {
+        request.allowCredentials = (request.allowCredentials || []).map(function (c, i) {
+            c.id = coerceToArrayBuffer(c.id, 'allowCredentials.' + i + '.id');
+            return c;
+        });
+    }
+    if (request.authenticatorSelection && !request.authenticatorSelection.authenticatorAttachment) {
+        request.authenticatorSelection.authenticatorAttachment = undefined;
+    }
+    return request;
+  }
+
+  getRegistrationRequestAsync() {
+    const _this = this;
+    const request = this.state.registrationRequest;
+    return new Promise(function (resolve, reject) {
+        if (!request) reject("no request json");
+        else {
+            try {
+                const x = JSON.parse(request);
+                resolve(request);
+            } catch (e) {
+                reject(e);
+            }
+        }
+    });
+  }
+  
+  webauthnRegistration(values, { setSubmitting, setErrors, resetForm, setValues /* setValues and other goodies */ }) {
+    const _this = this;
+    const b64url = new base64Codec(true);
+    let registrationRequest = null;
+    return function(evt) {
+      _this.setState({ submitting: true, setSubmitting: setSubmitting });
+      _this.getRegistrationRequestAsync()
+          .then((request) => {
+            registrationRequest = request;
+            const x = JSON.parse(request);
+            request = _this.transformWebAuthRequest(x);
+              return navigator.credentials.create({
+                  publicKey: request
+              })
+          })
+          .then(function (newCredentialInfo) {
+              var extensions = newCredentialInfo.getClientExtensionResults();
+              var result = {
+                  Id: newCredentialInfo.id,
+                  RawId: b64url.encode(newCredentialInfo.rawId),
+                  Type: newCredentialInfo.type,
+                  Response: {
+                      AttestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
+                      ClientDataJson: b64url.encode(newCredentialInfo.response.clientDataJSON),
+                  },
+                  Extensions: extensions,
+                  attestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
+                  platform: navigator.platform,
+                  isMobile: IsMobile(),
+              };
+              var resultJSON = JSON.stringify(result);
+              _this.props.webauthnRegistration(registrationRequest, resultJSON)
+              .then(result=>{
+                log.debug(result);
+                if (((result || {}).data || {}).credentialId) {
+                  localStorage["Fido2Login"] = newCredentialInfo.id;
+                  if (result.data.message) {
+                    alert(result.data.message);
+                  }
+                }
+              })
+              .catch(error=>{
+                log.debug(error);
+                alert("registration failed");
+              });
+      }).catch((err) => {
+          alert(err);
+          // No acceptable authenticator or user refused consent. Handle appropriately.
+      }).finally(
+        ()=>{
+          _this.setState({ submitting: false });  
+        }
+      );
+      console.log(values);
+  
+    }
+  }  
 
   render() {
 
@@ -155,6 +269,7 @@ class NewPassword extends Component {
                   render={({
                     errors,
                     touched,
+                    setSubmitting,
                     isSubmitting,
                     values
                   }) => (
@@ -215,6 +330,15 @@ class NewPassword extends Component {
                             </Col>
                           </Row>
                         </div>
+                        { this.state.registrationRequest &&
+                          <div className="form__form-group mb-0">
+                          <Row className="btn-bottom-row">
+                            <Col xs={1} sm={12} className="btn-bottom-column">
+                              <Button color='success' className='btn btn-success account__btn' onClick={this.webauthnRegistration(values, {setSubmitting})} disabled={isSubmitting}>{"WebAuthn Registration"}</Button>
+                            </Col>
+                          </Row>
+                          </div>
+                        }
                       </Form>
                     )}
                 />
@@ -239,6 +363,8 @@ const mapDispatchToProps = (dispatch) => (
     { logout: logout },
     { getCurrentUser: getCurrentUser },
     { changePassword: changePassword },
+    { getWebAuthnRegistrationRequest: getWebAuthnRegistrationRequest },
+    { webauthnRegistration: webauthnRegistration },
     { setTitle: setTitle },
   ), dispatch)
 )

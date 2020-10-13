@@ -1059,6 +1059,7 @@ class MstRecord extends RintagiScreen {
                                       (values.cUsrEmail1URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cUsrEmail1URL, false, false, {values, name: 'EmailLink1'})}
                                           onClick={this.PopUpSearchLink(values.cUsrEmail1URL, false, true, {values, name: 'EmailLink1'})}
                                           disabled={(authCol.EmailLink1 || {}).readonly ? 'disabled' : ''}
@@ -1083,6 +1084,7 @@ class MstRecord extends RintagiScreen {
                                       (values.cUsrMobile1URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cUsrMobile1URL, false, false, {values, name: 'MobileLink1'})}
                                           onClick={this.PopUpSearchLink(values.cUsrMobile1URL, false, true, {values, name: 'MobileLink1'})}
                                           disabled={(authCol.MobileLink1 || {}).readonly ? 'disabled' : ''}

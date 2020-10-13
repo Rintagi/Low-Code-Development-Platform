@@ -6,10 +6,11 @@ import { bindActionCreators } from 'redux';
 import { Formik, Field, Form } from 'formik';
 import { Redirect, withRouter } from 'react-router-dom';
 import LoadingIcon from 'mdi-react/LoadingIcon';
-import { login, logout, getCurrentUser } from '../../redux/Auth';
+import { login, logout, getCurrentUser, getWebAuthnAssertionRequest, webauthnAssertion } from '../../redux/Auth';
 import { Link } from 'react-router-dom';
 import log from '../../helpers/logger';
 import { setSpinner } from '../../redux/Global';
+import { parsedUrl, base64UrlEncode, base64UrlDecode, base64Codec, coerceToArrayBuffer, IsMobile } from '../../helpers/domutils';
 
 class Login extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Login extends Component {
     };
 
     this.showPassword = this.showPassword.bind(this);
+    this.webAuthnLogin = this.webAuthnLogin.bind(this);
     this.handleSubmit = ((values, { setSubmitting, setErrors /* setValues and other goodies */ }) => {
       this.setState({ submitting: true, setSubmitting: setSubmitting });
       // this.state.submitting = true;
@@ -52,19 +54,155 @@ class Login extends Component {
       .finally(() => {
         const _this = this;
         this.props.setSpinner(false, 'login end');
-       // log.debug('get current user done');
+        // log.debug('get current user done');
         /* must reset this */
         setTimeout(() => { _this.props.setSpinner(false, '#####Login2Final'); }, 500);
       });
 
   }
 
+  transformWebAuthRequest(request) {
+    request.status = undefined;
+    request.errorMessage = undefined;
+    request.challenge = coerceToArrayBuffer(request.challenge, 'challenge');
+    if (request.user && request.user.id) {
+      request.user.id = coerceToArrayBuffer(request.user.id, 'user.id');
+    }
+    if (request.excludeCredentials && request.excludeCredentials) {
+      request.excludeCredentials = (request.excludeCredentials || []).map(function (c, i) {
+        c.id = coerceToArrayBuffer(c.id, 'excludeCredentials.' + i + '.id');
+        return c;
+      });
+    }
+    if (request.allowCredentials && request.allowCredentials) {
+      request.allowCredentials = (request.allowCredentials || []).map(function (c, i) {
+        c.id = coerceToArrayBuffer(c.id, 'allowCredentials.' + i + '.id');
+        return c;
+      });
+    }
+    if (request.authenticatorSelection && !request.authenticatorSelection.authenticatorAttachment) {
+      request.authenticatorSelection.authenticatorAttachment = undefined;
+    }
+    return request;
+  }
+
+  getAssertionRequestAsync() {
+    const _this = this;
+    const request = this.state.assertionRequest;
+    return new Promise(function (resolve, reject) {
+      if (!request) reject("no request json");
+      else {
+        try {
+          const x = JSON.parse(request);
+          resolve(request);
+        } catch (e) {
+          reject(e);
+        }
+      }
+    });
+  }
+
+  webAuthnLogin(values, { setSubmitting, setErrors, resetForm, setValues /* setValues and other goodies */ }) {
+    const _this = this;
+    let registeredFido2 = null;
+    let loginRequest = null;
+    const b64url = new base64Codec(true);
+
+    try {
+      registeredFido2 = localStorage["Fido2Login"] || "none";
+    }
+    catch (e) {
+
+    }
+    return function (evt) {
+      _this.setState({ submitting: true, setSubmitting: setSubmitting });
+      _this.getAssertionRequestAsync()
+        .then(function (request) {
+          loginRequest = request;
+          const x = JSON.parse(request);
+          request = _this.transformWebAuthRequest(x);
+          if ((!request.allowCredentials || request.allowCredentials.length == 0) && registeredFido2 != "none" && IsMobile()) {
+            request.allowCredentials = [
+              {
+                id: b64url.decode(registeredFido2),
+                type: "public-key",
+                transports: ["ble", "internal", "lightning", "nfc", "usb"],
+              },
+            ];
+          }
+          return navigator.credentials.get({
+            publicKey: request
+          });
+        }
+        )
+        .then(function (rawAssertion) {
+          var id = rawAssertion.id; // id during registration b64url
+          var assertion = {
+            id: rawAssertion.id,
+            rawId: b64url.encode(rawAssertion.rawId),
+            type: rawAssertion.type,
+            extensions: rawAssertion.getClientExtensionResults(),
+            response: {
+              clientDataJSON: b64url.encode(rawAssertion.response.clientDataJSON),
+              userHandle: rawAssertion.response.userHandle && b64url.encode(rawAssertion.response.userHandle) ? b64url.encode(rawAssertion.response.userHandle) : null,
+              signature: b64url.encode(rawAssertion.response.signature),
+              authenticatorData: b64url.encode(rawAssertion.response.authenticatorData)
+            }
+          };
+          var assertionJSON = JSON.stringify(assertion);
+          _this.props.webauthnAssertion(loginRequest, assertionJSON)
+                .then(result=>{
+                  log.debug(result);
+                })
+                .catch(error=>{
+                  log.debug(error);
+                });
+        })
+        .catch(function (err) {
+          console.log(err);
+          if (
+            err.name == "NotAllowedError" // user denied OR another active prompt by another process(firefox/chrome)
+            ||
+            err.name == "UnknownError" // Legacy Edge when another active prompt by another process 
+            ||
+            err.name == "NotSupportedError" // Legacy Edge when another active prompt by another process 
+          ) {
+            if (err.name == "NotSupportedError"
+              &&
+              loginRequest.allowCredentials.length == 0) {
+              alert(err);
+            }
+            else {
+              alert(err);
+            }
+          }
+        })
+      console.log(values);
+    }
+  }
 
   componentDidMount() {
     // if (!this.props.user || !this.props.user.UsrId) {
     //   this.props.getCurrentUser();
     // }
     // console.log(this.props.user);
+    const fido2 = typeof window != 'undefined' && window.PublicKeyCredential;
+    if (fido2) {
+      const _this = this;
+      const myUrl = parsedUrl(window.location);
+      const loginName = localStorage["Fido2Login"];
+      this.props.getWebAuthnAssertionRequest(myUrl.href, loginName)
+        .then(result => {
+          log.debug(result);
+          _this.setState({
+            assertionRequest: ((result || {}).data || {}).assertionRequest,
+          });
+        })
+        .catch(error => {
+          log.debug(error);
+        })
+    }
+
   }
   componentDidUpdate(prevProps, prevStats) {
 
@@ -134,6 +272,8 @@ class Login extends Component {
                 render={({
                   errors,
                   touched,
+                  values,
+                  setSubmitting,
                   isSubmitting,
                 }) => (
                     <Form className='form'> {/* this line equals to <form className='form' onSubmit={handleSubmit} */}
@@ -163,6 +303,11 @@ class Login extends Component {
                         <Link className="fill-fintrux" to="/forget-password">Forget Password?</Link>
                       </div>
                       <Button color='success' className='btn btn-success account__btn' type="submit" disabled={isSubmitting}>{this.props.auth.Label.Login}</Button>
+                      <br />
+                      {
+                        this.state.assertionRequest &&
+                        <Button color='success' className='btn btn-success account__btn' onClick={this.webAuthnLogin(values, { setSubmitting })} disabled={isSubmitting}>{"WebAuthn Login"}</Button>
+                      }
                     </Form>
                   )}
               />
@@ -187,6 +332,8 @@ const mapDispatchToProps = (dispatch) => (
     { logout: logout },
     { getCurrentUser: getCurrentUser },
     { setSpinner: setSpinner },
+    { getWebAuthnAssertionRequest: getWebAuthnAssertionRequest },
+    { webauthnAssertion: webauthnAssertion },
   ), dispatch)
 )
 

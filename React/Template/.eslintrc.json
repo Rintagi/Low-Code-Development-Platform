@@ -3,7 +3,7 @@
         "no-unused-vars" : "off",
         "no-useless-escape" : "off",
         "no-unreachable" : "off",
-        "eqeqeq" : "off",
+        "eqeqeq" : "warn",
         "no-mixed-operators" : "warn",
         "no-extra-bind" : "off",
         "no-useless-constructor": "off",

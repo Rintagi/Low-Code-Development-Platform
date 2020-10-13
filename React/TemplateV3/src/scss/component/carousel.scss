@@ -1,0 +1,128 @@
+@import '~slick-carousel/slick/slick.css';
+@import '~slick-carousel/slick/slick-theme.css';
+
+.slick-slider {
+  width: calc(100% + 15px);
+  margin-bottom: 24px;
+
+  .slick-slide {
+    overflow: hidden;
+    padding-right: 15px;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+    }
+  }
+
+  .slick-list {
+    width: calc(100% - 15px);
+  }
+
+  .slick-arrow {
+    height: 100%;
+    width: 100px;
+    z-index: 1;
+
+    &:before {
+      color: #dddddd;
+      font-weight: 600;
+      position: absolute;
+      top: calc(50% - 15px);
+      font-size: 30px;
+      line-height: 30px;
+      font-family: inherit;
+      width: 30px;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+      color: $color-additional;
+    }
+  }
+
+  .slick-arrow.slick-next {
+    right: 15px;
+    background: linear-gradient(90deg, transparent, white);
+
+    &:before {
+      content: '\203A';
+      right: 5px;
+    }
+  }
+
+  .slick-arrow.slick-prev {
+    background: linear-gradient(-90deg, transparent, white);
+    left: 0;
+
+    &:before {
+      content: '\2039';
+      left: 5px;
+    }
+  }
+
+  .slick-dots {
+
+    li {
+      width: 10px;
+
+      button {
+        padding: 0;
+        width: 10px;
+
+        &:before {
+          font-size: 10px;
+          width: 10px;
+          height: 10px;
+          color: #d8d8d8;
+          opacity: 1;
+          transition: all 0.3s;
+        }
+      }
+
+      &.slick-active {
+
+        button:before {
+          color: #f2f4f7;
+        }
+      }
+
+      &:hover {
+
+        button:before {
+          color: $color-additional;
+        }
+      }
+    }
+  }
+
+  &.slick-slider--single {
+
+    .slick-arrow {
+      background: transparent;
+    }
+  }
+
+  .slick-slider__caption {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    width: calc(100% - 50px);
+  }
+
+  .slick-slider__caption-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    line-height: 20px;
+  }
+
+  .slick-slider__caption-description {
+    font-size: 14px;
+    color: $color-additional;
+    margin: 0;
+    line-height: 16px;
+  }
+}

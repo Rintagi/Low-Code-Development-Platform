@@ -60,6 +60,8 @@ function registerValidSW(swUrl, scope) {
       // via postMessage(if there are listener setup BEFORE difficult, see index.js as this happens way earlier than React)
       // so we stuck it to document object(which should never go away except refresh)
       document.swRegistration = registration;
+      document.swReRegister = () => registerValidSW(swUrl, scope);
+      document.swUnRegister = unregister;
       listenForWaitingServiceWorker(registration, promptUserToRefresh);
       console.log('service work registration');
       console.log(registration);
@@ -151,11 +153,14 @@ var refreshing;
 ));
 
 function promptUserToRefresh(reg) {
-  // this is just an example
-  // don't use window.confirm in real life; it's terrible
-  // blind skip
+  // blind skip without waiting(i.e. flush sw cache and used new one, the js is still OLD version! only sw is updated)
   reg.waiting.postMessage('skipWaiting');
+  // force reload which would kick in new version of index.html(by the new sw if it is cached) 
   // if (window.confirm("New SW version available! OK to refresh?")) {
+  // must do this to use new version  
+  // we don't do it here but use more aggressive strategy of in-app reload(see screen.js)
+  // only one can be used to avoid double prompt
+  // window.location.reload();
   // }
 }
 

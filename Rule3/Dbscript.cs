@@ -455,12 +455,16 @@ ORDER BY so1.name"
 			dt = GetTables(SrcDbProviderCd, IsFrSource, false, false, CSrc, CTar);
 			foreach (DataRow dr2 in dt.Rows)
 			{
-				using (DbScriptAccessBase dac = GetDbScriptAccess())
+                int idxCount = 0;
+                int fkIdxCount = 0;
+                using (DbScriptAccessBase dac = GetDbScriptAccess())
 				{
 					dtIx = dac.GetData("EXEC sp_helpindex " + dr2["tbName"].ToString(), IsFrSource, CSrc, CTar);
 				}
                 bool inConditionalBlock = false;
                 bool hasContent = false;
+                string includeColumns = null;
+                string filter = null;
 				foreach (DataRow drIx in dtIx.Rows)
 				{
 					if (drIx[0].ToString().Substring(0,3) != "PK_"
@@ -468,6 +472,30 @@ ORDER BY so1.name"
                         !dr2["tbName"].ToString().Contains("sysdiagrams") // SQL Server generated, not always available on target
                         )	// No primary key.
 					{
+                        using (DbScriptAccessBase dac = GetDbScriptAccess())
+                        {
+                            DataTable dtInclude = dac.GetData(@"SELECT 
+                                                        IndexName = i.Name,
+                                                        ColName = c.Name,
+	                                                    TableName = t.name,
+	                                                    FilterDef = i.filter_definition
+                                                        FROM 
+                                                            sys.indexes i
+                                                        INNER JOIN 
+                                                            sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
+                                                        INNER JOIN 
+                                                            sys.columns c ON c.object_id = ic.object_id AND c.column_id = ic.column_id
+                                                        INNER JOIN 
+                                                            sys.tables t on t.object_id = c.object_id
+                                                        WHERE
+                                                            ic.is_included_column = 1
+	                                                        AND t.name = '" + dr2["tbName"].ToString() + @"'
+	                                                        AND i.name = '" + drIx[0].ToString() + "'", IsFrSource, CSrc, CTar);
+                            includeColumns = string.Join(",", dtInclude.AsEnumerable().Select(dr=>dr["ColName"]).ToArray());
+                            filter = dtInclude.AsEnumerable()
+                                        .Where(dr=>!string.IsNullOrEmpty(dr["FilterDef"].ToString()))
+                                        .Select(dr => dr["FilterDef"].ToString()).FirstOrDefault();
+                        }
                         if (conditional(dr2["tbName"].ToString()) && !inConditionalBlock)
                         {
                             // re-create table only if it is not there
@@ -481,9 +509,20 @@ ORDER BY so1.name"
 						strIx = "CREATE ";
 						if (drIx[1].ToString().LastIndexOf("unique") > 0) {strIx += " UNIQUE ";}
 						strIx += "INDEX " + drIx[0].ToString() + " ON " + dr2["tbName"].ToString() + "(";
-						strIx += drIx[2].ToString() + ")\r\n";
+						strIx += drIx[2].ToString() + ")" 
+                                    /* add covering columns */
+                                    + (string.IsNullOrEmpty(includeColumns) ? "" : " INCLUDE (" + includeColumns + ")")
+                                    /* add filter clause */
+                                    + (string.IsNullOrEmpty(filter) ? "" : " WHERE (" + filter + ")")
+                                    + "\r\n";
 						//replace (-) 
+                        if (idxCount > 0)
+                        {
+                            sbCrea.Append("GO\r\n\r\n");
+                            idxCount = 0;
+                        }
 						sbCrea.Append(Regex.Replace(sbDrop.Append(strIx).ToString(),"[(]-[)]"," DESC"));
+                        idxCount += 1;
 						sbDrop.Remove(0,sbDrop.Length); //clear the drop statement
 					}
 				}
@@ -512,7 +551,18 @@ ORDER BY so1.name"
 					strFK = sbDrop.Append(strFK).ToString();
 					sbDrop.Remove(0, sbDrop.Length); //clear the drop statement
 					strFK += ")\r\n";
-					sbCrea.Append(strFK);
+                    if (idxCount > 0)
+                    {
+                        sbCrea.Append("GO\r\n\r\n");
+                        idxCount = 0;
+                    }
+                    else if (fkIdxCount > 0)
+                    {
+                        sbCrea.Append("GO\r\n\r\n");
+                        fkIdxCount = 0;
+                    }
+                    sbCrea.Append(strFK);
+                    fkIdxCount += 1;
 				}
                 if (conditional(dr2["tbName"].ToString()) && inConditionalBlock)
                 {
@@ -670,7 +720,7 @@ ORDER BY so1.name"
 			}
 			else	// TarDbProviderCd == "M"
 			{
-				return Regex.Replace(ss,@"(?i)([^'])(/[*])\s*WITH\s*ENCRYPTION\s*([*]/)","$1WITH ENCRYPTION");
+				return Regex.Replace(ss,@"(?i)([^'])(/[*])\s*WITH\s+ENCRYPTION\s*([*]/)","$1WITH ENCRYPTION");
 			}
 		}
 

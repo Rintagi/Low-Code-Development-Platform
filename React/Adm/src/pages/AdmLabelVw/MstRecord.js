@@ -512,6 +512,7 @@ class MstRecord extends RintagiScreen {
                                       (values.cLabelLink265URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cLabelLink265URL, false, false, {values, name: 'LabelLink265'})}
                                           onClick={this.PopUpSearchLink(values.cLabelLink265URL, false, false, {values, name: 'LabelLink265'})}
                                           disabled={(authCol.LabelLink265 || {}).readonly ? 'disabled' : ''}

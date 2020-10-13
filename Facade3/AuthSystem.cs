@@ -252,38 +252,40 @@ namespace RO.Facade3
             int remainingSeconds = expiredOn - (int)currTime;
             var currentHandle = loginJWT.handle;
             bool keepRefreshToken = remainingSeconds > 120 && !reAuth && grant_type == "refresh_token";
-            if (currTime > nbf && currTime < expiredOn && ValidateJWTHandle(currentHandle))
+            try
             {
-                string signingKey = GetSessionSigningKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
-                string encryptionKey = GetSessionEncryptionKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
-                RintagiLoginToken loginToken = DecryptLoginToken(loginJWT.loginToken, encryptionKey);
-
-                LCurr = new UsrCurr(companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId, systemId ?? loginToken.SystemId, systemId ?? loginToken.SystemId);
-                LImpr = null;
-
-                LImpr = SetImpersonation(LImpr, loginToken.UsrId, systemId ?? loginToken.SystemId, companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId);
-
-                LUser = new LoginUsr();
-                LUser.UsrId = loginToken.UsrId;
-                LUser.LoginName = loginToken.LoginName;
-                LUser.DefCompanyId = loginToken.DefCompanyId;
-                LUser.DefProjectId = loginToken.DefProjectId;
-                LUser.DefSystemId = loginToken.DefSystemId;
-                LUser.UsrName = loginToken.UsrName;
-                LUser.InternalUsr = "Y";
-                LUser.CultureId = 1;
-                LUser.HasPic = false;
-
-                LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
-
-                string refreshTag = keepRefreshToken ? currentHandle : Guid.NewGuid().ToString().Replace("-", "").ToLower();
-                string loginTag = Guid.NewGuid().ToString().Replace("-", "").ToLower();
-                if (ValidateScope(LUser, LCurr, LImpr, LPref, currentHandle, true))
+                if (currTime > nbf && currTime < expiredOn && ValidateJWTHandle(currentHandle))
                 {
-                    string loginTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, access_token_validity, loginTag);
-                    string refreshTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, keepRefreshToken ? remainingSeconds : refresh_token_validity, refreshTag);
-                    string token_scope = string.Format("s{0}c{1}p{2}", LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId);
-                    var Token = new SerializableDictionary<string, string> {
+                    string signingKey = GetSessionSigningKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
+                    string encryptionKey = GetSessionEncryptionKey(loginJWT.iat.ToString(), loginJWT.loginId.ToString());
+                    RintagiLoginToken loginToken = DecryptLoginToken(loginJWT.loginToken, encryptionKey);
+
+                    LCurr = new UsrCurr(companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId, systemId ?? loginToken.SystemId, systemId ?? loginToken.SystemId);
+                    LImpr = null;
+
+                    LImpr = SetImpersonation(LImpr, loginToken.UsrId, systemId ?? loginToken.SystemId, companyId ?? loginToken.CompanyId, projectId ?? loginToken.ProjectId);
+
+                    LUser = new LoginUsr();
+                    LUser.UsrId = loginToken.UsrId;
+                    LUser.LoginName = loginToken.LoginName;
+                    LUser.DefCompanyId = loginToken.DefCompanyId;
+                    LUser.DefProjectId = loginToken.DefProjectId;
+                    LUser.DefSystemId = loginToken.DefSystemId;
+                    LUser.UsrName = loginToken.UsrName;
+                    LUser.InternalUsr = "Y";
+                    LUser.CultureId = 1;
+                    LUser.HasPic = false;
+
+                    LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
+
+                    string refreshTag = keepRefreshToken ? currentHandle : Guid.NewGuid().ToString().Replace("-", "").ToLower();
+                    string loginTag = Guid.NewGuid().ToString().Replace("-", "").ToLower();
+                    if (ValidateScope(LUser, LCurr, LImpr, LPref, currentHandle, true))
+                    {
+                        string loginTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, access_token_validity, loginTag);
+                        string refreshTokenJWT = CreateLoginJWT(LUser, loginToken.DefCompanyId, loginToken.DefProjectId, loginToken.DefSystemId, LCurr, LImpr, appPath, keepRefreshToken ? remainingSeconds : refresh_token_validity, refreshTag);
+                        string token_scope = string.Format("s{0}c{1}p{2}", LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId);
+                        var Token = new SerializableDictionary<string, string> {
                                         { "access_token", loginTokenJWT},
                                         { "token_type", "Bearer"},
                                         { "iat", currTime.ToString()},
@@ -293,15 +295,18 @@ namespace RO.Facade3
                                         { "refresh_token", refreshTokenJWT},
                                     };
 
-                    return Token;
-                }
-                else
-                {
-                    return new SerializableDictionary<string, string>() {
+                        return Token;
+                    }
+                    else
+                    {
+                        return new SerializableDictionary<string, string>() {
                                         { "error", "access_denied"},
                                         { "message", "cannot issue token"},
                                 };
+                    }
                 }
+            }
+            catch {
             }
             return new SerializableDictionary<string, string>() {
                 { "error", "invalid_token"},
@@ -388,8 +393,8 @@ namespace RO.Facade3
                 Resources = resources,
             };
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(loginToken);
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            string hash = BitConverter.ToString(hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(json))).Replace("-", "");
+            SHA256CryptoServiceProvider hashsha256 = new SHA256CryptoServiceProvider();
+            string hash = BitConverter.ToString(hashsha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(json))).Replace("-", "");
             string encrypted = RO.Common3.Utils.ROEncryptString(hash.Left(32) + json, secret);
             return encrypted;
         }

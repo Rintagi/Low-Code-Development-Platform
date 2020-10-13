@@ -4,7 +4,7 @@
     using System.IO;
     using System.Text;
     using System.Data;
-    //using System.Data.OleDb;
+    using System.Net;
     using System.Collections.Generic;
     using System.Threading;
     using System.Diagnostics;
@@ -19,6 +19,7 @@
     using System.Xml;
     using System.Xml.Serialization;
     using ExifLib;
+
     public static class StringExtensions
     {
         public static string Left(this string s, int left)
@@ -41,6 +42,15 @@
         {
             if (string.IsNullOrWhiteSpace(s)) return replacement;
             else return s;
+        }
+        public static string ReplaceInsensitive(this string str, string from, string to)
+        {
+            str = Regex.Replace(str, Regex.Escape(from), to.Replace("$", "$$"), RegexOptions.IgnoreCase);
+            return str;
+        }
+        public static byte[] ToUtf8ByteArray(this string str)
+        {
+            return System.Text.UTF8Encoding.UTF8.GetBytes(str);
         }
     }
 
@@ -1392,36 +1402,52 @@
             // general format
             // base64(version byte + byte[] of IV + encrypted content) + '-' + visible tail portion
             // version 1 3DES CBC with 8 byte IV
+            // version 2 AES256 CBC with 16 byte IV
 
-            byte[] ver = new byte[] { 1 };
-            byte[] iv = new byte[8];
+            byte[] ver = new byte[] { (byte) (Config.DesLegacyMD5Encrypt ? 1 : 2) };
+            byte[] iv = new byte[Config.DesLegacyMD5Encrypt ? 8 : 16];
             rng.GetBytes(iv);
 
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
-            des.Mode = CipherMode.CBC;
-            des.IV = iv;
-            des.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(inKey));
-            byte[] encryptedBlock = des.CreateEncryptor().TransformFinalBlock(UTF8Encoding.UTF8.GetBytes(inStr), 0, UTF8Encoding.UTF8.GetBytes(inStr).Length);
+            var hasher = new ROHasher(Config.DesLegacyMD5Encrypt);
+            SymmetricAlgorithm cipher = Config.DesLegacyMD5Encrypt ? (SymmetricAlgorithm) new TripleDESCryptoServiceProvider() : (SymmetricAlgorithm) new AesCryptoServiceProvider();
+            cipher.Mode = CipherMode.CBC;
+            cipher.IV = iv;
+            cipher.Key = hasher.ComputeHash(UTF8Encoding.UTF8.GetBytes(inKey)).Take(Config.DesLegacyMD5Encrypt ? 16 : 32).ToArray();
+            byte[] encryptedBlock = cipher.CreateEncryptor().TransformFinalBlock(UTF8Encoding.UTF8.GetBytes(inStr), 0, UTF8Encoding.UTF8.GetBytes(inStr).Length);
             outStr = Convert.ToBase64String(ver.Concat(iv).Concat(encryptedBlock).ToArray());
             return outStr;
         }
 
         public static string RODecryptString(string inStr, string inKey)
         {
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
-            byte[] encryptedData = Convert.FromBase64String(inStr);
-            byte ver = encryptedData[0];
-            int ivSize = 0;
-            if (ver == 1) ivSize = 8;
-            else throw new Exception("unsupported encryption version");
+            try
+            {
+                var hasher = new ROHasher(Config.DesLegacyMD5Encrypt);
+                byte[] encryptedData = Convert.FromBase64String(inStr);
+                byte ver = encryptedData[0];
+                int ivSize = 0;
+                if (ver == 1) ivSize = 8;
+                else if (ver == 2) ivSize = 16;
+                else throw new Exception("unsupported encryption version");
 
-            des.IV = encryptedData.Skip(1).Take(ivSize).ToArray();
-            des.Mode = CipherMode.CBC;
-            des.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(inKey));
-            string outStr = UTF8Encoding.UTF8.GetString(des.CreateDecryptor().TransformFinalBlock(encryptedData.Skip(1 + ivSize).ToArray(), 0, encryptedData.Length - (1 + ivSize)));
-            return outStr;
+                SymmetricAlgorithm cipher = ver == 1 ? (SymmetricAlgorithm)new TripleDESCryptoServiceProvider() : (SymmetricAlgorithm)new AesCryptoServiceProvider();
+
+                try
+                {
+                    cipher.IV = encryptedData.Skip(1).Take(ivSize).ToArray();
+                    cipher.Mode = CipherMode.CBC;
+                    cipher.Key = hasher.ComputeHash(UTF8Encoding.UTF8.GetBytes(inKey)).Take(Config.DesLegacyMD5Encrypt ? 16 : 32).ToArray();
+                    string outStr = UTF8Encoding.UTF8.GetString(cipher.CreateDecryptor().TransformFinalBlock(encryptedData.Skip(1 + ivSize).ToArray(), 0, encryptedData.Length - (1 + ivSize)));
+                    return outStr;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            catch {
+                return null; 
+            }
         }
         public static SecurityIdentifier GetComputerSid()
         {
@@ -1859,6 +1885,44 @@
                 xa.Value = fi.FullName.Replace(DeployPath, "");
                 NewNode.Attributes.Append(xa);
                 ItemNode.AppendChild(NewNode);
+            }
+        }
+        public static bool IsPrivateIp(string testIp)
+        {
+            /* An IP should be considered as internal when:
+
+           ::1          -   IPv6  loopback
+           10.0.0.0     -   10.255.255.255  (10/8 prefix)
+           127.0.0.0    -   127.255.255.255  (127/8 prefix)
+           172.16.0.0   -   172.31.255.255  (172.16/12 prefix)
+           192.168.0.0  -   192.168.255.255 (192.168/16 prefix)
+             */
+            try
+            {
+                if (string.IsNullOrEmpty(testIp)) return false;
+                if (testIp == "localhost") return true;
+
+                var addr = IPAddress.Parse(testIp);
+                if (testIp == "::1" || addr.IsIPv6LinkLocal || addr.IsIPv6SiteLocal) return true;
+
+                byte[] ip = IPAddress.Parse(testIp).GetAddressBytes();
+                switch (ip[0])
+                {
+                    case 10:
+                    case 127:
+                        return true;
+                    case 169:
+                        return ip[1] == 254;
+                    case 172:
+                        return ip[1] >= 16 && ip[1] < 32;
+                    case 192:
+                        return ip[1] == 168;
+                    default:
+                        return false;
+                }
+            }
+            catch {
+                return false;
             }
         }
 

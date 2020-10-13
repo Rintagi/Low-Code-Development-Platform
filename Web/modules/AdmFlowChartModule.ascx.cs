@@ -41,7 +41,7 @@ namespace RO.Common3.Data
 			columns.Add("ChartData1325", typeof(string));
 			columns.Add("launch", typeof(string));
 			columns.Add("View", typeof(string));
-			columns.Add("Generate", typeof(string));
+			columns.Add("Display", typeof(string));
 			return dt;
 		}
 	}
@@ -540,7 +540,7 @@ if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "S
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ChartData1325"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmFlowchart.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmFlowchart.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{
@@ -1328,7 +1328,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				cChartData1325E.Attributes["label_id"] = cChartData1325Label.ClientID; cChartData1325E.Attributes["target_id"] = cChartData1325.ClientID;
 				base.SetFoldBehavior(claunch, dtAuth.Rows[4], null, null, null, dtLabel.Rows[4], null, null, null);
 				base.SetFoldBehavior(cView, dtAuth.Rows[5], null, null, null, dtLabel.Rows[5], null, null, null);
-				base.SetFoldBehavior(cGenerate, dtAuth.Rows[6], null, null, null, dtLabel.Rows[6], null, null, null);
+				base.SetFoldBehavior(cDisplay, dtAuth.Rows[6], null, null, null, dtLabel.Rows[6], null, null, null);
 			}
 			if ((cChartName1325.Attributes["OnChange"] == null || cChartName1325.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cChartName1325.Visible && !cChartName1325.ReadOnly) {cChartName1325.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cChartDesc1325.Attributes["OnChange"] == null || cChartDesc1325.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cChartDesc1325.Visible && !cChartDesc1325.ReadOnly) {cChartDesc1325.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1439,20 +1439,20 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			ScriptManager.GetCurrent(Parent.Page).SetFocus(cAdmFlowchart1027List.FocusID);
 			ShowDirty(false); PanelTop.Update();
 			//WebRule: Hide and show view button and add logic
-  if (!string.IsNullOrEmpty(cChartId1325.Text))
+if (!string.IsNullOrEmpty(cChartId1325.Text))
             {
-                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "'); return false;";
+                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue + "'); return false;";
             }
 
  if (string.IsNullOrEmpty(cAdmFlowchart1027List.SelectedValue))
             {
-                cGenerate.Visible = false;
                 cView.Visible = false;
+                cDisplay.Visible = false;
             }
             else
             {
-                cGenerate.Visible = false;
                 cView.Visible = true;
+                cDisplay.Visible = true;
             }
 			// *** WebRule End *** //
 		}
@@ -1469,21 +1469,22 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
 		}
 
-		protected void cGenerate_Click(object sender, System.EventArgs e)
+		protected void cDisplay_Click(object sender, System.EventArgs e)
 		{
-			//WebRule: Generate Button
-string chartData = cChartData1325.Text;
-            string chartHtmlContent = @"
-    //Currently this function is not in use. To enable function, copy the content from viewchart.ascx page
-";
-            string chartDir = Server.MapPath("~/chart");
-            if (!Directory.Exists(chartDir)) { Directory.CreateDirectory(chartDir); }
-            string xsdPath = Server.MapPath("~/chart/") + cChartName1325.Text + ".html";
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(xsdPath))
-            {
-                try { writer.Write(chartHtmlContent); }
-                finally { writer.Close(); }
-            }
+			//WebRule: Display on Default Button
+string projectRootPath = Config.RuleTierPath;
+            var lines = File.ReadAllLines(projectRootPath + "/Web/modules/DefaultModule.ascx");
+            string firstLine = lines[0];
+            string flowchartLink = "viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue;
+            string flowchartIframe = "<iframe id='myiFrame' src='" + flowchartLink + "' style='width: 100%; height: 70vh; visibility:visible;'></iframe>";
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(firstLine + Environment.NewLine);
+            sb.Append(flowchartIframe);
+
+            StreamWriter sw = new StreamWriter(projectRootPath + "/Web/modules/DefaultModule.ascx");
+            try { sw.Write(sb); PreMsgPopup("Flowchart added to default page successfully"); }
+            finally { sw.Close(); }
 
 			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.

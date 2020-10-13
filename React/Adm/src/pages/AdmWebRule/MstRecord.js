@@ -764,7 +764,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.Snippet1 || {}).readonly || !(authCol.Snippet1 || {}).visible}
                                         onClick={this.Snippet1({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet1 || (columnLabel.Snippet1 || {}).ColumnName}
+                                        {auxLabels.Snippet1 || (columnLabel.Snippet1 || {}).ColumnHeader || (columnLabel.Snippet1 || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -776,7 +776,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.Snippet4 || {}).readonly || !(authCol.Snippet4 || {}).visible}
                                         onClick={this.Snippet4({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet4 || (columnLabel.Snippet4 || {}).ColumnName}
+                                        {auxLabels.Snippet4 || (columnLabel.Snippet4 || {}).ColumnHeader || (columnLabel.Snippet4 || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -788,7 +788,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.Snippet2 || {}).readonly || !(authCol.Snippet2 || {}).visible}
                                         onClick={this.Snippet2({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet2 || (columnLabel.Snippet2 || {}).ColumnName}
+                                        {auxLabels.Snippet2 || (columnLabel.Snippet2 || {}).ColumnHeader || (columnLabel.Snippet2 || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -800,7 +800,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.Snippet3 || {}).readonly || !(authCol.Snippet3 || {}).visible}
                                         onClick={this.Snippet3({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet3 || (columnLabel.Snippet3 || {}).ColumnName}
+                                        {auxLabels.Snippet3 || (columnLabel.Snippet3 || {}).ColumnHeader || (columnLabel.Snippet3 || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

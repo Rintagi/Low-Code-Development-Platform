@@ -1542,3 +1542,12 @@
 7664~@~1325~@~10~@~~@~ChartId~@~Flowchart - ChartId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this menu item~@~
 7665~@~1325~@~20~@~~@~ChartName~@~Flowchart - ChartName~@~11~@~500~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is an integer tab index order between 0 - 32767 with an interval of 10 starting at 10~@~
 7666~@~1325~@~50~@~~@~ChartDesc~@~Flowchart - ChartDesc~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the custom program or http:/https:/file:/mailto: this menu item should invoke, if applicable~@~
+7667~@~1326~@~40~@~~@~LoginName~@~UsrProvider - LoginName~@~11~@~200~@~~@~~@~N~@~N~@~N~@~N~@~N~@~SSO's Login credential~@~
+7668~@~1326~@~30~@~~@~ProviderCd~@~UsrProvider - ProviderCd~@~15~@~5~@~~@~~@~N~@~N~@~N~@~N~@~N~@~source of SSO~@~
+7669~@~1326~@~20~@~~@~UsrId~@~UsrProvider - UsrId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7670~@~1326~@~60~@~~@~Remark~@~UsrProvider - Remark~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~remarks say reason why it is diabled or anything~@~
+7671~@~1326~@~80~@~~@~DisabledOn~@~UsrProvider - DisabledOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~when it was disabled~@~
+7672~@~1326~@~70~@~~@~CreatedOn~@~UsrProvider - CreatedOn~@~12~@~8~@~~@~getutcdate()~@~N~@~N~@~N~@~N~@~N~@~first created on~@~
+7673~@~1326~@~90~@~~@~Active~@~UsrProvider - Active~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~whether this is still active login alternative(we do not remove records unless for GPDR reason)~@~
+7674~@~1326~@~50~@~~@~LoginMeta~@~UsrProvider - LoginMeta~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Auxilary info for related to the SSO(can be public key info in the case of FIDO2/WebAuthn for example)~@~
+7675~@~1326~@~10~@~~@~UsrProviderId~@~UsrProvider - UsrProviderId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~

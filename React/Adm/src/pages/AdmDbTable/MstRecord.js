@@ -700,7 +700,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.ModelSample || {}).readonly || !(authCol.ModelSample || {}).visible}
                                         onClick={this.ModelSample({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.ModelSample || (columnLabel.ModelSample || {}).ColumnName}
+                                        {auxLabels.ModelSample || (columnLabel.ModelSample || {}).ColumnHeader || (columnLabel.ModelSample || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -712,7 +712,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.SyncByDb || {}).readonly || !(authCol.SyncByDb || {}).visible}
                                         onClick={this.SyncByDb({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SyncByDb || (columnLabel.SyncByDb || {}).ColumnName}
+                                        {auxLabels.SyncByDb || (columnLabel.SyncByDb || {}).ColumnHeader || (columnLabel.SyncByDb || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -724,7 +724,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.AnalToDb || {}).readonly || !(authCol.AnalToDb || {}).visible}
                                         onClick={this.AnalToDb({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.AnalToDb || (columnLabel.AnalToDb || {}).ColumnName}
+                                        {auxLabels.AnalToDb || (columnLabel.AnalToDb || {}).ColumnHeader || (columnLabel.AnalToDb || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -736,7 +736,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.SyncToDb || {}).readonly || !(authCol.SyncToDb || {}).visible}
                                         onClick={this.SyncToDb({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SyncToDb || (columnLabel.SyncToDb || {}).ColumnName}
+                                        {auxLabels.SyncToDb || (columnLabel.SyncToDb || {}).ColumnHeader || (columnLabel.SyncToDb || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -827,7 +827,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.BtnScan || {}).readonly || !(authCol.BtnScan || {}).visible}
                                         onClick={this.BtnScan({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.BtnScan || (columnLabel.BtnScan || {}).ColumnName}
+                                        {auxLabels.BtnScan || (columnLabel.BtnScan || {}).ColumnHeader || (columnLabel.BtnScan || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

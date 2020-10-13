@@ -44,31 +44,28 @@ body {
 	border-left: 5px solid orange;
 }
 
-.state {
-	
-}
 
 #myflow_tools{
-	position: fixed; 
+	
 	top: 10px; 
 	left: 30px; 
-	background-color: 
-	#fff; 
 	width: 150px; 
 	cursor: pointer; 
-	padding: 3px;
 }
 
 #myflow_props{
-	position: fixed; 
-	top: 30; 
-	right: 50; 
-	background-color: #fff; 
+	top: 30px; 
+	right: 50px; 
 	width: 260px; 
-	padding: 3px;
 }
-#myflow_props table {
-	
+
+
+#myflow_tools, #myflow_props
+{
+    padding: 3px;
+    background-color: #fff; 
+    position: fixed; 
+    z-index: 1;
 }
 
 #myflow_props th {
@@ -120,4 +117,23 @@ hr{
 
 .editor textarea{
 	min-height: 50px;
+}
+
+svg:nth-child(2)
+{
+    display:none;
+}
+
+.tooltipCnt:empty
+{
+    padding: 0 !important;
+    border:none !important;
+}
+
+#myflow
+{
+    width: 100%;
+    height: 100%;
+    min-width:1000px;
+    min-height:500px;
 }

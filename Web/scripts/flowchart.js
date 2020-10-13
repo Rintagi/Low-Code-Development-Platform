@@ -1396,8 +1396,17 @@
 
    
     myflow.init = function (c, o) {
-        var _w = $(window).width(), _h = $(window).height(), _r = Raphael(c, _w
-                    * 1.5, _h * 1.5), _states = {}, _paths = {};
+        var _w = $(window).width(), _h = $(window).height(),
+            //_r = Raphael(c, _w * 1.5, _h * 1.5), _states = {}, _paths = {};
+            _r = Raphael(c, _w, _h), _states = {}, _paths = {};
+
+        if (self !== top && window.frameElement.id == "myiFrame") {
+            // Add svg view width and height if inside the iframe on default page
+            _w = _w + 160;
+            _h = _h + 160;
+        }
+        _r.setViewBox(0, 0, _w, _h, true);
+        _r.setSize('100%', '100%');
 
         $.extend(true, myflow.config, o);
 
@@ -1908,7 +1917,7 @@ $.extend(true,myflow.config.tools.states,{
 		type : 'start',
 		name : {text:'<<start>>'},
 		text : {text:'Start'},
-		img : {src : 'http://localhost/ro/images/flowchart/start_event_empty.png',width : 48, height:48},
+		img : {src : 'images/flowchart/start_event_empty.png',width : 48, height:48},
 		attr : {width:50 ,heigth:50 },
 		props : {
 			text: {name:'text',label: 'Start', value:'', editor: function(){return new myflow.editors.textEditor();}},
@@ -1916,7 +1925,7 @@ $.extend(true,myflow.config.tools.states,{
 	end : {showType: 'image',type : 'end',
 		name : {text:'<<end>>'},
 		text : {text:'End'},
-		img: { src: 'http://localhost/ro/images/flowchart/end_event_terminate.png', width: 48, height: 48 },
+		img: { src: 'images/flowchart/end_event_terminate.png', width: 48, height: 48 },
 		attr : {width:100 ,heigth:50 },
 		props : {
 			text: {name:'text',label: 'End', value:'', editor: function(){return new myflow.editors.textEditor();}},
@@ -1924,7 +1933,7 @@ $.extend(true,myflow.config.tools.states,{
 	textSection : {showType: 'text',type : 'textSection',
 		name : {text:'<<textSection>>'},
 		text : {text:'Text'},
-		img: { src: 'http://localhost/ro/images/flowchart/task_empty.png', width: 48, height: 48 },
+		img: { src: 'images/flowchart/task_empty.png', width: 48, height: 48 },
 		props : {
 			text: {name:'text',label: 'Text', value:'', editor: function(){return new myflow.editors.textEditor();}},
 		    tooltip: {name:'tooltip', label : 'Tooltip', value:'', editor: function(){return new myflow.editors.textAreaEditor();}},
@@ -1932,7 +1941,7 @@ $.extend(true,myflow.config.tools.states,{
 	linkSection : {showType: 'text',type : 'linkSection',
 		name : {text:'<<linkSection>>'},
 		text : {text:'Link'},
-		img: { src: 'http://localhost/ro/images/flowchart/task_empty.png', width: 48, height: 48 },
+		img: { src: 'images/flowchart/task_empty.png', width: 48, height: 48 },
 	    //attr : {fill: '#D5E8D4', stroke: '#82B366', target: 'blank'},	
 		attr: { fill: '#D5E8D4', stroke: '#82B366'},
 		props : {
@@ -1943,41 +1952,12 @@ $.extend(true,myflow.config.tools.states,{
 	fork : {showType: 'image',type : 'fork',
 		name : {text:'<<fork>>'},
 		text : {text:'Fork'},
-		img: { src: 'http://localhost/ro/images/flowchart/gateway_parallel.png', width: 48, height: 48 },
+		img: { src: 'images/flowchart/gateway_parallel.png', width: 48, height: 48 },
 		attr : {width:50 ,heigth:50 },
 		props : {
-			text: {name:'text', label: 'Text', value:'', editor: function(){return new myflow.editors.textEditor();}},
+		    text: { name: 'text', label: 'Text', value: '', editor: function () { return new myflow.editors.textEditor(); } },
+		    //temp2: { name: 'temp2', label: '', value: '', editor: function () { return new myflow.editors.selectEditor([{ name: 'aaa', value: 1 }, { name: 'bbb', value: 2 }]); } }
 		}},
-	// join : {showType: 'image',type : 'join',
-		// name : {text:'<<join>>'},
-		// text : {text:'Join'},
-		// img : {src : 'img/48/gateway_parallel.png',width :48, height:48},
-		// attr : {width:50 ,heigth:50 },
-		// props : {
-			// text: {name:'text', label: 'Text', value:'', editor: function(){return new myflow.editors.textEditor();}, value:'Join'},
-			// temp1: {name:'temp1', label: '文本', value:'', editor: function(){return new myflow.editors.inputEditor();}},
-			// temp2: {name:'temp2', label : 'Select', value:'', editor: function(){return new myflow.editors.selectEditor('select.json');}}
-		// }},
-	// 'end-cancel' : {showType: 'image',type : 'end-cancel',
-		// name : {text:'<<end-cancel>>'},
-		// text : {text:'Cancel'},
-		// img : {src : 'img/48/end_event_cancel.png',width : 48, height:48},
-		// attr : {width:50 ,heigth:50 },
-		// props : {
-			// text: {name:'text',label: text', value:'', editor: function(){return new myflow.editors.textEditor();}, value:'Cancel'},
-			// temp1: {name:'temp1', label : '', value:'', editor: function(){return new myflow.editors.inputEditor();}},
-			// temp2: {name:'temp2', label : '', value:'', editor: function(){return new myflow.editors.selectEditor([{name:'aaa',value:1},{name:'bbb',value:2}]);}}
-		// }},
-	// 'end-error' : {showType: 'image',type : 'end-error',
-		// name : {text:'<<end-error>>'},
-		// text : {text:'Error'},
-		// img : {src : 'img/48/end_event_error.png',width : 48, height:48},
-		// attr : {width:50 ,heigth:50 },
-		// props : {
-			// text: {name:'text',label: 'Text', value:'', editor: function(){return new myflow.editors.textEditor();}, value:'Error'},
-			// temp1: {name:'temp1', label : '', value:'', editor: function(){return new myflow.editors.inputEditor();}},
-			// temp2: {name:'temp2', label : '', value:'', editor: function(){return new myflow.editors.selectEditor([{name:'aaa',value:1},{name:'bbb',value:2}]);}}
-		// }},
 });
 })(jQuery);
 

@@ -1615,6 +1615,8 @@ MenuHlpId
 )
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MenuPrm') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.MenuPrm') AND type='U')
 DROP TABLE dbo.MenuPrm
 CREATE TABLE MenuPrm ( 
@@ -1627,6 +1629,7 @@ CONSTRAINT PK_MenuPrm PRIMARY KEY CLUSTERED (
 MenuPrmId
 )
 )
+END
 
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Msg') AND type='U')
@@ -3311,15 +3314,24 @@ END
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrProvider') and type='U')
 BEGIN
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_Provider_LoginName' AND o.name = 'UsrProvider')
+DROP INDEX UsrProvider.IX_Provider_LoginName 
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_UsrId' AND o.name = 'UsrProvider')
+DROP INDEX UsrProvider.IX_UsrId 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrProvider') AND type='U')
 DROP TABLE dbo.UsrProvider
 CREATE TABLE UsrProvider ( 
+UsrProviderId int IDENTITY(1,1) NOT NULL ,
 UsrId int NOT NULL ,
-ProviderCd char (1) NOT NULL ,
+ProviderCd varchar (5) NOT NULL ,
 LoginName nvarchar (200) NOT NULL ,
+LoginMeta nvarchar (max) NULL ,
+Remark nvarchar (max) NULL ,
+CreatedOn datetime NOT NULL CONSTRAINT DF_UsrProvider_CreatedOn DEFAULT (getutcdate()),
+DisabledOn datetime NULL ,
+Active char (1) NOT NULL CONSTRAINT DF_UsrProvider_Active DEFAULT ('Y'),
 CONSTRAINT PK_UsrProvider PRIMARY KEY CLUSTERED (
-UsrId,
-ProviderCd
+UsrProviderId
 )
 )
 END

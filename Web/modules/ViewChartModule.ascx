@@ -68,7 +68,8 @@
     .style('border-radius', '5px')
     .style('padding', '10px')
 	.style('color', '#666666')
-	.style('min-width', '100px');
+	.style('min-width', '100px')
+    .attr('class', "tooltipCnt");
 	
 	var cacheTitle = '';
 
@@ -98,6 +99,15 @@
 body {
   background-image: none;
 }
+    html, body, form, #myflow
+    {
+      height: 100%;
+    }
+
+    /*html
+    {
+        overflow:hidden;
+    }*/
 
 path, text{
     cursor: default !important;

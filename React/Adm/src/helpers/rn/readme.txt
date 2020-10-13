@@ -1,0 +1,1 @@
+these are React Native friendly substitution of helper files, must replace the one in parent(and adjust accordingly to actual project like web api url)

@@ -676,7 +676,7 @@ namespace RO.Web
 						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DoSpEncrypt192"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmRelease.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmRelease.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{

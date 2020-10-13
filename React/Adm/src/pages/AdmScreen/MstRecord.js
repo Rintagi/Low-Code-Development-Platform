@@ -1112,6 +1112,7 @@ class MstRecord extends RintagiScreen {
                                       (values.cScreenObj15URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cScreenObj15URL, false, false, {values, name: 'ScreenObj15'})}
                                           onClick={this.PopUpSearchLink(values.cScreenObj15URL, false, false, {values, name: 'ScreenObj15'})}
                                           disabled={(authCol.ScreenObj15 || {}).readonly ? 'disabled' : ''}
@@ -1136,13 +1137,14 @@ class MstRecord extends RintagiScreen {
                                       (values.cScreenFilter15URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cScreenFilter15URL, false, false, {values, name: 'ScreenFilter'})}
                                           onClick={this.PopUpSearchLink(values.cScreenFilter15URL, false, false, {values, name: 'ScreenFilter'})}
                                           disabled={(authCol.ScreenFilter || {}).readonly ? 'disabled' : ''}
                                           >
                                             <img 
                                                 alt={'images/custom/adm/AnalToDb.gif'}
-                                                src={require('../../img/custom/adm/AnalToDb.gif')}
+                                                src={'images/custom/adm/AnalToDb.gif'}
                                             />
                                         </a>
                                       </div>)
@@ -1164,6 +1166,7 @@ class MstRecord extends RintagiScreen {
                                       ('http://www.robocoder.com' && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
                                           onClick={this.PopUpSearchLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
                                           disabled={(authCol.MoreInfo || {}).readonly ? 'disabled' : ''}

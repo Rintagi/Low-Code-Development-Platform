@@ -680,7 +680,7 @@ namespace RO.Web
 						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId1"].ToString() + (char)9 + drv["GuarantorId1Text"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmUsr.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmUsr.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{

@@ -1,0 +1,133 @@
+.timeline {
+  position: relative;
+
+  @include themify($themes) {
+    color: themed('colorText');
+  }
+
+  &:before {
+    content: "";
+    background-color: #dddddd;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+  }
+
+  .timeline__item {
+    position: relative;
+    padding-bottom: 50px;
+  }
+
+  .timeline__icon {
+    position: absolute;
+    left: calc(50% - 25px);
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: $color-accent;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+
+    &.work {
+      background-image: linear-gradient(to bottom, #4ce1b6, #1cd25a), linear-gradient(#4ce1b6, #4ce1b6);
+    }
+
+    &.video {
+      background-image: linear-gradient(to bottom, #708eee, #9e44f3), linear-gradient(#7082ee, #7082ee);
+    }
+
+    &.file {
+      background-image: linear-gradient(to bottom, #ee4f99, #f76e5b);
+    }
+
+    img {
+      height: 100%;
+      width: auto;
+      min-width: 100%;
+    }
+
+    span {
+      color: white;
+      font-size: 20px;
+      margin: auto;
+    }
+  }
+
+  .timeline__content {
+    width: calc(50% - 52px);
+    padding: 25px 25px 25px 20px;
+    border-radius: 5px;
+    position: relative;
+
+    @include themify($themes) {
+      background-color: themed('colorBackground');
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: 20px;
+      border: 10px solid transparent;
+
+      @include themify($themes) {
+        border-left: 10px solid themed('colorBackground');
+      }
+    }
+  }
+
+  .timeline__title {
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  p {
+    margin-top: 5px;
+  }
+
+  .timeline__item:nth-child(even) {
+
+    .timeline__content {
+      margin-left: calc(50% + 52px);
+
+      &:after {
+        right: auto;
+        left: -20px;
+        border: 10px solid transparent;
+
+        @include themify($themes) {
+          border-right: 10px solid themed('colorBackground');
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 991px) {
+
+    &:before {
+      left: 25px;
+    }
+
+    .timeline__icon {
+      left: 0;
+    }
+
+    .timeline__item:nth-child(even) .timeline__content,
+    .timeline__item .timeline__content {
+      margin-left: 72px;
+      width: calc(100% - 72px);
+
+      &:after {
+        right: auto;
+        left: -20px;
+        border: 10px solid transparent;
+
+        @include themify($themes) {
+          border-right: 10px solid themed('colorBackground');
+        }
+      }
+    }
+  }
+}

@@ -487,7 +487,7 @@ namespace RO.Web
 			{
 				NewNode = xd.CreateNode(XmlNodeType.Element, "EmbeddedResource", null);
 				xa = xd.CreateAttribute("Include");
-				xa.Value = fi.FullName.Replace(DeployPath, "");
+				xa.Value = fi.FullName.ReplaceInsensitive(DeployPath, "");
 				NewNode.Attributes.Append(xa);
 				ItemNode.AppendChild(NewNode);
 			}

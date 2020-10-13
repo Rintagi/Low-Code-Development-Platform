@@ -243,11 +243,11 @@ namespace RO.Web
                         string key = Request.QueryString["key"].ToString();
                         string DownloadLinkCode = Session.SessionID;
                         byte[] Download_code = System.Text.Encoding.ASCII.GetBytes(DownloadLinkCode);
-                        System.Security.Cryptography.HMACMD5 bkup_hmac = new System.Security.Cryptography.HMACMD5(Download_code);
+                        System.Security.Cryptography.HMACSHA256 bkup_hmac = new System.Security.Cryptography.HMACSHA256(Download_code);
                         byte[] Download_hash = bkup_hmac.ComputeHash(System.Text.Encoding.ASCII.GetBytes(fileName));
                         string Download_hashString = BitConverter.ToString(Download_hash);
                         bool allowDownload = Download_hashString == key;
-                        fileName = fileName.ToLower().Replace("/guarded/", "/source/");
+                        fileName = fileName.ToLower().ReplaceInsensitive("/guarded/", "/source/");
                         string url = fileName;
                         string fullfileName = Server.MapPath(fileName);   // we enforce everything file for download is under ../files
                         System.IO.FileInfo file = new System.IO.FileInfo(fullfileName);
@@ -257,7 +257,7 @@ namespace RO.Web
                             if (file.Name.EndsWith(".wmv"))
                             {
                                 file = new FileInfo(file.DirectoryName + "/PubMsg.wmv");
-                                url = fileName.Replace(oname, "PubMsg.wmv");
+                                url = fileName.ReplaceInsensitive(oname, "PubMsg.wmv");
                             }
                             else
                             {

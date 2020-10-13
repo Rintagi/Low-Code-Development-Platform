@@ -37,6 +37,8 @@ namespace RO.Web
                 if (!string.IsNullOrEmpty(keyId))
                 {
                     byte sid = 3;
+                    byte.TryParse(Request.QueryString["csy"], out sid);
+
                     string dbConnectionString = base.SysConnectStr(sid);
 
                     DataTable dt = null;
@@ -45,7 +47,7 @@ namespace RO.Web
                     {
                         dt = (new AdminSystem()).GetMstById("GetAdmFlowChart1027ById", keyId, dbConnectionString, base.AppPwd(base.LCurr.DbId));
                     }
-                    catch (Exception err) 
+                    catch (Exception err)
                     {
                         Common3.Utils.NeverThrow(err);
                     }
@@ -57,7 +59,7 @@ namespace RO.Web
 
                         var x = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, object>>>>(jsonString);
 
-                        foreach(var st in x["states"].Keys)
+                        foreach (var st in x["states"].Keys)
                         {
                             var attr = (JObject)x["states"][st]["attr"];
                             var href = attr["href"];
@@ -65,13 +67,18 @@ namespace RO.Web
                             {
                                 //change link logic goes here
                                 //attr["href"] = "http://www.google.com";
-                            }        
+                            }
                         }
 
                         hfChartData.Value = JsonConvert.SerializeObject(x);
                     }
                 }
             }
+        }
+
+        private void CheckAuthentication(bool pageLoad)
+        {
+            CheckAuthentication(pageLoad, true);
         }
 
         protected void Page_Init(object sender, EventArgs e)
@@ -86,7 +93,7 @@ namespace RO.Web
         /// </summary>
         private void InitializeComponent()
         {
-
+            CheckAuthentication(true);
         }
         #endregion
     }

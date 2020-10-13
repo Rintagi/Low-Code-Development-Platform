@@ -683,6 +683,7 @@ class MstRecord extends RintagiScreen {
                                       (values.cSctGrpRow1277URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cSctGrpRow1277URL, false, false, {values, name: 'SctGrpRow1277'})}
                                           onClick={this.PopUpSearchLink(values.cSctGrpRow1277URL, false, false, {values, name: 'SctGrpRow1277'})}
                                           disabled={(authCol.SctGrpRow1277 || {}).readonly ? 'disabled' : ''}
@@ -711,6 +712,7 @@ class MstRecord extends RintagiScreen {
                                       (values.cSctGrpCol1277URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cSctGrpCol1277URL, false, false, {values, name: 'SctGrpCol1277'})}
                                           onClick={this.PopUpSearchLink(values.cSctGrpCol1277URL, false, false, {values, name: 'SctGrpCol1277'})}
                                           disabled={(authCol.SctGrpCol1277 || {}).readonly ? 'disabled' : ''}
@@ -775,7 +777,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.BtnDefault || {}).readonly || !(authCol.BtnDefault || {}).visible}
                                         onClick={this.BtnDefault({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.BtnDefault || (columnLabel.BtnDefault || {}).ColumnName}
+                                        {auxLabels.BtnDefault || (columnLabel.BtnDefault || {}).ColumnHeader || (columnLabel.BtnDefault || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -787,7 +789,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.BtnHeader || {}).readonly || !(authCol.BtnHeader || {}).visible}
                                         onClick={this.BtnHeader({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.BtnHeader || (columnLabel.BtnHeader || {}).ColumnName}
+                                        {auxLabels.BtnHeader || (columnLabel.BtnHeader || {}).ColumnHeader || (columnLabel.BtnHeader || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -799,7 +801,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.BtnFooter || {}).readonly || !(authCol.BtnFooter || {}).visible}
                                         onClick={this.BtnFooter({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.BtnFooter || (columnLabel.BtnFooter || {}).ColumnName}
+                                        {auxLabels.BtnFooter || (columnLabel.BtnFooter || {}).ColumnHeader || (columnLabel.BtnFooter || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -811,7 +813,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.BtnSidebar || {}).readonly || !(authCol.BtnSidebar || {}).visible}
                                         onClick={this.BtnSidebar({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.BtnSidebar || (columnLabel.BtnSidebar || {}).ColumnName}
+                                        {auxLabels.BtnSidebar || (columnLabel.BtnSidebar || {}).ColumnHeader || (columnLabel.BtnSidebar || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

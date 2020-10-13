@@ -9,54 +9,18 @@ namespace RO.Common3
     using System.IO;
     using System.Collections.Generic;
 
-    public class Encryption: Key
+    public class Encryption: License
     {
 		private string pExpiryDt = "9999.12.01";
-        	public const string ROVersion = "20200228";
+        public const string ROVersion = "20200228";
 		// RCEncryption uses TripleDES algorithm to encrypt and/or decrypt an input string.
 		// By default a key is used to do the decryption, this key should be the same for decryption and encryption.
 		
-		private string PrevKey
-		{
-			get{return pPrevKey;}
-			set{pPrevKey = value;}
-		}
-		
-		private string CurrKey
-		{
-			get{return pCurrKey;}
-			set{pCurrKey = value;}
-		}
-		
-		public Encryption()
-		{
-			if (DateTime.Now >= DateTime.Parse(pExpiryDt)) { throw new Exception("License has expired, please procure another license and try again."); }
-		}
-
-		public string EncryptString(string inStr)
-		{
-			return EncryptString(inStr, CurrKey);
-		}
-
-		public string EncryptString(string inStr, string inKey)
-		{
-			string outStr = string.Empty;
-			MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-			TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
-			des.Mode = CipherMode.ECB;
-			try
-			{
-				des.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(inKey));
-				outStr = Convert.ToBase64String(des.CreateEncryptor().TransformFinalBlock(UTF8Encoding.UTF8.GetBytes(inStr), 0, UTF8Encoding.UTF8.GetBytes(inStr).Length));
-			}
-			catch
-			{
-				outStr = null;
-			}
-			hashmd5 = null;
-			des = null;
-			return outStr;
-		}
+        public Encryption()
+            : base(Config.DesLegacyMD5Encrypt)
+        {
+            if (DateTime.Now >= DateTime.Parse(pExpiryDt)) { throw new Exception("License has expired, please procure another license and try again."); }
+        }
 
         public string GetInstallID()
         {
@@ -117,57 +81,7 @@ namespace RO.Common3
         {
             return new Tuple<string, string, string>("", "", "");
         }
-        protected string DecryptString(string inStr, string inKey)
-        {
-            if (string.IsNullOrEmpty(inStr)) return null;
 
-            string outStr = "";
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
-            des.Mode = CipherMode.ECB;
-            try
-            {
-                des.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(inKey));
-                outStr = UTF8Encoding.UTF8.GetString(des.CreateDecryptor().TransformFinalBlock(Convert.FromBase64String(inStr), 0, Convert.FromBase64String(inStr).Length));
-            }
-            catch
-            {
-                outStr = null;
-            }
-            hashmd5 = null;
-            des = null;
-            return outStr;
-        }
-
-		protected string DecryptString(string inStr)
-		{
-            if (string.IsNullOrEmpty(inStr)) return null;
-
-			string outStr="";
-			MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-			TripleDESCryptoServiceProvider des = new TripleDESCryptoServiceProvider();
-			des.Mode = CipherMode.ECB;
-			try
-			{
-				des.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(CurrKey));
-				outStr = UTF8Encoding.UTF8.GetString(des.CreateDecryptor().TransformFinalBlock(Convert.FromBase64String(inStr),0,Convert.FromBase64String(inStr).Length));
-			}
-			catch
-			{
-				try
-				{
-					des.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(PrevKey));
-					outStr = UTF8Encoding.UTF8.GetString(des.CreateDecryptor().TransformFinalBlock(Convert.FromBase64String(inStr),0,Convert.FromBase64String(inStr).Length));
-				}
-				catch
-				{
-					outStr=null;
-				}
-			}
-			hashmd5 = null;
-			des = null;
-			return outStr;
-		}
         public Dictionary<string, Dictionary<string, string>> DecodeLicenseDetail(string licenseJSON)
         {
             Dictionary<string, Dictionary<string, string>> moduleList = new Dictionary<string, Dictionary<string, string>>();

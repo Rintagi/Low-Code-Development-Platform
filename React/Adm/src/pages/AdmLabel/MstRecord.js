@@ -651,7 +651,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.RemoveBtn || {}).readonly || !(authCol.RemoveBtn || {}).visible}
                                         onClick={this.RemoveBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.RemoveBtn || (columnLabel.RemoveBtn || {}).ColumnName}
+                                        {auxLabels.RemoveBtn || (columnLabel.RemoveBtn || {}).ColumnHeader || (columnLabel.RemoveBtn || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

@@ -582,7 +582,7 @@ namespace RO.Web
 						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["WebAddress45"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmSystems.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmSystems.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{
@@ -1809,8 +1809,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                 string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webAppRoot.Replace("/Web/", "");
                 string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
-                string reactTemplateDir = reactRootDir + "/Template";
-                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactTemplateDir = reactRootDir + "/" + Config.ReactTemplate;
+                string reactModuleDir = reactTemplateDir.ReplaceInsensitive("/" + Config.ReactTemplate, "/" + systemAbbr);
                 string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
                 string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -1869,7 +1869,7 @@ document.Rintagi = {{
                 else
                 {
                     ////DirectoryCopy(reactTemplateDir, reactModuleDir, true, true);
-                    var copyRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX", reactTemplateDir, reactModuleDir), true, appRoot);
+                    var copyRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX /XD build node_modules", reactTemplateDir, reactModuleDir), true, appRoot);
                     var runtimeJS = string.Format("{0}/runtime/rintagi.js", reactModuleDir);
                     using (var sr = new StreamWriter(reactModuleDir + "/public/runtime/rintagi.js", false, System.Text.UTF8Encoding.UTF8))
                     {

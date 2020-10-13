@@ -1726,7 +1726,7 @@ namespace RO.Access3
                 }
                 pKeyAdded = null;
                 bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnAdd", "Y", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref pKeyAdded, dis);
-                /* Skip CRUD */
+                /* Skip(i.e. Replace) CRUD */
                 bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnAdd", "S", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref pKeyAdded, dis);
                 if (SkipAdd && !string.IsNullOrEmpty(pKeyAdded)) { row[pMKeyCol] = pKeyAdded; }
                 if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I2")
@@ -1736,7 +1736,7 @@ namespace RO.Access3
                         if (SkipAdd && !string.IsNullOrEmpty(pKeyAdded) && SkipGridAdd) ds.Tables[2].Rows[jj][pMKeyCol] = pKeyAdded;
                         dKeyAdded = null;
                         bHasErr = ExecSRule("MasterTable <> 'Y'", dvSRule, "OnAdd", "Y", LUser, LImpr, LCurr, ds.Tables[2].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref dKeyAdded, ds.Tables[1].Rows[1]);
-                        /* Skip CRUD */
+                        /* Skip(i.e. Replace) CRUD */
                         bHasErr = ExecSRule("MasterTable <> 'Y'", dvSRule, "OnAdd", "S", LUser, LImpr, LCurr, ds.Tables[2].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref dKeyAdded, ds.Tables[1].Rows[1]);
                         if (!string.IsNullOrEmpty(dKeyAdded)) { ds.Tables[2].Rows[jj][pDKeyCol] = dKeyAdded; };
                     }
@@ -1904,7 +1904,7 @@ namespace RO.Access3
                         SkipUpd = SkipUpd || (drv["MasterTable"].ToString() == "Y" && drv["OnUpd"].ToString() == "Y" && drv["BeforeCRUD"].ToString() == "S");
                     }
                     bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnUpd", "Y", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, ds.Tables[0].Rows[2]);
-                    /* Skip CRUD */
+                    /* Skip(i.e. Replace) CRUD */
                     bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnUpd", "S", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, ds.Tables[0].Rows[2]);
                 }
                 if ("I2,I3".IndexOf(dtScr.Rows[0]["ScreenTypeName"].ToString()) >= 0)
@@ -1948,7 +1948,7 @@ namespace RO.Access3
                         string KeyAdded = null;
                         if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I2" && SkipGridAdd) ds.Tables[ii].Rows[jj][pMKeyCol] = row[pMKeyCol].ToString().Trim();
                         bHasErr = ExecSRule(sRowFilter, dvSRule, "OnAdd", "Y", LUser, LImpr, LCurr, ds.Tables[ii].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref KeyAdded, dis);
-                        /* Skip CRUD */
+                        /* Skip(i.e. Replace) CRUD */
                         bHasErr = ExecSRule(sRowFilter, dvSRule, "OnAdd", "S", LUser, LImpr, LCurr, ds.Tables[ii].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref KeyAdded, dis);
                         if (SkipGridAdd && !string.IsNullOrEmpty(KeyAdded)) { ds.Tables[ii].Rows[jj][dtScr.Rows[0]["ScreenTypeName"].ToString() == "I2" ? pDKeyCol : pMKeyCol] = KeyAdded; };
                     }
@@ -1956,14 +1956,14 @@ namespace RO.Access3
                     for (int jj = 0; jj < ds.Tables[ii].Rows.Count; jj++)
                     {
                         bHasErr = ExecSRule(sRowFilter, dvSRule, "OnUpd", "Y", LUser, LImpr, LCurr, ds.Tables[ii].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, dis);
-                        /* Skip CRUD */
+                        /* Skip(i.e. Replace) CRUD */
                         bHasErr = ExecSRule(sRowFilter, dvSRule, "OnUpd", "S", LUser, LImpr, LCurr, ds.Tables[ii].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, dis);
                     }
                     ii = ii + 1;
                     for (int jj = 0; jj < ds.Tables[ii].Rows.Count; jj++)
                     {
                         bHasErr = ExecSRule(sRowFilter, dvSRule, "OnDel", "Y", LUser, LImpr, LCurr, ds.Tables[ii].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, dis);
-                        /* Skip CRUD */
+                        /* Skip(i.e. Replace) CRUD */
                         bHasErr = ExecSRule(sRowFilter, dvSRule, "OnDel", "S", LUser, LImpr, LCurr, ds.Tables[ii].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, dis);
                     }
                 }
@@ -2185,14 +2185,14 @@ namespace RO.Access3
 
                 /* Before CRUD rules */
                 bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnDel", "Y", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, null);
-                /* Skip CRUD */
+                /* Skip(i.e. Replace) CRUD */
                 bHasErr = ExecSRule("MasterTable = 'Y'", dvSRule, "OnDel", "S", LUser, LImpr, LCurr, row, bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, null);
                 if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I2")
                 {
                     for (int jj = 0; jj < ds.Tables[4].Rows.Count; jj++)
                     {
                         bHasErr = ExecSRule("MasterTable <> 'Y'", dvSRule, "OnDel", "Y", LUser, LImpr, LCurr, ds.Tables[4].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, null);
-                        /* Skip CRUD */
+                        /* Skip(i.e. Replace) CRUD */
                         bHasErr = ExecSRule("MasterTable <> 'Y'", dvSRule, "OnDel", "S", LUser, LImpr, LCurr, ds.Tables[4].Rows[jj], bDeferError, bHasErr, ErrLst, cn, tr, ref _dummy, null);
                     }
                 }

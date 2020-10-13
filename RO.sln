@@ -24,8 +24,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "License3", "License3\Licens
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RO", "http://localhost/RO", "{12533305-7929-4CDC-BF76-E50D25C5056F}"
 	ProjectSection(WebsiteProperties) = preProject
+		Frontpage = "false"
 		UseIISExpress = "False"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.2"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
 		ProjectReferences = "{E1B65B9A-913E-49C4-A808-1A860C43AD54}|Facade3.dll;{DCF6CD1A-C0E0-47A9-82C1-30F4BF121EBA}|Service3.dll;{AEB74555-0049-4BE9-AED6-0B425B37BD66}|Common3.dll;{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}|SystemFramewk.dll;{24A29344-FEA9-414A-9D1B-AC15E5350D12}|Access3.dll;{5BDD230D-538F-44A5-A6FE-EDC0FAA57B7D}|Rule3.dll;{384CF42A-A0E1-43AC-BF0F-83A3E5A801F7}|UsrRules.dll;{0569000B-FE33-4DBF-8EBF-9C5AD5D23810}|WebControls.dll;{E04AF3F0-F94E-4149-B038-2403010CA914}|WebRules.dll;{CEE68C9E-87C5-44C0-8578-7FEDFDF07EF2}|UsrAccess.dll;{6DF138A1-4F45-4D4C-9810-3DF112781836}|License3.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/RO"
 		Debug.AspNetCompiler.PhysicalPath = "Web\"

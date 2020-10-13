@@ -25,6 +25,7 @@ namespace RO.Web
             if (!IsPostBack)
             {
                 bool isFullyLicensed = RO.Common3.Utils.IsFullyLicense("Design", "Deploy");
+                bool isCommunity = string.IsNullOrEmpty(RO.Common3.Utils.GetInstallDetail().Item1);
                 Tuple<string, bool, string> licenseDetail = RO.Common3.Utils.DecodeLicense(null);
                 Dictionary<string, Dictionary<string, string>> moduleList = RO.Common3.Utils.DecodeLicenseDetail(licenseDetail.Item1);
                 Dictionary<string, string> admLicenseDetail = moduleList.ContainsKey("Design") ? moduleList["Design"] : null;
@@ -46,7 +47,7 @@ namespace RO.Web
                                             + " by R" + (new LoginSystem()).GetRbtVersion() + "). Protected by U.S. Patent 6,876,314."
                                             + (
                                                 isFullyLicensed && !licenseDetail.Item2
-                                                ? " Perpetual license"
+                                                ? (isCommunity ? "Community license" : " Perpetual license")
                                                 : !licenseDetail.Item2 || admLicenseDetail == null ? " Trial license"
                                                 : string.Format(" Licensed till {0}", admLicenseDetail["Expiry"])
                                                 )

@@ -21,6 +21,7 @@ npm-cache
 PrecompiledWeb/*
 Import/*
 Web/data/tmp/*
+Web/data/*
 Web/react/*
 *.webinfo
 *.vsdisco

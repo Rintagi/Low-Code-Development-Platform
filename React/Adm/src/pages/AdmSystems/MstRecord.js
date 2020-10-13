@@ -714,7 +714,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.AddDbs || {}).readonly || !(authCol.AddDbs || {}).visible}
                                         onClick={this.AddDbs({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.AddDbs || (columnLabel.AddDbs || {}).ColumnName}
+                                        {auxLabels.AddDbs || (columnLabel.AddDbs || {}).ColumnHeader || (columnLabel.AddDbs || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -1104,7 +1104,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.ResetFromGitRepo || {}).readonly || !(authCol.ResetFromGitRepo || {}).visible}
                                         onClick={this.ResetFromGitRepo({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.ResetFromGitRepo || (columnLabel.ResetFromGitRepo || {}).ColumnName}
+                                        {auxLabels.ResetFromGitRepo || (columnLabel.ResetFromGitRepo || {}).ColumnHeader || (columnLabel.ResetFromGitRepo || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -1116,7 +1116,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.CreateReactBase || {}).readonly || !(authCol.CreateReactBase || {}).visible}
                                         onClick={this.CreateReactBase({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.CreateReactBase || (columnLabel.CreateReactBase || {}).ColumnName}
+                                        {auxLabels.CreateReactBase || (columnLabel.CreateReactBase || {}).ColumnHeader || (columnLabel.CreateReactBase || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -1128,7 +1128,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.RemoveReactBase || {}).readonly || !(authCol.RemoveReactBase || {}).visible}
                                         onClick={this.RemoveReactBase({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.RemoveReactBase || (columnLabel.RemoveReactBase || {}).ColumnName}
+                                        {auxLabels.RemoveReactBase || (columnLabel.RemoveReactBase || {}).ColumnHeader || (columnLabel.RemoveReactBase || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -1140,7 +1140,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.PublishReactToSite || {}).readonly || !(authCol.PublishReactToSite || {}).visible}
                                         onClick={this.PublishReactToSite({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PublishReactToSite || (columnLabel.PublishReactToSite || {}).ColumnName}
+                                        {auxLabels.PublishReactToSite || (columnLabel.PublishReactToSite || {}).ColumnHeader || (columnLabel.PublishReactToSite || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

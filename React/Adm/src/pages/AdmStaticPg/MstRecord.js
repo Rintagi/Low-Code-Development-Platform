@@ -638,6 +638,7 @@ class MstRecord extends RintagiScreen {
                                       (values.cStaticPgUrl259URL && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(values.cStaticPgUrl259URL, false, false, {values, name: 'StaticPgUrl259'})}
                                           onClick={this.PopUpSearchLink(values.cStaticPgUrl259URL, false, false, {values, name: 'StaticPgUrl259'})}
                                           disabled={(authCol.StaticPgUrl259 || {}).readonly ? 'disabled' : ''}

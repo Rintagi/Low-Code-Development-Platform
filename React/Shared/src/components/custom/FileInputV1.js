@@ -8,7 +8,7 @@ import { Row, Col } from 'reactstrap';
 
 function calcSize(width, height, max_width, max_height, noSwap) {
 
-  if (!max_height && !max_width) return {width,height};
+  if (!max_height && !max_width) return { width, height };
   if (width > height) {
     if (max_height) {
       if (height > max_height) {
@@ -28,9 +28,9 @@ function calcSize(width, height, max_width, max_height, noSwap) {
         width = max_width;
       }
     }
-  } 
+  }
   else {
-    if (noSwap) { const x=max_width;max_width = max_height;max_width=x;}
+    if (noSwap) { const x = max_width; max_width = max_height; max_width = x; }
     if (max_height) {
       if (width > max_height) {
         height *= max_height / width;
@@ -65,19 +65,19 @@ class FileInputField extends Component {
     this.state = {
       previewUrl: null,
       deleteBtnVisibility: true,
-      storedImgSize: { width:0,height:0}
+      storedImgSize: { width: 0, height: 0 }
     }
     this.getImgSize = this.getImgSize.bind(this);
   }
-  
+
   getImgSize(img, stateKey) {
     var imgTag = document.createElement("img");
-    var existingImgSize =this.state.storedImgSize;
-    imgTag.src =  img;
+    var existingImgSize = this.state.storedImgSize;
+    imgTag.src = img;
     imgTag.onload = () => {
-      const {width,height} = imgTag;
+      const { width, height } = imgTag;
       if (existingImgSize.width !== width || existingImgSize.height !== height) {
-        this.setState({[stateKey]:{width:width,height:height}});
+        this.setState({ [stateKey]: { width: width, height: height } });
       }
     };
   }
@@ -97,7 +97,7 @@ class FileInputField extends Component {
     const actionTimeStamp = Date.now();
 
     reader.fileName = file.name;
-    
+
     if (fileType.split('/')[0] === 'image') {
 
       const _this = this;
@@ -150,15 +150,16 @@ class FileInputField extends Component {
             });
 
             // Passing name and base64 value of our rotated and resized image
-            _this.props.onChange({ 
-              name: files[0].name, 
-              mimeType: files[0].type, 
-              size: files[0].size, 
-              width: width, 
-              height: height, 
+            _this.props.onChange({
+              name: files[0].name,
+              mimeType: files[0].type,
+              size: files[0].size,
+              width: width,
+              height: height,
               ts: actionTimeStamp + 1,
-              lastModified: files[0].lastModified, 
-              base64: readerResizedImg });
+              lastModified: files[0].lastModified,
+              base64: readerResizedImg
+            });
           }
         })
       };
@@ -170,13 +171,13 @@ class FileInputField extends Component {
           previewUrl: reader.result,
           fileName: reader.fileName
         });
-        this.props.onChange({ 
-          name: files[0].name, 
-          mimeType: files[0].type, 
-          size: files[0].size, 
-          lastModified: files[0].lastModified, 
+        this.props.onChange({
+          name: files[0].name,
+          mimeType: files[0].type,
+          size: files[0].size,
+          lastModified: files[0].lastModified,
           ts: actionTimeStamp + 1,
-          base64: reader 
+          base64: reader
         });
         // this.props.onChange({ name: files[0].name, base64: reader });
       };
@@ -226,11 +227,11 @@ class FileInputField extends Component {
       result: "iVBORw0KGgoAAAANSUhEUgAAAhwAAAABCAQAAAA/IL+bAAAAFElEQVR42mN89p9hFIyCUTAKSAIABgMB58aXfLgAAAAASUVORK5CYII=",
     }
 
-    this.props.onChange({ 
-      name: '', 
+    this.props.onChange({
+      name: '',
       base64: emptyObject,
-      ts:Date.now() + 1,
-     });
+      ts: Date.now() + 1,
+    });
     this.setState({ deleteBtnVisibility: false });
   }
 
@@ -259,8 +260,8 @@ class FileInputField extends Component {
     const mimeType = fileInfo.mimeType;
     const options = this.props.options || {};
     const inPlaceImg = (fileInfo.mimeType || '').startsWith('image/') || true;
-    const fileContent = !fileInfo.base64 || (fileInfo.base64 || '').startsWith('data:') ? '' : 'data:' + (mimeType? mimeType : 'image/png') + ';base64,' + (fileInfo.base64 || '');
-    const iconContent = !fileInfo.icon || (fileInfo.icon || '').startsWith('data:') ? '' : 'data:' + (mimeType? mimeType : 'image/png') + ';base64,' + (fileInfo.icon || '');
+    const fileContent = !fileInfo.base64 || (fileInfo.base64 || '').startsWith('data:') ? '' : 'data:' + (mimeType ? mimeType : 'image/png') + ';base64,' + (fileInfo.base64 || '');
+    const iconContent = !fileInfo.icon || (fileInfo.icon || '').startsWith('data:') ? '' : 'data:' + (mimeType ? mimeType : 'image/png') + ';base64,' + (fileInfo.icon || '');
     let iconClass = classNames({
       'fa-file-image-o': mimeType === 'image/jpeg' || mimeType === 'image/gif',
       'fa-file-photo-o': mimeType === 'image/png',
@@ -270,7 +271,7 @@ class FileInputField extends Component {
       'fa-file-o': mimeType !== 'image/jpeg' || 'image/png' || 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 'application/pdf',
     });
 
-    if (fileInfo.base64) this.getImgSize(fileContent,'storedImgSize');
+    if (fileInfo.base64) this.getImgSize(fileContent, 'storedImgSize');
 
     var MAX_WIDTH = (options.MinImageSize || {}).Width;
     var MAX_HEIGHT = (options.MinImageSize || {}).Height;
@@ -297,12 +298,12 @@ class FileInputField extends Component {
                   id={this.props.name}
                   onChange={this.handleChange}
                 />
-                 {
-                    (this.props.fileInfo || {}).downloadLink &&
-                    <label><a href={this.props.fileInfo.downloadLink} target='_blank'>
-                      Download
+                {
+                  (this.props.fileInfo || {}).downloadLink &&
+                  <label><a href={this.props.fileInfo.downloadLink} target='_blank' rel="noopener noreferrer" >
+                    Download
                     </a></label>
-                 }
+                }
               </div>
             </div>
 
@@ -323,7 +324,7 @@ class FileInputField extends Component {
           <Col>
             {
               (fileInfo.base64 || fileInfo.icon || '').length > 0 && inPlaceImg && (mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/gif') &&
-              <img alt='' width={storedIconImageSize.width  || 32} height={storedIconImageSize.height || 32} className={`img-upload pointer ${deleteIconClass}`} onClick={this.previewServerFile(fileContent || iconContent, mimeType)} src={fileContent || iconContent} />
+              <img alt='' width={storedIconImageSize.width || 32} height={storedIconImageSize.height || 32} className={`img-upload pointer ${deleteIconClass}`} onClick={this.previewServerFile(fileContent || iconContent, mimeType)} src={fileContent || iconContent} />
             }
             {
               (mimeType === 'image/jpeg' || mimeType === 'image/png' || mimeType === 'image/gif') &&

@@ -1,0 +1,77 @@
+.dropdown {
+
+  &:last-child .btn {
+    margin-right: 0;
+  }
+
+  .btn.icon svg {
+    height: 18px;
+    width: 20px;
+    margin-right: -5px;
+  }
+
+  .btn-group {
+    margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    .btn {
+
+      &:last-child {
+        border-left: none;
+        padding: 7px;
+
+        svg {
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+.dropdown__menu {
+  width: 190px;
+  border-radius: 0;
+  border: none;
+  margin: 0;
+  padding: 15px 0;
+  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+
+  @include themify($themes) {
+    background: themed('colorBackground');
+  }
+
+  button {
+    font-family: 'Open Sans', sans-serif;
+    transition: all 0.3s;
+    padding: 7px 24px;
+    cursor: pointer;
+
+    @include themify($themes) {
+      color: themed('colorText');
+    }
+
+    &:hover {
+
+      @include themify($themes) {
+        background: #f5f5f5;
+        color: themed('colorText');
+      }
+    }
+  }
+
+  button:focus, button:active, button:active:focus {
+    outline: none;
+  }
+
+  .active button {
+    background-color: $color-blue;
+
+    &:hover {
+      background-color: $color-blue-hover;
+    }
+  }
+}

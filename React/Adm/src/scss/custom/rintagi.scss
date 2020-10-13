@@ -1368,7 +1368,7 @@ mark {
     display: flex;
     width: 250px;
     // height: 192px;
-    // background: url("../img/folder1.png") no-repeat center left;
+    // background: url("../../img/folder1.png") no-repeat center left;
   }
 
   .create-new-message {
@@ -2634,7 +2634,7 @@ label {
   padding-left: 10px;
 }
 
-.btn-as-input-disabled {
+.btn-as-input-disabled, .form .Dropdown-disabled {
   background: #ccc !important;
 }
 

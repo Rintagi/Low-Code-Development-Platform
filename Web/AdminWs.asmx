@@ -1359,12 +1359,13 @@ public partial class AdminWs : WebService
         Dictionary<string, Dictionary<string, string>> ret = result.ToDictionary(m => m["ModuleName"], m => m);
         string xxJSON = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(ret);
         string signerFileName = Config.LicenseSignerPath;
-        Tuple<string, string, string> encodedLicense = RO.Common3.Utils.EncodeLicenseString(xxJSON, installID, appID, perInstance, true, signerFileName);
+        Tuple<string, string, string> encodedLicense = RO.Common3.Utils.EncodeLicenseString(xxJSON, installID, appID, true, perInstance, signerFileName);
         return Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(new Dictionary<string, string>()
         {
             { "License",encodedLicense.Item1},
             { "LicenseSig",encodedLicense.Item2},
             { "Encrypted",encodedLicense.Item3},
+            { "Sha256", !Config.DesLegacyMD5Encrypt ? "Y" : "N"},
             { "PerInstance",perInstance ? "Y" : "N"},
         })));
     }

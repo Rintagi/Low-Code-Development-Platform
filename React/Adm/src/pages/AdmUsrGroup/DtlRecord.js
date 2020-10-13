@@ -564,6 +564,7 @@ class DtlRecord extends RintagiScreen {
                                       ('http://www.robocoder.com' && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
                                           onClick={this.PopUpSearchLink('http://www.robocoder.com', false, false, {values, name: 'MoreInfo'})}
                                           disabled={(authCol.MoreInfo || {}).readonly ? 'disabled' : ''}

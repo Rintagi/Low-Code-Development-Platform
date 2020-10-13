@@ -2619,4 +2619,33 @@ In default.master: replace section.css with the following:
 2. remove ODBC driver info in error message~@~~@~en-US~@~
 12635~@~  11. 198.00714~@~11~@~198~@~2020-07-14 00:00:00.000~@~~@~~@~1. fix an issue with ODBC connector
 2. first draft react native template project~@~~@~en-US~@~
-12636~@~  11. 199~@~11~@~199~@~~@~~@~~@~~@~~@~~@~
+12636~@~  11. 199.00716~@~11~@~199~@~2020-07-16 00:00:00.000~@~~@~~@~1. add experimental Create React App v3 base template for better future support
+2. make project root redirect case insensitive on path and various other path case sensitive change on string replace~@~~@~en-US~@~
+12637~@~  11. 200.00720~@~11~@~200~@~2020-07-20 00:00:00.000~@~~@~~@~1. revised and tested CRA V3 template~@~~@~en-US~@~
+12638~@~  11. 201.00812~@~11~@~201~@~2020-08-12 00:00:00.000~@~~@~~@~1. expand user login provider table for FIDO2/WebAuthn~@~~@~en-US~@~
+12639~@~  11. 202.00818~@~11~@~202~@~2020-08-18 00:00:00.000~@~~@~must target .NET 4.8 due to requirement of fido2.net library(all related class library + website)
+may need binding redirection or Number library and/or NewtonSoft JSON library~@~1. enhance security using crypto suite of aes256/sha256 for key functions(only new installation controlled in web.config)
+2. incorporate fido2(webauthn) login feature
+3. flow charge enhancements
+4. enhance TOTP checking(8 digit)~@~~@~en-US~@~
+12640~@~  11. 203.00819~@~11~@~203~@~2020-08-19 00:00:00.000~@~~@~~@~1. only enable webauthn/fido2 if 2FA is enabled(via web.config)
+2. various upgrade changes due to hardened crypto algorithm changes(on existing systems)~@~~@~en-US~@~
+12641~@~  11. 204.00820~@~11~@~204~@~2020-08-20 00:00:00.000~@~~@~~@~1. force to use aes-sha256 crypto for new installation
+2. better account profile change notification message for intruder detection~@~~@~en-US~@~
+12642~@~  11. 205.00827~@~11~@~205~@~2020-08-27 00:00:00.000~@~~@~~@~1. enhance deployment index script creation( support INCLUDE and WHERE of index creation clause)
+2. enhance client only installation with no DB connection(installer)
+3. add helper SQL SP/Function for JSON parsing and bulk insert Menu ACL by user group
+4. align LUser.Culture in asmx with asp.net side(use ISO code like 'en-us' instead of human description like 'English(US)')~@~~@~en-US~@~
+12643~@~  11. 206.00829~@~11~@~206~@~2020-08-29 00:00:00.000~@~~@~~@~1. fix WrCloneScreen for screen tab id issue
+2. fix WrSyncByDb stripping function call issue
+3. further remove hard coded sqloledb to honour msoledbsql and/or odbc setup
+4. map server supplied sqloledb to proper web.config setup(driver is client side, not centralized setup)
+~@~~@~en-US~@~
+12644~@~  11. 207.00830~@~11~@~207~@~2020-08-30 00:00:00.000~@~~@~~@~1. enhance deployment mechanism to push out Rintagi supplied App SPs revision(like MkStoredProcedure) on DEV package
+2. MkStoredProcedure supports multi-lingual charset(varchar->nvarchar)~@~~@~en-US~@~
+12645~@~  11. 208.00902~@~11~@~208~@~2020-09-02 00:00:00.000~@~~@~~@~1. add WebAuthn(fido2) feature to React template and associate web service layer~@~~@~en-US~@~
+12646~@~  11. 209.00910~@~11~@~209~@~2020-09-10 00:00:00.000~@~~@~~@~1. make txt(csv) export with proper extension and add optional excel friendly separator line(sep=)~@~~@~en-US~@~
+12647~@~  11. 210.00914~@~11~@~210~@~2020-09-14 00:00:00.000~@~~@~~@~1. minor enhancement to deployment feature for better tracking when creating PDT package~@~~@~en-US~@~
+12648~@~  11. 211.01012~@~11~@~211~@~2020-10-12 00:00:00.000~@~~@~~@~1. minor fix to GetReportById call
+2. Community version release~@~~@~en-US~@~
+12649~@~  11. 212~@~11~@~212~@~~@~~@~~@~~@~~@~~@~

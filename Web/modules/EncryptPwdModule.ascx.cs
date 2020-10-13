@@ -25,7 +25,7 @@ namespace RO.Web
 		{
 			if (!IsPostBack)
 			{
-                if (base.LUser != null)
+                if (base.LUser != null && base.LUser.LoginName.ToLower() != "anonymous")
                 {
                     new AdminSystem().LogUsage(base.LUser.UsrId, string.Empty, "Encrypt Password", 0, 0, 0, "EncryptPwd.aspx", LcSysConnString, LcAppPw);
                     if (base.LImpr.RowAuthoritys.Split(new char[]{(char) 191},StringSplitOptions.RemoveEmptyEntries).Contains("8")

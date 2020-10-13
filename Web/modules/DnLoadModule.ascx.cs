@@ -146,7 +146,7 @@ namespace RO.Web
                             {
                                 string icon = RO.Common3.Utils.BlobPlaceHolder(dt.Rows[0][0] as byte[],true);
                                 if (icon != null) {
-                                    icon = icon.Replace("data:application/base64;base64,", "");
+                                    icon = icon.ReplaceInsensitive("data:application/base64;base64,", "");
                                 }
                                 else {
                                     icon = emptyFile;
@@ -278,7 +278,7 @@ namespace RO.Web
                         //byte[] Download_hash = bkup_hmac.ComputeHash(System.Text.Encoding.ASCII.GetBytes(fileName));
                         //string Download_hashString = BitConverter.ToString(Download_hash);
                         bool allowDownload = string.IsNullOrEmpty(Request.QueryString["_h"]) ? ValidatedQS(false) : ValidateQSV2(false);
-                        fileName = (fileName.StartsWith("~/") ? "" : "~/") + fileName.ToLower().Replace("~/guarded/", "~/secure/").Replace("/guarded/", "/secure/");
+                        fileName = (fileName.StartsWith("~/") ? "" : "~/") + fileName.ToLower().ReplaceInsensitive("~/guarded/", "~/secure/").ReplaceInsensitive("/guarded/", "/secure/");
                         string url = fileName;
                         string fullfileName = Server.MapPath(fileName);   // we enforce everything file for download is under ../files
                         System.IO.FileInfo file = new System.IO.FileInfo(fullfileName);
@@ -297,7 +297,7 @@ namespace RO.Web
                             if (file.Name.EndsWith(".wmv"))
                             {
                                 file = new FileInfo(file.DirectoryName + "/PubMsg.wmv");
-                                url = fileName.Replace(oname, "PubMsg.wmv");
+                                url = fileName.ReplaceInsensitive(oname, "PubMsg.wmv");
                             }
                             else
                             {

@@ -95,19 +95,27 @@ namespace RO.Common3
                 return imageUrl;
             }
         }
+        private static byte[] HashSecret(byte[] secret)
+        {
+            return Config.HardenedTOTP
+                    ? new MD5CryptoServiceProvider().ComputeHash(secret).Take(10).ToArray()
+                    : new SHA256CryptoServiceProvider().ComputeHash(secret).Take(32).ToArray();
+        }
         public static string GetSecretCode(byte[] secret)
         {
-            byte[] secretHash = new MD5CryptoServiceProvider().ComputeHash(secret).Take(10).ToArray();
+            byte[] secretHash = HashSecret(secret);
             return Base32Encode(secretHash);
         }
-        public static string CalculateOneTimePassword(byte[] secret,int slotOffset = 0)
+        public static string CalculateOneTimePassword(byte[] secret,int slotOffset = 0, int digits = 6)
         {
             // https://tools.ietf.org/html/rfc4226
             int steps = 30; // 30 seconds for Google Authentication
-            byte[] secretHash = new MD5CryptoServiceProvider().ComputeHash(secret).Take(10).ToArray();
+            byte[] secretHash = HashSecret(secret);
             Int64 UnixTimestamp = GetUnixTimestamp();
             Int64 GoodTillTimestamp = Convert.ToInt64(UnixTimestamp / steps) + slotOffset;
             int SecondsRemain = steps - Convert.ToInt32(UnixTimestamp % steps);
+            int mod = (int) Math.Pow(10, digits);
+            string formatter = string.Format("{{0:{0}}}", mod.ToString().Substring(1));
             var data = BitConverter.GetBytes(GoodTillTimestamp).Reverse().ToArray();
             byte[] Hmac = new HMACSHA1(secretHash).ComputeHash(data);
             int Offset = Hmac.Last() & 0x0F;
@@ -116,8 +124,8 @@ namespace RO.Common3
                 ((Hmac[Offset + 1] & 0xff) << 16) |
                 ((Hmac[Offset + 2] & 0xff) << 8) |
                 (Hmac[Offset + 3] & 0xff)
-                    ) % 1000000;
-            return string.Format("{0:000000}", OneTimePassword);
+                    ) % mod;
+            return string.Format(formatter, OneTimePassword);
         }
         public static Int64 GetUnixTimestamp()
         {

@@ -20,7 +20,6 @@
         }, 500)
     }
 
-
     function slide(e) {
         var elementLeft = jQuery(e).position().left;
         var overlay = null;;
@@ -54,13 +53,14 @@
     }
 
     function signOut(e) {
-        var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();
+        var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();       
         eraseUserHandle(appDomainUrl);
         return true;
     }
 
     Sys.Application.add_load(function () {
         var rememberToken = function () {
+            var currentLoginName = $('#<%= cLoginName.ClientID %>').val();
             var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val(); 
             var user_handle = getCookie(makeNameFromNS(appDomainUrl,"tokenInCookieJS"));
             var token = getCookie(makeNameFromNS(appDomainUrl, "tokenJS"));
@@ -75,6 +75,35 @@
                     eraseCookie(makeNameFromNS(appDomainUrl, "tokenJS"));
                 } catch (e) {/**/}
             }
+            else if (!currentLoginName && IsMobile()) {
+                // only do this on mobile
+                try {
+                    var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();
+                    var user_handle = getUserHandle(appDomainUrl);
+                    var x = getTokenName(appDomainUrl, "refresh_token");
+                    var refresh_token = localStorage[x] && JSON.parse(localStorage[x]);
+                    if (user_handle && refresh_token) {
+                        var myUrl = encodeURI(window.location.href);
+                        var lastTry = sessionStorage[user_handle];
+                        var lastRetry = (function () { try { return JSON.parse(lastTry); } catch (e) { return null; }; })();
+                        if (!lastTry
+                            // || +(lastTry.timestamp || 0) + 60 * 1000 < Date.now()
+                            || (lastTry.token || "") !== refresh_token
+                            ) {
+                            var retry = {
+                                token: refresh_token,
+                                timestamp: Date.now()
+                            };
+
+                            if (!lastTry || +lastTry + 300 * 1000 < Date.now()) {
+                                sessionStorage[user_handle] = JSON.stringify(retry);
+                                window.top.location = 'MyAccount.aspx?typ=N&logo=N&ReturnUrl=' + myUrl;
+                            }
+                        }
+                    }
+                } catch (e) {
+                }
+            }
         }
         if (window.requestIdleCallback) {
             requestIdleCallback(function () { setTimeout(rememberToken, 1000); });
@@ -82,7 +111,6 @@
         else {
             setTimeout(rememberToken, 1000);
         }
-
     }
     );
 </script>
@@ -110,7 +138,7 @@
                         <asp:Label ID="CurrSys" CssClass="inp-lbl ProfSys" runat="server" />
                     </div>
                     <div class="r-td">
-                        <asp:Button ID="SignoutButton2" CssClass="signOutButton small blue button" runat="server" OnClick="SignoutButton_Click" OnClientClick="signOut();return true;" CausesValidation="false" />
+                        <asp:Button ID="SignoutButton2" CssClass="signOutButton small blue button" runat="server" OnClick="SignoutButton_Click" OnClientClick="return signOut();" CausesValidation="false" />
                     </div>
                 </div>
             </div>
@@ -149,7 +177,7 @@
             <asp:HyperLink ID="cMyAccountLink" runat="server" />
         </div>
         <div style="float: right;">
-            <asp:Button ID="SignoutButton1" CssClass="small blue button" runat="server" OnClick="SignoutButton_Click" CausesValidation="false" />
+            <asp:Button ID="SignoutButton1" CssClass="small blue button" runat="server"  OnClientClick="return signOut();" OnClick="SignoutButton_Click" CausesValidation="false" />
         </div>
     </div>
 </div>

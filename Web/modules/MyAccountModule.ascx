@@ -291,14 +291,27 @@
         var parentURL = $("#<%= cRedirectParent.ClientID %>").val();
         if (parentURL && parentURL != "") window.top.location.href = parentURL;
         var silentLogin = function () {
-            if ($('#<%= cJWTLogin.ClientID %>').length > 0) {
+            if ($('#<%= cJWTLogin.ClientID %>').length > 0 && IsMobile()) {
+                // only on mobile
                 try {
                     var appDomainUrl = $('#<%= cAppDomainUrl.ClientID %>').val();
-                    var user_handle = localStorage[getUserHandle(appDomainUrl)];
+                    var user_handle = getUserHandle(appDomainUrl);
                     var refresh_token = JSON.parse(localStorage[getTokenName(appDomainUrl, "refresh_token")]);
                     if (user_handle && refresh_token) {
-                        $('#<%= cJWTToken.ClientID %>').val(refresh_token.refresh_token);
-                        $('#<%= cJWTLogin.ClientID %>').click();
+                        var lastTry = sessionStorage[user_handle + "login"];
+                        var lastRetry = (function () { try { return JSON.parse(lastTry);} catch (e) { return null;}; })();
+                        if (!lastTry
+//                            || +(lastTry.timestamp || 0) + 60 * 1000 < Date.now()
+                            || (lastTry.token || "") !== refresh_token
+                            ) {
+                            var retry = {
+                                token: refresh_token,
+                                timestamp: Date.now()
+                            };
+                            sessionStorage[user_handle + "login"] = JSON.stringify(retry);
+                            $('#<%= cJWTToken.ClientID %>').val(refresh_token.refresh_token);
+                            $('#<%= cJWTLogin.ClientID %>').click();
+                        }
                     }
                 }
                 catch (e) {
@@ -310,9 +323,190 @@
         }
         else {
             setTimeout(silentLogin, 1000);
+        }        
+    });
+
+    function getRegistrationRequestAsync() {
+        var request = $("#<%= cRegistrationRequest.ClientID %>").val();
+            return new Promise(function (resolve, reject) {
+                if (!request) reject("no request json");
+                else {
+                    try {
+                        var x = JSON.parse(request);
+                        resolve(transformWebAuthRequest(x));
+                    } catch (e) {
+                        reject(e);
+                    }
+                }
+            });
         }
-        
-});
+    function getAssertionRequestAsync() {
+        var request = $("#<%= cAssertionRequest.ClientID %>").val();
+        return new Promise(function (resolve, reject) {
+            if (!request) reject("no request json");
+            else {
+                try {
+                    var x = JSON.parse(request);
+                    resolve(transformWebAuthRequest(x));
+                } catch (e) {
+                    reject(e);
+                }
+            }
+        });
+    }
+
+    function transformWebAuthRequest(request) {
+        var b64url = new base64Codec(true);
+        request.status = undefined;
+        request.errorMessage = undefined;
+        request.challenge = coerceToArrayBuffer(request.challenge, 'challenge');
+        if (request.user && request.user.id) {
+            request.user.id = coerceToArrayBuffer(request.user.id, 'user.id');
+        }
+        if (request.excludeCredentials && request.excludeCredentials) {
+            request.excludeCredentials = (request.excludeCredentials || []).map(function (c, i) {
+                c.id = coerceToArrayBuffer(c.id, 'excludeCredentials.' + i + '.id');
+                return c;
+            });
+        }
+        if (request.allowCredentials && request.allowCredentials) {
+            request.allowCredentials = (request.allowCredentials || []).map(function (c, i) {
+                c.id = coerceToArrayBuffer(c.id, 'allowCredentials.' + i + '.id');
+                return c;
+            });
+        }
+        if (request.authenticatorSelection && !request.authenticatorSelection.authenticatorAttachment) {
+            request.authenticatorSelection.authenticatorAttachment = undefined;
+        }
+        return request;
+    }
+
+    var registeredFido2 = null;
+    function LoginWebAuthn() {
+        var b64url = new base64Codec(true);
+        var loginRequest = null;
+        try {
+            registeredFido2 = localStorage["Fido2Login"] || "none";
+        }
+        catch (e) {
+
+        }
+        var fnOK = function () {
+            <%= this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.cWebAuthnLoginBtn)) %>;
+        }
+
+        getAssertionRequestAsync()
+        .then(function (request) {
+            loginRequest = request;
+            if ((!request.allowCredentials || request.allowCredentials.length == 0) && registeredFido2 != "none" && IsMobile()) {
+                request.allowCredentials = [
+                    {
+                        id: b64url.decode(registeredFido2),
+                        type: "public-key",
+                        transports:["ble","internal","lightning","nfc","usb"],
+                    },
+                ];
+            }
+            return navigator.credentials.get({
+                publicKey: request
+            });
+        }
+        )
+        .then(function (rawAssertion) {
+            var id = rawAssertion.id; // id during registration b64url
+            var assertion = {
+                id: rawAssertion.id,
+                rawId: b64url.encode(rawAssertion.rawId),
+                type: rawAssertion.type,
+                extensions: rawAssertion.getClientExtensionResults(),
+                response: {
+                    clientDataJSON: b64url.encode(rawAssertion.response.clientDataJSON),
+                    userHandle: rawAssertion.response.userHandle && b64url.encode(rawAssertion.response.userHandle) ? b64url.encode(rawAssertion.response.userHandle) : null,
+                    signature: b64url.encode(rawAssertion.response.signature),
+                    authenticatorData: b64url.encode(rawAssertion.response.authenticatorData)
+                }
+            };
+            var assertionJSON = JSON.stringify(assertion);
+            $("#<%= cWebAuthnResult.ClientID %>").val(assertionJSON);
+            fnOK();
+        })
+        .catch(function (err) {
+            console.log(err);
+            if (
+                err.name == "NotAllowedError" // user denied OR another active prompt by another process(firefox/chrome)
+                ||
+                err.name == "UnknownError" // Legacy Edge when another active prompt by another process 
+                ||
+                err.name == "NotSupportedError" // Legacy Edge when another active prompt by another process 
+                ) {
+                if (err.name == "NotSupportedError"
+                    &&
+                    loginRequest.allowCredentials.length == 0) {
+                    alert(err);
+                }
+                else {
+                    alert(err);
+                }
+            }
+        })
+
+        return false;
+    }
+
+    function RegisterWebAuthn() {
+        var b64url = new base64Codec(true);
+
+        var fnOK = function () {
+            <%= this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.cLinkWebAuthnBtn)) %>;
+        }
+        getRegistrationRequestAsync()
+          .then(function (request) {
+              return navigator.credentials.create({
+                  publicKey: request
+              })
+          })
+          .then(function (newCredentialInfo) {
+              var extensions = newCredentialInfo.getClientExtensionResults();
+              var result = {
+                  Id: newCredentialInfo.id,
+                  RawId: b64url.encode(newCredentialInfo.rawId),
+                  Type: newCredentialInfo.type,
+                  Response: {
+                      AttestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
+                      ClientDataJson: b64url.encode(newCredentialInfo.response.clientDataJSON),
+                  },
+                  Extensions: extensions,
+                  attestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
+                  platform: navigator.platform,
+                  isMobile: IsMobile(),
+              };
+              var resultJSON = JSON.stringify(result);
+              localStorage["Fido2Login"] = newCredentialInfo.id;
+              $("#<%= cWebAuthnResult.ClientID %>").val(resultJSON);
+              fnOK();
+      }).catch(function (err) {
+          alert(err);
+          // No acceptable authenticator or user refused consent. Handle appropriately.
+      });
+        return false;
+    }
+
+    Sys.Application.add_load(function () {
+        var credentialsContainer = typeof navigator != 'undefined' && navigator.credentials;
+        var fido2 = credentialsContainer && typeof window != 'undefined' && window.PublicKeyCredential;
+        var rpDomain = $("#<%= cRPDomain.ClientID %>").val();
+        var rpName = $("#<%= cRPName.ClientID %>").val();
+        if (fido2) {
+            var registrationRequest = $("#<%= cRegistrationRequest.ClientID %>").val();
+            var assertionRequest = $("#<%= cAssertionRequest.ClientID %>").val();
+            if (registrationRequest) {
+                $("#<%= cLinkWebAuthnBtn.ClientID %>").show();
+            }
+            if (assertionRequest) {
+                $("#<%= cWebAuthnLoginBtn.ClientID %>").show();
+            }
+        }
+    });
 </script>
 <div class="r-table MyPrfContent">
     <div class="r-tr">
@@ -341,6 +535,13 @@
             <asp:TextBox ID="cAppDomainUrl" Style="display: none;" runat="server" Visible="true" />
             <asp:TextBox ID="cJWTToken" Style="display: none;" runat="server" Visible="true" />
             <asp:Button ID="cJWTLogin" Style="display: none;" runat="server" Visible="true" />
+            <asp:TextBox ID="cServerChallenge" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cRPDomain" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cRPName" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cWebAuthnResult" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cRegistrationRequest" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cAssertionRequest" runat="server" Visible="true" style="display:none;" />
+
             <asp:Panel ID="LoginPanel" CssClass="pNewPwd" DefaultButton="cLoginBtn" runat="server">
                 <div class="title-content">
                     <div>
@@ -379,6 +580,9 @@
                 </div>
                 <div class="LoginButton">
                     <asp:Button ID="cLoginBtn" OnClientClick="return Login();" OnClick="LoginBtn_Click" CssClass="btn_login" runat="server" />
+                </div>
+                <div class="LoginButton">
+                    <asp:Button ID="cWebAuthnLoginBtn" Style="display: none;" Text="WebAuthn(Fido2) Passwordless Login" OnClientClick="return LoginWebAuthn();" OnClick="WebAuthnLoginBtn_Click" CssClass="btn_login" runat="server" />
                 </div>
                 <asp:Panel ID="separatePanel" Visible="false" runat="server">
                     <div class="separateLine"></div>
@@ -554,6 +758,7 @@
                 </div>
                 <%--new change--%>
                 <asp:Panel ID="TwoFactorAuthenticationPanel" runat="server">
+                    <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cLinkWebAuthnBtn" runat="server" OnClientClick="return RegisterWebAuthn();" Style="display: none;" Text="Register WebAuthn(Fido2) Passwordless Login" OnClick="cLinkWebAuthnBtn_Click" Visible="true" /></div>
                     <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cForgetOTPCache" runat="server" OnClick="cForgetOTPCache_Click" Visible="true" /></div>
                     <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cDisableTwoFactor" runat="server" OnClick="cDisableTwoFactor_Click" Visible="true" /></div>
                     <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cResetTwoFactorKey" runat="server" OnClick="cResetTwoFactorKey_Click" Visible="true" /></div>

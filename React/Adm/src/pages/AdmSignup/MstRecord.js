@@ -758,7 +758,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.ResnedToken || {}).readonly || !(authCol.ResnedToken || {}).visible}
                                         onClick={this.ResnedToken({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.ResnedToken || (columnLabel.ResnedToken || {}).ColumnName}
+                                        {auxLabels.ResnedToken || (columnLabel.ResnedToken || {}).ColumnHeader || (columnLabel.ResnedToken || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -794,7 +794,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.Submit || {}).readonly || !(authCol.Submit || {}).visible}
                                         onClick={this.Submit({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Submit || (columnLabel.Submit || {}).ColumnName}
+                                        {auxLabels.Submit || (columnLabel.Submit || {}).ColumnHeader || (columnLabel.Submit || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -806,7 +806,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.SignUpBtn || {}).readonly || !(authCol.SignUpBtn || {}).visible}
                                         onClick={this.SignUpBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SignUpBtn || (columnLabel.SignUpBtn || {}).ColumnName}
+                                        {auxLabels.SignUpBtn || (columnLabel.SignUpBtn || {}).ColumnHeader || (columnLabel.SignUpBtn || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

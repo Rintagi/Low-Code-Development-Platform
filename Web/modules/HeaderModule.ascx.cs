@@ -35,8 +35,8 @@ namespace RO.Web
                 if (!Request.IsAuthenticated || LUser == null || LUser.LoginName.ToLower() == "anonymous")
                 {
                     string loginUrl = System.Web.Security.FormsAuthentication.LoginUrl;
-                    if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
-                    cSignIn.Visible = true; cSignIn.NavigateUrl = "~/" + loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "logo=N"; cProfileButton.Visible = false;
+                    if (string.IsNullOrEmpty(loginUrl)) loginUrl = "~/MyAccount.aspx";
+                    cSignIn.Visible = true; cSignIn.NavigateUrl = loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "logo=N"; cProfileButton.Visible = false;
                 }
                 else
                 {
@@ -45,7 +45,7 @@ namespace RO.Web
                 if (Request.IsAuthenticated && base.LUser != null)
                 {
                     SetCultureId(cLang, LUser.CultureId.ToString());
-                    cWelcomeTime.Text = Utils.fmLongDate(DateTime.Now.ToString(), LUser.Culture);
+                    cWelcomeTime.Text = Utils.fmLongDate(DateTime.Now.ToString(), LUser.Culture ?? "en-us");
                 }
                 if (base.LUser != null && base.LPref != null && Request.QueryString["typ"] != null && Request.QueryString["typ"].ToString().ToUpper() == "N")
                 {

@@ -20,7 +20,7 @@ import AdmDbTableReduxObj from './AdmDbTable';
 import AdmDatTierReduxObj from './AdmDatTier';
 import AdmCtDisplayTypeReduxObj from './AdmCtDisplayType';
 import AdmEntityReduxObj from './AdmEntity';
-import AdmFlowChartReduxObj from './AdmFlowChart';
+import AdmFlowchartReduxObj from './AdmFlowchart';
 import AdmDbKeyReduxObj from './AdmDbKey';
 import AdmReleaseReduxObj from './AdmRelease';
 import AdmLabelVwReduxObj from './AdmLabelVw';
@@ -103,7 +103,7 @@ export default {
     AdmDatTier: AdmDatTierReduxObj.ReduxReducer(),
     AdmCtDisplayType: AdmCtDisplayTypeReduxObj.ReduxReducer(),
     AdmEntity: AdmEntityReduxObj.ReduxReducer(),
-    AdmFlowChart: AdmFlowChartReduxObj.ReduxReducer(),
+    AdmFlowchart: AdmFlowchartReduxObj.ReduxReducer(),
     AdmDbKey: AdmDbKeyReduxObj.ReduxReducer(),
     AdmRelease: AdmReleaseReduxObj.ReduxReducer(),
     AdmLabelVw: AdmLabelVwReduxObj.ReduxReducer(),

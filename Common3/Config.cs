@@ -113,7 +113,10 @@ namespace RO.Common3
         private static string wPaypalExpressAPIEncSignature;
         private static string wPaypalRESTAPIClientID;
         private static string wPaypalRESTAPIEncSecret;
-
+        private static string wReactTemplate;
+        private static string wDesLegacyMD5Encrypt;
+        private static string wHardenedTOTP;
+        private static string wExportExcelCSV;
         static Config()
 		{
             wConverterUrl = ConfigurationManager.AppSettings["WsConverterUrl"];
@@ -191,12 +194,12 @@ namespace RO.Common3
                 string[] redirect = wRedirectProjectRoot.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                 if (redirect.Length == 2)
                 {
-                    wPathRtfTemplate = (wPathRtfTemplate??"").Replace(redirect[0], redirect[1]);
-                    wPathTmpImport = (wPathTmpImport ?? "").Replace(redirect[0], redirect[1]);
-                    wPathTxtTemplate = (wPathTmpImport ?? "").Replace(redirect[0], redirect[1]);
-                    wPathXlsImport = (wPathXlsImport ?? "").Replace(redirect[0], redirect[1]);
-                    wClientTierPath = (wClientTierPath ?? "").Replace(redirect[0], redirect[1]);
-                    wRuleTierPath = (wRuleTierPath ?? "").Replace(redirect[0], redirect[1]);
+                    wPathRtfTemplate = (wPathRtfTemplate ?? "").ReplaceInsensitive(redirect[0], redirect[1]);
+                    wPathTmpImport = (wPathTmpImport ?? "").ReplaceInsensitive(redirect[0], redirect[1]);
+                    wPathTxtTemplate = (wPathTmpImport ?? "").ReplaceInsensitive(redirect[0], redirect[1]);
+                    wPathXlsImport = (wPathXlsImport ?? "").ReplaceInsensitive(redirect[0], redirect[1]);
+                    wClientTierPath = (wClientTierPath ?? "").ReplaceInsensitive(redirect[0], redirect[1]);
+                    wRuleTierPath = (wRuleTierPath ?? "").ReplaceInsensitive(redirect[0], redirect[1]);
                 }
             }
             if (!string.IsNullOrEmpty(wExtBaseUrl))
@@ -259,6 +262,10 @@ namespace RO.Common3
             wPaypalExpressAPIEncSignature = System.Configuration.ConfigurationManager.AppSettings["PaypalExpressAPIEncSignature"];
             wPaypalRESTAPIClientID = System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIClientID"];
             wPaypalRESTAPIEncSecret = System.Configuration.ConfigurationManager.AppSettings["PaypalRESTAPIEncSecret"];
+            wReactTemplate = System.Configuration.ConfigurationManager.AppSettings["ReactTemplate"];
+            wDesLegacyMD5Encrypt = System.Configuration.ConfigurationManager.AppSettings["DesLegacyMD5Encrypt"];
+            wHardenedTOTP = System.Configuration.ConfigurationManager.AppSettings["HardenedTOTP"];
+            wExportExcelCSV = System.Configuration.ConfigurationManager.AppSettings["ExportExcelCSV"];
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -438,6 +445,10 @@ namespace RO.Common3
         public static string PaypalExpressAPIEncSignature { get { return wPaypalExpressAPIEncSignature; } }
         public static string PaypalRESTAPIClientID { get { return wPaypalRESTAPIClientID; } }
         public static string PaypalRESTAPIEncSecret { get { return wPaypalRESTAPIEncSecret; } }
+        public static string ReactTemplate { get { return string.IsNullOrEmpty(wReactTemplate) ? "Template" : wReactTemplate;; } }
+        public static bool DesLegacyMD5Encrypt { get { return (wDesLegacyMD5Encrypt ?? "Y").ToUpper() == "Y"; } }
+        public static bool HardenedTOTP { get { return (wHardenedTOTP ?? "N").ToUpper() == "Y"; } }
+        public static bool ExportExcelCSV { get { return (wExportExcelCSV ?? "Y").ToUpper() == "Y"; } }
 
         public static string RintagiLicense
         { 
@@ -466,7 +477,7 @@ namespace RO.Common3
 
         public static string ConvertOleDbConnStrToOdbcConnStr(string connectionString)
         {
-            System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"Data Source=([^;]+);database=([^;]+);(Integrated Security=sspi;)*.*User ID=([^;]+);.*password=([^;]+)");
+            System.Text.RegularExpressions.Regex rx = new System.Text.RegularExpressions.Regex(@"Data Source=([^;]*);database=([^;]*);(Integrated Security=sspi;)*.*User ID=([^;]*);.*password=([^;]*)");
             string odbcDriverVersion = string.IsNullOrEmpty(Config.ODBCDriver) ? "ODBC Driver 13 for SQL Server" : Config.ODBCDriver;
             return rx.Replace(connectionString, m => {
                 var dbServer = m.Groups[1].Value;
@@ -485,6 +496,8 @@ namespace RO.Common3
             bool useOleDb = !useOdbc && !useSqlClient;
             //string defaultOleDbProvider = "SQLOLEDB";
             string defaultOleDbProvider = "MSOLEDBSQL";
+            dbProvider = (dbProvider ?? "").ToLower() == "sqloledb" && 
+                ((Config.DesProvider ?? "").ToLower() == "msoledbsql" || (Config.DesProvider ?? "").ToLower() == "odbc") ? Config.DesProvider : dbProvider;
             if (useOdbc
                 || useOleDb
                 || useSqlClient

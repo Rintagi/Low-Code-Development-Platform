@@ -1,0 +1,1 @@
+this directory contains image file that should be in-sync with the Web/images one for shared image source definition between React and Main site(for controls like image button/popup etc.)

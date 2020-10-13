@@ -9146,5 +9146,5 @@
 17197~@~AdmFlowchart [   30] Main: ChartDesc (en-US)~@~4380~@~1~@~Chart Description~@~~@~~@~
 17198~@~AdmFlowchart [   40] Main: ChartData (en-US)~@~4381~@~1~@~Chart Data~@~~@~~@~
 17199~@~AdmFlowchart [   50] Main: launch (en-US)~@~4382~@~1~@~Launch Flowchart IDE~@~~@~~@~
-17200~@~AdmFlowchart [   60] Main: Generate (en-US)~@~4383~@~1~@~Generate Flowchart HTML File~@~~@~~@~
-17201~@~AdmFlowchart [   70] Main: View (en-US)~@~4384~@~1~@~View Flowchart~@~~@~~@~
+17201~@~AdmFlowchart [   60] Main: View (en-US)~@~4384~@~1~@~View Flowchart~@~~@~~@~
+17202~@~AdmFlowchart [   80] Main: Display (en-US)~@~4385~@~1~@~Display on Default Page~@~~@~~@~

@@ -7,9 +7,17 @@ namespace RO.Access3
     using RO.Common3.Data;
 	using RO.SystemFramewk;
     using System.Linq;
-
+    using System.Security.Cryptography;
+    using System.Text;
 	public abstract class LoginAccessBase : Encryption, IDisposable
 	{
+        protected static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+        protected static string randomByteString(int count)
+        {
+            byte[] r = new byte[count <= 0 ? 1 : count];
+            rngCsp.GetBytes(r);
+            return Convert.ToBase64String(r);
+        }
         public abstract void CancelUserAccount(int UsrId);
         public abstract bool ChkAdminLogin(string RowAuths);
         public abstract bool ChkLoginStatus(string LoginName);
@@ -21,7 +29,7 @@ namespace RO.Access3
         public abstract string GetHintQuestionId(string UsrId);
         public abstract DataTable GetLinkedUserLogin(int UsrId);
         public abstract LoginUsr GetLoginLegacy(string LoginName, string Password);
-        public abstract DataTable GetLogins(string LoginName, string Provider);
+        public abstract DataTable GetLogins(string LoginName, string Provider, string UsrId = null);
         public abstract LoginUsr GetLoginSecure(Credential cr);
         public abstract DataTable GetProjectList(string Usrs, string RowAuthoritys, string Projects, string currCompanyId);
         public abstract string GetPwdExpMsg(string UsrId, string CultureId, string PwdExpDays);
@@ -33,10 +41,10 @@ namespace RO.Access3
         public abstract UsrPref GetUsrPref(Int32 UsrId, Int32 CompanyId, Int32 ProjectId, byte SystemId);
         public abstract bool IsNullLegacyPwd(string LoginName);
         public abstract bool IsUsrSafeIP(int UsrId, string IpAddress);
-        public abstract void LinkUserLogin(int UsrId, string ProviderCd, string LoginName);
+        public abstract void LinkUserLogin(int UsrId, string ProviderCd, string LoginName, string LoginMeta = null);
         public abstract void SetLoginStatus(string LoginName, bool bLoginSuccess, string IpAddress, string Provider, string ProviderLoginName);
         public abstract void SetUsrSafeIP(int UsrId, string IpAddress);
-        public abstract void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName);
+        public abstract void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName, string LoginMeta = null);
         public abstract bool UpdHintQuestion(string UsrId, string HintQuestionId, string HintAnswer);
         public abstract void UpdUserLoginInfo(int UsrId, string LoginName, string UsrName, string UsrEmail);
         public abstract bool UpdUsrPassword(Credential cr, LoginUsr LUser, bool RemoveLink);

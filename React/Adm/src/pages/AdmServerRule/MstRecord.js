@@ -983,7 +983,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.SyncByDb || {}).readonly || !(authCol.SyncByDb || {}).visible}
                                         onClick={this.SyncByDb({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SyncByDb || (columnLabel.SyncByDb || {}).ColumnName}
+                                        {auxLabels.SyncByDb || (columnLabel.SyncByDb || {}).ColumnHeader || (columnLabel.SyncByDb || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -995,7 +995,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.SyncToDb || {}).readonly || !(authCol.SyncToDb || {}).visible}
                                         onClick={this.SyncToDb({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SyncToDb || (columnLabel.SyncToDb || {}).ColumnName}
+                                        {auxLabels.SyncToDb || (columnLabel.SyncToDb || {}).ColumnHeader || (columnLabel.SyncToDb || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

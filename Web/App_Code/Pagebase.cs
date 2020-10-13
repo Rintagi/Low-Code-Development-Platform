@@ -71,8 +71,8 @@ namespace RO.Web
                 if (Response.ContentType == "text/plain" && (appPath.Length == extBasePath.Length))
                 {
                     // only do this 
-                    s = s.Replace((Request.ApplicationPath + "/WebResource.axd").Replace("//", "/"), (extBasePath + "/WebResource.axd").Replace("//", "/"))
-                         .Replace((Request.ApplicationPath + "/ScriptResource.axd").Replace("//", "/"), (extBasePath + "/ScriptResource.axd").Replace("//", "/"));
+                    s = s.ReplaceInsensitive((Request.ApplicationPath + "/WebResource.axd").Replace("//", "/"), (extBasePath + "/WebResource.axd").Replace("//", "/"))
+                         .ReplaceInsensitive((Request.ApplicationPath + "/ScriptResource.axd").Replace("//", "/"), (extBasePath + "/ScriptResource.axd").Replace("//", "/"));
                 }
                 var rx = new System.Text.RegularExpressions.Regex("((src|href)=[\"'])(/" + appPath.Substring(1) + ")");
                 s = rx.Replace(s, (m) => { return m.Groups[1].Value + extBasePath + (appPath == "/" ? "/" : ""); });

@@ -1,6 +1,7 @@
 namespace RO.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
     using System.Web;
@@ -23,6 +24,10 @@ namespace RO.Web
         {
             if (!IsPostBack)
             {
+                bool isFullyLicensed = RO.Common3.Utils.IsFullyLicense("Design", "Deploy");
+                Tuple<string, bool, string> licenseDetail = RO.Common3.Utils.DecodeLicense(null);
+                Dictionary<string, Dictionary<string, string>> moduleList = RO.Common3.Utils.DecodeLicenseDetail(licenseDetail.Item1);
+                Dictionary<string, string> admLicenseDetail = moduleList.ContainsKey("Design") ? moduleList["Design"] : null;
                 if (Session[KEY_DefaultGenerated] == null) try
                 {
                     if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Default", 0, 0, 0, string.Empty, string.Empty))

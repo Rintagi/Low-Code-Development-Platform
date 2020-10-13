@@ -158,6 +158,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                     List<Tuple<Exception, Dictionary<string, string>>> errorList = new List<Tuple<Exception, Dictionary<string, string>>>();
                     bool singleSQLCredential = Config.DesShareCred;
                     string RunCronJobModules = Config.RunCronJobModules;
+                    string dbDesDataBase;
                     try
                     {
                         foreach (DataRow dr in SystemList.Rows)
@@ -167,9 +168,20 @@ public partial class CronJobModule : RO.Web.ModuleBase
                                 (!string.IsNullOrEmpty(RunCronJobModules) && !RunCronJobModules.Contains(dr["dbDesDatabase"].ToString()))
                                 ) 
                                 continue;
+                            dbDesDataBase = dr["dbDesDatabase"].ToString();
                             string connStr = Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", dr["dbAppUserId"].ToString());
-                            DataTable dtJobs = (new AdminSystem()).GetCronJob(null,string.Empty, connStr
-                                , singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString());
+                            DataTable dtJobs = null;
+                            try
+                            {
+                                dtJobs = (new AdminSystem()).GetCronJob(null, string.Empty, connStr
+                                    , singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString());
+                            }
+                            catch (Exception er)
+                            {
+                                string errorMsg = string.Format("Cronjob scan error {0}", dbDesDataBase);
+                                ErrorTrace(new Exception(errorMsg, er), "error", requestInfo);
+                                continue;
+                            }
                             dtJobs.DefaultView.Sort = "NextRun, Year, Month, Day, Hour, Minute";
                             foreach (DataRowView drvJob in dtJobs.DefaultView)
                             {
@@ -329,7 +341,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
                             Thread.Sleep(waitInterval);
                         }
                     }
-                    string myHash = Convert.ToBase64String(new System.Security.Cryptography.MD5CryptoServiceProvider().ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword)));
+                    string myHash = Convert.ToBase64String(new System.Security.Cryptography.SHA256CryptoServiceProvider().ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword)));
                     WebRequest wr = HttpWebRequest.Create(myUrl + "?hash=" + HttpUtility.UrlEncode(myHash));
                     lock (SystemList)
                     {
@@ -387,7 +399,7 @@ public partial class CronJobModule : RO.Web.ModuleBase
     {
         if (!IsPostBack)
         {
-            string myHash = Convert.ToBase64String(new System.Security.Cryptography.MD5CryptoServiceProvider().ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword)));
+            string myHash = Convert.ToBase64String(new System.Security.Cryptography.SHA256CryptoServiceProvider().ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword)));
             string hash = HttpUtility.HtmlDecode(Request.QueryString["hash"] ?? "");
             if (hash != myHash)
             {

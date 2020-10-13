@@ -717,7 +717,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.PaypalBtn || {}).readonly || !(authCol.PaypalBtn || {}).visible}
                                         onClick={this.PaypalBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PaypalBtn || (columnLabel.PaypalBtn || {}).ColumnName}
+                                        {auxLabels.PaypalBtn || (columnLabel.PaypalBtn || {}).ColumnHeader || (columnLabel.PaypalBtn || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -729,7 +729,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.PaypalPayoutBtn || {}).readonly || !(authCol.PaypalPayoutBtn || {}).visible}
                                         onClick={this.PaypalPayoutBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PaypalPayoutBtn || (columnLabel.PaypalPayoutBtn || {}).ColumnName}
+                                        {auxLabels.PaypalPayoutBtn || (columnLabel.PaypalPayoutBtn || {}).ColumnHeader || (columnLabel.PaypalPayoutBtn || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -783,7 +783,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.PaypalCCBtn || {}).readonly || !(authCol.PaypalCCBtn || {}).visible}
                                         onClick={this.PaypalCCBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PaypalCCBtn || (columnLabel.PaypalCCBtn || {}).ColumnName}
+                                        {auxLabels.PaypalCCBtn || (columnLabel.PaypalCCBtn || {}).ColumnHeader || (columnLabel.PaypalCCBtn || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

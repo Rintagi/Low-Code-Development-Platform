@@ -1,0 +1,75 @@
+@import '~react-vis/dist/styles/plot';
+@import '~react-vis/dist/styles/legends';
+@import '~react-vis/dist/styles/radial-chart';
+@import '~react-vis/dist/styles/treemap';
+@import '~react-vis/dist/styles/examples';
+
+//recharts
+
+path.recharts-sector {
+
+  @include themify($themes) {
+    stroke: themed('colorBackground');
+  }
+}
+
+.recharts-legend-item-text {
+
+  @include themify($themes) {
+    color: themed('colorText');
+  }
+}
+
+.recharts-text {
+  fill: $color-additional;
+  opacity: 0.6;
+}
+
+.recharts-cartesian-axis-line {
+  opacity: 0;
+}
+
+.recharts-cartesian-grid-horizontal line, .recharts-cartesian-grid-vertical line {
+  fill: $color-additional;
+  opacity: 0.2;
+}
+
+.recharts-brush-slide {
+  fill: #dee3eb;
+  fill-opacity: 1;
+}
+
+.recharts-brush-traveller {
+  transform: translateX(-8px);
+
+  rect {
+    fill: #ffffff;
+    width: 12px;
+    stroke: #dee3eb;
+  }
+
+  line {
+    stroke: #dee3eb;
+    transform: translateX(4px);
+  }
+
+  &:first-of-type {
+    transform: translateX(0);
+  }
+}
+
+.recharts-tooltip-cursor {
+  fill-opacity: 0.2;
+}
+
+//chartsjs
+
+.card {
+
+  .chartjs-size-monitor {
+
+    & + .card__title:not(:first-child) {
+      margin-top: 0;
+    }
+  }
+}

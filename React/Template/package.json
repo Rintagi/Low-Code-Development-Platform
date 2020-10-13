@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@loadable/component": "5.13.1",
     "@material-ui/core": "1.5.1",
     "@mdi/font": "3.6.95",
     "autoprefixer": "7.1.6",

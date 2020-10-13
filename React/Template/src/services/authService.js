@@ -10,6 +10,7 @@ var currentAccessScope = {};
 export const authService = {
     login, logout, renewAccessToken, getToken, getAccessToken, getAccessControlInfo
     , isAuthenticated, getUsr, getMenu, getReactQuickMenu, getSystems, getServerIdentity, getRefreshToken, setAccessScope, getAccessScope, resetPwdEmail, resetPassword
+    , getWebAuthnAssertionRequest, getWebAuthnRegistrationRequest, webauthnAssertion, webauthnRegistration
 };
 
 const getMyMachine = getFingerPrint();
@@ -697,5 +698,170 @@ async function getServerIdentity(scope) {
             error => {
                 return Promise.reject(error);
             }
+        )
+}
+
+async function getWebAuthnRegistrationRequest(hostingDomainUrl, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetWebAuthnRegistrationRequest"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    hostingDomainUrl: hostingDomainUrl,
+                    scope: scope || ""
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
+}
+
+async function getWebAuthnAssertionRequest(hostingDomainUrl, loginName, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetWebAuthnAssertionRequest"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    hostingDomainUrl: hostingDomainUrl || '',
+                    loginName: loginName || '',
+                    scope: scope || ""
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
+}
+
+async function webauthnRegistration(requestJSON, resultJSON, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/WebAuthnRegistration"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    requestJSON: requestJSON || '',
+                    resultJSON: resultJSON || '',
+                    scope: scope || ''
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
+}
+
+async function webauthnAssertion(requestJSON, resultJSON, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/WebAuthnAssertion"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    requestJSON: requestJSON || '',
+                    resultJSON: resultJSON || '',
+                    scope: scope || ''
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(result => {
+            const apiResult = fetchService.getAPIResult(result);
+            if (apiResult.accessCode || (apiResult.accessToken || {}).refresh_token) {
+                rememberUserHandle(apiResult.username);
+                if ((apiResult.accessToken || {}).refresh_token) {
+                    return renewAccessToken((apiResult.accessToken || {}).refresh_token)
+                        .then(
+                            accessToken => {
+                                return {
+                                    accessCode: apiResult.accessCode,
+                                    refresh_token: accessToken.refresh_token,
+                                    status: "success",
+                                }
+                            },
+                            error => {
+                                eraseUserHandle();
+                                return Promise.reject(error);
+                            }
+                        )
+                }
+                else
+                    return getToken(apiResult.accessCode)
+                        .then(
+                            accessToken => {
+                                return {
+                                    accessCode: apiResult.accessCode,
+                                    status: "success",
+                                }
+                            },
+                            error => {
+                                eraseUserHandle();
+                                return Promise.reject(error);
+                            }
+                        )
+            }
+            else {
+                return Promise.reject({
+                    status: "failed",
+                    errType: result.status === "success" ? result.data.value.d.error : result.errType,
+                    errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                })
+        }
+        },
+            (error => {
+                return Promise.reject(error);
+            })
         )
 }

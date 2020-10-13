@@ -37610,8 +37610,8 @@ SELECT @sClause = 'SELECT a.ReportId,a.ProgramName,a.GenerateRp,b.SysProgram,a.O
 + ',a.RegClause,a.UpdClause,a.XlsClause,b.dbAppDatabase,b.dbDesDatabase,a.TemplateName'
 + ',a.UnitCd,a.TopMargin,a.BottomMargin,a.LeftMargin,a.RightMargin,a.PageWidth,a.PageHeight'
 + ',RptWidth = a.PageWidth - a.LeftMargin - a.RightMargin'
-+ case when @GenPrefix = '' then ',a.AuthRequired' else 'AuthRequired = ''Y''' end
-+ case when @GenPrefix = '' then ',a.CommandTimeOut' else 'CommandTimeOut = NULL' end
++ case when @GenPrefix = '' then ',a.AuthRequired' else ',AuthRequired = ''Y''' end
++ case when @GenPrefix = '' then ',a.CommandTimeOut' else ',CommandTimeOut = NULL' end
 SELECT @fClause = 'FROM dbo.' + @GenPrefix + 'Report a'
 + ' INNER JOIN RODesign.dbo.Systems b ON b.dbDesDatabase = ''' + @srcDatabase + ''''
 SELECT @wClause = 'WHERE a.ReportId = ' + CONVERT(varchar,@reportId)
@@ -46557,37 +46557,37 @@ ELSE
 	SELECT @WhereClause = WhereClause, @RegClause = RegClause, @ValClause = ValClause, @UpdClause = UpdClause, @XlsClause = XlsClause FROM dbo.Report WHERE ReportId = @reportId
 SELECT @paramClause = '', @tc = ''
 EXEC dbo.GetReportParm @GenPrefix, @reportId, @WhereClause, @tc OUTPUT, @paramClause OUTPUT, @SelfColumns OUTPUT, @SelfHeaders OUTPUT, null
-SELECT @procedureSql = 'CREATE PROCEDURE Get' + @procedureName + CHAR(13)
-+ ' @reportId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
-+ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Usrs' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13)
-+ ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13)
-+ ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + @paramClause + CHAR(13)
-+ ',@bUpd char(1)' + CHAR(13) + ',@bXls char(1)' + CHAR(13) + ',@bVal char(1)=''''N''''' + CHAR(13)
-+ '/* WITH ENCRYPTION */' + CHAR(13) + 'AS' + CHAR(13)
-+ 'DECLARE	 @usrName		nvarchar(50)' + CHAR(13)
-+ '		,@UsrId			int' + CHAR(13)
-+ '		,@wClause		varchar(max)' + CHAR(13)
-+ '		,@tClause		varchar(max)' + CHAR(13)
-+ 'EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT' + CHAR(13)
-+ 'SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId' + CHAR(13)
+SELECT @procedureSql = 'CREATE PROCEDURE Get' + @procedureName + CHAR(13) + CHAR(10)
++ ' @reportId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@RowAuthoritys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Usrs' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@UsrGroups' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Cultures' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Companys' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Projects' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Agents' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Brokers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Customers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Investors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Members' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Vendors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Borrowers' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Guarantors' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@Lenders' + CHAR(9) + CHAR(9) + 'varchar(1000)' + CHAR(13) + CHAR(10)
++ ',@currCompanyId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
++ ',@currProjectId' + CHAR(9) + CHAR(9) + 'int' + @paramClause + CHAR(13) + CHAR(10)
++ ',@bUpd char(1)' + CHAR(13) + CHAR(10) + ',@bXls char(1)' + CHAR(13) + CHAR(10) + ',@bVal char(1)=''''N''''' + CHAR(13) + CHAR(10)
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10) + 'AS' + CHAR(13) + CHAR(10)
++ 'DECLARE	 @usrName		nvarchar(50)' + CHAR(13) + CHAR(10)
++ '		,@UsrId			int' + CHAR(13) + CHAR(10)
++ '		,@wClause		varchar(max)' + CHAR(13) + CHAR(10)
++ '		,@tClause		varchar(max)' + CHAR(13) + CHAR(10)
++ 'EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT' + CHAR(13) + CHAR(10)
++ 'SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId' + CHAR(13) + CHAR(10)
 IF @WhereClause is not null AND @WhereClause <> ''
-	SELECT @procedureSql = @procedureSql + replace(@WhereClause,'''','''''') + CHAR(13) + @tc
+	SELECT @procedureSql = @procedureSql + replace(@WhereClause,'''','''''') + CHAR(13) + CHAR(10) + @tc
 ELSE
-	SELECT @procedureSql = @procedureSql + 'SELECT @wClause = ''''WHERE 1=1''''' + CHAR(13) + @tc
+	SELECT @procedureSql = @procedureSql + 'SELECT @wClause = ''''WHERE 1=1''''' + CHAR(13) + CHAR(10) + @tc
 SELECT @allClause = '', @selfClause = '', @parameter1Names='', @parameter1Types='', @parameter1SByte='', @calling1Params='', @param1Sql='', @declare1Sql=''
 /* Only permission manage on the table specified on Report Generator */
 /*
@@ -46600,25 +46600,25 @@ IF @TableId is not null AND @TableAbbr is not null
 SELECT @procedureSql = @procedureSql + @allClause + @selfClause
 IF @UpdClause is not null AND @UpdClause <> ''
 BEGIN
-	SELECT @procedureSql = @procedureSql + 'IF @bUpd = ''''Y'''' ' + @UpdClause + CHAR(13) + 'ELSE '
+	SELECT @procedureSql = @procedureSql + 'IF @bUpd = ''''Y'''' ' + @UpdClause + CHAR(13) + CHAR(10) + 'ELSE '
 END
 IF @XlsClause is not null AND @XlsClause <> ''
 BEGIN
-	SELECT @procedureSql = @procedureSql + 'IF @bXls = ''''Y'''' ' + @XlsClause + CHAR(13) + 'ELSE '
+	SELECT @procedureSql = @procedureSql + 'IF @bXls = ''''Y'''' ' + @XlsClause + CHAR(13) + CHAR(10) + 'ELSE '
 END
 IF @RegClause is not null AND @RegClause <> ''
 BEGIN
 	IF @ValClause is not null AND @ValClause <> ''
-		SELECT @procedureSql = @procedureSql + 'IF @bVal = ''''N'''' ' + @RegClause + CHAR(13) + 'ELSE ' + @ValClause + CHAR(13)
+		SELECT @procedureSql = @procedureSql + 'IF @bVal = ''''N'''' ' + @RegClause + CHAR(13) + CHAR(10) + 'ELSE ' + @ValClause + CHAR(13) + CHAR(10)
 	ELSE
-		SELECT @procedureSql = @procedureSql + @RegClause + CHAR(13)
+		SELECT @procedureSql = @procedureSql + @RegClause + CHAR(13) + CHAR(10)
 END
 ELSE
 BEGIN
 	RAISERROR('Stored Procedure Get%s not generated because Regular Execution Clause is not specified.',18,2,@procedureName) WITH SETERROR
 	RETURN 1
 END
-SELECT @procedureSql = @procedureSql + 'RETURN 0' + CHAR(13)
+SELECT @procedureSql = @procedureSql + 'RETURN 0' + CHAR(13) + CHAR(10)
 IF @procedureSql IS NULL
 BEGIN
 	RAISERROR('Stored Procedure Get%s not generated.',18,2,@procedureName) WITH SETERROR
@@ -46957,7 +46957,7 @@ BEGIN
 	SELECT @CriParams = @CriParams + ',@' + @ColumnName + convert(varchar,@CriSelect) + CHAR(9) + @DataTypeName
 		+ case when charindex('char',lower(@DataTypeName)) > 0 then '(' + case when @DataTypeSize > 0 then convert(varchar,@DataTypeSize) else 'max' end + ')'
 			when @DataTypeName = 'Decimal' then '(' + convert(varchar,@DataTypeSize) + ',' + convert(varchar,@ColumnScale) + ')'
-			else '' end + CHAR(13)
+			else '' end + CHAR(13) + CHAR(10)
 	SELECT @CriClause = @CriClause + 'IF @' + @ColumnName + convert(varchar,@CriSelect)
 		+ ' is not null SELECT @wClause = @wClause + '' AND '
 		+ @TableAbbr + '.' + @ColumnName + ' ' + @OperatorName + ' ' + case
@@ -46965,7 +46965,7 @@ BEGIN
 		when @NumericData = 'Y' then ''' + convert(varchar,@' + @ColumnName + convert(varchar,@CriSelect) + ')'
 		when @OperatorName = 'like' then '''''%'' + @' + @ColumnName + convert(varchar,@CriSelect) + ' + ''%'''''''
 		when @OperatorName = 'in' OR @OperatorName = 'not in' then ''' + @' + @ColumnName + convert(varchar,@CriSelect)
-		else ''''''' + @' + @ColumnName + convert(varchar,@CriSelect) + ' + ''''''''' end + CHAR(13)
+		else ''''''' + @' + @ColumnName + convert(varchar,@CriSelect) + ' + ''''''''' end + CHAR(13) + CHAR(10)
 	/* update function parameter */
 	UPDATE fp set paraType = @DataTypeName
 		+ case when charindex('char',lower(@DataTypeName)) > 0 then '(' + case when @DataTypeSize > 0 then convert(varchar,@DataTypeSize) else 'max' end + ')'
@@ -47048,25 +47048,25 @@ BEGIN
 	FETCH NEXT FROM cur4 INTO @TableId, @ColumnName, @ColSort
 END
 CLOSE cur4 DEALLOCATE cur4
-SELECT @RegCode = 'CREATE PROCEDURE dbo._Get' + @ProgramName + 'R' + CHAR(13)
-+ ' @wClause' + CHAR(9) + 'nvarchar(max)' + CHAR(13) + @CriParams
-+ '/* WITH ENCRYPTION */' + CHAR(13)
-+ 'AS' + CHAR(13) + 'DECLARE'
-+ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
+SELECT @RegCode = 'CREATE PROCEDURE dbo._Get' + @ProgramName + 'R' + CHAR(13) + CHAR(10)
++ ' @wClause' + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10) + @CriParams
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10)
++ 'AS' + CHAR(13) + CHAR(10) + 'DECLARE'
++ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@fClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@oClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
 /* function parameter declaration and init */
-+ CHAR(9) + ',@dfClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ CHAR(9) + ',@sfClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ 'SET NOCOUNT ON' + CHAR(13)
-+ CASE WHEN LEN(@dec) > 0 THEN 'SELECT @dfClause = ''' + @dec +  ''''  ELSE 'SELECT @dfClause = ''''' END + CHAR(13)
-+ CASE WHEN LEN(@val) > 0 THEN 'SELECT @sfClause = ''' + @val  ELSE 'SELECT @sfClause = ''''' END + CHAR(13)
-+ 'SELECT @sClause = ''SELECT ' + @SelClause + '''' + CHAR(13)
-+ 'SELECT @fClause = ''FROM ' + @FrmClause + '''' + CHAR(13)
++ CHAR(9) + ',@dfClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ CHAR(9) + ',@sfClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ 'SET NOCOUNT ON' + CHAR(13) + CHAR(10)
++ CASE WHEN LEN(@dec) > 0 THEN 'SELECT @dfClause = ''' + @dec +  ''''  ELSE 'SELECT @dfClause = ''''' END + CHAR(13) + CHAR(10)
++ CASE WHEN LEN(@val) > 0 THEN 'SELECT @sfClause = ''' + @val  ELSE 'SELECT @sfClause = ''''' END + CHAR(13) + CHAR(10)
++ 'SELECT @sClause = ''SELECT ' + @SelClause + '''' + CHAR(13) + CHAR(10)
++ 'SELECT @fClause = ''FROM ' + @FrmClause + '''' + CHAR(13) + CHAR(10)
 + @CriClause
-+ case when @OrdClause = '' then 'SELECT @oClause = ''''' else 'SELECT @oClause = ''ORDER BY ' + @OrdClause + '''' end + CHAR(13)
-+ 'EXEC (@dfClause+ '' ''  + @sfClause + '' '' + @sClause + '' '' + @fClause + '' '' + @wClause + '' '' + @oClause)' + CHAR(13)
-+ 'RETURN 0' + CHAR(13)
++ case when @OrdClause = '' then 'SELECT @oClause = ''''' else 'SELECT @oClause = ''ORDER BY ' + @OrdClause + '''' end + CHAR(13) + CHAR(10)
++ 'EXEC (@dfClause+ '' ''  + @sfClause + '' '' + @sClause + '' '' + @fClause + '' '' + @wClause + '' '' + @oClause)' + CHAR(13) + CHAR(10)
++ 'RETURN 0' + CHAR(13) + CHAR(10)
 /* Convert does not work inside EXEC */
 SELECT @ProcDel = 'IF exists (SELECT 1 FROM dbo.sysobjects WHERE id = object_id(''''dbo._Get' + @ProgramName + 'R'''') AND type = ''''P'''') DROP PROCEDURE dbo._Get' + @ProgramName + 'R'
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ProcDel + '''')
@@ -47420,17 +47420,17 @@ DECLARE	 @DeclareClause		varchar(8000)
 		,@DataTypeSize		smallint
 SET NOCOUNT ON
 SELECT @DeclareClause = '', @ExeUpdClause = ''
-SELECT @ExeMemClause = CHAR(13) + 'IF @RptMemCriId is null'
-	+ CHAR(13) +'BEGIN'
-	+ CHAR(13) + CHAR(9) + 'INSERT ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)'
-	+ CHAR(13) + CHAR(9) + CHAR(9) + 'SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END, @UsrId, getdate()'
-	+ CHAR(13) + CHAR(9) + 'SELECT @RptMemCriId = @@IDENTITY'
-	+ CHAR(13) + 'END'
-	+ CHAR(13) + 'ELSE UPDATE ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri SET'
-	+ CHAR(13) + CHAR(9) + ' RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName'
-	+ CHAR(13) + CHAR(9) + ',RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink'
-	+ CHAR(13) + CHAR(9) + ',UsrId = CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END'
-	+ CHAR(13) + CHAR(9) + ',ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId'
+SELECT @ExeMemClause = CHAR(13) + CHAR(10) + 'IF @RptMemCriId is null'
+	+ CHAR(13) + CHAR(10) +'BEGIN'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + 'INSERT ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + CHAR(9) + 'SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END, @UsrId, getdate()'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + 'SELECT @RptMemCriId = @@IDENTITY'
+	+ CHAR(13) + CHAR(10) + 'END'
+	+ CHAR(13) + CHAR(10) + 'ELSE UPDATE ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri SET'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + ' RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + ',RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + ',UsrId = CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + ',ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId'
 IF @GenPrefix = 'Ut'
 BEGIN
 	DECLARE objCursor CURSOR FOR SELECT a.ColumnName, b.DataTypeSqlName, a.DataTypeSize
@@ -47449,7 +47449,7 @@ OPEN objCursor
 FETCH NEXT FROM objCursor INTO @ColumnName, @DataTypeSqlName, @DataTypeSize
 WHILE @@FETCH_STATUS = 0
 BEGIN
-	SELECT @DeclareClause = @DeclareClause + CHAR(13) + ',@' + @ColumnName + ' ' + @DataTypeSqlName
+	SELECT @DeclareClause = @DeclareClause + CHAR(13) + CHAR(10) + ',@' + @ColumnName + ' ' + @DataTypeSqlName
 	IF charindex('char',lower(@DataTypeSqlName)) > 0
 	BEGIN
 		IF @DataTypeSize is not null SELECT @DeclareClause = @DeclareClause + '(' + case when @DataTypeSize > 0 then convert(varchar,@DataTypeSize) else 'max' end + ')'
@@ -47461,33 +47461,33 @@ BEGIN
 	END
 	IF charindex('datetime',lower(@DataTypeSqlName)) > 0
 	BEGIN
-		SELECT @ExeUpdClause = @ExeUpdClause + CHAR(13) + 'SELECT @cri = convert(nvarchar,convert(datetime,@' + @ColumnName + '),102)'
-		+ CHAR(13) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'ReportLstCri @reportId, ''''' + @ColumnName + ''''', @usrId, @cri'
-		SELECT @ExeMemClause = @ExeMemClause + CHAR(13) + 'SELECT @cri = convert(nvarchar,convert(datetime,@' + @ColumnName + '),102)'
-		+ CHAR(13) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'RptMemCri @RptMemCriId, @reportId, ''''' + @ColumnName + ''''', @cri'
+		SELECT @ExeUpdClause = @ExeUpdClause + CHAR(13) + CHAR(10) + 'SELECT @cri = convert(nvarchar,convert(datetime,@' + @ColumnName + '),102)'
+		+ CHAR(13) + CHAR(10) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'ReportLstCri @reportId, ''''' + @ColumnName + ''''', @usrId, @cri'
+		SELECT @ExeMemClause = @ExeMemClause + CHAR(13) + CHAR(10) + 'SELECT @cri = convert(nvarchar,convert(datetime,@' + @ColumnName + '),102)'
+		+ CHAR(13) + CHAR(10) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'RptMemCri @RptMemCriId, @reportId, ''''' + @ColumnName + ''''', @cri'
 	END
 	ELSE IF charindex('char',lower(@DataTypeSqlName)) <= 0
 	BEGIN
-		SELECT @ExeUpdClause = @ExeUpdClause + CHAR(13) + 'SELECT @cri = convert(nvarchar,@' + @ColumnName + ')'
-		+ CHAR(13) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'ReportLstCri @reportId, ''''' + @ColumnName + ''''', @usrId, @cri'
-		SELECT @ExeMemClause = @ExeMemClause + CHAR(13) + 'SELECT @cri = convert(nvarchar,@' + @ColumnName + ')'
-		+ CHAR(13) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'RptMemCri @RptMemCriId, @reportId, ''''' + @ColumnName + ''''', @cri'
+		SELECT @ExeUpdClause = @ExeUpdClause + CHAR(13) + CHAR(10) + 'SELECT @cri = convert(nvarchar,@' + @ColumnName + ')'
+		+ CHAR(13) + CHAR(10) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'ReportLstCri @reportId, ''''' + @ColumnName + ''''', @usrId, @cri'
+		SELECT @ExeMemClause = @ExeMemClause + CHAR(13) + CHAR(10) + 'SELECT @cri = convert(nvarchar,@' + @ColumnName + ')'
+		+ CHAR(13) + CHAR(10) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'RptMemCri @RptMemCriId, @reportId, ''''' + @ColumnName + ''''', @cri'
 	END
 	ELSE
 	BEGIN
-		SELECT @ExeUpdClause = @ExeUpdClause + CHAR(13) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'ReportLstCri @reportId, ''''' + @ColumnName + ''''', @usrId, @' + @ColumnName
-		SELECT @ExeMemClause = @ExeMemClause + CHAR(13) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'RptMemCri @RptMemCriId, @reportId, ''''' + @ColumnName + ''''', @' + @ColumnName
+		SELECT @ExeUpdClause = @ExeUpdClause + CHAR(13) + CHAR(10) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'ReportLstCri @reportId, ''''' + @ColumnName + ''''', @usrId, @' + @ColumnName
+		SELECT @ExeMemClause = @ExeMemClause + CHAR(13) + CHAR(10) + 'EXEC ' + @sysDatabase + '.dbo.Upd' + @GenPrefix + 'RptMemCri @RptMemCriId, @reportId, ''''' + @ColumnName + ''''', @' + @ColumnName
 	END
 	FETCH NEXT FROM objCursor INTO @ColumnName, @DataTypeSqlName, @DataTypeSize
 END
 CLOSE objCursor
 DEALLOCATE objCursor
-SELECT @ProcUpdSql = 'CREATE PROCEDURE Upd' + @procedureName + CHAR(13)
-+ ' @reportId int' + CHAR(13) + ',@usrId int' + @DeclareClause + CHAR(13)
-+ '/* WITH ENCRYPTION */' + CHAR(13) + 'AS' + CHAR(13)
-+ 'DECLARE @cri nvarchar(900)' + CHAR(13)
-+ 'SET NOCOUNT ON' + @ExeUpdClause + CHAR(13)
-+ 'SELECT 0' + CHAR(13) + 'RETURN 0' + CHAR(13)
+SELECT @ProcUpdSql = 'CREATE PROCEDURE Upd' + @procedureName + CHAR(13) + CHAR(10)
++ ' @reportId int' + CHAR(13) + CHAR(10) + ',@usrId int' + @DeclareClause + CHAR(13) + CHAR(10)
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10) + 'AS' + CHAR(13) + CHAR(10)
++ 'DECLARE @cri nvarchar(900)' + CHAR(13) + CHAR(10)
++ 'SET NOCOUNT ON' + @ExeUpdClause + CHAR(13) + CHAR(10)
++ 'SELECT 0' + CHAR(13) + CHAR(10) + 'RETURN 0' + CHAR(13) + CHAR(10)
 IF @ProcUpdSql IS NULL
 	RAISERROR('Stored Procedure Upd%s not generated.',18,2,@procedureName) WITH SETERROR
 ELSE
@@ -47497,18 +47497,18 @@ BEGIN
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @DropUpdSql + '''')
 	EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ProcUpdSql + '''')
 END
-SELECT @ProcMemSql = 'CREATE PROCEDURE Mem' + @procedureName + CHAR(13)
-+ ' @PublicAccess char(1)' + CHAR(13)
-+ ',@RptMemCriId int' + CHAR(13)
-+ ',@RptMemFldId int' + CHAR(13)
-+ ',@RptMemCriName nvarchar(200)' + CHAR(13)
-+ ',@RptMemCriDesc nvarchar(500)' + CHAR(13)
-+ ',@RptMemCriLink varchar(200)' + CHAR(13)
-+ ',@reportId int' + CHAR(13) + ',@usrId int' + @DeclareClause + CHAR(13)
-+ '/* WITH ENCRYPTION */' + CHAR(13) + 'AS' + CHAR(13)
-+ 'DECLARE @cri nvarchar(900)' + CHAR(13)
-+ 'SET NOCOUNT ON' + @ExeMemClause + CHAR(13)
-+ 'SELECT @RptMemCriId' + CHAR(13) + 'RETURN 0' + CHAR(13)
+SELECT @ProcMemSql = 'CREATE PROCEDURE Mem' + @procedureName + CHAR(13) + CHAR(10)
++ ' @PublicAccess char(1)' + CHAR(13) + CHAR(10)
++ ',@RptMemCriId int' + CHAR(13) + CHAR(10)
++ ',@RptMemFldId int' + CHAR(13) + CHAR(10)
++ ',@RptMemCriName nvarchar(200)' + CHAR(13) + CHAR(10)
++ ',@RptMemCriDesc nvarchar(500)' + CHAR(13) + CHAR(10)
++ ',@RptMemCriLink varchar(200)' + CHAR(13) + CHAR(10)
++ ',@reportId int' + CHAR(13) + CHAR(10) + ',@usrId int' + @DeclareClause + CHAR(13) + CHAR(10)
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10) + 'AS' + CHAR(13) + CHAR(10)
++ 'DECLARE @cri nvarchar(900)' + CHAR(13) + CHAR(10)
++ 'SET NOCOUNT ON' + @ExeMemClause + CHAR(13) + CHAR(10)
++ 'SELECT @RptMemCriId' + CHAR(13) + CHAR(10) + 'RETURN 0' + CHAR(13) + CHAR(10)
 IF @ProcMemSql IS NULL
 	RAISERROR('Stored Procedure Mem%s not generated.',18,2,@procedureName) WITH SETERROR
 ELSE
@@ -47562,21 +47562,21 @@ BEGIN
 	SELECT @CriParams = @CriParams + ',@' + @ColumnName + convert(varchar,@CriSelect) + CHAR(9) + @DataTypeName + case
 		when charindex('char',lower(@DataTypeName)) > 0 then '(' + case when @DataTypeSize > 0 then convert(varchar,@DataTypeSize) else 'max' end + ')'
 		when @DataTypeName = 'Decimal' then '(' + convert(varchar,@DataTypeSize) + ',' + convert(varchar,@ColumnScale) + ')'
-		else '' end + CHAR(13)
+		else '' end + CHAR(13) + CHAR(10)
 	FETCH NEXT FROM cur1 INTO @ColumnName, @CriSelect, @DataTypeName, @DataTypeSize, @ColumnScale
 END
 CLOSE cur1 DEALLOCATE cur1
 SELECT @SelClause = 'ReportName=''''' + replace(RptwizName,' ','') + '_''''' FROM dbo.Rptwiz WHERE RptwizId = @RptwizId
-SELECT @ValCode = 'CREATE PROCEDURE dbo._Get' + @ProgramName + 'V' + CHAR(13)
-+ ' @wClause' + CHAR(9) + 'nvarchar(max)' + CHAR(13) + @CriParams
-+ '/* WITH ENCRYPTION */' + CHAR(13)
-+ 'AS' + CHAR(13) + 'DECLARE'
-+ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13)
-+ 'SET NOCOUNT ON' + CHAR(13)
-+ '/* It is mandatory for this procedure to return at least one row */' + CHAR(13)
-+ 'SELECT @sClause = ''SELECT ' + @SelClause + '''' + CHAR(13)
-+ 'EXEC (@sClause)' + CHAR(13)
-+ 'RETURN 0' + CHAR(13)
+SELECT @ValCode = 'CREATE PROCEDURE dbo._Get' + @ProgramName + 'V' + CHAR(13) + CHAR(10)
++ ' @wClause' + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10) + @CriParams
++ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10)
++ 'AS' + CHAR(13) + CHAR(10) + 'DECLARE'
++ CHAR(9) + ' @sClause' + CHAR(9) + CHAR(9) + 'nvarchar(max)' + CHAR(13) + CHAR(10)
++ 'SET NOCOUNT ON' + CHAR(13) + CHAR(10)
++ '/* It is mandatory for this procedure to return at least one row */' + CHAR(13) + CHAR(10)
++ 'SELECT @sClause = ''SELECT ' + @SelClause + '''' + CHAR(13) + CHAR(10)
++ 'EXEC (@sClause)' + CHAR(13) + CHAR(10)
++ 'RETURN 0' + CHAR(13) + CHAR(10)
 /* Convert does not work inside EXEC */
 SELECT @ProcDel = 'IF exists (SELECT 1 FROM dbo.sysobjects WHERE id = object_id(''''dbo._Get' + @ProgramName + 'V'''') AND type = ''''P'''') DROP PROCEDURE dbo._Get' + @ProgramName + 'V'
 EXEC (@appDatabase + '.dbo.MkStoredProcedure ''' + @ProcDel + '''')
@@ -47891,20 +47891,22 @@ GO
 SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE [dbo].[MkStoredProcedure]
-  @spString1	varchar(max)
-, @spString2	varchar(max) = ''
-, @spString3	varchar(max) = ''
-, @spString4	varchar(max) = ''
-, @spString5	varchar(max) = ''
-, @spString6	varchar(max) = ''
-, @spString7	varchar(max) = ''
-, @spString8	varchar(max) = ''
-, @spString9	varchar(max) = ''
+  @spString1	nvarchar(max)
+, @spString2	nvarchar(max) = ''
+, @spString3	nvarchar(max) = ''
+, @spString4	nvarchar(max) = ''
+, @spString5	nvarchar(max) = ''
+, @spString6	nvarchar(max) = ''
+, @spString7	nvarchar(max) = ''
+, @spString8	nvarchar(max) = ''
+, @spString9	nvarchar(max) = ''
 /* WITH ENCRYPTION */
 AS
-declare @nl varchar(1) select @nl = CHAR(13)
+/* WARNING ! 
+   THIS IS Rintagi supplied SP, any local change would be overwritten when upgrade DEV package is applied
+ */
 -- Although PRINT will only print a maximum of max characters, EXEC will execute more than max characters if concatenated as follow.
-EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON' + @nl)
+EXEC ('SET QUOTED_IDENTIFIER ON SET ANSI_NULLS ON')
 EXEC (@spString1 + @spString2 + @spString3 + @spString4 + @spString5 + @spString6 + @spString7 + @spString8 + @spString9)
 EXEC ('SET QUOTED_IDENTIFIER OFF')
 RETURN 0
@@ -49378,21 +49380,27 @@ SELECT @iClause = @iClause + char(13) + char(10) + char(13) + char(10) + '/* Scr
 + char(13) + char(10) + 'IF object_id(''tempdb.dbo.#objhlp'') is not null DROP TABLE dbo.#objhlp'
 + char(13) + char(10) + 'CREATE TABLE #objhlp (OObjHlpId int NOT NULL, NObjHlpId int NOT NULL)'
 DECLARE cur04 CURSOR FAST_FORWARD FOR
-	SELECT ScreenObjId,MasterTable,NewGroupRow,GroupRowId,GroupColId,LabelVertical,LabelCss,ContentCss,ColumnId,ColumnName,ColumnDesc
-		,DefaultValue,HyperLinkUrl,DefAfter,SystemValue,DefAlways,ColumnWrap,GridGrpCd,HideOnTablet,HideOnMobile,ColumnJustify
-		,ColumnSize,ResizeWidth,ColumnHeight,ResizeHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId,DdlFtrColumnId,AggregateCd,GenerateSp
-		,TabFolderId,TabIndex,SortOrder,DtlLstPosId,RequiredValid,MaskValid,RangeValidType,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD
-		,TrimOnEntry,MatchCd,IgnoreConfirm
+	SELECT 
+		ScreenObjId,MasterTable,NewGroupRow,GroupRowId,GroupColId,LabelVertical,LabelCss,ContentCss,ColumnId,ColumnName
+		,ColumnDesc,DefaultValue,HyperLinkUrl,DefAfter,SystemValue,DefAlways,ColumnWrap,GridGrpCd,HideOnTablet,HideOnMobile
+		,ColumnJustify,ColumnSize,ResizeWidth,ColumnHeight,ResizeHeight,DisplayModeId,DdlKeyColumnId,DdlRefColumnId,DdlSrtColumnId,DdlAdnColumnId
+		,DdlFtrColumnId,AggregateCd,GenerateSp,TabFolderId,TabIndex,SortOrder,DtlLstPosId,RequiredValid,MaskValid,RangeValidType
+		,RangeValidMax,RangeValidMin,ColumnLink,RefreshOnCUD,TrimOnEntry,MatchCd,IgnoreConfirm
 	FROM dbo.ScreenObj
 	WHERE ScreenId=@ScreenId ORDER BY TabIndex
 	FOR READ ONLY
-OPEN cur04 FETCH NEXT FROM cur04 INTO @ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@i29,@i30,@c31,@c32,@i33,@i34,@i35,@i36,@c37,@c38,@c39,@c40,@c41,@c42,@c43,@c44,@c45,@c46
+OPEN cur04 FETCH NEXT FROM cur04 INTO 
+		@ScreenObjId,@c01,@c02,@i03,@i04,@c05,@c06,@c07,@i08,@c09
+		,@c10,@c11,@c12,@c13,@c14,@c15,@c16,@c17,@c18,@c19
+		,@c20,@i21,@i22,@i23,@i24,@i25,@i26,@i27,@i28,@i29
+		,@i30,@c31,@c32,@i33,@i34,@i35,@i36,@c37,@c38,@c39
+		,@c40,@c41,@c42,@c43,@c44,@c45,@c46
 WHILE @@FETCH_STATUS=0
 BEGIN
 	IF @c06 is not null SELECT @NewCSS = @NewCSS + '; ' + @c06
 	IF @c07 is not null SELECT @NewCSS = @NewCSS + '; ' + @c07
-	IF @i31 IS NOT NULL	-- ScreenTabId map
-		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ScreenTabId=NTabId FROM #tab WHERE OTabId=' + CONVERT(varchar(10),@i31)
+	IF @i33 IS NOT NULL	-- ScreenTabId map
+		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ScreenTabId=NTabId FROM #tab WHERE OTabId=' + CONVERT(varchar(10),@i33)
 	ELSE
 		SELECT @iClause = @iClause + char(13) + char(10) + 'SELECT @ScreenTabId=NULL'
 	SELECT @iClause = @iClause + char(13) + char(10)
@@ -50012,6 +50020,78 @@ END
 ELSE
 	SELECT @sClause = 'SELECT PermId' + convert(varchar,@TableId) + '=null, PermId' + convert(varchar,@TableId) + 'Text=null, Active=null WHERE 1<>1'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrGetIndex') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrGetIndex AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[WrGetIndex]
+/* WITH ENCRYPTION */
+AS
+/* retrieve all index definition */
+
+/* WARNING ! 
+   THIS IS Rintagi supplied SP, any local change would be overwritten when upgrade DEV package is applied
+ */
+
+SET NOCOUNT ON
+
+SELECT
+TableName = t.name, 
+IndexName = i.name,
+'CREATE' 
++
+CASE WHEN is_unique=0 THEN '' 
+ELSE ' UNIQUE'
+END   
++ 
+CASE WHEN is_primary_key=1 THEN ' CLUSTERED' 
+WHEN is_primary_key=0 THEN ' NONCLUSTERED'
+END  
+
++ ' INDEX ' +
+QUOTENAME(i.name) + ' ON ' +
+QUOTENAME(t.name) + ' ( '  + 
+STUFF(REPLACE(REPLACE((
+        SELECT QUOTENAME(c.name) + CASE WHEN ic.is_descending_key = 1 THEN ' DESC' ELSE '' END AS [data()]
+        FROM sys.index_columns AS ic
+        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 0
+        ORDER BY ic.key_ordinal
+        FOR XML PATH
+    ), '<row>', ', '), '</row>', ''), 1, 2, '') + ' ) '  -- keycols
++ COALESCE(' INCLUDE ( ' +
+    STUFF(REPLACE(REPLACE((
+        SELECT QUOTENAME(c.name) AS [data()]
+        FROM sys.index_columns AS ic
+        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 1
+        ORDER BY ic.index_column_id
+        FOR XML PATH
+    ), '<row>', ', '), '</row>', ''), 1, 2, '') + ' ) ',    -- included cols
+    '')
++ ISNULL('WHERE ' + i.filter_definition,'') as [Create],
+[Drop] =
+CASE WHEN is_primary_key = 1 THEN
+	'ALTER TABLE ' + QUOTENAME(t.name) + ' DROP CONSTRAINT ' + QUOTENAME(i.name)
+ELSE 
+	'DROP INDEX ' + QUOTENAME(i.name) + ' ON ' + QUOTENAME(t.name)
+END 
+, 'ALTER INDEX ' + QUOTENAME(i.name)  + ' ON ' +QUOTENAME(t.name) + ' REBUILD ' as [Rebuild]
+FROM sys.tables AS t
+INNER JOIN sys.indexes AS i ON t.object_id = i.object_id
+--LEFT JOIN sys.dm_db_index_usage_stats AS u ON i.object_id = u.object_id AND i.index_id = u.index_id
+WHERE t.is_ms_shipped = 0
+AND i.type <> 0
+order by QUOTENAME(t.name), is_primary_key desc, QUOTENAME(i.name)
+
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -51939,6 +52019,55 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrSetupDefaultMenuPrm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.WrSetupDefaultMenuPrm AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+/* setup default menu permission for given user group */
+ALTER PROCEDURE [dbo].[WrSetupDefaultMenuPrm]
+ @UsrGroupId	int
+,@GrantDeny		CHAR(1)='G'
+/* WITH ENCRYPTION */
+AS
+
+IF @UsrGroupId IS NOT NULL
+BEGIN
+	IF @UsrGroupId <> 5 AND @GrantDeny = 'G' 
+	BEGIN
+		/* MUST force Admin to 'G' or else won't be able to access once another grant is set */
+		INSERT INTO dbo.MenuPrm 
+		(MenuId, GrantDeny, PermKeyId, PermId)
+		select
+		m.MenuId, @GrantDeny, 8, 5
+		from
+		dbo.menu m
+		inner join RODesign.dbo.UsrGroup ug on ug.UsrGroupId = @UsrGroupId -- only if it has chance of successful below
+		inner join RODesign.dbo.UsrGroup g on g.UsrGroupId = 5
+		--inner join dbo.MenuHlp h on h.MenuId = m.MenuId and h.CultureId = 1
+		left outer join dbo.MenuPrm p on p.MenuId = m.MenuId AND p.GrantDeny = 'G' --only if there is NO other 'G' entries at all otherwise we don't insert group 5
+		where p.MenuPrmId is null
+	END
+
+	/* create entries only if not exist for the given group */
+	INSERT INTO dbo.MenuPrm 
+	(MenuId, GrantDeny, PermKeyId, PermId)
+	select
+	m.MenuId, @GrantDeny, 8, @UsrGroupId
+	from
+	dbo.menu m
+	inner join RODesign.dbo.UsrGroup g on g.UsrGroupId = @UsrGroupId
+	--inner join dbo.MenuHlp h on h.MenuId = m.MenuId and h.CultureId = 1
+	left outer join dbo.MenuPrm p on p.MenuId = m.MenuId AND p.PermKeyId = 8 AND p.PermId = @UsrGroupId
+	where p.MenuPrmId is null
+END
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.WrSyncByDb') AND type='P')
 EXEC('CREATE PROCEDURE dbo.WrSyncByDb AS SELECT 1')
 GO
@@ -51985,7 +52114,11 @@ SELECT @dClause = 'DECLARE @ColumnName varchar(50), @Tid int, @PkName varchar(50
 + ',CASE WHEN ColumnProperty(' + @Oid + ',sc.Name,''''AllowsNull'''') = 1 THEN ''''Y'''' ELSE ''''N'''' END'
 + ',CASE WHEN ColumnProperty(' + @Oid + ',sc.Name,''''IsIdentity'''') = 1 THEN ''''Y'''' ELSE ''''N'''' END'
 + ',CASE WHEN sc.name = @PkCol THEN ''''Y'''' ELSE ''''N'''' END'
+/*
+keep function call for things like GETUTCDATE()
 + ',sc.colid * 10, REPLACE(REPLACE(cm.text,''''('''',''''''''),'''')'''','''''''')'
+*/
++ ',sc.colid * 10, CASE WHEN cm.text LIKE ''''(%'''' THEN SUBSTRING(cm.text, 2, LEN(cm.text) - 2) ELSE cm.text END'
 + ' FROM dbo.syscolumns sc'
 + ' INNER JOIN dbo.systypes st ON sc.xtype = st.xtype '
 + ' INNER JOIN RODesign.dbo.CtDataType dt on dt.DataTypeSqlName = st.name'

@@ -207,8 +207,8 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cViewP2" class="r-td r-content" runat="server"><asp:Button id="cView" CssClass="small blue button" OnClick="cView_Click" runat="server" /></div>
     	</div>
     	<div class="r-tr">
-    		<div id="cGenerateP1" class="r-td r-labelR" runat="server"><asp:Label id="cGenerateLabel" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cGenerateP2" class="r-td r-content" runat="server"><asp:Button id="cGenerate" CssClass="small blue button" OnClick="cGenerate_Click" runat="server" /></div>
+    		<div id="cDisplayP1" class="r-td r-labelR" runat="server"><asp:Label id="cDisplayLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cDisplayP2" class="r-td r-content" runat="server"><asp:Button id="cDisplay" CssClass="small blue button" OnClick="cDisplay_Click" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

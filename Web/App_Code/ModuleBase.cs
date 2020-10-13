@@ -418,13 +418,13 @@ namespace RO.Web
                     string[] redirect = RedirectProjectRoot.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
                     if (redirect.Length == 2)
                     {
-                        value.DeployPath = value.DeployPath.Replace(redirect[0], redirect[1]);
-                        value.SrcClientProgramPath = value.SrcClientProgramPath.Replace(redirect[0], redirect[1]);
-                        value.SrcRuleProgramPath = value.SrcRuleProgramPath.Replace(redirect[0], redirect[1]);
-                        value.SrcWsProgramPath = value.SrcWsProgramPath.Replace(redirect[0], redirect[1]);
-                        value.TarClientProgramPath = value.TarClientProgramPath.Replace(redirect[0], redirect[1]);
-                        value.TarRuleProgramPath = value.TarRuleProgramPath.Replace(redirect[0], redirect[1]);
-                        value.TarWsProgramPath = value.TarWsProgramPath.Replace(redirect[0], redirect[1]);
+                        value.DeployPath = value.DeployPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        value.SrcClientProgramPath = value.SrcClientProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        value.SrcRuleProgramPath = value.SrcRuleProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        value.SrcWsProgramPath = value.SrcWsProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        value.TarClientProgramPath = value.TarClientProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        value.TarRuleProgramPath = value.TarRuleProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        value.TarWsProgramPath = value.TarWsProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
                     }
                 }
             }
@@ -1394,6 +1394,7 @@ namespace RO.Web
         {
             Pair ssdInfo = GetSSD();
             string ssd = ((string)ssdInfo.First ?? "").Split(new char[] { ',' }).Last();
+            bool isShowPage = Request.Path.EndsWith("showpage.aspx", StringComparison.InvariantCultureIgnoreCase);
             bool bFromReferrer = (bool)ssdInfo.Second;
             string csy = string.Empty;
             Dictionary<string, string> CmpPrj = new Dictionary<string, string>();
@@ -1472,17 +1473,49 @@ namespace RO.Web
                     LCurr = new UsrCurr(Int32.Parse(CmpPrj["cmp"]), Int32.Parse(CmpPrj["prj"]), byte.Parse(csy), byte.Parse(csy));
                 }
 
-                if ((!bValidSSD || bFromReferrer) && !IsPostBack)
+                if ((
+                    (!bValidSSD 
+                    || isShowPage
+                    || bFromReferrer)
+                    ) && !IsPostBack)
                 {
                     string strUrl = Request.RawUrl;
                     System.Collections.Specialized.NameValueCollection qs = System.Web.HttpUtility.ParseQueryString(Request.QueryString.ToString());
+                    bool multiPg = false;
                     qs["ssd"] = ssd;
                     qs["msy"] = csy;
                     if (Request.HttpMethod == "POST" && Request.Form.Count > 0 && LUser != null && LUser.LoginName != "Anonymous")
                     {
                         Session["DirectPostedData"] = Request.Form;
                     }
-                    if (!IsCrawlerBot(Request.UserAgent)) { this.Redirect((strUrl.IndexOf("?") < 0 ? strUrl : strUrl.Substring(0, strUrl.IndexOf("?"))) + "?" + qs.ToString()); }
+                    if (!IsCrawlerBot(Request.UserAgent)) {
+                        if (Request.Path.EndsWith("showpage.aspx", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            if (!string.IsNullOrEmpty(qs["pg"])) 
+                            {
+                                var pgParam = qs["pg"].Split(new char[] { ',' });
+                                qs["pg"] = qs["pg"].Split(new char[] { ',' }).FirstOrDefault();
+                                multiPg = pgParam.Length > 1;
+                            }
+                            if (!string.IsNullOrEmpty(qs["csy"]))
+                            {
+                                qs["csy"] = qs["csy"].Split(new char[] { ',' }).FirstOrDefault();
+                            }
+                        }
+                        if (!isShowPage ||
+                            multiPg)
+                        {
+                            if (isShowPage)
+                                this.Redirect((strUrl.IndexOf("?") < 0 
+                                    ? strUrl 
+                                    : strUrl.Substring(0, strUrl.IndexOf("?")) 
+                                        + (strUrl.Substring(0, strUrl.IndexOf("?")).EndsWith("showpage.aspx",StringComparison.InvariantCultureIgnoreCase) ? "" : "showpage.aspx")
+                                        + "?" + qs.ToString()
+                                    ));
+                            else
+                                this.Redirect((strUrl.IndexOf("?") < 0 ? strUrl : strUrl.Substring(0, strUrl.IndexOf("?"))) + "?" + qs.ToString());
+                        }
+                    }
                 }
             }
         }
@@ -2669,7 +2702,7 @@ namespace RO.Web
             try
             {
                 byte[] code = System.Text.Encoding.ASCII.GetBytes(Config.WsConverterKey);
-                HMACMD5 hmac = new HMACMD5(code);
+                HMACSHA256 hmac = new HMACSHA256(code);
                 byte[] hash = hmac.ComputeHash(content);
                 string hasString = BitConverter.ToString(hash);
                 Common3.Converter converter = new Common3.Converter();
@@ -2683,10 +2716,14 @@ namespace RO.Web
 
         public string GetVisitorIPAddress()
         {
-            string visitorIPAddress = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            /* return the public ip of client, assuming it may go through proxy to reach the app */
+            List<string> ipChain = GetClientIpChain();
+            string visitorIPAddress = ipChain.LastOrDefault();
+            if (visitorIPAddress == "unknown") visitorIPAddress = string.Empty;
+            //string visitorIPAddress = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
             if (string.IsNullOrEmpty(visitorIPAddress)) { visitorIPAddress = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"]; }
             if (string.IsNullOrEmpty(visitorIPAddress)) { visitorIPAddress = HttpContext.Current.Request.UserHostAddress; }
-            if (string.IsNullOrEmpty(visitorIPAddress) || visitorIPAddress.Trim() == "::1") { visitorIPAddress = string.Empty; }
+            if (string.IsNullOrEmpty(visitorIPAddress) || visitorIPAddress.Trim() == "::1") { visitorIPAddress = "127.0.0.1"; }
             if (string.IsNullOrEmpty(visitorIPAddress))
             {
                 string stringHostName = Dns.GetHostName();
@@ -2865,7 +2902,7 @@ namespace RO.Web
                 }
                 string qsToHash = string.Join("&", param.OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim();
                 byte[] code = Convert.FromBase64String(request["_s"]);
-                System.Security.Cryptography.HMACMD5 hmac = new System.Security.Cryptography.HMACMD5(code);
+                System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(code);
                 byte[] hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Convert.ToBase64String(code) + qsToHash.ToString()));
                 string hashString = Convert.ToBase64String(hash);
                 if (!SecureEquals(hashString, request["_h"]))
@@ -3239,9 +3276,9 @@ namespace RO.Web
             if (isInternal
                 || !IsProxy()
                 || string.IsNullOrEmpty(Config.ExtBaseUrl))
-                return string.IsNullOrEmpty(Config.IntBaseUrl) ? intDomainUrl : new Regex(Config.IntBasePath + "$").Replace(Config.IntBaseUrl, "");
+                return string.IsNullOrEmpty(Config.IntBaseUrl) ? intDomainUrl : new Regex(Config.IntBasePath + "$", RegexOptions.IgnoreCase).Replace(Config.IntBaseUrl, "");
             else
-                return new Regex(Config.ExtBasePath + "$").Replace(Config.ExtBaseUrl, "");
+                return new Regex(Config.ExtBasePath + "$", RegexOptions.IgnoreCase).Replace(Config.ExtBaseUrl, "");
         }
         protected string GetBaseUrl(bool isInternal = false)
         {
@@ -3333,6 +3370,47 @@ namespace RO.Web
                 || Request.Cookies["secureChannelTest"] != null
                 || Config.BehindSecureProxy
                 ;
+        }
+        protected string GetClientIp()
+        {
+            if (Request != null) {
+                var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
+                                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(s => s.Trim())
+                                .Where(s => !string.IsNullOrEmpty(s))
+                                .ToArray();
+                // this is the closest to the browser being reported, can be internal if browser is fronted by proxy
+                return proxied.Length > 0 ? proxied[0] : Request.UserHostAddress;
+            }
+            return null;
+        }
+        protected List<string> GetClientIpChain()
+        {
+            try
+            {
+                if (Request != null)
+                {
+                    var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
+                                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Where(s => !string.IsNullOrEmpty((s ?? "").Trim()))
+                                    .Select(s => new { addr = s, isPrivate = Common3.Utils.IsPrivateIp(s) })
+                                    .Aggregate(new { ipChain = new List<string>(), startNonLocal = new bool[1] { false } }
+                                        , (a, i) =>
+                                        {
+                                            if (!i.isPrivate || !a.startNonLocal[0]) a.ipChain.Add(i.addr);
+                                            if (!i.isPrivate) a.startNonLocal[0] = true;
+                                            return a;
+                                        })
+                                    ;
+                    if (proxied.ipChain.Count == 0 || !Common3.Utils.IsPrivateIp(Request.UserHostAddress)) proxied.ipChain.Add(Request.UserHostAddress);
+                    // this is the closest to the browser being reported, can be internal if browser is fronted by proxy
+                    return proxied.ipChain;
+                }
+            }
+            catch {
+                return new List<string> { "unknown" };
+            }
+            return new List<string> { "unknown" };
         }
 
         public static List<string> GetExceptionMessage(Exception ex)
@@ -3682,8 +3760,8 @@ namespace RO.Web
                 string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webAppRoot.Replace("/Web/", "");
                 string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
-                string reactTemplateDir = reactRootDir + "/Template";
-                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactTemplateDir = reactRootDir + "/" + Config.ReactTemplate;
+                string reactModuleDir = reactTemplateDir.Replace("/" + Config.ReactTemplate, "/" + systemAbbr);
                 string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
                 string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -3862,7 +3940,7 @@ document.Rintagi = {{
         protected Task<Tuple<bool, List<string>, List<string>, List<string>, string>[]> PublishReactAsync(string modules, Dictionary<string, string> requestInfo, bool gitCommit = true)
         {
             string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
-            string appRoot = webAppRoot.Replace("/Web/", "");
+            string appRoot = webAppRoot.ReplaceInsensitive("/Web/", "");
 
             string somethingRunning = Application["BuildRunning"] as string;
             Func<string, string, Task<Tuple<bool, List<string>, List<string>, List<string>, string>>> publishReactModule = (systemAbbr, systemId) =>
@@ -4111,7 +4189,7 @@ document.Rintagi = {{
         protected Task<Tuple<bool, string, string, string, string>> CreateInstallerAsync(short upgradeReleaseId, short newReleaseId, string DeployPath, string releaseTypeAbbr, string package, string SysConnString, string SysAppPw, Dictionary<string, string> requestInfo, bool fixedInstallerName = false, bool gitCommit = false)
         {
             string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
-            string appRoot = webAppRoot.Replace("/Web/", "");
+            string appRoot = webAppRoot.ReplaceInsensitive("/Web/", "");
             string somethingRunning = Application["BuildRunning"] as string;
             string deployPath = DeployPath;
             string deployName = deployPath;
@@ -4185,6 +4263,7 @@ document.Rintagi = {{
                     string dropInstallerLocation = Config.DropInstallerLocation;
                     string installerPath = "";
                     string dropError = "";
+                    string dropResult = "";
                     string dropToPathName = "";
                     string installerFileName = "";
                     bool gitCommitSQL = (releaseTypeAbbr.ToUpper().Contains("PDT") 
@@ -4211,6 +4290,7 @@ document.Rintagi = {{
                             if (!string.IsNullOrWhiteSpace(dropInstallerLocation)) {
                                 dropToPathName = dropInstallerLocation + "/" + installerFileName;
                                 System.IO.File.Copy(installerPath, dropToPathName, true);
+                                dropResult = string.Format("\r\nInstaller dropped to {0}", dropToPathName);
                             }
                         }
                         catch (Exception ex) {
@@ -4223,8 +4303,13 @@ document.Rintagi = {{
                             try
                             {
                                 string sqlPath = string.Format("{0}/SQL", appRoot);
-                                string gitAddAction = string.Format("add {0}", sqlPath);
-                                string gitCommitAction = string.Format("commit -m \"{0}\"", string.Format("DB metadata and SP snapshot"));
+                                string webPath = string.Format("{0}/Web", appRoot);
+                                string reactPath = string.Format("{0}/React", appRoot);
+                                string usrAccessPath = string.Format("{0}/UsrAccess", appRoot);
+                                string usrRulesPath = string.Format("{0}/UsrRules", appRoot);
+                                string libPath = string.Format("{0}/React", appRoot);
+                                string gitAddAction = string.Format("add {0} {1} {2} {3} {4}", sqlPath, webPath, reactPath, libPath, usrAccessPath, usrRulesPath);
+                                string gitCommitAction = string.Format("commit -m \"{0}\"", string.Format("Web/React/Lib, DB metadata and SP snapshot of {0}", installerFileName));
 
                                 var aa = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitAddAction, true, appRoot);
                                 var bb = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", gitCommitAction, true, appRoot);
@@ -4240,7 +4325,7 @@ document.Rintagi = {{
                     }
 
                     ErrorTrace(new Exception(string.Format("Create {2} Installer result \r\n{0}\r\n{1}"
-                                                , string.Join("\r\n\r\n", compileResult), dropError, package))
+                                                , string.Join("\r\n\r\n", compileResult), string.IsNullOrEmpty(dropResult) ? dropError : dropResult, package))
                               , hasError ? "warning" : "info", requestInfo);
                     if (!hasError)
                     {

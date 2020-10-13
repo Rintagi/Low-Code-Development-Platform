@@ -7,6 +7,7 @@ const _pbkdf2 = require('pbkdf2');
 export function base64Encode(s) {
   return btoa(s)
 }
+
 export function base64Decode(s) {
   return atob(s)
 }
@@ -67,7 +68,7 @@ export function arrayBufferToBase64(buffer) {
   for (var i = 0; i < len; i++) {
       binary += String.fromCharCode(bytes[i]);
   }
-  return btoa(binary);
+  return base64Encode(binary);
 }
 
 export function scrambleString(s)
@@ -122,6 +123,10 @@ export function isHttps() {
   if (window.location.protocol === 'https:') {
     return true;
   }
+}
+
+export function IsMobile() {
+  return isAndroid() || isIphone();
 }
 
 export function previewContent({ dataObj, winObj, containerUrl, download, isImage, features, replace, dataPromise, previewSig } = {}) {
@@ -216,7 +221,7 @@ export function parsedUrl(url) {
     var o = {};
     // IE 8 and 9 dont load the attributes "protocol" and "host" in case the source URL
     // is just a pathname, that is, "/example" and not "http://domain.com/example".
-    parser.href = parser.href;
+    parser.href = parser.href.toString();
 
     // IE 7 and 6 wont load "protocol" and "host" even with the above workaround,
     // so we take the protocol/host from window.location and place them manually
@@ -278,10 +283,12 @@ export function getReactContainerInfo(documentObject={document}) {
     for (var c in documentObject.body.childNodes) {
       try {
         var n = documentObject.body.childNodes[c];
-        if (n.tagName === "SCRIPT") {
-          var mySource = n.src.match(/^\s*(http.*)(\/static\/js\/)(.+\.js)\s*$/);
-          reactInfo.myJS = mySource[3];
-          reactInfo.myJSHostingRoot = mySource[1];
+        if (n && n.tagName === "SCRIPT") {
+          var mySource = n.src.match(/^\s*(http.*)(\/static\/js)(\/main.+\.js)\s*$/);
+          if (mySource && mySource.length === 4) {
+            reactInfo.myJS = mySource[3];
+            reactInfo.myJSHostingRoot = mySource[1];  
+          }
         }  
       } catch (e) {
         console.log(e);
@@ -310,4 +317,115 @@ export function getReactContainerStatus(httpRet) {
     }
     else return {}
 }
+
+export function base64Codec(urlsafe) {
+  var chars = urlsafe
+                  ? "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+                  : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+  // Use a lookup table to find the index.
+  var lookup = new Uint8Array(256);
   
+  for (var i = 0; i < chars.length; i++) {
+      lookup[chars.charCodeAt(i)] = i;
+  }
+
+  this.encode = function (arraybuffer, nopadding) {
+      var bytes = new Uint8Array(arraybuffer),
+      i, len = bytes.length, base64 = "";
+
+      for (i = 0; i < len; i += 3) {
+          base64 += chars[bytes[i] >> 2];
+          base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+          base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+          base64 += chars[bytes[i + 2] & 63];
+      }
+
+      if ((len % 3) === 2) {
+          base64 = base64.substring(0, base64.length - 1) + (urlsafe || nopadding ? "" : "=");
+      } else if (len % 3 === 1) {
+          base64 = base64.substring(0, base64.length - 2) + (urlsafe || nopadding ? "" : "==");
+      }
+
+      return base64;
+  };
+
+  this.decode = function (base64) {
+      var bufferLength = base64.length * 0.75,
+      len = base64.length, i, p = 0,
+      encoded1, encoded2, encoded3, encoded4;
+
+      if (base64[base64.length - 1] === "=") {
+          bufferLength--;
+          if (base64[base64.length - 2] === "=") {
+              bufferLength--;
+          }
+      }
+
+      var arraybuffer = new ArrayBuffer(bufferLength),
+      bytes = new Uint8Array(arraybuffer);
+
+      for (i = 0; i < len; i += 4) {
+          encoded1 = lookup[base64.charCodeAt(i)];
+          encoded2 = lookup[base64.charCodeAt(i + 1)];
+          encoded3 = lookup[base64.charCodeAt(i + 2)];
+          encoded4 = lookup[base64.charCodeAt(i + 3)];
+
+          bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+          bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+          bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+      }
+
+      return arraybuffer;
+  };
+
+  return this;
+}
+
+export function ab2str(buf) {
+  return String.fromCharCode.apply(null, new Uint16Array(buf));
+}
+
+export function str2ab(str) {
+  var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+  var bufView = new Uint16Array(buf);
+  for (var i = 0, strLen = str.length; i < strLen; i++) {
+      bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
+}
+
+export function base64UrlEncode(s) {
+  return new base64Codec(true).encode;
+}
+
+export function base64UrlDecode(s) {
+  return new base64Codec(true).decode;
+}
+
+export function coerceToArrayBuffer(thing, name) {
+  if (typeof thing === "string") {
+      thing = thing.replace(/-/g, "+").replace(/_/g, "/");
+      var b64Decode = new base64Codec(false).decode;
+      thing = b64Decode(thing);
+      if (typeof thing === "string") {
+        thing = str2ab(thing);
+      }
+  }
+
+  if (Array.isArray(thing)) {
+      thing = new Uint8Array(thing);
+  }
+  // Uint8Array to ArrayBuffer
+  if (thing instanceof Uint8Array) {
+      thing = thing.buffer;
+  }
+
+  // error if none of the above worked
+  if (!(thing instanceof ArrayBuffer)) {
+      throw new TypeError("could not coerce '" + name + "' to ArrayBuffer");
+  }
+  else {
+      return new Uint8Array(thing);
+  }
+}

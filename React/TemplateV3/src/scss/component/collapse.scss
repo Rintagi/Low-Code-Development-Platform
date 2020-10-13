@@ -1,0 +1,158 @@
+.collapse__wrapper {
+
+  .collapse__title, .collapse__content {
+    padding-left: 20px;
+    padding-right: 15px;
+  }
+
+  .collapse__title {
+    padding-bottom: 10px;
+    padding-top: 6px;
+    cursor: pointer;
+    position: relative;
+
+    p {
+      font-weight: 700;
+      margin-top: 0;
+      transition: all 0.3s;
+      position: relative;
+
+      svg {
+        right: 0;
+        left: auto;
+        display: none;
+      }
+    }
+
+    svg {
+      position: absolute;
+      left: 0;
+      width: 14px;
+      height: 14px;
+      top: 8px;
+      transition: all 0.3s;
+
+      @include themify($themes) {
+        fill: themed('colorText');
+      }
+
+    }
+  }
+
+  .collapse__content {
+    padding-bottom: 14px;
+  }
+
+  &.opened, &.opening {
+
+    .collapse__title {
+
+      p {
+        color: $color-additional;
+      }
+
+      svg {
+        fill: $color-additional;
+      }
+    }
+  }
+
+  &.boxed {
+    border: solid 1px #dddddd;
+    margin-top: -1px;
+
+    .collapse__title {
+      background-color: #f2f4f7;
+      border-bottom: solid 1px #dddddd;
+      padding: 8px 15px;
+
+      p {
+        color: #444444;
+      }
+
+      svg {
+        display: none;
+      }
+    }
+
+    .collapse__content {
+      padding: 16px 20px 20px 15px;
+    }
+
+    &.closed {
+
+      .collapse__title {
+        border-bottom: none;
+      }
+    }
+  }
+
+  &.shadow {
+    margin-bottom: 10px;
+
+    .collapse__content {
+      padding: 15px 20px 0 25px;
+      max-width: 1320px;
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+    }
+
+    .collapse__title {
+      padding: 15px 25px;
+      box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.05);
+      transition: background-color 0.3s;
+
+      @include themify($themes) {
+        color: themed('colorText');
+      }
+
+      &:hover {
+
+        @include themify($themes) {
+          background-color: themed('colorHover');
+        }
+      }
+
+      svg {
+        display: none;
+      }
+
+      p {
+
+        svg {
+          display: block;
+          top: calc(50% - 7px);
+          transition: all 0.3s;
+
+          @include themify($themes) {
+            fill: themed('colorText');
+          }
+        }
+      }
+    }
+
+    &.opened .collapse__title,
+    &.opening .collapse__title {
+
+      p {
+        color: inherit;
+      }
+
+      svg {
+        fill: inherit;
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &.closing {
+
+    .collapse__content {
+      padding-top: 0;
+      padding-bottom: 0;
+      transition: all 0.3s;
+    }
+  }
+}

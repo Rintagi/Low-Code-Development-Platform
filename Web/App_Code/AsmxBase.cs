@@ -5,6 +5,7 @@ using System.Web.Services;
 using RO.Facade3;
 using RO.Common3;
 using RO.Common3.Data;
+using RO.WebRules;
 using System.Collections;
 using System.IO;
 using System.Text;
@@ -245,6 +246,7 @@ namespace RO.Web
             public string accessCode;
             public string error;
             public string serverChallenge;
+            public string username;
             public int challengeCount;
             public SerializableDictionary<string, string> accessToken;
             public SerializableDictionary<string, string> refreshToken;
@@ -615,8 +617,8 @@ namespace RO.Web
                 Resources = resources,
             };
             string json = new JavaScriptSerializer().Serialize(loginToken);
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-            string hash = BitConverter.ToString(hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(json))).Replace("-", "");
+            SHA256CryptoServiceProvider hashsha256 = new SHA256CryptoServiceProvider();
+            string hash = BitConverter.ToString(hashsha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(json))).Replace("-", "");
             string encrypted = RO.Common3.Utils.ROEncryptString(hash.Left(32) + json, secret);
             return encrypted;
         }
@@ -897,7 +899,7 @@ namespace RO.Web
         {
             Dictionary<string, string> dSys = GetSystemsDict()[systemId ?? token.SystemId];
             byte? dbId = systemId;
-            LUser = new LoginUsr(token.LoginName, token.UsrId, token.UsrName, token.UsrEmail, "N", "N", 1, "English(US)", token.DefSystemId, token.DefProjectId, token.DefCompanyId, 9999, 0, false, null, null, false);
+            LUser = new LoginUsr(token.LoginName, token.UsrId, token.UsrName, token.UsrEmail, "N", "N", 1, "en-US", token.DefSystemId, token.DefProjectId, token.DefCompanyId, 9999, 0, false, null, null, false);
             LCurr = new UsrCurr(companyId ?? token.CompanyId, projectId ?? token.ProjectId, systemId ?? token.SystemId, dbId ?? token.DbId);
             LImpr = SetImpersonation(null, token.UsrId, systemId ?? token.SystemId, companyId ?? token.CompanyId, projectId ?? token.ProjectId);
             LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
@@ -912,7 +914,7 @@ namespace RO.Web
 
         protected void SetupAnonymousUser()
         {
-            LUser = new LoginUsr("Anonymous", 1, "Anonymous", null, "N", "N", 1, "English(US)", 0, 0, 0, 9999, 0, false, null, null, false);
+            LUser = new LoginUsr("Anonymous", 1, "Anonymous", null, "N", "N", 1, "en-US", 0, 0, 0, 9999, 0, false, null, null, false);
             LCurr = new UsrCurr(0, 0, 3, 3);
             LImpr = SetImpersonation(null, 1, LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId);
             LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
@@ -964,13 +966,13 @@ namespace RO.Web
                     string[] redirect = RedirectProjectRoot.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
                     if (redirect.Length == 2)
                     {
-                        CPrj.DeployPath = CPrj.DeployPath.Replace(redirect[0], redirect[1]);
-                        CPrj.SrcClientProgramPath = CPrj.SrcClientProgramPath.Replace(redirect[0], redirect[1]);
-                        CPrj.SrcRuleProgramPath = CPrj.SrcRuleProgramPath.Replace(redirect[0], redirect[1]);
-                        CPrj.SrcWsProgramPath = CPrj.SrcWsProgramPath.Replace(redirect[0], redirect[1]);
-                        CPrj.TarClientProgramPath = CPrj.TarClientProgramPath.Replace(redirect[0], redirect[1]);
-                        CPrj.TarRuleProgramPath = CPrj.TarRuleProgramPath.Replace(redirect[0], redirect[1]);
-                        CPrj.TarWsProgramPath = CPrj.TarWsProgramPath.Replace(redirect[0], redirect[1]);
+                        CPrj.DeployPath = CPrj.DeployPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        CPrj.SrcClientProgramPath = CPrj.SrcClientProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        CPrj.SrcRuleProgramPath = CPrj.SrcRuleProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        CPrj.SrcWsProgramPath = CPrj.SrcWsProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        CPrj.TarClientProgramPath = CPrj.TarClientProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        CPrj.TarRuleProgramPath = CPrj.TarRuleProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
+                        CPrj.TarWsProgramPath = CPrj.TarWsProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
                     }
                 }
 
@@ -2331,6 +2333,65 @@ namespace RO.Web
 
         }
 
+        protected List<string> GetClientIpChain(HttpRequest Request)
+        {
+            try
+            {
+                if (Request != null)
+                {
+                    var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
+                                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                    .Where(s => !string.IsNullOrEmpty((s ?? "").Trim()))
+                                    .Select(s => new { addr = s, isPrivate = Common3.Utils.IsPrivateIp(s) })
+                                    .Aggregate(new { ipChain = new List<string>(), startNonLocal = new bool[1] { false } }
+                                        , (a, i) =>
+                                        {
+                                            if (!i.isPrivate || !a.startNonLocal[0]) a.ipChain.Add(i.addr);
+                                            if (!i.isPrivate) a.startNonLocal[0] = true;
+                                            return a;
+                                        })
+                                    ;
+                    if (proxied.ipChain.Count == 0 || !Common3.Utils.IsPrivateIp(Request.UserHostAddress)) proxied.ipChain.Add(Request.UserHostAddress);
+                    // this is the closest to the browser being reported, can be internal if browser is fronted by proxy
+                    return proxied.ipChain;
+                }
+            }
+            catch
+            {
+                return new List<string> { "unknown" };
+            }
+            return new List<string> { "unknown" };
+        }
+        public string GetVisitorIPAddress()
+        {
+            /* return the public ip of client, assuming it may go through proxy to reach the app */
+
+            List<string> ipChain = GetClientIpChain(HttpContext.Current.Request);
+            string visitorIPAddress = ipChain.LastOrDefault();
+            if (visitorIPAddress == "unknown") visitorIPAddress = string.Empty;
+            //string visitorIPAddress = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (string.IsNullOrEmpty(visitorIPAddress)) { visitorIPAddress = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"]; }
+            if (string.IsNullOrEmpty(visitorIPAddress)) { visitorIPAddress = HttpContext.Current.Request.UserHostAddress; }
+            if (string.IsNullOrEmpty(visitorIPAddress) || visitorIPAddress.Trim() == "::1") { visitorIPAddress = "127.0.0.1"; }
+            if (string.IsNullOrEmpty(visitorIPAddress))
+            {
+                string stringHostName = Dns.GetHostName();
+                IPHostEntry ipHostEntries = Dns.GetHostEntry(stringHostName);
+                IPAddress[] arrIpAddress = ipHostEntries.AddressList;
+                try { visitorIPAddress = arrIpAddress[arrIpAddress.Length - 2].ToString(); }
+                catch
+                {
+                    try { visitorIPAddress = arrIpAddress[0].ToString(); }
+                    catch
+                    {
+                        try { arrIpAddress = Dns.GetHostAddresses(stringHostName); visitorIPAddress = arrIpAddress[0].ToString(); }
+                        catch { visitorIPAddress = "127.0.0.1"; }
+                    }
+                }
+            }
+            return visitorIPAddress;
+        }
+
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false)
         {
             var Request = HttpContext.Current.Request;
@@ -2701,7 +2762,7 @@ namespace RO.Web
             byte[] tokenData = Guid.NewGuid().ToByteArray();
             Dictionary<string, string> _h = new Dictionary<string, string>();
             _h["_s"] = Convert.ToBase64String(tokenData);
-            System.Security.Cryptography.HMACMD5 hmac = new System.Security.Cryptography.HMACMD5(tokenData);
+            System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(tokenData);
             byte[] hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(Convert.ToBase64String(tokenData) + qsToHash.ToString()));
             string hashString = Convert.ToBase64String(hash);
             _h["_h"] = hashString;
@@ -2933,7 +2994,7 @@ namespace RO.Web
                             var rec = new SerializableDictionary<string, string> { 
                                 {"key",drv[keyF].ToString()}, // internal key 
                                 {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
-                                {"labelL",rx.Replace(drv[valF].ToString(),"")}, // stripped desc
+                                {"labelL",rx.Replace(drv[valF].ToString().Trim(),"")}, // stripped desc
                                 {"value", valueIsKey ? drv[keyF].ToString() : drv[valF].ToString()}, // visible value shown in jquery's autocomplete box, react expect this to be the key not label
                                 {"iconUrl",iconUrlF !="" ? drv[iconUrlF].ToString() == "" ? "" : ResolveUrlCustom(GetUrlWithQSHashV2(drv[iconUrlF].ToString()),false,true) : null}, // optional icon url
                                 {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": BlobPlaceHolder(drv[imgF] as byte[], true))  : null}, // optional embedded image
@@ -3545,8 +3606,8 @@ namespace RO.Web
             bool isDtlTbl = GetScreenId() > 0 && dt.Columns.Contains(GetDtlKeyColumnName(false));
             bool isMstTbl = GetScreenId() > 0 && !isDtlTbl && dt.Columns.Contains(GetMstKeyColumnName(false));
             string tableId = isDtlTbl ? 
-                                GetDtlTableName(true).Replace(GetDtlTableName(false),"")
-                                : (isMstTbl ? GetMstTableName(true).Replace(GetMstTableName(false),"") 
+                                GetDtlTableName(true).ReplaceInsensitive(GetDtlTableName(false),"")
+                                : (isMstTbl ? GetMstTableName(true).ReplaceInsensitive(GetMstTableName(false),"") 
                                 : ""
                                 );
             string tableName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlTableName(true) : (isMstTbl ? GetMstTableName(true) : "")) : null;
@@ -3593,6 +3654,10 @@ namespace RO.Web
                     {
                         return null;
                     }
+                }
+                else if (displayMode == "Password") // do not send Password content to client side
+                {
+                    return null;
                 }
                 else
                 {
@@ -3661,13 +3726,17 @@ namespace RO.Web
                         || (colAuth.ContainsKey(columnName + "Text") && colAuth[columnName + "Text"]["ColVisible"].ToString() != "N")
                         )
                     {
+                        // technically wrong as there should be associating of colAuth with direct DB retrieval on content type, FIXME
+                        string displayMode = colAuth == null || !colAuth.ContainsKey(columnName)
+                                                ? "TextBox"
+                                                : colAuth[columnName]["DisplayMode"].ToString();
                         rec[columnName] =
                             colType == typeof(DateTime) ? (((DateTime)dr[columnName]).ToString("o") + (utcColumns == null || !utcColumns.Contains(columnName) ? "" : "Z")) :
                             colType == typeof(byte[]) ?
                                 (dr[columnName] != null
                                     ? convertByteArrayToString(columnName, dr)
                                     : null)
-                            : dr[columnName].ToString()
+                                    : (displayMode == "Password" ? null :  dr[columnName].ToString()) // do not send Password content to client side
                             ;
                         if (colAuth != null && colAuth.ContainsKey(columnName) && colAuth[columnName]["DisplayMode"].ToString() == "Upload")
                         {

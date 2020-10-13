@@ -9,6 +9,12 @@ choco install vscode -y
 Write-Output "choco install netfx-4.6.2-devpack -y"
 choco install netfx-4.6.2-devpack -y
 
+# .NET 4.8 devpack
+# required (can either be here or prerequisite)
+# https://www.microsoft.com/en-us/download/details.aspx?id=53321
+Write-Output "choco install netfx-4.8-devpack -y"
+choco install netfx-4.8-devpack -y
+
 #Write-Output "choco install adobereader -y"
 #choco install adobereader -y
 

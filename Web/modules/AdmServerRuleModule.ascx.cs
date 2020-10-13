@@ -618,7 +618,7 @@ if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled =
 						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt24"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmServerRule.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmServerRule.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{

@@ -470,7 +470,7 @@ namespace RO.Web
 					if (dt.Columns.Contains("BeforeCRUD")) {sb.Append(drv["BeforeCRUD"].ToString() + (char)9);}
 					sb.Append(Environment.NewLine);
 				}
-				ExportToStream(null, reportName + ".xls", sb.Replace("\r\n","\n"), exportTo.TXT);
+				ExportToStream(null, reportName + ".csv", sb.Insert(0, (Config.ExportExcelCSV ? "sep=\t\n": "")).Replace("\r\n","\n"), exportTo.TXT);
 			}
 			else if (eExport == exportTo.XLS)
 			{

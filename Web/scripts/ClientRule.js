@@ -1980,7 +1980,12 @@ function AppendOrigTd() {
 }
 
 function IsMobile() {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent);
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent)
+            ||
+            (!(/Win|Mac|Linux|Arm/i).test(navigator.platform))
+            ||
+            !navigator.platform
+            ;
 }
 
 //remove iframe and close the dialog box
@@ -2714,6 +2719,168 @@ function arrayBufferToBase64(buffer) {
     return btoa(binary);
 }
 
+function base64Codec(urlsafe) {
+    var chars = urlsafe
+                    ? "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
+                    : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    // Use a lookup table to find the index.
+    var lookup = new Uint8Array(256);
+    
+    for (var i = 0; i < chars.length; i++) {
+        lookup[chars.charCodeAt(i)] = i;
+    }
+
+    this.encode = function (arraybuffer, nopadding) {
+        var bytes = new Uint8Array(arraybuffer),
+        i, len = bytes.length, base64 = "";
+
+        for (i = 0; i < len; i += 3) {
+            base64 += chars[bytes[i] >> 2];
+            base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+            base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+            base64 += chars[bytes[i + 2] & 63];
+        }
+
+        if ((len % 3) === 2) {
+            base64 = base64.substring(0, base64.length - 1) + (urlsafe || nopadding ? "" : "=");
+        } else if (len % 3 === 1) {
+            base64 = base64.substring(0, base64.length - 2) + (urlsafe || nopadding ? "" : "==");
+        }
+
+        return base64;
+    };
+
+    this.decode = function (base64) {
+        var bufferLength = base64.length * 0.75,
+        len = base64.length, i, p = 0,
+        encoded1, encoded2, encoded3, encoded4;
+
+        if (base64[base64.length - 1] === "=") {
+            bufferLength--;
+            if (base64[base64.length - 2] === "=") {
+                bufferLength--;
+            }
+        }
+
+        var arraybuffer = new ArrayBuffer(bufferLength),
+        bytes = new Uint8Array(arraybuffer);
+
+        for (i = 0; i < len; i += 4) {
+            encoded1 = lookup[base64.charCodeAt(i)];
+            encoded2 = lookup[base64.charCodeAt(i + 1)];
+            encoded3 = lookup[base64.charCodeAt(i + 2)];
+            encoded4 = lookup[base64.charCodeAt(i + 3)];
+
+            bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
+            bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
+            bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
+        }
+
+        return arraybuffer;
+    };
+
+    return this;
+}
+
+function ab2str(buf) {
+    return String.fromCharCode.apply(null, new Uint16Array(buf));
+}
+
+function str2ab(str) {
+    var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+    var bufView = new Uint16Array(buf);
+    for (var i = 0, strLen = str.length; i < strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+}
+
+function coerceToArrayBuffer(thing, name) {
+    if (typeof thing === "string") {
+        thing = thing.replace(/-/g, "+").replace(/_/g, "/");
+        var b64 = new base64Codec();
+        thing = b64.decode(thing);
+    }
+    if (Array.isArray(thing)) {
+        thing = new Uint8Array(thing);
+    }
+    // Uint8Array to ArrayBuffer
+    if (thing instanceof Uint8Array) {
+        thing = thing.buffer;
+    }
+
+    // error if none of the above worked
+    if (!(thing instanceof ArrayBuffer)) {
+        throw new TypeError("could not coerce '" + name + "' to ArrayBuffer");
+    }
+    else {
+        return new Uint8Array(thing);
+    }
+}
+ 
+function str2utf8ByteArray(str) {
+    // TODO(user): Use native implementations if/when available
+    var out = [], p = 0;
+    for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        if (c < 128) {
+            out[p++] = c;
+        } else if (c < 2048) {
+            out[p++] = (c >> 6) | 192;
+            out[p++] = (c & 63) | 128;
+        } else if (
+            ((c & 0xFC00) == 0xD800) && (i + 1) < str.length &&
+            ((str.charCodeAt(i + 1) & 0xFC00) == 0xDC00)) {
+            // Surrogate Pair
+            c = 0x10000 + ((c & 0x03FF) << 10) + (str.charCodeAt(++i) & 0x03FF);
+            out[p++] = (c >> 18) | 240;
+            out[p++] = ((c >> 12) & 63) | 128;
+            out[p++] = ((c >> 6) & 63) | 128;
+            out[p++] = (c & 63) | 128;
+        } else {
+            out[p++] = (c >> 12) | 224;
+            out[p++] = ((c >> 6) & 63) | 128;
+            out[p++] = (c & 63) | 128;
+        }
+    }
+    return out;
+};
+
+function utf8ByteArray2str (bytes) {
+    // TODO(user): Use native implementations if/when available
+    var out = [], pos = 0, c = 0;
+    while (pos < bytes.length) {
+        var c1 = bytes[pos++];
+        if (c1 < 128) {
+            out[c++] = String.fromCharCode(c1);
+        } else if (c1 > 191 && c1 < 224) {
+            var c2 = bytes[pos++];
+            out[c++] = String.fromCharCode((c1 & 31) << 6 | c2 & 63);
+        } else if (c1 > 239 && c1 < 365) {
+            // Surrogate Pair
+            var c2 = bytes[pos++];
+            var c3 = bytes[pos++];
+            var c4 = bytes[pos++];
+            var u = ((c1 & 7) << 18 | (c2 & 63) << 12 | (c3 & 63) << 6 | c4 & 63) -
+                0x10000;
+            out[c++] = String.fromCharCode(0xD800 + (u >> 10));
+            out[c++] = String.fromCharCode(0xDC00 + (u & 1023));
+        } else {
+            var c2 = bytes[pos++];
+            var c3 = bytes[pos++];
+            out[c++] =
+                String.fromCharCode((c1 & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+        }
+    }
+    return out.join('');
+};
+
+function sha256(byteArray) {
+    var h = sjcl.hash.sha256.hash(byteArray);
+    var b = wordArrayToByteArray(h, h.length);
+    return b;
+}
 function makeNameFromNS(appDomainUrl, name) {
     var appNS = (parsedUrl(appDomainUrl) || {}).pathname || '/';
     return ((appNS.toUpperCase().replace(/^\//, '') + '_') || '') + name;

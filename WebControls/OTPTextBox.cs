@@ -47,9 +47,16 @@ namespace RoboCoder.WebControls
             {
                 bool valid = (ViewState["Validated"] as string) == "Y";
                 int skew = TimeSkew;
-                for (int i = -1 * skew; i <= skew && !valid; i++)
+                int forwardSkew = 2; // allowance clock is slower than client by 2 slot
+                for (int i = -1 * skew; i <= (skew + forwardSkew) && !valid; i++)
                 {
-                    valid = valid || (!string.IsNullOrEmpty(EncryptionKey) && RO.Common3.GoogleAuthenticator.CalculateOneTimePassword(System.Text.UTF8Encoding.UTF8.GetBytes(EncryptionKey), i) == Text.Trim());
+                    valid = valid || (!string.IsNullOrEmpty(EncryptionKey) 
+                                    && 
+                                    (RO.Common3.GoogleAuthenticator.CalculateOneTimePassword(System.Text.UTF8Encoding.UTF8.GetBytes(EncryptionKey), i) == Text.Trim()
+                                     ||
+                                     RO.Common3.GoogleAuthenticator.CalculateOneTimePassword(System.Text.UTF8Encoding.UTF8.GetBytes(EncryptionKey), i, 8) == Text.Trim()
+                                     )
+                                    );
                 }
                 return valid;
             }

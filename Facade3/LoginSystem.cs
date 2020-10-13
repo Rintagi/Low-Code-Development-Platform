@@ -68,11 +68,11 @@ namespace RO.Facade3
             }
         }
 
-        public DataTable GetLogins(string LoginName, string Provider)
+        public DataTable GetLogins(string LoginName, string Provider, string UsrId = null)
         {
             using (LoginAccessBase dac = GetLoginAccess())
             {
-                return dac.GetLogins(LoginName, Provider);
+                return dac.GetLogins(LoginName, Provider, UsrId);
             }
         }
 
@@ -228,18 +228,18 @@ namespace RO.Facade3
 			}
 		}
 
-        public void LinkUserLogin(int UsrId, string ProviderCd, string LoginName)
+        public void LinkUserLogin(int UsrId, string ProviderCd, string LoginName, string LoginMeta = null)
         {
             using (LoginAccessBase dac = GetLoginAccess())
             {
-                dac.LinkUserLogin(UsrId, ProviderCd, LoginName);
+                dac.LinkUserLogin(UsrId, ProviderCd, LoginName, LoginMeta);
             }
         }
-        public void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName)
+        public void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName, string LoginMeta = null)
         {
             using (LoginAccessBase dac = GetLoginAccess())
             {
-                dac.UnlinkUserLogin(UsrId, ProviderCd, LoginName);
+                dac.UnlinkUserLogin(UsrId, ProviderCd, LoginName, LoginMeta);
             }
         }
         public DataTable GetLinkedUserLogin(int UsrId)

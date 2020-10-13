@@ -1,4 +1,4 @@
-C~@~Last Rule~@~Run this s.proc after all the After-CRUD and just before Commit transaction.~@~4
-N~@~After CRUD~@~Run this s.proc after CRUD; Must handle Add scenario when CRUD is skipped.~@~3
-S~@~Skip CRUD~@~Run this s.proc after all the Before-CRUD and skip the CRUD operation.~@~2
-Y~@~Before CRUD~@~Run this s.proc before CRUD and before any Skip-CRUD.~@~1
+C~@~Final Rule~@~Run this s.proc after all the After-CRUD(master and detail) and just before Commit transaction. Only run once per transaction~@~4
+N~@~After CRUD~@~Run this s.proc after CRUD(per record)~@~3
+S~@~Replace CRUD~@~Run this s.proc after all the Before-CRUD and skip(thus replace) the CRUD operation by this(per record). Must return Primary key for Add if this SP handle that~@~2
+Y~@~Before CRUD~@~Run this s.proc before CRUD(per record) and before any Replace-CRUD.~@~1

@@ -2082,8 +2082,8 @@
                 string webAppRoot = Server.MapPath(@"~/").Replace(@"\", "/");
                 string appRoot = webAppRoot.Replace("/Web/", "");
                 string reactRootDir = webAppRoot.Replace(@"/Web", "/React");
-                string reactTemplateDir = reactRootDir + "/Template";
-                string reactModuleDir = reactTemplateDir.Replace("/Template", "/" + systemAbbr);
+                string reactTemplateDir = reactRootDir + "/" + Config.ReactTemplate;
+                string reactModuleDir = reactTemplateDir.ReplaceInsensitive("/" + Config.ReactTemplate, "/" + systemAbbr);
                 string reactModuleNodeModuleDir = reactModuleDir + "/node_modules";
                 string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -2142,7 +2142,7 @@ document.Rintagi = {{
                 else
                 {
                     ////DirectoryCopy(reactTemplateDir, reactModuleDir, true, true);
-                    var copyRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX", reactTemplateDir, reactModuleDir), true, appRoot);
+                    var copyRet = Utils.WinProc("robocopy.exe", string.Format("{0} {1} /E /S /COPY:DATS /SECFIX /TIMFIX /XD build node_modules", reactTemplateDir, reactModuleDir), true, appRoot);
                     var runtimeJS = string.Format("{0}/runtime/rintagi.js", reactModuleDir);
                     using (var sr = new StreamWriter(reactModuleDir + "/public/runtime/rintagi.js", false, System.Text.UTF8Encoding.UTF8))
                     {
@@ -2802,31 +2802,32 @@ document.Rintagi = {{
 
 ~@~~@~~@~~@~~@~~@~~@~~@~
 191~@~4~@~Button to launch flowchart editor~@~Flow Chart IDE: Button to launch flowchart editor~@~Button to launch flowchart editor~@~1027~@~~@~~@~9~@~if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "SearchLink('flowchart.html','myFlowChart','100%','90vh'); return false;"; }~@~~@~~@~~@~~@~~@~~@~~@~
-192~@~4~@~Generate Button~@~Flowchart IDE: Generate Button~@~Generate Button~@~1027~@~4383~@~~@~1~@~string chartData = cChartData1325.Text;
-            string chartHtmlContent = @"
-    //Currently this function is not in use. To enable function, copy the content from viewchart.ascx page
-";
-            string chartDir = Server.MapPath("~/chart");
-            if (!Directory.Exists(chartDir)) { Directory.CreateDirectory(chartDir); }
-            string xsdPath = Server.MapPath("~/chart/") + cChartName1325.Text + ".html";
-            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(xsdPath))
+193~@~4~@~Hide and show view button and add logic~@~Flowchart IDE: Hide and show view button and add logic~@~Hide and show view button and add logic~@~1027~@~~@~~@~11~@~if (!string.IsNullOrEmpty(cChartId1325.Text))
             {
-                try { writer.Write(chartHtmlContent); }
-                finally { writer.Close(); }
-            }
-~@~~@~~@~~@~~@~~@~~@~~@~
-193~@~4~@~Hide and show view button and add logic~@~Flowchart IDE: Hide and show view button and add logic~@~Hide and show view button and add logic~@~1027~@~~@~~@~11~@~  if (!string.IsNullOrEmpty(cChartId1325.Text))
-            {
-                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "'); return false;";
+                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue + "'); return false;";
             }
 
  if (string.IsNullOrEmpty(cAdmFlowchart1027List.SelectedValue))
             {
-                cGenerate.Visible = false;
                 cView.Visible = false;
+                cDisplay.Visible = false;
             }
             else
             {
-                cGenerate.Visible = false;
                 cView.Visible = true;
+                cDisplay.Visible = true;
             }~@~~@~~@~~@~~@~~@~~@~~@~
+194~@~4~@~Display on Default Button~@~Flowchart IDE: Display on Default Button~@~Display on Default Button~@~1027~@~4385~@~~@~1~@~string projectRootPath = Config.RuleTierPath;
+            var lines = File.ReadAllLines(projectRootPath + "/Web/modules/DefaultModule.ascx");
+            string firstLine = lines[0];
+            string flowchartLink = "viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue;
+            string flowchartIframe = "<iframe id='myiFrame' src='" + flowchartLink + "' style='width: 100%; height: 70vh; visibility:visible;'></iframe>";
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(firstLine + Environment.NewLine);
+            sb.Append(flowchartIframe);
+
+            StreamWriter sw = new StreamWriter(projectRootPath + "/Web/modules/DefaultModule.ascx");
+            try { sw.Write(sb); PreMsgPopup("Flowchart added to default page successfully"); }
+            finally { sw.Close(); }
+~@~~@~~@~~@~~@~~@~~@~~@~

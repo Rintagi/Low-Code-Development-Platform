@@ -626,7 +626,7 @@ namespace RO.Web
 						if (dtAu.Rows[11]["ColExport"].ToString() == "Y") {sb.Append(drv["SysRowAuthorityId58"].ToString() + (char)9 + drv["SysRowAuthorityId58Text"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmUsrGroup.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmUsrGroup.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{

@@ -2798,7 +2798,7 @@ namespace RO.Rule3
 			}
 			sb.Append("						sb.Append(Environment.NewLine);" + Environment.NewLine);
 			sb.Append("					}" + Environment.NewLine);
-			sb.Append("					bExpNow.Value = \"Y\"; Session[\"ExportFnm\"] = \"" + dw["ProgramName"].ToString() + ".xls\"; Session[\"ExportStr\"] = sb.Replace(\"\\r\\n\",\"\\n\");" + Environment.NewLine);
+            sb.Append("					bExpNow.Value = \"Y\"; Session[\"ExportFnm\"] = \"" + dw["ProgramName"].ToString() + ".csv\"; Session[\"ExportStr\"] = (Config.ExportExcelCSV ? \"sep=\\t\\n\": \"\") + sb.Replace(\"\\r\\n\",\"\\n\");" + Environment.NewLine);
 			sb.Append("				}" + Environment.NewLine);
 			sb.Append("				else if (eExport == \"RTF\")" + Environment.NewLine);
 			sb.Append("				{" + Environment.NewLine);

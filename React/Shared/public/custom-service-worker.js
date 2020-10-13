@@ -35,12 +35,29 @@ self.addEventListener('message', function handler (event) {
   * (like main js which is actually NOT cached in service-work.js which is correct as it only loads once)
  */
  self.addEventListener('fetch', function(event) {
+  var ignoreUrlParametersMatching = [/^utm_/];
+  var  stripIgnoredUrlParameters = function (e, t) { 
+    var a = new URL(e); 
+    return a.hash = ""
+    , a.search = a.search
+               .slice(1)
+               .split("&")
+               .map(function (e) { return e.split("=") })
+               .filter(function (a) { return t.every(function (e) { return !e.test(a[0]) }) })
+               .map(function (e) { return e.join("=") }).join("&") 
+   , a.toString() 
+   }; 
+
     if (event.request.method === 'GET') {
       // Should we call event.respondWith() inside this fetch event handler?
       // This needs to be determined synchronously, which will give other fetch
       // handlers a chance to handle the request if need be.
+   
       var shouldRespond;
-      // check service-worker.js for the helper
+      // check service-worker.js(sw-precache version) for the helper
+      // or here 
+      // https://gist.github.com/Dev-Dipesh/d71fefc7883de33b5416f98dd83035a2
+      // must be modified if use workbox approach
       var url = stripIgnoredUrlParameters(event.request.url, ignoreUrlParametersMatching);
       var urlObj = new URL(event.request.url);
       var cacheName = 'whatever cache name'

@@ -1,0 +1,97 @@
+.date-picker {
+  width: 100%;
+
+  & > div, .react-datepicker-wrapper, .react-datepicker__input-container {
+    width: 100%;
+  }
+
+  .react-datepicker__time-list {
+    padding: 0;
+  }
+
+  .react-datepicker__time-list-item {
+    width: 50px;
+  }
+
+  &.date-picker--interval {
+    display: flex;
+
+    & > div, .react-datepicker-wrapper, .react-datepicker__input-container {
+      max-width: 170px;
+    }
+  }
+
+  .date-picker__svg {
+    width: 14px;
+    height: 14px;
+    margin: auto 10px;
+
+    @include themify($themes) {
+      fill: themed('colorText');
+    }
+  }
+
+  .react-datepicker__header {
+    background-color: $color-fintrux;
+    border-color: $color-fintrux;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  .react-datepicker__current-month, .react-datepicker-time__header,
+  .react-datepicker__day-name, .react-datepicker__time-name {
+    color: #ffffff;
+  }
+
+  .react-datepicker__navigation--next {
+    border-left-color: #ffffff;
+
+    &:hover {
+      border-left-color: #ffffff;
+    }
+  }
+  .react-datepicker__navigation
+  .react-datepicker__navigation--previous {
+    border-right-color: #ffffff;
+
+    &:hover {
+      border-right-color: #ffffff;
+    }
+  }
+
+  .react-datepicker__day--keyboard-selected {
+    background-color: $color-fintrux;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: $color-fintrux-hover;
+    }
+  }
+
+  .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
+    border-bottom-color: $color-fintrux;
+    margin-top: -7px;
+  }
+
+  .react-datepicker-popper {
+    z-index: 3;
+  }
+
+  .react-datepicker {
+    box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.05);
+    border: none;
+    // border: olid $color-fintrux;
+    border-radius: 4px;
+  }
+
+  .react-datepicker__time-container {
+
+    @include themify($themes) {
+      border-left: 1px solid themed('colorBorder');
+    }
+  }
+
+  .react-datepicker__day--selected, .react-datepicker__day--in-range, .react-datepicker__time-list-item--selected{
+    background-color: $color-fintrux-hover !important;
+  }
+}

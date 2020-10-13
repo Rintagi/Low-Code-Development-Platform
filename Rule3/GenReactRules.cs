@@ -358,10 +358,11 @@ export default {
         //React Page Generation
         private StringBuilder MakeReactJsIndex(string screenId, string screenName)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataTable dtItms = (new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword);
+            DataView dvItms = new DataView(dtItms);
             string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
             bool gridOnly = screenTypeName == "I3";
-
+            bool codeSplit = false;
             string screenPrimaryKey = "";
             foreach (DataRowView drv in dvItms)
             {
@@ -391,9 +392,19 @@ export default {
             }
             else if ("I2".IndexOf(screenTypeName) >= 0)
             {
-                ImportRouter = @"
+                ImportRouter = "" +
+(codeSplit
+?
+@"
+const XDtlList =  loadable(() => import('./DtlList'));
+const DtlList = (props)=> <div><XDtlList {...props}/></div>;
+const XDtlRecord = loadable(() => import('./DtlRecord'));
+const DtlRecord = (props)=> <div><XDtlRecord {...props}/></div>;"
+:
+@"
 import DtlList from './DtlList';
-import DtlRecord from './DtlRecord';";
+import DtlRecord from './DtlRecord';")
+;
                 DetailRouter = @"
   {
     path: '/[[---ScreenName---]]/:mstId?/DtlList/:dtlId?',
@@ -425,10 +436,25 @@ import DtlRecord from './DtlRecord';";
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
 /* this is external interface(for import) for this screen */
-import { naviPath } from '../../helpers/utils'
+import { naviPath } from '../../helpers/utils'" + 
+(
+codeSplit 
+?
+@"
+import React from 'react';
+import loadable from '@loadable/component';
+const XMstList =  loadable(() => import('./MstList'));
+const MstList = (props)=> <div><XMstList {...props}/></div>;
+const XMstRecord = loadable(() => import('./MstRecord'));
+const MstRecord = (props)=> <div><XMstRecord {...props}/></div>;
+"
+:
+@"
 import MstList from './MstList';
 import MstRecord from './MstRecord';
-");
+"
+)
+);
             sb.Append(ImportRouter);
             sb.Append(@"
 /* react router match by order of appearance in list so make sure wider match comes last, use order to control display order */
@@ -1776,7 +1802,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol." + ColumnName + @" || {}).readonly || !(authCol." + ColumnName + @" || {}).visible}
                                         onClick={this." + ColumnName + @"({ naviBar, submitForm, currMst })} >
-                                        {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnName}
+                                        {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnHeader || (columnLabel." + ColumnName + @" || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -2133,7 +2159,8 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                 string sameWindow = DisplayMode.Contains("PopUp") ? "false" : "true";
                                 string linkColumnName = DdlKeyColumnName + DdlKeyTableId;
                                 string imageSrc = !string.IsNullOrEmpty(DefaultValue)
-                                                    ? string.Format("require('../../{0}')", rx.Replace(DefaultValue,"img/"))
+//                                                    ? string.Format("require('../../{0}')", rx.Replace(DefaultValue,"img/"))
+                                                    ? string.Format("'{0}'",DefaultValue) // use content unchanged, need corresponding path in public/ of the React source
                                                     : ColumnId == DdlKeyColumnId ? "require('../../img/Link.gif')"
                                                     : (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId)
                                                     ;
@@ -2178,6 +2205,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
 isHyperLink ? @"
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
                                           onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
                                           disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}
@@ -2186,6 +2214,7 @@ isHyperLink ? @"
 : isImageLink ? @"
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
                                           onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
                                           disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}
@@ -4166,7 +4195,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                 string sameWindow = DisplayMode.Contains("PopUp") ? "false" : "true";
                                 string linkColumnName = DdlKeyColumnName + DdlKeyTableId;
                                 string imageSrc = !string.IsNullOrEmpty(DefaultValue)
-                                                    ? string.Format("require('../../{0}')", rx.Replace(DefaultValue, "img/"))
+//                                                    ? string.Format("require('../../{0}')", rx.Replace(DefaultValue, "img/"))
+                                                    ? string.Format("'{0}'", DefaultValue) // use content unchanged, need corresponding path in public/ of the React source
                                                     : ColumnId == DdlKeyColumnId ? "require('../../img/Link.gif')"
                                                     : (isRefColumnControl && !isPullUpColumnControl ? formikRefColumnBinding : "values.c" + columnId)
                                                     ;
@@ -4211,6 +4241,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
 isHyperLink ? @"
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
                                           onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
                                           disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}
@@ -4219,6 +4250,7 @@ isHyperLink ? @"
 : isImageLink ? @"
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink(" + navigationUrl + @", false, false, {values, name: '" + columnId + @"'})}
                                           onClick={this.PopUpSearchLink(" + navigationUrl + @", false, " + sameWindow + @", {values, name: '" + columnId + @"'})}
                                           disabled={(authCol." + columnId + @" || {}).readonly ? 'disabled' : ''}

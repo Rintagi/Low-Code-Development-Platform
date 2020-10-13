@@ -21,18 +21,51 @@ namespace RO.Web
     using System.Web.Script.Serialization;
     using System.Web.Configuration;
     using System.Configuration;
+    using Newtonsoft;
+    using Fido2NetLib;
+    using Fido2NetLib.Objects;
+    using System.Threading.Tasks;
 
     public partial class MyAccountModule : RO.Web.ModuleBase
     {
+        public class WebAuthnChallenge
+        {
+            public string nonce;
+            public string usrId;
+            public string appDomainUrl;
+            public string appPath;
+            public int expiredAfter;
+        }
+
+        public class WebAuthnMeta
+        {
+            public string credentialId;
+            public string publicKey;
+            public string aaguid;
+            public string authenticatorType;
+            public string appPath;
+            public string usrId;
+            public string platform;
+            public string requestIPChain;
+            public bool isMobile;
+            public bool userPresence;
+            public bool userVerified;
+        }
+
+        public class AuthenticatorAttestationRawResponseEx : AuthenticatorAttestationRawResponse
+        {
+            public string platform;
+            public bool isMobile;
+        }
         private string Encrypt128(string text, string iv, string key)
         {
             // AesCryptoServiceProvider
             AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
+            SHA256CryptoServiceProvider hashsha256 = new SHA256CryptoServiceProvider();
             aes.BlockSize = 128;
             aes.KeySize = 128;
-            aes.IV = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(iv));
-            aes.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+            aes.IV = hashsha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(iv).Take(16).ToArray());
+            aes.Key = hashsha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(key).Take(16).ToArray());
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.PKCS7;
 
@@ -56,11 +89,11 @@ namespace RO.Web
         {
             // AesCryptoServiceProvider
             AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
-            MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
+            SHA256CryptoServiceProvider hashsha256 = new SHA256CryptoServiceProvider();
             aes.BlockSize = 128;
             aes.KeySize = 128;
-            aes.IV = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(iv));
-            aes.Key = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+            aes.IV = hashsha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(iv).Take(16).ToArray());
+            aes.Key = hashsha256.ComputeHash(UTF8Encoding.UTF8.GetBytes(key).Take(16).ToArray());
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.PKCS7;
 
@@ -112,10 +145,16 @@ namespace RO.Web
                 LPref = usrPref;
                 return true;
             };
-            var access_token = auth.GetToken("", "", "refresh_token", refresh_token, "", "", "", appPath, domain, getStoredToken, validateScope);
-            if (access_token != null)
-                return LUser;
-            else return null;
+            try
+            {
+                var access_token = auth.GetToken("", "", "refresh_token", refresh_token, "", "", "", appPath, domain, getStoredToken, validateScope);
+                if (access_token != null && access_token.ContainsKey("access_token"))
+                    return LUser;
+                else return null;
+            }
+            catch {
+                return null;
+            }
         }
         protected void SetJWTCookie()
         {
@@ -177,10 +216,12 @@ namespace RO.Web
             if (!IsPostBack)
             {
                 TwoFactorAuthenticationPanel.Visible = Config.EnableTwoFactorAuth == "Y" || Config.EnableTwoFactorAuth == "M";
+                
                 string extAppDomainUrl = 
                     !string.IsNullOrWhiteSpace(Config.ExtBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
                         ? Config.ExtBaseUrl 
                         : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                // for client side login sync between React and asp.net(only when served under the same app tree 
                 cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0,extAppDomainUrl.Length - 1) : extAppDomainUrl ;
                 if (base.SystemsList == null) { base.SystemsDict = (new LoginSystem()).GetSystemsList(string.Empty, string.Empty); }    // Instantiate base.SystemsList.
                 if (!Request.IsLocal 
@@ -344,6 +385,18 @@ namespace RO.Web
                     cPicMed.ImageUrl = base.GetUrlWithQSHash("~/DnLoad.aspx?key=" + LUser.UsrId.ToString() + "&tbl=dbo.Usr&knm=UsrId&col=PicMed&sys=3"); cPicMed.Visible = true;
                 }
                 else { cPicMed.ImageUrl = "~/images/DefaultImg.png"; }
+
+                if ((Config.EnableTwoFactorAuth ?? "") == "Y" || (Config.EnableTwoFactorAuth ?? "") == "M")
+                {
+                    if (LUser != null && LUser.LoginName != "Anonymous")
+                    {
+                        RegisterWebAuthnSetup(extAppDomainUrl, null);
+                    }
+                    else
+                    {
+                        VerifyWebAuthnSetup(extAppDomainUrl, null);
+                    }
+                }
             }
 
             if (!IsPostBack &&
@@ -454,6 +507,7 @@ namespace RO.Web
             if (LUser != null && LUser.LoginName != "Anonymous")
             {
                 LinkedUserLogin = (new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable()).ToList();
+                cJWTLogin.Visible = false;
                 cRemoveLinkedLogin.Visible = cRemoveLinkedLogin.Visible && LinkedUserLogin.Count > 0;
                 cRemoveLinkedLogin.Checked = LImpr.UsrGroups == "5"; 
             }
@@ -858,10 +912,17 @@ namespace RO.Web
         public void SSOLogin(string SelectedLoginName, string ProviderLoginName, string Provider)
         {
             LoginUsr intendedUser = Provider == "SJ" ? LoginByJWTToken(cJWTToken.Text) : null;
-            Credential cr = new Credential(SelectedLoginName, intendedUser != null ? intendedUser.UsrId.ToString() : ProviderLoginName, new byte[32], Provider.Left(1));
-            LoginUsr usr = (new LoginSystem()).GetLoginSecure(cr); 
-            
-            if (usr != null) usr.OTPValidated = !string.IsNullOrEmpty(Provider);
+            Credential cr = new Credential(SelectedLoginName, intendedUser != null ? intendedUser.UsrId.ToString() : ProviderLoginName, new byte[32], Provider.Left(5));
+            LoginUsr usr = (new LoginSystem()).GetLoginSecure(cr);
+
+            if (usr != null)
+            {
+                usr.OTPValidated = !string.IsNullOrEmpty(Provider);
+            }
+            else if (Provider == "SJ")
+            {
+                LUser = null;
+            }
             if (Provider == "SJ")
             {
                 cJWTToken.Visible = false;
@@ -873,7 +934,10 @@ namespace RO.Web
                 () => { PreMsgPopup(TranslateItem(GetLabels().Rows, "AccountLockedMsg")); },
                 () =>
                 {
-                    PreMsgPopup(TranslateItem(GetLabels().Rows, "LoginFailedMsg"));
+                    if (Provider != "SJ")
+                    {
+                        PreMsgPopup(TranslateItem(GetLabels().Rows, "LoginFailedMsg"));
+                    }
                     ShowLoginPanel();
                 }, cr, Provider, ProviderLoginName);
             if (!bBlocked && !string.IsNullOrEmpty(Request.QueryString["typ"]))
@@ -921,6 +985,59 @@ namespace RO.Web
                 }
             }
         }
+        public void WebAuthnLoginBtn_Click(object sender, System.EventArgs e)
+        {
+            try
+            {
+                var x = cWebAuthnResult.Text;
+                Fido2Configuration fido2Config = new Fido2Configuration
+                {
+                    Origin = "https://" + Request.Url.Host,
+                    ServerDomain = Request.Url.Host,
+                    ServerName = "site name",
+                    ServerIcon = "https://www.rintagi.com/images/a.gif",
+                    Timeout = 60 * 1000,
+                    TimestampDriftTolerance = 1000
+                };
+
+                var fido2 = new Fido2(fido2Config);
+
+
+                // 4. Create callback to check if userhandle owns the credentialId
+                IsUserHandleOwnerOfCredentialIdAsync callback = async (args) =>
+                {
+                    var u = args.UserHandle;
+                    var id = args.CredentialId;
+                    return await Task.FromResult(true);
+                };
+
+                // 5. Make the assertion
+                var request = Newtonsoft.Json.JsonConvert.DeserializeObject<AssertionOptions>(cAssertionRequest.Text);
+                AuthenticatorAssertionRawResponse assertionResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthenticatorAssertionRawResponse>(x);
+                var credentialId = base64UrlEncode(assertionResponse.Id);
+                // 3. Get credential counter from database(design flaw of WebAuthn, required centralized storage), similar to ethereum transaction nonce
+                uint storedCounter = 0; // 0 means always success
+                var dtLogin = new LoginSystem().GetLogins(credentialId, "Fido2");
+                var loginMeta = dtLogin.Rows[0]["LoginMeta"].ToString();
+                var loginName = dtLogin.Rows[0]["RLoginName"].ToString();
+                var webAuthMeta = Newtonsoft.Json.JsonConvert.DeserializeObject<WebAuthnMeta>(loginMeta);
+                var publicKey = base64UrlDecode(webAuthMeta.publicKey);
+                var success = fido2.MakeAssertionAsync(assertionResponse, request, publicKey, storedCounter, callback).Result;
+                var clientData = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthenticatorResponse>(System.Text.UTF8Encoding.UTF8.GetString(assertionResponse.Response.ClientDataJson));
+                var challenge = clientData.Challenge;
+                var assertionState = Newtonsoft.Json.JsonConvert.DeserializeObject<WebAuthnChallenge>(System.Text.UTF8Encoding.UTF8.GetString(challenge));
+                var authData = new AuthenticatorData(assertionResponse.Response.AuthenticatorData);
+                var userPresence = authData.UserPresent;
+                var userVerified = authData.UserVerified;
+
+                SSOLogin(null, credentialId, "Fido2");
+            }
+            catch (Exception ex)
+            {
+                Common3.Utils.NeverThrow(ex);
+                PreMsgPopup("login failed");
+            }
+        }
 
         public void FacebookLoginBtn_Click(object sender, System.EventArgs e)
         {
@@ -952,7 +1069,7 @@ namespace RO.Web
         }
         private string GetHMACHash(string val)
         {
-            System.Security.Cryptography.HMACMD5 hmac = new System.Security.Cryptography.HMACMD5(UTF8Encoding.UTF8.GetBytes(System.Web.Configuration.WebConfigurationManager.AppSettings["TrustedLoginFederationKey"]));
+            System.Security.Cryptography.HMACSHA256 hmac = new System.Security.Cryptography.HMACSHA256(UTF8Encoding.UTF8.GetBytes(System.Web.Configuration.WebConfigurationManager.AppSettings["TrustedLoginFederationKey"]));
             byte[] hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(val));
             string hashString = BitConverter.ToString(hash);
             return hashString.Replace("-", "");
@@ -1092,7 +1209,7 @@ namespace RO.Web
             else
             {
                 string myHostAndPort = Request.Url.GetComponents(UriComponents.HostAndPort, UriFormat.SafeUnescaped);
-                string loginUrl = Config.TrustedLoginFederationUrl.Replace("localhost", Request.Url.Host);
+                string loginUrl = Config.TrustedLoginFederationUrl.ReplaceInsensitive("localhost", Request.Url.Host);
                 string myUrl = Request.Url.ToString();
                 string randomIV = Guid.NewGuid().ToString().Replace("-", "");
                 string ticket = WindowLoginRegisterTicket(randomIV);
@@ -1729,7 +1846,8 @@ namespace RO.Web
         protected void NotifyUser(string subject, string body, string email, string from)
         {
             string site = GetSiteUrl(true);
-            SendEmail(subject + " " + site, body, email, from, "", Config.WebTitle + " Customer Care", false);
+            string requestIPChain = string.Format("\r\n\r\nRequest Source IP info : [{0}]\r\n", string.Join(",", GetClientIpChain().ToArray()));
+            SendEmail(subject + " " + site, body + requestIPChain, email, from, "", Config.WebTitle + " Customer Care", false);
         }
 
         protected void TranslateLoginLinkBtns(DataTable dtLabel)
@@ -1757,16 +1875,17 @@ namespace RO.Web
 
         }
 
-        protected void LinkUserLogin(int UsrId, string ProviderCd, string LoginName)
+        protected void LinkUserLogin(int UsrId, string ProviderCd, string LoginName, string LoginMeta = null)
         {
             Dictionary<string, string> providers = new Dictionary<string, string>{
                 {"F","Facebook"},
                 {"G","Google"},
                 {"M","Microsoft"},
                 {"O","Office 365/Azure"},
-                {"W","Windows"}
+                {"W","Windows"},
+                {"Fido2","WebAuthn/Fido2"}
                 };
-            new LoginSystem().LinkUserLogin(UsrId, ProviderCd, LoginName);
+            new LoginSystem().LinkUserLogin(UsrId, ProviderCd, LoginName, LoginMeta);
             LinkedUserLogin = new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable().ToList();
             if ((from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() > 0) cLinkFacebookBtn.OnClientClick = "";
             if ((from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() > 0) cLinkGoogleBtn.OnClientClick = "";
@@ -1794,7 +1913,8 @@ namespace RO.Web
                 {"G","Google"},
                 {"M","Microsoft"},
                 {"O","Office 365/Azure"},
-                {"W","Windows"}
+                {"W","Windows"},
+                {"Fido2","WebAuthn/Fido2"}
                 };
             new LoginSystem().UnlinkUserLogin(UsrId, ProviderCd, LoginName);
             LinkedUserLogin = new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable().ToList();
@@ -1817,6 +1937,111 @@ namespace RO.Web
             catch { }
         }
 
+        protected void cLinkWebAuthnBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (LUser != null && LUser.LoginName != "Anonymous")
+                {
+                    var aaguidLookup = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase){
+                    {"6028B017-B1D4-4C02-B4B3-AFCDAFC96BB2","Windows Hello software authenticator"},
+                    {"6E96969E-A5CF-4AAD-9B56-305FE6C82795","Windows Hello VBS software authenticator"},
+                    {"08987058-CADC-4B81-B6E1-30DE50DCBE96","Windows Hello TPM authenticator"},
+                    {"9DDD1817-AF5A-4672-A2B9-3E3DD95000A9","Windows Hello VBS hardware authenticator"},
+                    {"cb69481e-8ff7-4039-93ec-0a2729a154a8","YubiKey 5 5.1 all variance"},
+                    {"ee882879-721c-4913-9775-3dfcce97072a","YubiKey 5 5.2 all variance"},
+                    {"fa2b99dc-9e39-4257-8f92-4a30d23c4118","YubiKey 5 NFC"},
+                    {"2fc0579f-8113-47ea-b116-bb5a8db9202a","YubiKey 5 NFC"},
+                    {"c5ef55ff-ad9a-4b9f-b580-adebafe026d0","YubiKey 5Ci"},
+                    {"f8a011f3-8c0a-4d15-8006-17111f9edc7d","Security Key By Yubico"},
+                    {"b92c3f9a-c014-4056-887f-140a2501163b","Security Key By Yubico"},
+                    {"6d44ba9b-f6ec-2e49-b930-0c8fe920cb73","Security Key NFC By Yubico"},
+                    {"149a2021-8ef6-4133-96b8-81f8d5b7f1f5","Security Key NFC By Yubico"},
+                };
+
+                    var x = cWebAuthnResult.Text;
+                    Fido2Configuration fido2Config = new Fido2Configuration
+                    {
+                        Origin = "https://" + Request.Url.Host,
+                        ServerDomain = Request.Url.Host,
+                        ServerName = "site name",
+                        ServerIcon = "https://www.rintagi.com/images/a.gif",
+                        Timeout = 60 * 1000,
+                        TimestampDriftTolerance = 1000
+                    };
+
+                    var fido2 = new Fido2(fido2Config);
+                    IsCredentialIdUniqueToUserAsyncDelegate callback = async (IsCredentialIdUniqueToUserParams args) =>
+                    {
+                        var id = args.CredentialId; // generated ID by authenticator(should be always unique for each authenticator, equivalent to client cert)
+                        var u = args.User;          // user info, kind of useless as this can be changed by js at client side
+                        return await Task.FromResult(true);
+                    };
+
+                    var request = Newtonsoft.Json.JsonConvert.DeserializeObject<CredentialCreateOptions>(cRegistrationRequest.Text);
+                    AuthenticatorAttestationRawResponseEx regResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthenticatorAttestationRawResponseEx>(x);
+                    var success = fido2.MakeNewCredentialAsync(regResponse, request, callback).Result;
+                    var clientDataJson = Newtonsoft.Json.JsonConvert.DeserializeObject<AuthenticatorResponse>(System.Text.UTF8Encoding.UTF8.GetString(regResponse.Response.ClientDataJson));
+                    var challenge = clientDataJson.Challenge;
+                    var regState = Newtonsoft.Json.JsonConvert.DeserializeObject<WebAuthnChallenge>(System.Text.UTF8Encoding.UTF8.GetString(challenge));
+                    var forUsrId = regState.usrId;
+                    var appPath = regState.appPath;
+                    var expiry = regState.expiredAfter;
+                    var credentialId = base64UrlEncode(success.Result.CredentialId);
+                    var publicKey = System.Convert.ToBase64String(success.Result.PublicKey);
+                    var signingCounter = success.Result.Counter; // designed for replay attact prevention but useless for a multiple node situation
+                    var user = success.Result.User;
+                    var usrId = System.Convert.ToBase64String(user.Id);
+                    var aaguid = success.Result.Aaguid;
+                    var authData = new AuthenticatorData(AuthenticatorAttestationResponse.Parse(regResponse).AttestationObject.AuthData);
+                    var userPresence = authData.UserPresent;
+                    var userVerified = authData.UserVerified;
+                    var loginMeta = Newtonsoft.Json.JsonConvert.SerializeObject(new WebAuthnMeta
+                    {
+                        credentialId = credentialId,
+                        publicKey = publicKey,
+                        aaguid = aaguid.ToString(),
+                        usrId = usrId,
+                        appPath = appPath,
+                        platform = regResponse.platform,
+                        isMobile = regResponse.isMobile,
+                        authenticatorType = aaguidLookup.ContainsKey(aaguid.ToString()) ? aaguidLookup[aaguid.ToString()] : "unknown",
+                        requestIPChain = string.Format("[{0}]",string.Join(",",GetClientIpChain().ToArray())),
+                        userPresence = userPresence,
+                        userVerified = userVerified,
+                    });
+                    LinkUserLogin(LUser.UsrId, "Fido2", credentialId, loginMeta);
+                    try
+                    {
+                        // re-gen to prevent re-registration
+                        string extAppDomainUrl =
+                            !string.IsNullOrWhiteSpace(Config.ExtBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
+                                ? Config.ExtBaseUrl
+                                : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+
+                        RegisterWebAuthnSetup(extAppDomainUrl, null);
+                        VerifyWebAuthnSetup(extAppDomainUrl, null);
+                    }
+                    catch { }
+                    if (!LUser.TwoFactorAuth && false) 
+                    {
+                        new LoginSystem().WrSetUsrOTPSecret(LUser.UsrId, true);
+                    }
+
+                    PreMsgPopup(
+                        string.Format("WebAuthn(Fido2) registration successful with id {0}{1}"
+                            , credentialId
+                            , LUser.TwoFactorAuth ? "" : "\r\nPlease consider enable 2FA and/or choosing really random/complex password of at least 16 characters to harden other adhoc login"
+                            )
+                        );
+                }
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup("failed to setup WebAuthn(Fido2)");
+                ErrorTrace(ex, "error");
+            }
+        }
         protected void cLinkWindowsBtn_Click(object sender, EventArgs e)
         {
             if (LUser != null && LUser.LoginName != "Anonymous")
@@ -1879,5 +2104,153 @@ namespace RO.Web
                 }
             }
         }
+
+        #region webauthn/fido2
+        private void RegisterWebAuthnSetup(string appDomainUrl,  string registrationJSON)
+        {
+            //var x = Newtonsoft.Json.JsonConvert.DeserializeObject(registrationJSON);
+            var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
+            var serverPath = new Uri(appDomainUrl).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+            string usrId = LUser.UsrId.ToString();
+            string usrIdB64 = System.Convert.ToBase64String(usrId.ToUtf8ByteArray());
+            
+            var dtLogin = new LoginSystem().GetLogins(null, "Fido2", usrId);
+            
+            Fido2Configuration fido2Config = new Fido2Configuration
+            {
+//                Origin = serverDomain,
+                ServerDomain = serverDomain,
+                ServerName = serverDomain,
+//                ServerIcon = "https://www.rintagi.com/images/a.gif",
+                Timeout = 60 * 1000,
+                TimestampDriftTolerance = 1000
+            };
+            byte[] challenge =
+                Newtonsoft.Json.JsonConvert.SerializeObject(
+                new WebAuthnChallenge
+                {
+                    nonce = Guid.NewGuid().ToString(),
+                    usrId = serverPath + usrIdB64,
+                    appPath = serverPath,
+                    expiredAfter = Common3.Utils.ToUnixTime(DateTime.UtcNow.AddMinutes(30))
+                }
+                ).ToUtf8ByteArray();
+            Fido2User user = new Fido2User
+            {
+                DisplayName = LUser.UsrName,
+                /* must be restricted to no more than than 64 for device like yubikey as it would fail without reason */
+                //Name = (Guid.NewGuid().ToString() + " " + DateTime.UtcNow.ToString("o")).Left(64),
+                //Id= Guid.NewGuid().ToString().ToUtf8ByteArray()
+                Name = (serverPath + LUser.LoginName).Left(64),
+                Id = (serverPath + usrIdB64).ToUtf8ByteArray()
+            };
+            AuthenticatorSelection authenticatorSelection = new AuthenticatorSelection
+            {
+                RequireResidentKey = false,
+                UserVerification = UserVerificationRequirement.Discouraged,
+                //                 AuthenticatorAttachment = AuthenticatorAttachment.Platform,
+            };
+            AttestationConveyancePreference attConveyancePreference = AttestationConveyancePreference.Indirect;
+            List<PublicKeyCredentialDescriptor> excludedCredentials = dtLogin.AsEnumerable().Select(
+                    dr =>
+                    {
+                        return new PublicKeyCredentialDescriptor()
+                        {
+                            Id = base64UrlDecode(dr["LoginName"].ToString()),
+                            Transports = new AuthenticatorTransport[]{
+                                AuthenticatorTransport.Ble, AuthenticatorTransport.Internal, AuthenticatorTransport.Lightning, AuthenticatorTransport.Nfc, AuthenticatorTransport.Usb
+                            },
+                            Type = PublicKeyCredentialType.PublicKey,
+                        };
+                    }
+                    ).ToList();
+            //new List<PublicKeyCredentialDescriptor> { };
+            AuthenticationExtensionsClientInputs clientExtensions = new AuthenticationExtensionsClientInputs
+            {
+                Extensions = true,
+                SimpleTransactionAuthorization = "you are registering to " + GetDomainUrl(false),
+                Location = true,
+                UserVerificationMethod = true,
+                BiometricAuthenticatorPerformanceBounds = new AuthenticatorBiometricPerfBounds
+                {
+                    FAR = float.MaxValue,
+                    FRR = float.MaxValue
+                }
+            };
+
+            var fido2 = new Fido2(fido2Config);
+
+            // must do this for the verification to work
+            var options = fido2.RequestNewCredential(user, excludedCredentials, authenticatorSelection, attConveyancePreference, clientExtensions);
+            // the challenge is random byte but we need more info, replace it
+            options.Challenge = challenge;
+            string createRequestJson = options.ToJson();
+            cRegistrationRequest.Text = createRequestJson;
+        }
+
+        private void VerifyWebAuthnSetup(string appDomainUrl, string registrationJSON, bool TwoFA = false)
+        {
+            //var x = Newtonsoft.Json.JsonConvert.DeserializeObject(registrationJSON);
+            var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
+            var serverPath = new Uri(appDomainUrl).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+            Fido2Configuration fido2Config = new Fido2Configuration
+            {
+                Origin = serverDomain,
+                ServerDomain = serverDomain,
+                ServerName = serverDomain,
+                ServerIcon = "https://www.rintagi.com/images/a.gif",
+                Timeout = 60 * 1000,
+                TimestampDriftTolerance = 1000
+            };
+            byte[] challenge =
+                Newtonsoft.Json.JsonConvert.SerializeObject(
+                new WebAuthnChallenge
+                {
+                    nonce = Guid.NewGuid().ToString(),
+                    usrId = null,
+                    appPath = serverPath,
+                    expiredAfter = Common3.Utils.ToUnixTime(DateTime.UtcNow.AddMinutes(30))
+                }
+                ).ToUtf8ByteArray();
+            AuthenticatorSelection authSelection = new AuthenticatorSelection
+            {
+                RequireResidentKey = false,
+                UserVerification = UserVerificationRequirement.Required,
+                AuthenticatorAttachment = TwoFA ? AuthenticatorAttachment.Platform : (AuthenticatorAttachment?) null,
+                //                AuthenticatorAttachment = null,
+            };
+            var dtLogin = new LoginSystem().GetLogins(cLoginName.Text, "Fido2");
+            //var dtLogin = new LoginSystem().GetLogins("John Doe", "Fido2");
+            List<PublicKeyCredentialDescriptor> allowedCredentials = dtLogin.AsEnumerable().Select(
+                    dr =>
+                    {
+                        return new PublicKeyCredentialDescriptor()
+                        {
+                            Id = base64UrlDecode(dr["LoginName"].ToString()),
+                            Transports = new AuthenticatorTransport[]{
+                                AuthenticatorTransport.Ble, AuthenticatorTransport.Internal, AuthenticatorTransport.Lightning, AuthenticatorTransport.Nfc, AuthenticatorTransport.Usb
+                            },
+                            Type = PublicKeyCredentialType.PublicKey,
+                        };
+                    }
+                    ).ToList();
+
+            //List<PublicKeyCredentialDescriptor> allowedCredentials = new List<PublicKeyCredentialDescriptor> {};
+            AuthenticationExtensionsClientInputs clientExtensions = new AuthenticationExtensionsClientInputs
+            {
+                Extensions = true,
+                SimpleTransactionAuthorization = "you are signing in to abc.com",
+                Location = true,
+                UserVerificationMethod = true,
+            };
+
+            var fido2 = new Fido2(fido2Config);
+
+            var verificationRequest = Fido2NetLib.AssertionOptions.Create(fido2Config, challenge, allowedCredentials, UserVerificationRequirement.Preferred, clientExtensions);
+            string verificationRequestJson = verificationRequest.ToJson();
+            cAssertionRequest.Text = verificationRequestJson;
+        }
+
+        #endregion
     }
 }

@@ -214,6 +214,18 @@ IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.i
 CREATE  UNIQUE INDEX IX_UsrGroupAuth ON UsrGroupAuth(UsrGroupId, CompanyId, ProjectId, SystemId)
 GO
 
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_Provider_LoginName' AND o.name = 'UsrProvider')
+    DROP INDEX UsrProvider.IX_Provider_LoginName 
+
+CREATE INDEX IX_Provider_LoginName ON UsrProvider(ProviderCd, LoginName) INCLUDE (UsrId,Active)
+GO
+
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_UsrId' AND o.name = 'UsrProvider')
+    DROP INDEX UsrProvider.IX_UsrId 
+
+CREATE INDEX IX_UsrId ON UsrProvider(UsrId)
+GO
+
 IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_UtReport_ProgramName' AND o.name = 'UtReport')
     DROP INDEX UtReport.IX_UtReport_ProgramName 
 

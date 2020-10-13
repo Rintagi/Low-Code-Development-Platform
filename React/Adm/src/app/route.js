@@ -16,7 +16,7 @@ import {pagesRoutes as AdmDbTableRoute} from '../pages/AdmDbTable/index'
 import {pagesRoutes as AdmDatTierRoute} from '../pages/AdmDatTier/index'
 import {pagesRoutes as AdmCtDisplayTypeRoute} from '../pages/AdmCtDisplayType/index'
 import {pagesRoutes as AdmEntityRoute} from '../pages/AdmEntity/index'
-import {pagesRoutes as AdmFlowChartRoute} from '../pages/AdmFlowChart/index'
+import {pagesRoutes as AdmFlowchartRoute} from '../pages/AdmFlowchart/index'
 import {pagesRoutes as AdmDbKeyRoute} from '../pages/AdmDbKey/index'
 import {pagesRoutes as AdmReleaseRoute} from '../pages/AdmRelease/index'
 import {pagesRoutes as AdmLabelVwRoute} from '../pages/AdmLabelVw/index'
@@ -101,7 +101,7 @@ SuppressGenRoute ? [] : [
 ...AdmDatTierRoute,
 ...AdmCtDisplayTypeRoute,
 ...AdmEntityRoute,
-...AdmFlowChartRoute,
+...AdmFlowchartRoute,
 ...AdmDbKeyRoute,
 ...AdmReleaseRoute,
 ...AdmLabelVwRoute,

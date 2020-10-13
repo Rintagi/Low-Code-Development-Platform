@@ -654,6 +654,7 @@ class MstRecord extends RintagiScreen {
                                       ('http://www.rintagi.com' && <div className='form__form-group-field'>
                                         <a
                                           target='_blank'
+                                          rel='noopener noreferrer'
                                           href={this.TranslateHyperLink('http://www.rintagi.com', false, false, {values, name: 'RegisterInsall'})}
                                           onClick={this.PopUpSearchLink('http://www.rintagi.com', false, false, {values, name: 'RegisterInsall'})}
                                           disabled={(authCol.RegisterInsall || {}).readonly ? 'disabled' : ''}
@@ -843,7 +844,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.AcquireLicense || {}).readonly || !(authCol.AcquireLicense || {}).visible}
                                         onClick={this.AcquireLicense({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.AcquireLicense || (columnLabel.AcquireLicense || {}).ColumnName}
+                                        {auxLabels.AcquireLicense || (columnLabel.AcquireLicense || {}).ColumnHeader || (columnLabel.AcquireLicense || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>
@@ -876,7 +877,7 @@ class MstRecord extends RintagiScreen {
                                       <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
                                         disabled={(authCol.RenewLicense || {}).readonly || !(authCol.RenewLicense || {}).visible}
                                         onClick={this.RenewLicense({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.RenewLicense || (columnLabel.RenewLicense || {}).ColumnName}
+                                        {auxLabels.RenewLicense || (columnLabel.RenewLicense || {}).ColumnHeader || (columnLabel.RenewLicense || {}).ColumnName}
                                       </Button>}
                                   </div>
                                 </div>

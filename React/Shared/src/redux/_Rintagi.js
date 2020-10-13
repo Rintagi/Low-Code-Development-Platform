@@ -40,7 +40,7 @@ export function rintagiReducer(state = initState, action) {
 const onGoingCheck = {
   waiting: undefined,
 };
-let lastCheckOn = undefined;
+let lastCheckOn = 0;
 let refreshing = false;
 export function refreshApp(refresh) {
   if (refreshing) return false;
@@ -56,11 +56,13 @@ export function checkBundleUpdate(docObj, fromLocation) {
     const _uuid = uuid();
     const rintagi = docObj.Rintagi;
     const swRegistration = docObj.swRegistration;
+    const swUnRegister = docObj.swUnRegister;
     const myRunningJS = rintagi.myJS;
-    const indexCached = rintagi.indexCached;
-    const checkInterval = rintagi.bundleCheckInterval || 5;
+    const indexCached = rintagi.indexCached !== false;
+    const defaultCheckIntervalSec = 60;
+    const checkInterval = rintagi.bundleCheckInterval || defaultCheckIntervalSec;
     const myself = rintagi.myDocumentUrl;
-    const myselfLatest = myself + (myself[myself.length - 1] === '/' ? '' : '/') + uuid();
+    const myselfLatest = myself + (myself[myself.length - 1] === '/' ? '' : '/') + '?' + uuid(); // bypass caching via (?) and don't need server urlrewrite support
     const lastCheckedVersion = currentBundleStatus.lastCheckedBundleName;
     const lastModified = currentBundleStatus.latestBundleLastModified;
     const eTag = currentBundleStatus.latestBundleETag;
@@ -69,14 +71,14 @@ export function checkBundleUpdate(docObj, fromLocation) {
       headers: {
       }
     }
+    log.debug(indexCached, now - lastCheckOn, now, lastCheckOn);
     if (lastModified) options.headers['If-Modified-Since'] = lastModified;
     //if (eTag) options.headers['If-None-Match'] = eTag;
-    console.log(navigator.serviceWorker && navigator.serviceWorker);
-    log.debug(now - lastCheckOn);
     const me = (now - lastCheckOn) < checkInterval * 1000
       ? Promise.resolve({})
       : getUrl(myself, options)
         .then(ret => {
+          lastCheckOn = !indexCached ? now : lastCheckOn;
           return getReactContainerStatus(ret);
         })
         .catch(error => {
@@ -89,6 +91,8 @@ export function checkBundleUpdate(docObj, fromLocation) {
       ? Promise.resolve({})
       : getUrl(myselfLatest, options)
         .then(ret => {
+          lastCheckOn = now;
+          log.debug('forced check ' + myselfLatest);
           return getReactContainerStatus(ret);
         })
         .catch(error => {
@@ -103,8 +107,7 @@ export function checkBundleUpdate(docObj, fromLocation) {
         const latestBundleJS = newMe.myJS || me.myJS;
         const latestLastModified = newMe.lastModified || me.lastModified;
         const latestETag = newMe.etag || me.etag;
-        lastCheckOn = me.myJS || newMe.myJS ? now : lastCheckOn;
-
+        log.debug(myself, myselfLatest, latestMe, myRunningJS);
         if (
           (newMe.myJS && myRunningJS !== newMe.myJS)
           ||
@@ -114,12 +117,13 @@ export function checkBundleUpdate(docObj, fromLocation) {
         ) {
           const currentUrl = fromLocation.href;
           const refreshUrl = currentUrl.replace(myself, myselfLatest);
-          lastCheckOn = now;
+          //lastCheckOn = now;
+          // this (.update()) doesn't work, still use the old one even after call
           if (swRegistration) {
             false && swRegistration.update()
               .then(r => {
-//                console.log('sw refreshed')
-//                console.log(r);
+                console.log('sw refreshed via update')
+                console.log(r);
               })
               .catch(error => {
                 console.log('sw refreshed failed')
@@ -131,11 +135,13 @@ export function checkBundleUpdate(docObj, fromLocation) {
             (latestBundleJS && lastCheckedVersion !== latestBundleJS)
           )
           ) {
-            console.log(myRunningJS);
-            console.log(latestBundleJS);
+            log.info(myRunningJS, latestBundleJS);
             console.log('a new version is available, please refresh the page');
-            //document.lastCheckedVersion = latestVersion;
-            // console.log(document.lastCheckedVersion);
+            if (typeof swUnRegister === 'function') {
+              // this is a must to force no caching before reload, basically disable service worker
+              // we don't do it here, leave to front end(see screen.js)
+              // document.swUnRegister();
+            }
             // alert('a new version is available, please refresh the page');
             // window.location.reload();
           }

@@ -633,7 +633,7 @@ namespace RO.Web
 						if (dtAu.Rows[12]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["BotVisible116"].ToString().Replace("\"","\"\"") + "\"" + (char)9 + "\"" + drv["BotVisible116Text"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
-					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmButtonHlp.xls"; Session["ExportStr"] = sb.Replace("\r\n","\n");
+					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmButtonHlp.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
 				}
 				else if (eExport == "RTF")
 				{

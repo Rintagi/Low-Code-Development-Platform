@@ -4,7 +4,8 @@ import moment from 'moment';
 import { getAddMstPath, getAddDtlPath, getNaviPath, getEditDtlPath, getEditMstPath, debounce, isEmailFormat, isEmpty, isEmptyArray, isEmptyObject, isEmptyId, isValidRange, delay } from '../../helpers/utils'
 import { registerBlocker, unregisterBlocker } from '../../helpers/navigation';
 import { GetDropdownAction, GetBottomAction, GetRowAction } from '../../redux/_ScreenReducer'
-import { getDefaultPath, getReactContainerInfo, getReactContainerStatus, uuid } from '../../helpers/utils';
+import { getDefaultPath } from '../../helpers/utils';
+import { getReactContainerInfo, getReactContainerStatus, uuid } from '../../helpers/domutils';
 import { parsedUrl } from '../../helpers/domutils';
 import { getUrl } from '../../services/systemService';
 import log from '../../helpers/logger';
@@ -48,14 +49,22 @@ class RintagiScreen extends Component {
         bundleCheck(document, window.location)
         .then(bundle => {
           const latestJS = bundle.latestMe.myJS;
+          const [myBaseUrl, path] = window.location.href.split('#');
           if (latestJS 
             && latestJS !== bundle.currentJSBundleName 
             && !this.noAutoRefresh) {
               setTimeout(() => {
                 if (!this.noAutoRefresh && refreshApp(true)) {
+                  log.info('force reloading of app');
+                  if (typeof document.swUnRegister === 'function') {
+                    log.info('disable SW');
+                    // this is a must to force no caching before reload
+                    document.swUnRegister();
+                  }
                   alert('A new version of application is available. Application will be refreshed!');
                   setTimeout(() => {
-                    window.location.reload();                    
+                    window.location.reload();           
+                    //window.location = myBaseUrl + "_" + uuid() + "#" + path;          
                   }, 100);
                 }
                 else {

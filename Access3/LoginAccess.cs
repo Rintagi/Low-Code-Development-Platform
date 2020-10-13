@@ -175,17 +175,21 @@ namespace RO.Access3
 			cn.Close();
 		}
 
-        public override DataTable GetLogins(string LoginName, string Provider)
+        public override DataTable GetLogins(string SSOLoginName, string Provider, string UsrId = null)
         {
             DataTable dt = new DataTable();
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OleDbConnection cn = new OleDbConnection(GetDesConnStr());
             cn.Open();
-            OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON SELECT DISTINCT u.UsrId, u.LoginName FROM dbo.Usr u INNER JOIN UsrProvider p on u.UsrId = p.UsrId AND p.LoginName = ? AND p.ProviderCd = ? WHERE u.Active = 'Y' ", cn);
-            cmd.CommandType = CommandType.Text;
+            OleDbCommand cmd = new OleDbCommand("GetLoginSSO", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+//            OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON SELECT DISTINCT u.UsrId, u.LoginName FROM dbo.Usr u INNER JOIN UsrProvider p on u.UsrId = p.UsrId AND p.LoginName = ? AND p.ProviderCd = ? WHERE u.Active = 'Y' ", cn);
+//            cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 1800;
-            cmd.Parameters.Add("@LoginName", OleDbType.VarWChar).Value = LoginName;
+            cmd.Parameters.Add("@SSOLoginName", OleDbType.VarWChar).Value = string.IsNullOrEmpty(SSOLoginName) ? (object)System.DBNull.Value : SSOLoginName;
             cmd.Parameters.Add("@ProviderCd", OleDbType.VarWChar).Value = Provider;
+            cmd.Parameters.Add("@UsrId", OleDbType.Integer).Value = string.IsNullOrEmpty(UsrId) ? (object)System.DBNull.Value : UsrId;
             try
             {
                 da.SelectCommand = cmd;
@@ -406,7 +410,7 @@ namespace RO.Access3
             foreach (DataRow dr in dt.Rows)
             {
                 // we don't want to leak the user password hash verbatim
-                dr["UsrPassword"] = (new System.Security.Cryptography.HMACMD5(dr["UsrPassword"] == null || dr["UsrPassword"].ToString() == "" ? (System.Security.Cryptography.SHA1.Create()).ComputeHash(System.Text.Encoding.Unicode.GetBytes("NoPassword")) : dr["UsrPassword"] as byte[])).ComputeHash(System.Text.Encoding.ASCII.GetBytes(dr["UsrId"].ToString() + (dr["LastPwdChgDt"] == null || dr["LastPwdChgDt"].ToString() == "" ? new DateTime() : (DateTime)dr["LastPwdChgDt"]).ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                dr["UsrPassword"] = (new System.Security.Cryptography.HMACSHA256(dr["UsrPassword"] == null || dr["UsrPassword"].ToString() == "" ? (System.Security.Cryptography.SHA1.Create()).ComputeHash(System.Text.Encoding.Unicode.GetBytes("NoPassword")) : dr["UsrPassword"] as byte[])).ComputeHash(System.Text.Encoding.ASCII.GetBytes(dr["UsrId"].ToString() + (dr["LastPwdChgDt"] == null || dr["LastPwdChgDt"].ToString() == "" ? new DateTime() : (DateTime)dr["LastPwdChgDt"]).ToString(System.Globalization.CultureInfo.InvariantCulture)));
             }
             return dt;
         }
@@ -759,7 +763,7 @@ namespace RO.Access3
 			return rtn;
 		}
 
-        public override void LinkUserLogin(int UsrId, string ProviderCd, string LoginName)
+        public override void LinkUserLogin(int UsrId, string ProviderCd, string LoginName, string LoginMeta = null)
         {
             if (da == null)
             {
@@ -776,6 +780,7 @@ namespace RO.Access3
                 cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = UsrId;
                 cmd.Parameters.Add("@ProviderCd", OleDbType.Char).Value = ProviderCd;
                 cmd.Parameters.Add("@LoginName", Config.DoubleByteDb ? OleDbType.VarWChar : OleDbType.VarChar).Value = LoginName;
+                cmd.Parameters.Add("@LoginMeta", Config.DoubleByteDb ? OleDbType.VarWChar : OleDbType.VarChar).Value = LoginMeta;
                 cmd.ExecuteNonQuery();
                 tr.Commit();
             }
@@ -790,7 +795,7 @@ namespace RO.Access3
             }
         }
 
-        public override void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName)
+        public override void UnlinkUserLogin(int UsrId, string ProviderCd, string LoginName, string LoginMeta = null)
         {
             if (da == null)
             {
@@ -807,6 +812,7 @@ namespace RO.Access3
                 cmd.Parameters.Add("@UsrId", OleDbType.Numeric).Value = UsrId;
                 cmd.Parameters.Add("@ProviderCd", OleDbType.Char).Value = ProviderCd;
                 cmd.Parameters.Add("@LoginName", Config.DoubleByteDb ? OleDbType.VarWChar : OleDbType.VarChar).Value = LoginName;
+                cmd.Parameters.Add("@LoginMeta", Config.DoubleByteDb ? OleDbType.VarWChar : OleDbType.VarChar).Value = LoginMeta;
                 cmd.ExecuteNonQuery();
                 tr.Commit();
             }
@@ -929,7 +935,8 @@ namespace RO.Access3
 
         public override string WrSetUsrOTPSecret(int UsrId, bool bEnable, string hostSecret = null)
         {
-            string Secret = Guid.NewGuid().ToString().Replace("-", "");
+//            string Secret = Guid.NewGuid().ToString().Replace("-", "");
+            string Secret = randomByteString(32); 
             string EncSecret = string.IsNullOrEmpty(hostSecret) ? EncryptString(Secret) : EncryptString(Secret, hostSecret);
             OleDbConnection cn = new OleDbConnection(GetDesConnStr());
             cn.Open();

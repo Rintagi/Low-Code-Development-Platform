@@ -49,6 +49,8 @@ BrokerId
 END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.City') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.City') AND type='U')
 DROP TABLE dbo.City
 CREATE TABLE City ( 
@@ -60,6 +62,7 @@ CONSTRAINT PK_City PRIMARY KEY CLUSTERED (
 CityId
 )
 )
+END
 
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Company') and type='U')
@@ -79,6 +82,8 @@ CompanyId
 END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Country') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Country') AND type='U')
 DROP TABLE dbo.Country
 CREATE TABLE Country ( 
@@ -89,6 +94,7 @@ CONSTRAINT PK_Country PRIMARY KEY CLUSTERED (
 CountryId
 )
 )
+END
 
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Customer') and type='U')
@@ -140,7 +146,7 @@ END
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.FxRate') and type='U')
 BEGIN
-IF EXISTS (SELECT name FROM sysindexes WHERE name = 'IX_FxRate')
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_FxRate' AND o.name = 'FxRate')
 DROP INDEX FxRate.IX_FxRate 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.FxRate') AND type='U')
 DROP TABLE dbo.FxRate
@@ -244,6 +250,8 @@ ProjectId
 END
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.State') and type='U')
+BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.State') AND type='U')
 DROP TABLE dbo.State
 CREATE TABLE State ( 
@@ -255,6 +263,7 @@ CONSTRAINT PK_State PRIMARY KEY CLUSTERED (
 StateId
 )
 )
+END
 
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Vendor') and type='U')

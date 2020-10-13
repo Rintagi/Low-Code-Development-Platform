@@ -28,7 +28,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <GenerateResourceNeverLockTypeAssemblies>true</GenerateResourceNeverLockTypeAssemblies>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -81,6 +81,22 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Fido2">
+      <HintPath>..\Lib\Fido2.dll</HintPath>
+    </Reference>
+    <Reference Include="Fido2.Models">
+      <HintPath>..\Lib\Fido2.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>..\Lib\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Numbers">
+      <HintPath>..\Lib\Numbers.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -99,6 +115,9 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="URIUtility">
+      <HintPath>..\Lib\URIUtility.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

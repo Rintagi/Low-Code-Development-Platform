@@ -372,7 +372,7 @@ namespace RO
                     : (!string.IsNullOrEmpty(Config.IntBaseUrl) ? Config.IntBaseUrl
                     : ""
                     );
-            string hash = Convert.ToBase64String(new System.Security.Cryptography.MD5CryptoServiceProvider().ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword)));
+            string hash = Convert.ToBase64String(new System.Security.Cryptography.SHA256CryptoServiceProvider().ComputeHash(System.Text.UTF8Encoding.UTF8.GetBytes(Config.DesPassword)));
             string url = (string.IsNullOrEmpty(cronjobBaseUrl) ? http : cronjobBaseUrl) + "/CronJob.aspx" + "?hash=" + HttpUtility.UrlEncode(hash);
 
             Dictionary<string, string> info = GetRequestInfo();
