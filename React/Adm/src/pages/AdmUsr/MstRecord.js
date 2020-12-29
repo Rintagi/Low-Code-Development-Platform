@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'UsrId1';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -102,6 +102,13 @@ class MstRecord extends RintagiScreen {
   LenderId1InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchLenderId1(v, filterBy); } }
   BorrowerId1InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchBorrowerId1(v, filterBy); } }
   GuarantorId1InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchGuarantorId1(v, filterBy); } }
+  SendNotificationBtn({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = 'SendNotificationBtn';
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }
   /* ReactRule: Master Record Custom Function */
 
   /* ReactRule End: Master Record Custom Function */
@@ -181,6 +188,8 @@ class MstRecord extends RintagiScreen {
           LenderId1: (values.cLenderId1 || {}).value || '',
           BorrowerId1: (values.cBorrowerId1 || {}).value || '',
           GuarantorId1: (values.cGuarantorId1 || {}).value || '',
+          NotificationTitle: values.cNotificationTitle || '',
+          NotificationContent: values.cNotificationContent || '',
         },
         [],
         {
@@ -446,6 +455,8 @@ class MstRecord extends RintagiScreen {
     const BorrowerId1 = currMst.BorrowerId1;
     const GuarantorId1List = AdmUsrReduxObj.ScreenDdlSelectors.GuarantorId1(AdmUsrState);
     const GuarantorId1 = currMst.GuarantorId1;
+    const NotificationTitle = currMst.NotificationTitle;
+    const NotificationContent = currMst.NotificationContent;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
@@ -526,6 +537,8 @@ class MstRecord extends RintagiScreen {
                     cLenderId1: LenderId1List.filter(obj => { return obj.key === LenderId1 })[0],
                     cBorrowerId1: BorrowerId1List.filter(obj => { return obj.key === BorrowerId1 })[0],
                     cGuarantorId1: GuarantorId1List.filter(obj => { return obj.key === GuarantorId1 })[0],
+                    cNotificationTitle: formatContent(NotificationTitle || '', 'TextBox'),
+                    cNotificationContent: formatContent(NotificationContent || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -1537,6 +1550,61 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
+                              {(authCol.NotificationTitle || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.NotificationTitle || {}).ColumnHeader} {(columnLabel.NotificationTitle || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.NotificationTitle || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.NotificationTitle || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cNotificationTitle'
+                                          disabled={(authCol.NotificationTitle || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cNotificationTitle && touched.cNotificationTitle && <span className='form__form-group-error'>{errors.cNotificationTitle}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.NotificationContent || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.NotificationContent || {}).ColumnHeader} {(columnLabel.NotificationContent || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.NotificationContent || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.NotificationContent || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmUsrState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          component='textarea'
+                                          name='cNotificationContent'
+                                          disabled={(authCol.NotificationContent || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cNotificationContent && touched.cNotificationContent && <span className='form__form-group-error'>{errors.cNotificationContent}</span>}
+                                  </div>
+                                </Col>
+                              }
+                                {(authCol.SendNotificationBtn || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.SendNotificationBtn || {}).readonly || !(authCol.SendNotificationBtn || {}).visible}
+                                            onClick={this.SendNotificationBtn({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.SendNotificationBtn || (columnLabel.SendNotificationBtn || {}).ColumnHeader || (columnLabel.SendNotificationBtn || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>

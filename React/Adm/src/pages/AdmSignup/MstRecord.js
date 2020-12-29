@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'UsrId270';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -751,18 +751,19 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.ResnedToken || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.ResnedToken || {}).readonly || !(authCol.ResnedToken || {}).visible}
-                                        onClick={this.ResnedToken({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.ResnedToken || (columnLabel.ResnedToken || {}).ColumnHeader || (columnLabel.ResnedToken || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.ResnedToken || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.ResnedToken || {}).readonly || !(authCol.ResnedToken || {}).visible}
+                                            onClick={this.ResnedToken({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.ResnedToken || (columnLabel.ResnedToken || {}).ColumnHeader || (columnLabel.ResnedToken || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.DummyWhiteSpace4 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -787,30 +788,32 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.Submit || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.Submit || {}).readonly || !(authCol.Submit || {}).visible}
-                                        onClick={this.Submit({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Submit || (columnLabel.Submit || {}).ColumnHeader || (columnLabel.Submit || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.SignUpBtn || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.SignUpBtn || {}).readonly || !(authCol.SignUpBtn || {}).visible}
-                                        onClick={this.SignUpBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SignUpBtn || (columnLabel.SignUpBtn || {}).ColumnHeader || (columnLabel.SignUpBtn || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.Submit || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.Submit || {}).readonly || !(authCol.Submit || {}).visible}
+                                            onClick={this.Submit({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.Submit || (columnLabel.Submit || {}).ColumnHeader || (columnLabel.Submit || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.SignUpBtn || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.SignUpBtn || {}).readonly || !(authCol.SignUpBtn || {}).visible}
+                                            onClick={this.SignUpBtn({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.SignUpBtn || (columnLabel.SignUpBtn || {}).ColumnHeader || (columnLabel.SignUpBtn || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.DummyWhiteSpace6 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

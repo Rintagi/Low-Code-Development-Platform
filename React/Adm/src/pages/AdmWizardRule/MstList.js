@@ -36,7 +36,7 @@ class MstList extends RintagiScreen {
     this.hasChangedContent = false;
     this.titleSet = false;
     this.MstKeyColumnName = 'WizardRuleId73';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.SetCurrentRecordState = this.SetCurrentRecordState.bind(this);
     this.SearchBoxFocus = this.SearchBoxFocus.bind(this);
     this.SelectMstListRow = this.SelectMstListRow.bind(this);

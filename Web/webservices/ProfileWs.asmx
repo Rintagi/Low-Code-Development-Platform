@@ -167,6 +167,32 @@ public partial class ProfileWs : AsmxBase
         return result;
     }
 
+    [WebMethod(EnableSession = false)]
+    public ApiResponse<bool, object> UpdateNotificationChannel(string DeviceId, string Fingerprint, string AppSig, string NotificationType)
+    {
+        Func<ApiResponse<bool, object>> fn = () =>
+        {
+            SwitchContext(LCurr.SystemId, LCurr.CompanyId, LCurr.ProjectId, false, false, false);
+            ApiResponse<bool, object> mr = new ApiResponse<bool, object>();
+
+            if (LUser != null && LUser.LoginName.ToLower() != "anonymous")
+            {
+                (new LoginSystem()).UpdUsrNotificationChannel(LUser.UsrId, DeviceId, GetVistorUserAgent(), GetVisitorIPAddress(), Fingerprint, AppSig, NotificationType);
+                mr.status = "success";
+                mr.data = true;
+            }
+            else
+            {
+                mr.status = "failed";
+                mr.errorMsg = "Error updating push notification channel";
+                mr.data = false;
+            }
+
+            return mr;
+        };
+        var result = ProtectedCall(fn);
+        return result;
+    }
     protected string ResetRequestLoginName(string j, string p)
     {
         try

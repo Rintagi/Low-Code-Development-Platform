@@ -37,7 +37,7 @@ class DtlRecord extends RintagiScreen {
     this.GetReduxState = () => (this.props.AdmServerRuleOvrd || {});
     this.blocker = null;
     this.titleSet = false;
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.MstKeyColumnName = 'AtServerRuleOvrdId1322';
     this.DtlKeyColumnName = 'ServerRuledOvrdPrmId1321';
     this.hasChangedContent = false;

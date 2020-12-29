@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'RowOvrdId238';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);

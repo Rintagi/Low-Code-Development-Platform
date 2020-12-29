@@ -1551,3 +1551,16 @@
 7673~@~1326~@~90~@~~@~Active~@~UsrProvider - Active~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~whether this is still active login alternative(we do not remove records unless for GPDR reason)~@~
 7674~@~1326~@~50~@~~@~LoginMeta~@~UsrProvider - LoginMeta~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Auxilary info for related to the SSO(can be public key info in the case of FIDO2/WebAuthn for example)~@~
 7675~@~1326~@~10~@~~@~UsrProviderId~@~UsrProvider - UsrProviderId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7676~@~1327~@~60~@~~@~LastAccessOnUTC~@~UsrDevice - LastAccessOnUTC~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7677~@~1327~@~50~@~~@~UsrAgent~@~UsrDevice - UsrAgent~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7678~@~1327~@~30~@~~@~DeviceId~@~UsrDevice - DeviceId~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7679~@~1327~@~20~@~~@~UsrId~@~UsrDevice - UsrId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7680~@~1327~@~10~@~~@~UsrDeviceId~@~UsrDevice - UsrDeviceId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7681~@~1327~@~40~@~~@~PushNotificationType~@~UsrDevice - PushNotificationType~@~15~@~5~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7682~@~1327~@~70~@~~@~Status~@~UsrDevice - Status~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~~@~
+7683~@~1327~@~80~@~~@~Fingerprint~@~UsrDevice - Fingerprint~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7684~@~1327~@~90~@~~@~AppSig~@~UsrDevice - AppSig~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7685~@~1327~@~100~@~~@~ClientIP~@~UsrDevice - ClientIP~@~15~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7686~@~1328~@~20~@~~@~MimeType~@~VwMIMEType - MimeType~@~15~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7687~@~1328~@~30~@~~@~MimeTypeDesc~@~VwMIMEType - MimeTypeDesc~@~15~@~200~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7688~@~1328~@~10~@~~@~MimeTypeId~@~VwMIMEType - MimeTypeId~@~3~@~4~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~

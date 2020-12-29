@@ -74,6 +74,8 @@ namespace RO.Web
             columns.Add("BorrowerId1", typeof(string));
             columns.Add("GuarantorId1", typeof(string));
             columns.Add("UsageStat", typeof(string));
+            columns.Add("NotificationTitle", typeof(string));
+            columns.Add("NotificationContent", typeof(string));
             return dt;
         }
 
@@ -230,6 +232,10 @@ namespace RO.Web
             drType["GuarantorId1"] = "Numeric"; drDisp["GuarantorId1"] = "AutoComplete";
             try { dr["UsageStat"] = mst["UsageStat"]; } catch { }
             drType["UsageStat"] = string.Empty; drDisp["UsageStat"] = "Label";
+            try { dr["NotificationTitle"] = (mst["NotificationTitle"] ?? "").Trim().Left(9999999); } catch { }
+            drType["NotificationTitle"] = string.Empty; drDisp["NotificationTitle"] = "TextBox";
+            try { dr["NotificationContent"] = mst["NotificationContent"]; } catch { }
+            drType["NotificationContent"] = string.Empty; drDisp["NotificationContent"] = "MultiLine";
 
             if (dtl != null)
             {
@@ -308,6 +314,9 @@ namespace RO.Web
                 {"BorrowerId1",""},
                 {"GuarantorId1",""},
                 {"UsageStat",""},
+                {"NotificationTitle",""},
+                {"NotificationContent",""},
+                {"SendNotificationBtn",""},
 
             };
             /* AsmxRule: Init Master Table */
@@ -339,6 +348,7 @@ namespace RO.Web
             Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                var effectiveFilterId = GetEffectiveScreenFilterId(filterId, true);                
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 Dictionary<string, string> context = new Dictionary<string, string>();
                 context["method"] = "GetLisAdmUsr1";
@@ -349,7 +359,7 @@ namespace RO.Web
                 context["ssd"] = "";
                 context["scr"] = screenId.ToString();
                 context["csy"] = systemId.ToString();
-                context["filter"] = filterId;
+                context["filter"] = effectiveFilterId.ToString();
                 context["isSys"] = "N";
                 context["conn"] = string.Empty;
                 AutoCompleteResponse r = LisSuggests(searchStr, jss.Serialize(context), topN, _CurrentScreenCriteria);

@@ -1,0 +1,44 @@
+html {
+  overflow-y: scroll;
+}
+
+main {
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  background: #fff;
+
+  @include themify($themes) {
+    color: themed('colorText');
+  }
+}
+
+* {
+  box-sizing: inherit;
+}
+
+ul, ol {
+  padding-left: 15px;
+  margin-bottom: 0;
+}
+
+a {
+  color: #0a090c;
+  transition: all 0.3s;
+
+  &:hover {
+    text-decoration: none;
+    color: #0a090c;
+  }
+}
+
+img {
+  width: 100%;
+}

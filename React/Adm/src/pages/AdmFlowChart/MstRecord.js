@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'ChartId1325';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -571,42 +571,45 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.launch || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.launch || {}).readonly || !(authCol.launch || {}).visible}
-                                        onClick={this.launch({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.launch || (columnLabel.launch || {}).ColumnHeader || (columnLabel.launch || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.View || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.View || {}).readonly || !(authCol.View || {}).visible}
-                                        onClick={this.View({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.View || (columnLabel.View || {}).ColumnHeader || (columnLabel.View || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.Display || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.Display || {}).readonly || !(authCol.Display || {}).visible}
-                                        onClick={this.Display({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Display || (columnLabel.Display || {}).ColumnHeader || (columnLabel.Display || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.launch || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.launch || {}).readonly || !(authCol.launch || {}).visible}
+                                            onClick={this.launch({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.launch || (columnLabel.launch || {}).ColumnHeader || (columnLabel.launch || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.View || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.View || {}).readonly || !(authCol.View || {}).visible}
+                                            onClick={this.View({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.View || (columnLabel.View || {}).ColumnHeader || (columnLabel.View || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.Display || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.Display || {}).readonly || !(authCol.Display || {}).visible}
+                                            onClick={this.Display({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.Display || (columnLabel.Display || {}).ColumnHeader || (columnLabel.Display || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>

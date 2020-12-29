@@ -847,6 +847,7 @@ namespace RO.Rule3
                 else if (",Button,HyperLink,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 && !string.IsNullOrEmpty(drv["ColumnId"].ToString())) { sb.Append("<asp:TextBox"); }
                 else if (drv["DisplayName"].ToString() == "Button") { sb.Append("<asp:Button"); }
                 else if (drv["DisplayMode"].ToString() == "EncryptedTextBox") { sb.Append("<rcasp:EncryptedTextBox"); }
+                else if (drv["DisplayMode"].ToString() == "OTPTextBox") { sb.Append("<rcasp:OTPTextBox"); }
                 else { sb.Append("<asp:" + drv["DisplayName"].ToString()); }
                 if (",Password,MultiLine,".IndexOf("," + drv["DisplayMode"].ToString() + ",") >= 0) { sb.Append(" TextMode=\"" + drv["DisplayMode"].ToString() + "\""); }
                 sb.Append(" id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"");
@@ -5250,7 +5251,10 @@ namespace RO.Rule3
 				{
                     if (",Button,Label,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0)
                     {
-                        if (drv["ColumnIdentity"].ToString() != "Y" && (",ComboBox,DropDownList,ListBox,RadioButtonList,DataGrid,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 || drv["DisplayMode"].ToString().ToLower() == "document"))
+                        if (drv["ColumnIdentity"].ToString() != "Y" 
+                            && (",ComboBox,DropDownList,ListBox,RadioButtonList,DataGrid,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
+                                || drv["DisplayMode"].ToString().ToLower() == "document")
+                            )
 					    {
 						    sb.Append("			");
                             if (drv["DefaultValue"].ToString() != string.Empty && drv["DefAfter"].ToString() != "Y")
@@ -7249,7 +7253,7 @@ namespace RO.Rule3
                 sb.Append("					fName = fName.Replace(\":\",\"\").Replace(\"..\",\"\");" + Environment.NewLine);
                 sb.Append("					if (!Directory.Exists(Config.PathTmpImport)) { Directory.CreateDirectory(Config.PathTmpImport); }" + Environment.NewLine);
                 sb.Append("					cBrowse.PostedFile.SaveAs(Config.PathTmpImport + fName);" + Environment.NewLine);
-				sb.Append("					cWorkSheet.DataSource = (new XLSImport()).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();" + Environment.NewLine);
+                sb.Append("					cWorkSheet.DataSource = (new XLSImport(Config.WsXlsUrl)).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();" + Environment.NewLine);
 				sb.Append("					cFNameO.Text = fNameO; cFName.Text = fName;" + Environment.NewLine);
 				sb.Append("				}" + Environment.NewLine);
                 sb.Append("				catch (Exception err) {bErrNow.Value = \"Y\"; PreMsgPopup(\"Unable to retrieve sheet names from \\\"\" + fNameO + \"\\\": \" + err.Message); }" + Environment.NewLine);
@@ -7324,7 +7328,7 @@ namespace RO.Rule3
                 sb.Append("		{" + Environment.NewLine);
                 sb.Append("			try" + Environment.NewLine);
                 sb.Append("			{" + Environment.NewLine);
-				sb.Append("				DataTable dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport()).ImportFile(fileName,workSheet,startRow,fileFullName)).Tables[0];" + Environment.NewLine);
+                sb.Append("				DataTable dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName,workSheet,startRow,fileFullName)).Tables[0];" + Environment.NewLine);
                 sb.Append("				DataRowCollection rows = dtImp.Rows;" + Environment.NewLine);
                 sb.Append("				DataColumnCollection cols = dt.Columns;" + Environment.NewLine);
                 sb.Append("				Func<string, string, bool> isDateCol = (cl, c) => (\",\" + cl + \",\").IndexOf(\",\" + c + \",\") >= 0;" + Environment.NewLine);
@@ -11468,9 +11472,25 @@ namespace RO.Rule3
 				foreach (DataRowView drv in dv)
 				{
 					// Do not check 'drv["TableId"].ToString() != string.Empty' to allow for non-database columns.
-                    if (((",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 || drv["DdlRefColumnId"].ToString() == string.Empty || drv["DisplayMode"].ToString().ToLower() == "currency") && (drv["SystemValue"].ToString() == string.Empty || drv["DefAlways"].ToString() != "Y") && (drv["DisplayName"].ToString().ToLower() != "imagebutton" || drv["DataTypeSqlName"].ToString().ToLower() != "varbinary")) || drv["DisplayMode"].ToString().ToLower() == "document")
+                    if ((
+                            (",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
+                            || drv["DdlRefColumnId"].ToString() == string.Empty 
+                            || drv["DisplayMode"].ToString().ToLower() == "currency") 
+                            && 
+                            (drv["SystemValue"].ToString() == string.Empty 
+                            /* default always doesn't mean the front end value cannot be passed on, useful for server rule logic
+                            || drv["DefAlways"].ToString() != "Y" 
+                             */
+                            )
+                            /* still has client side field even for imagebutton/varbinary, useful for server rule(and make it consistent with grid treatment
+                            && 
+                            (drv["DisplayName"].ToString().ToLower() != "imagebutton" 
+                            || drv["DataTypeSqlName"].ToString().ToLower() != "varbinary")
+                             */
+                        ) 
+                        || drv["DisplayMode"].ToString().ToLower() == "document")
                     {
-						sb.Append("			columns.Add(\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\", typeof(string));" + Environment.NewLine);
+                        sb.Append("			columns.Add(\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\", " + (drv["DataTypeSqlName"].ToString().ToLower() == "varbinary" ? "typeof(object)" : "typeof(string)") + ");" + Environment.NewLine);
 					}
 				}
 				sb.Append("			return dt;" + Environment.NewLine);
@@ -11491,9 +11511,18 @@ namespace RO.Rule3
 				foreach (DataRowView drv in dv)
 				{
 					// Do not check 'drv["TableId"].ToString() != string.Empty' to allow for non-database columns.
-                    if (((",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 || drv["DdlRefColumnId"].ToString() == string.Empty || drv["DisplayMode"].ToString().ToLower() == "currency") && (drv["SystemValue"].ToString() == string.Empty || drv["DefAlways"].ToString() != "Y")) || drv["DisplayMode"].ToString().ToLower() == "document")
+                    if (((",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
+                            || drv["DdlRefColumnId"].ToString() == string.Empty 
+                            || drv["DisplayMode"].ToString().ToLower() == "currency") 
+                        && (drv["SystemValue"].ToString() == string.Empty
+                            /* default always doesn't mean the front end value cannot be passed on, useful for server rule logic
+                            || drv["DefAlways"].ToString() != "Y"
+                             */
+                            )
+                        ) 
+                        || drv["DisplayMode"].ToString().ToLower() == "document")
                     {
-						sb.Append("			columns.Add(\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\", typeof(string));" + Environment.NewLine);
+                        sb.Append("			columns.Add(\"" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\", " + (drv["DataTypeSqlName"].ToString().ToLower() == "varbinary" ? "typeof(object)" : "typeof(string)") + ");" + Environment.NewLine);
 					}
 				}
 				sb.Append("			return dt;" + Environment.NewLine);
@@ -11697,6 +11726,7 @@ namespace RO.Rule3
             {
                 if (drv["DisplayName"].ToString() == "Signature") { sb.Append("<rcasp:Signature"); }
                 else if (drv["DisplayMode"].ToString() == "EncryptedTextBox") { sb.Append("<rcasp:EncryptedTextBox"); }
+                else if (drv["DisplayMode"].ToString() == "OTPTextBox") { sb.Append("<rcasp:OTPTextBox"); }
                 else if (drv["DisplayName"].ToString() == "ComboBox") { sb.Append("<rcasp:ComboBox autocomplete=\"off\""); }
                 else if (drv["DisplayName"].ToString() == "Button") { sb.Append("<asp:Button"); }
                 else if (drv["DisplayName"].ToString() == "Editor") { sb.Append("<ajwced:Editor NoScript=\"true\" ActiveMode=\"Html\""); }

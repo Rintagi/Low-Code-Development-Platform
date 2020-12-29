@@ -147,7 +147,7 @@ namespace RO.Web
 					fName = fName.Replace(":","").Replace("..","");
 					if (!Directory.Exists(Config.PathTmpImport)) { Directory.CreateDirectory(Config.PathTmpImport); }
 					cBrowse.PostedFile.SaveAs(Config.PathTmpImport + fName);
-					cWorkSheet.DataSource = (new XLSImport()).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();
+					cWorkSheet.DataSource = (new XLSImport(Config.WsXlsUrl)).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();
 					cFNameO.Text = fNameO; cFName.Text = fName;
 				}
 				catch (Exception err) {throw new Exception("Unable to retrieve sheet names from \"" + fNameO + "\": " + err.Message);}
@@ -222,7 +222,7 @@ namespace RO.Web
 		{
 			try
 			{
-				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport()).ImportFile(fileName, workSheet, startRow, fileFullName)));
+				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName, workSheet, startRow, fileFullName)));
 				DataRowCollection rows = ds.Tables[0].Rows;
 				DataColumnCollection cols = ds.Tables[0].Columns;
 				int iStart = int.Parse(startRow) - 1;
@@ -280,7 +280,7 @@ namespace RO.Web
 		{
 			try
 			{
-				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport()).ImportFile(fileName, workSheet, startRow, fileFullName)));
+				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName, workSheet, startRow, fileFullName)));
 				DataRowCollection rows = ds.Tables[0].Rows;
 				DataColumnCollection cols = ds.Tables[0].Columns;
 				int iStart = int.Parse(startRow) - 1;

@@ -141,6 +141,7 @@ export default class AutoCompleteField extends Component {
       <div className={`${this.props.className} form__form-group-input-wrap`}>
         <Fragment>
           <Typeahead
+            id={this.props.id || this.props.name}
             ref={(typeahead) => this.typeahead = typeahead}
             renderMenu={this.renderMenu}
             onPaginate={this.handlePaginate()}

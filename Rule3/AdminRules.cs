@@ -11,7 +11,7 @@ namespace RO.Rule3
 
 	public class AdminRules
 	{
-		private AdminAccessBase GetAdminAccess(int CommandTimeout = 1800)
+		public AdminAccessBase GetAdminAccess(int CommandTimeout = 1800)
 		{
 			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
 			{
@@ -111,6 +111,13 @@ namespace RO.Rule3
             using (AdminAccessBase dac = GetAdminAccess())
             {
                 dac.UpdCronJobStatus(jobId, err, dbConnectionString, dbPassword);
+            }
+        }
+        public Tuple<string, bool, string> UpdateLicense(string licenseString, string hash)
+        {
+            using (AdminAccessBase dac = GetAdminAccess())
+            {
+                return dac.UpdateLicense(licenseString, hash);
             }
         }
 

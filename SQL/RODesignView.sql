@@ -75,6 +75,21 @@ ALTER VIEW [dbo].[VwMailProfile]
 AS
 SELECT ProfileNm = [name] FROM msdb.dbo.sysmail_profile
 GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwMIMEType') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwMIMEType AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwMIMEType] AS
+
+SELECT
+MimeTypeId, MimeType, MimeTypeDesc=ISNULL(MimeTypeDesc, MimeType)
+FROM
+(VALUES 
+(1, 'text/plain', NULL )
+,(2, 'application/json', NULL )
+,(3, 'application/x-www-form-urlencoded', NULL )
+) 
+x (MimeTypeId, MimeType, MimeTypeDesc)
+GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwNumSuccess') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwNumSuccess AS SELECT DUMMY=1')
 GO

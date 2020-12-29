@@ -18,6 +18,7 @@ namespace RO.WebRules
     using Fido2NetLib.Objects;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using System.Diagnostics;
 
     public class WebAuthnAssertion
     {
@@ -868,6 +869,147 @@ namespace RO.WebRules
             client.Port = port;
             client.EnableSsl = bSsl;
             client.Send(mm);
+        }
+
+        public Tuple<int, string, string> sshPush(string pscpPath, string localSource, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        {
+            string sshPort = "22";
+            string password = DecryptString(keyPassword);
+            string recursive = Directory.Exists(localSource) ? "-r" : "";
+            string cmdArg = string.Format("-P {0} {1} -q -i \"{2}\" \"{3}\" \"{4}\"", sshPort, recursive, sshKeyFile, localSource, removeTarget);
+            StringBuilder sbStdErr = new StringBuilder();
+            StringBuilder sbStdOut = new StringBuilder();
+            int wrongPasswordCnt = 0;
+
+            Action<string, Process, StreamWriter, string> puttyPromptHandler = (v, proc, ws, src) =>
+            {
+                string x = v;
+                if (v != null)
+                {
+                    if (src == "stdout" && !v.StartsWith("Passphrase for key "))
+                    {
+                        sbStdOut.Append(v);
+                        sbStdOut.Append("\n");
+                    }
+                    else if (!v.Contains("Wrong passphrase"))
+                    {
+                        sbStdErr.Append(v);
+                        sbStdErr.Append("\n");
+                    }
+                    string prompt = src == "stdout" ? sbStdOut.ToString() : sbStdErr.ToString();
+                    if (v.StartsWith("Passphrase for key"))
+                    {
+                        ws.WriteLine(password);
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 5)
+                        {
+                            sbStdErr.Append("Wrong Passphrase\n");
+                            if (!proc.HasExited) proc.Kill();
+                        }
+                    }
+                    else if (v.Contains("The server's host key is not"))
+                    {
+                        ws.WriteLine("n");
+                        ws.WriteLine(password);
+                        ws.WriteLine("");
+                    }
+                    else if (v.Contains("Access denied"))
+                    {
+                        if (!proc.HasExited) proc.Kill();
+                    }
+                    else if (v.Contains("Wrong passphrase"))
+                    {
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 3)
+                        {
+                            if (!proc.HasExited) proc.Kill();
+                        }
+                    }
+                }
+                //ws.WriteLine("");
+            };
+            Action<object, EventArgs> exitHandler = (v, ws) =>
+            {
+                var x = v;
+                //ws.WriteLine("");
+            };
+
+            var result = RO.Common3.Utils.WinProcEx(pscpPath, localSource, null, cmdArg, puttyPromptHandler, puttyPromptHandler, exitHandler);
+            return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
+        }
+        public Tuple<int, string, string> sshRemoteCmd(string plinkPath, string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        {
+            string sshPort = "22";
+            string password = DecryptString(keyPassword);
+            string cmdScript = string.Format("-m {0}", localCmdFile);
+            string cmdArg = string.Format("-P {0} {1} -i \"{2}\" \"{3}\"", sshPort, cmdScript, sshKeyFile, removeTarget);
+            StringBuilder sbStdErr = new StringBuilder();
+            StringBuilder sbStdOut = new StringBuilder();
+            bool sessionConnected = false;
+            int wrongPasswordCnt = 0;
+
+            Action<string, Process, StreamWriter, string> puttyPromptHandler = (v, proc, ws, src) =>
+            {
+                string x = v;
+                if (v != null)
+                {
+                    if (src == "stdout" && (!v.StartsWith("Passphrase for key ") || sessionConnected))
+                    {
+                        sbStdOut.Append(v);
+                        sbStdOut.Append("\n");
+                    }
+                    else if (!v.Contains("Wrong passphrase"))
+                    {
+                        sbStdErr.Append(v);
+                        sbStdErr.Append("\n");
+                    }
+                    string prompt = src == "stdout" ? sbStdOut.ToString() : sbStdErr.ToString();
+                    if (v.StartsWith("Passphrase for key"))
+                    {
+                        ws.WriteLine(password);
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 3)
+                        {
+                            sbStdErr.Append("Wrong Passphrase\n");
+                            if (!proc.HasExited) proc.Kill();
+                        }
+
+                    }
+                    else if (v.Contains("The server's host key is not"))
+                    {
+                        ws.WriteLine("n");
+                        ws.WriteLine(password);
+                        ws.WriteLine("");
+                    }
+                    else if (v.Contains("Wrong passphrase"))
+                    {
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 5)
+                        {
+                            if (!proc.HasExited) proc.Kill();
+                        }
+                    }
+                    else if (v.Contains("Access denied"))
+                    {
+                        if (!proc.HasExited) proc.Kill();
+                    }
+                    else if (v.Contains("Press Return to begin session") || v.Contains("Using username"))
+                    {
+                        ws.WriteLine("");
+                        sessionConnected = true;
+                    }
+                }
+                //ws.WriteLine("");
+            };
+
+            Action<object, EventArgs> exitHandler = (v, ws) =>
+            {
+                var x = v;
+                //ws.WriteLine("");
+            };
+
+            var result = RO.Common3.Utils.WinProcEx(plinkPath, null, null, cmdArg, puttyPromptHandler, puttyPromptHandler, exitHandler);
+            return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
         }
 
         // For report generator:

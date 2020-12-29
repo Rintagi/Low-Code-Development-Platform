@@ -23,7 +23,7 @@ class NewPassword extends Component {
   constructor(props) {
     super(props);
     this.titleSet = false;
-    this.SystemName = "FintruX";
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.state = {
       submitting: false,
       showPassword: false,

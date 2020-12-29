@@ -37,7 +37,7 @@ class DtlRecord extends RintagiScreen {
     this.GetReduxState = () => (this.props.AdmDataCat || {});
     this.blocker = null;
     this.titleSet = false;
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.MstKeyColumnName = 'RptwizCatId181';
     this.DtlKeyColumnName = 'RptwizCatDtlId182';
     this.hasChangedContent = false;

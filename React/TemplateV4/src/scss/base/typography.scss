@@ -1,0 +1,147 @@
+p, h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  font-weight: 400;
+  margin-bottom: 0;
+
+  @include themify($themes) {
+    color: #333;
+  }
+}
+
+p {
+  margin: 10px 0 0 0;
+
+  &:first-child {
+    margin: 0;
+  }
+}
+
+h1 {
+  font-size: 36px;
+  line-height: 48px;
+
+  &.subhead {
+    font-size: 30px;
+    color: $color-additional;
+    line-height: 36px;
+  }
+}
+
+h2 {
+  font-size: 30px;
+  line-height: 36px;
+
+  &.subhead {
+    font-size: 24px;
+    color: $color-additional;
+    line-height: 32px;
+  }
+}
+
+h3 {
+  font-size: 24px;
+  line-height: 32px;
+
+  &.subhead {
+    font-size: 18px;
+    color: #333;
+    line-height: 24px;
+  }
+}
+
+h4 {
+  font-size: 18px;
+  line-height: 24px;
+
+  &.subhead {
+    font-size: 14px;
+    color: #333;
+    line-height: 16px;
+  }
+}
+
+h5 {
+  font-size: 14px;
+  line-height: 18px;
+
+  &.subhead {
+    font-size: 10px;
+    color: $color-additional;
+    line-height: 12px;
+  }
+}
+
+h6 {
+  font-size: 14px;
+  line-height: 16px;
+
+  &.subhead {
+    font-size: 8px;
+    color: $color-additional;
+    line-height: 10px;
+  }
+}
+
+.bold-text {
+  font-weight: 700;
+}
+
+.typography--inline {
+  display: flex;
+  flex-wrap: wrap;
+
+  * {
+    margin-top: auto;
+    margin-right: 15px;
+  }
+}
+
+.typography-card {
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 10px;
+  }
+}
+
+blockquote {
+  font-size: 13px;
+  font-style: italic;
+  border-left: 3px solid $color-accent;
+  margin-bottom: 0;
+  padding-left: 10px;
+}
+
+.highlight {
+  background-color: $color-accent;
+  color: #ffffff;
+}
+
+.red-text {
+  color: #ad4444;
+}
+
+.page-title {
+  font-weight: 600;
+
+  &:last-child {
+    margin-bottom: 30px;
+  }
+
+  &.page-title--not-last{
+    margin-top: 20px;
+  }
+}
+
+.page-subhead {
+  margin-bottom: 20px;
+
+  &.subhead {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+}
+
+::selection {
+  color: #ffffff;
+  background: $color-fintrux;
+}

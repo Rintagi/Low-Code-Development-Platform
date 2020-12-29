@@ -46,6 +46,7 @@ import {pagesRoutes as AdmRptStyleRoute} from '../pages/AdmRptStyle/index'
 import {pagesRoutes as AdmRptTblRoute} from '../pages/AdmRptTbl/index'
 import {pagesRoutes as AdmTemplateRoute} from '../pages/AdmTemplate/index'
 import {pagesRoutes as AdmLicenseRoute} from '../pages/AdmLicense/index'
+import {pagesRoutes as AdmPostmanRoute} from '../pages/AdmPostman/index'
 import {pagesRoutes as AdmRowOvrdRoute} from '../pages/AdmRowOvrd/index'
 import {pagesRoutes as AdmRulTierRoute} from '../pages/AdmRulTier/index'
 import {pagesRoutes as AdmTbdRuleRoute} from '../pages/AdmTbdRule/index'
@@ -78,7 +79,7 @@ import {pagesRoutes as AdmAppInfoRoute} from '../pages/AdmAppInfo/index'
 import {pagesRoutes as AdmWebRuleRoute} from '../pages/AdmWebRule/index'
 import {pagesRoutes as AdmWizardObjRoute} from '../pages/AdmWizardObj/index'
 import {pagesRoutes as AdmWizardRuleRoute} from '../pages/AdmWizardRule/index'
-export default [
+let route = [
 ...(CustomRoutePre || []),
 ...(
 SuppressGenRoute ? [] : [
@@ -131,6 +132,7 @@ SuppressGenRoute ? [] : [
 ...AdmRptTblRoute,
 ...AdmTemplateRoute,
 ...AdmLicenseRoute,
+...AdmPostmanRoute,
 ...AdmRowOvrdRoute,
 ...AdmRulTierRoute,
 ...AdmTbdRuleRoute,
@@ -168,3 +170,4 @@ SuppressGenRoute ? [] : [
 ];
 
  document.Rintagi.systemId = '3';
+ export default route;

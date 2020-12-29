@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.OleDb;
 using System.Web;
 using System.Web.Services;
 using RO.Facade3;
@@ -19,6 +20,7 @@ using System.Security.Cryptography;
 using System.Web.Configuration;
 using System.Configuration;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace RO.Web
 {
@@ -2060,63 +2062,6 @@ namespace RO.Web
             return new DataView(_GetScrCriteria(screenId));
         }
 
-        protected byte[] ResizeImage(byte[] image, int maxHeight = 360)
-        {
-
-            byte[] dc;
-
-            System.Drawing.Image oBMP = null;
-
-            using (var ms = new MemoryStream(image))
-            {
-                oBMP = System.Drawing.Image.FromStream(ms);
-                ms.Close();
-            }
-
-            UInt16 orientCode = 1;
-
-            try
-            {
-                using (var ms2 = new MemoryStream(image))
-                {
-                    var r = new ExifLib.ExifReader(ms2);
-                    r.GetTagValue(ExifLib.ExifTags.Orientation, out orientCode);
-                }
-            }
-            catch { }
-
-            int nHeight = maxHeight < oBMP.Height ? maxHeight : oBMP.Height; // This is 36x10 line:7700 GenScreen
-            int nWidth = int.Parse((Math.Round(decimal.Parse(oBMP.Width.ToString()) * (nHeight / decimal.Parse(oBMP.Height.ToString())))).ToString());
-
-            var nBMP = new System.Drawing.Bitmap(oBMP, nWidth, nHeight);
-            using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
-            {
-                // 1 = do nothing
-                if (orientCode == 3)
-                {
-                    // rotate 180
-                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
-                }
-                else if (orientCode == 6)
-                {
-                    //rotate 90
-                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
-                }
-                else if (orientCode == 8)
-                {
-                    // same as -90
-                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
-                }
-                nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
-                sm.Position = 0;
-                dc = new byte[sm.Length + 1];
-                sm.Read(dc, 0, dc.Length); sm.Close();
-            }
-            oBMP.Dispose(); nBMP.Dispose();
-
-            return dc;
-        }
-
         protected List<_ReactFileUploadObj> DestructureFileUploadObject(string docJson)
         {
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
@@ -2332,7 +2277,40 @@ namespace RO.Web
                 ;
 
         }
-
+        protected bool IsSecureConnection()
+        {
+            var Request = HttpContext.Current.Request;
+            string xForwardedProto = Request.Headers["X-Forwarded-Proto"];
+            string xForwardedHttps = Request.Headers["X-Forwarded-Https"];
+            string xForwardedFor = Request.Headers["X-Forwarded-For"];
+            string isaHttps = Request.Headers["Front-End-Https"];
+            return
+                Request.IsSecureConnection
+                || (xForwardedProto ?? "").ToLower() == "https"
+                || (xForwardedHttps ?? "").ToLower() == "on"
+                || (isaHttps ?? "").ToLower() == "on"
+                || Request.Cookies["secureChannelTest"] != null
+                || Config.BehindSecureProxy
+                ;
+        }
+        protected string GetClientIp()
+        {
+            var Request = HttpContext.Current.Request;
+            if (Request != null)
+            {
+                var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
+                                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(s => s.Trim())
+                                .Where(s => !string.IsNullOrEmpty(s))
+                                .ToArray();
+                // this is the closest to the browser being reported, can be internal if browser is fronted by proxy
+                return proxied.Length > 0
+                        && Common3.Utils.IsPrivateIp(Request.UserHostAddress)
+                        ? proxied[0]
+                        : Request.UserHostAddress;
+            }
+            return null;
+        }
         protected List<string> GetClientIpChain(HttpRequest Request)
         {
             try
@@ -2391,7 +2369,11 @@ namespace RO.Web
             }
             return visitorIPAddress;
         }
-
+        public string GetVistorUserAgent()
+        {
+            var request = HttpContext.Current.Request;
+            return request.UserAgent;
+        }
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false)
         {
             var Request = HttpContext.Current.Request;
@@ -2774,6 +2756,631 @@ namespace RO.Web
             return path + "?" + string.Join("&", qsList.ToArray()) + "&_h=" + qsHash;
         }
 
+        #endregion
+
+        #region embedded doc(ImageButton) content helpers
+        protected byte[] ResizeImage(byte[] image, int maxHeight = 360)
+        {
+
+            byte[] dc;
+
+            System.Drawing.Image oBMP = null;
+
+            using (var ms = new MemoryStream(image))
+            {
+                oBMP = System.Drawing.Image.FromStream(ms);
+                ms.Close();
+            }
+
+            UInt16 orientCode = 1;
+
+            try
+            {
+                using (var ms2 = new MemoryStream(image))
+                {
+                    var r = new ExifLib.ExifReader(ms2);
+                    r.GetTagValue(ExifLib.ExifTags.Orientation, out orientCode);
+                }
+            }
+            catch { }
+
+            int nHeight = maxHeight < oBMP.Height ? maxHeight : oBMP.Height; // This is 36x10 line:7700 GenScreen
+            int nWidth = int.Parse((Math.Round(decimal.Parse(oBMP.Width.ToString()) * (nHeight / decimal.Parse(oBMP.Height.ToString())))).ToString());
+
+            var nBMP = new System.Drawing.Bitmap(oBMP, nWidth, nHeight);
+            using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
+            {
+                // 1 = do nothing
+                if (orientCode == 3)
+                {
+                    // rotate 180
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
+                }
+                else if (orientCode == 6)
+                {
+                    //rotate 90
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
+                }
+                else if (orientCode == 8)
+                {
+                    // same as -90
+                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
+                }
+                nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
+                sm.Position = 0;
+                dc = new byte[sm.Length + 1];
+                sm.Read(dc, 0, dc.Length); sm.Close();
+            }
+            oBMP.Dispose(); nBMP.Dispose();
+
+            return dc;
+        }
+
+        protected byte[] MakeEmbeddedDocContent(string docJson, bool resizeToIcon = false)
+        {
+            byte[] storedContent = null;
+            bool dummyImage = false;
+            int maxHeight = 360;
+            System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            jss.MaxJsonLength = Int32.MaxValue;
+            FileUploadObj fileObj = jss.Deserialize<FileUploadObj>(docJson);
+            if (!string.IsNullOrEmpty(fileObj.base64))
+            {
+                byte[] content = Convert.FromBase64String(fileObj.base64);
+                dummyImage = fileObj.base64 == "iVBORw0KGgoAAAANSUhEUgAAAhwAAAABCAQAAAA/IL+bAAAAFElEQVR42mN89p9hFIyCUTAKSAIABgMB58aXfLgAAAAASUVORK5CYII=";
+                if (resizeToIcon && fileObj.base64.Length > 0 && fileObj.mimeType.StartsWith("image/"))
+                {
+                    try
+                    {
+                        content = ResizeImage(Convert.FromBase64String(fileObj.base64), maxHeight);
+                    }
+                    catch
+                    {
+                    }
+                }
+                /* store as 256 byte UTF8 json header + actual binary file content 
+                 * if header info > 256 bytes use compact header(256 bytes) + actual header + actual binary file content
+                 */
+                string fileName = System.IO.Path.GetFileName(fileObj.fileName);
+                string contentHeader = jss.Serialize(new FileInStreamObj()
+                {
+                    fileName = fileName,
+                    lastModified = fileObj.lastModified,
+                    mimeType = fileObj.mimeType,
+                    ver = "0100",
+                    extensionSize = 0,
+                    contentIsJSON = true,
+                });
+                byte[] streamHeader = Enumerable.Repeat((byte)0x20, 256).ToArray();
+                int headerLength = System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader).Length;
+                string compactHeader = jss.Serialize(new FileInStreamObj()
+                {
+                    fileName = "",
+                    lastModified = fileObj.lastModified,
+                    mimeType = fileObj.mimeType,
+                    ver = "0100",
+                    extensionSize = headerLength,
+                    contentIsJSON = true,
+                });
+                int compactHeaderLength = System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader).Length;
+                if (headerLength <= 256)
+                    Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), streamHeader, headerLength);
+                else
+                {
+                    Array.Resize(ref streamHeader, 256 + contentHeader.Length);
+                    Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), streamHeader, compactHeaderLength);
+                    Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), 0, streamHeader, 256, headerLength);
+                }
+                if (content.Length == 0 || dummyImage)
+                {
+                    storedContent = null;
+                }
+                //no longer needed 2020.3.3 gary
+                //else if (fileObj.mimeType.StartsWith("image/") && false)
+                //{
+                //    // backward compatability with asp.net side, only store image and not fileinfo
+                //    storedContent = content;
+                //}
+                else
+                {
+                    System.Collections.Generic.List<_ReactFileUploadObj> fo = new System.Collections.Generic.List<_ReactFileUploadObj>();
+                    fo.Add(new _ReactFileUploadObj()
+                    {
+                        fileName = fileName,
+                        base64 = Convert.ToBase64String(content),
+                        mimeType = fileObj.mimeType,
+                        height = maxHeight,
+                        lastModified = fileObj.lastModified,
+                        previewUrl = null,
+                        size = 0,
+                        width = 0
+                    }
+                    );
+                    string foJSON = jss.Serialize(fo);
+                    content = System.Text.UTF8Encoding.UTF8.GetBytes(foJSON);
+                    storedContent = new byte[content.Length + streamHeader.Length];
+                    Array.Copy(streamHeader, storedContent, streamHeader.Length);
+                    Array.Copy(content, 0, storedContent, streamHeader.Length, content.Length);
+                }
+                byte[] savedContent = content.Length == 0 || dummyImage ? null : storedContent;
+
+                return savedContent;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        protected FileUploadObj DecodeEmbeddedDocContent(byte[] content)
+        {
+            if (content == null) return null;
+
+            string fileContent = RO.Common3.Utils.DecodeFileStream(content);
+            string fileName = "";
+            string mimeType = "application/octet";
+            string contentBase64 = "";
+            long lastModified = 0;
+            System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            try
+            {
+                RO.Common3.FileUploadObj fileInfo = jss.Deserialize<RO.Common3.FileUploadObj>(fileContent);
+                lastModified = fileInfo.lastModified;
+                mimeType = fileInfo.mimeType;
+                fileName = fileInfo.fileName;
+                contentBase64 = fileInfo.base64;
+            }
+            catch
+            {
+                try
+                {
+                    List<RO.Common3._ReactFileUploadObj> fileList = jss.Deserialize<List<RO.Common3._ReactFileUploadObj>>(fileContent);
+                    List<FileUploadObj> x = new List<FileUploadObj>();
+                    foreach (var fileInfo in fileList)
+                    {
+                        mimeType = fileInfo.mimeType;
+                        fileName = fileInfo.fileName;
+                        contentBase64 = fileInfo.base64;
+                        lastModified = fileInfo.lastModified;
+                        break;
+                    }
+                }
+                catch
+                {
+                    contentBase64 = fileContent;
+                    fileName = "";
+                    mimeType = "image/jpeg";
+                }
+            }
+            return new FileUploadObj()
+            {
+                fileName = fileName,
+                mimeType = mimeType,
+                base64 = contentBase64,
+                lastModified = lastModified
+            };
+
+        }
+        protected Ionic.Zip.ZipFile GetMultiEmbeddedDoc(Ionic.Zip.ZipFile resultFile, DataView dv, string columnName, string tempDirectory, string parentDirectory)
+        {
+            string baseDirectory = tempDirectory + "/" + parentDirectory;
+            if (!Directory.Exists(baseDirectory)) Directory.CreateDirectory(baseDirectory);
+
+            foreach (DataRowView drv in dv)
+            {
+                var validatorJsonFile = drv[columnName] as byte[];
+                var fileObj = DecodeEmbeddedDocContent(validatorJsonFile);
+                if (fileObj != null)
+                {
+                    string fileName = baseDirectory + "/" + fileObj.fileName;
+                    DateTime lastModified = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(fileObj.lastModified);
+                    byte[] content = System.Convert.FromBase64String(fileObj.base64);
+                    using (FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        fs.Write(content, 0, content.Length);
+                        fs.Close();
+                    }
+                    File.SetCreationTimeUtc(fileName, lastModified);
+                    File.SetLastWriteTimeUtc(fileName, lastModified);
+                    resultFile.AddFile(fileName, parentDirectory);
+                }
+            }
+            return resultFile;
+        }
+        #endregion
+
+        #region ssh remote helpers
+        protected Tuple<int, string, string> sshPush(string localSource, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        {
+            string pscpPath = Server.MapPath("~/helpers/pscp.exe");
+            return new RO.WebRules.WebRule().sshPush(pscpPath, localSource, removeTarget, login, sshKeyFile, keyPassword);
+#if false
+            string sshPort = "22";
+            string recursive = Directory.Exists(localSource) ? "-r" : "";
+            string cmdArg = string.Format("-P {0} {1} -q -i \"{2}\" \"{3}\" \"{4}\"", sshPort, recursive, sshKeyFile, localSource, removeTarget);
+            StringBuilder sbStdErr = new StringBuilder();
+            StringBuilder sbStdOut = new StringBuilder();
+            int wrongPasswordCnt = 0;
+
+            Action<string, Process, StreamWriter, string> puttyPromptHandler = (v, proc, ws, src) =>
+            {
+                string x = v;
+                if (v != null)
+                {
+                    if (src == "stdout" && !v.StartsWith("Passphrase for key "))
+                    {
+                        if (sbStdOut.Length > 0) sbStdOut.Append("\n");
+                        sbStdOut.Append(v);
+                    }
+                    else
+                    {
+                        if (sbStdErr.Length > 0) sbStdErr.Append("\n");
+                        sbStdErr.Append(v);
+                    }
+                    string prompt = src == "stdout" ? sbStdOut.ToString() : sbStdErr.ToString();
+                    if (v.StartsWith("Passphrase for key"))
+                    {
+                        ws.WriteLine(keyPassword);
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 5)
+                        {
+                            if (!proc.HasExited) proc.Kill();
+                        }
+                    }
+                    else if (v.Contains("The server's host key is not"))
+                    {
+                        ws.WriteLine("n");
+                        ws.WriteLine(keyPassword);
+                        wrongPasswordCnt += 1;
+                        //                        ws.WriteLine("n");
+                    }
+                    else if (v.Contains("Wrong passphrase"))
+                    {
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 5)
+                        {
+                            if (!proc.HasExited) proc.Kill();
+                        }
+                    }
+                }
+                //ws.WriteLine("");
+            };
+            Action<object, EventArgs> exitHandler = (v, ws) =>
+            {
+                var x = v;
+                //ws.WriteLine("");
+            };
+
+            var result = RO.Common3.Utils.WinProcEx(pscpPath, localSource, null, cmdArg, puttyPromptHandler, puttyPromptHandler, exitHandler);
+            return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
+#endif
+        }
+        protected virtual Tuple<int, string, string> sshRemoteCmd(string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        {
+            string plinkPath = Server.MapPath("~/helpers/plink.exe");
+            return new RO.WebRules.WebRule().sshRemoteCmd(plinkPath, localCmdFile, removeTarget, login, sshKeyFile, keyPassword);
+#if false
+            string sshPort = "22";
+            string cmdScript = string.Format("-m {0}", localCmdFile);
+            string cmdArg = string.Format("-P {0} {1} -i \"{2}\" \"{3}\"", sshPort, cmdScript, sshKeyFile, removeTarget);
+            StringBuilder sbStdErr = new StringBuilder();
+            StringBuilder sbStdOut = new StringBuilder();
+            int wrongPasswordCnt = 0;
+            bool sessionConnected = false;
+            Action<string, Process, StreamWriter, string> puttyPromptHandler = (v, proc, ws, src) =>
+            {
+                string x = v;
+                if (v != null)
+                {
+                    if (src == "stdout" && (!v.StartsWith("Passphrase for key ") || sessionConnected))
+                    {
+                        if (sbStdOut.Length > 0) sbStdOut.Append("\n");
+                        sbStdOut.Append(v);
+                    }
+                    else
+                    {
+                        if (sbStdErr.Length > 0) sbStdErr.Append("\n");
+                        sbStdErr.Append(v);
+                    }
+                    string prompt = src == "stdout" ? sbStdOut.ToString() : sbStdErr.ToString();
+                    if (v.StartsWith("Passphrase for key"))
+                    {
+                        ws.WriteLine(keyPassword);
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 5)
+                        {
+                            if (!proc.HasExited) proc.Kill();
+                        }
+
+                    }
+                    else if (v.Contains("The server's host key is not"))
+                    {
+                        ws.WriteLine("n");
+                        ws.WriteLine(keyPassword);
+                        ws.WriteLine("n");
+                    }
+                    else if (v.Contains("Wrong passphrase"))
+                    {
+                        wrongPasswordCnt += 1;
+                        if (wrongPasswordCnt > 5)
+                        {
+                            if (!proc.HasExited) proc.Kill();
+                        }
+                    }
+                    else if (v.Contains("Press Return to begin session") || v.Contains("Using username"))
+                    {
+                        ws.WriteLine("");
+                        sessionConnected = true;
+                    }
+                }
+                //ws.WriteLine("");
+            };
+
+            Action<object, EventArgs> exitHandler = (v, ws) =>
+            {
+                var x = v;
+                //ws.WriteLine("");
+            };
+
+            var result = RO.Common3.Utils.WinProcEx(plinkPath, null, null, cmdArg, puttyPromptHandler, puttyPromptHandler, exitHandler);
+            return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
+#endif
+        }
+
+        #endregion
+
+        #region webhook/http helper
+        protected virtual string InvokeWebHook(string url, string method = "GET", Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        {
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+            wr.CookieContainer = new CookieContainer();
+            string result = null;
+            try
+            {
+                using (WebResponse resp = wr.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex == null) return result;
+                throw;
+            }
+            return result;
+        }
+        protected virtual string HttpPostJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        {
+            var uri = new Uri(url);
+            byte[] bodyArray = System.Text.UTF8Encoding.UTF8.GetBytes(body);
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+            wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
+                new CookieContainer(),
+                (cookieContainer, kvp) =>
+                {
+                    cookieContainer.Add(new Uri(uri.GetLeftPart(UriPartial.Authority)), new Cookie(kvp.Key, kvp.Value));
+                    return cookieContainer;
+                });
+            ;
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
+                new WebHeaderCollection(),
+                (headerCollection, kvp) =>
+                {
+                    headerCollection[kvp.Key] = kvp.Value;
+                    return headerCollection;
+                });
+            wr.ContentType = "application/json";
+            wr.Method = "POST";
+            string result = null;
+            try
+            {
+                wr.ContentLength = bodyArray.Length;
+                using (Stream ws = wr.GetRequestStream())
+                {
+                    ws.Write(bodyArray, 0, bodyArray.Length);
+                    ws.Close();
+                }
+
+                using (WebResponse resp = wr.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex == null) return result;
+                throw;
+            }
+            return result;
+        }
+        protected virtual string HttpPostFORM(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        {
+            var uri = new Uri(url);
+            byte[] bodyArray = System.Text.UTF8Encoding.UTF8.GetBytes(body);
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+            wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
+                new CookieContainer(),
+                (cookieContainer, kvp) =>
+                {
+                    cookieContainer.Add(new Uri(uri.GetLeftPart(UriPartial.Authority)), new Cookie(kvp.Key, kvp.Value));
+                    return cookieContainer;
+                });
+            ;
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
+                new WebHeaderCollection(),
+                (headerCollection, kvp) =>
+                {
+                    headerCollection[kvp.Key] = kvp.Value;
+                    return headerCollection;
+                });
+            wr.ContentType = "application/x-www-form-urlencoded";
+            wr.Method = "POST";
+            string result = null;
+            try
+            {
+                wr.ContentLength = bodyArray.Length;
+                using (Stream ws = wr.GetRequestStream())
+                {
+                    ws.Write(bodyArray, 0, bodyArray.Length);
+                    ws.Close();
+                }
+
+                using (WebResponse resp = wr.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex == null) return result;
+                throw;
+            }
+            return result;
+        }
+        protected virtual string HttpPost(string url, string body, string mimeType, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        {
+            var uri = new Uri(url);
+            byte[] bodyArray = System.Text.UTF8Encoding.UTF8.GetBytes(body);
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+            wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
+                new CookieContainer(),
+                (cookieContainer, kvp) =>
+                {
+                    cookieContainer.Add(new Uri(uri.GetLeftPart(UriPartial.Authority)), new Cookie(kvp.Key, kvp.Value));
+                    return cookieContainer;
+                });
+            ;
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
+                new WebHeaderCollection(),
+                (headerCollection, kvp) =>
+                {
+                    headerCollection[kvp.Key] = kvp.Value;
+                    return headerCollection;
+                });
+            wr.ContentType = string.IsNullOrEmpty(mimeType) ? "text/plain" : mimeType;
+            wr.Method = "POST";
+            string result = null;
+            try
+            {
+                wr.ContentLength = bodyArray.Length;
+                using (Stream ws = wr.GetRequestStream())
+                {
+                    ws.Write(bodyArray, 0, bodyArray.Length);
+                    ws.Close();
+                }
+
+                using (WebResponse resp = wr.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex == null) return result;
+                throw;
+            }
+            return result;
+        }
+        #endregion
+
+        #region XlsImportExport
+        public List<string> GetSheetNames(string fileFullName)
+        {
+            List<string> names = new List<string>();
+            OleDbConnection conn = new OleDbConnection();
+            System.Collections.ArrayList al = new System.Collections.ArrayList();
+            try
+            {
+                conn.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 12.0; HDR=NO; IMEX=1;\"";
+                //conn.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 8.0; HDR=NO; IMEX=1;\"";
+                conn.Open();
+                // Get original sheet order:
+                DataTable dt = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
+                DataRow[] drs = dt.Select(dt.Columns[2].ColumnName + " not like '*$Print_Area' AND " + dt.Columns[2].ColumnName + " not like '*$''Print_Area'");
+                foreach (DataRow dr in drs) { names.Add(dr["TABLE_NAME"].ToString().Replace("'", string.Empty).Replace("$", string.Empty)); }
+            }
+            catch (Exception e)
+            {
+                throw (e);
+            }
+            finally
+            {
+                conn.Close(); conn = null;
+            }
+
+            return names;
+        }
+        public string ImportFile(string fileName, string workSheet, string startRow, string fileFullName)
+        {
+            OleDbConnection conn = new OleDbConnection();
+            OleDbDataAdapter da = new OleDbDataAdapter();
+            DataTable dt = new DataTable();
+            try
+            {
+                conn.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 12.0; HDR=NO; IMEX=1;\"";
+                //conn.ConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileFullName + ";Extended Properties=\"Excel 8.0; HDR=NO; IMEX=1;\"";
+                conn.Open();
+                string myQuery = @"SELECT * From [" + workSheet + "$]";
+                OleDbCommand myCmd = new OleDbCommand(myQuery, conn);
+                da.SelectCommand = myCmd;
+                da.Fill(dt);
+            }
+            catch (Exception e) { throw (e); }
+            finally { conn.Close(); conn = null; }
+            dt.TableName = workSheet;
+            dt = CleanData(dt);
+            return dt.DataTableToXml();
+        }
+        private DataTable CleanData(DataTable dt)
+        {
+            foreach (DataRow dr in dt.Rows)
+            {
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    if (dc.DataType == typeof(string))
+                    {
+                        string r = "[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]";
+                        dr[dc.ColumnName] = System.Text.RegularExpressions.Regex.Replace(dr[dc.ColumnName].ToString(), r, "", System.Text.RegularExpressions.RegexOptions.Compiled);
+                    }
+                }
+            }
+            return dt;
+        }
         #endregion
 
         protected DataTable GetLis(string getLisMethod, int systemId, int screenId, string searchStr, List<string> criteria, string filterId, string conn, string isSys, int topN, bool addRow = true)
@@ -4490,11 +5097,13 @@ namespace RO.Web
                 /* this should either bounce or use refRecord value FIXME */
                 var revertedVal = !string.IsNullOrEmpty(oldVal) ? oldVal : defaultValue ;
                 if (colVisible
-                    ||
-                    (!colVisible 
-                        && !string.IsNullOrEmpty(val) 
-                        && (!string.IsNullOrEmpty(oldVal) || (val != defaultValue))
-                        ))
+                    //Aaron: changes for all ModifiedOn fields
+                    //||
+                    //(!colVisible 
+                    //    && !string.IsNullOrEmpty(val)
+                    //    && (!string.IsNullOrEmpty(oldVal) || (val != defaultValue))
+                    //    )
+                    )
                 {
                     // if visible or not visible but forced with some value that doesn't match existing one
                     errors.Add(new KeyValuePair<string, string>(colName, "readonly value cannot be changed" + " " + drLabel["ColumnHeader"].ToString()));
@@ -4864,6 +5473,9 @@ namespace RO.Web
                 bool isCrypto = FrISOCurrencySymbol == "FTX" || FrISOCurrencySymbol == "ETH" || ToISOCurrencySymbol == "FTX" || ToISOCurrencySymbol == "ETH";
                 string cacheKey = "FXRate_" + FrISOCurrencySymbol + "_" + ToISOCurrencySymbol;
                 int minutesToCache = isCrypto ? 15 : 60;
+                string cacheConfig = Config.FXMinuteToCache;
+                if (!string.IsNullOrEmpty(cacheConfig)) { minutesToCache = int.Parse(cacheConfig); };
+
                 string price = "";
                 lock (cache)
                 {
@@ -4892,8 +5504,10 @@ namespace RO.Web
                 {
                     if (cache[cacheKey] as string == null)
                     {
-                        cache.Insert(cacheKey, price, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] { } : new string[] { loginHandle })
+                        cache.Insert(cacheKey, price, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null || loginHandle != null ? new string[] { } : new string[] { loginHandle })
                             , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.Normal, null);
+
+                        new AdminSystem().UpdFxRate(FrISOCurrencySymbol, ToISOCurrencySymbol, price);
                     }
                 }
 

@@ -2648,4 +2648,57 @@ may need binding redirection or Number library and/or NewtonSoft JSON library~@~
 12647~@~  11. 210.00914~@~11~@~210~@~2020-09-14 00:00:00.000~@~~@~~@~1. minor enhancement to deployment feature for better tracking when creating PDT package~@~~@~en-US~@~
 12648~@~  11. 211.01012~@~11~@~211~@~2020-10-12 00:00:00.000~@~~@~~@~1. minor fix to GetReportById call
 2. Community version release~@~~@~en-US~@~
-12649~@~  11. 212~@~11~@~212~@~~@~~@~~@~~@~~@~~@~
+12649~@~  11. 212.01125~@~11~@~212~@~2020-11-25 00:00:00.000~@~~@~~@~1. add FCM support
+2. remove XXWs and WsXls in deployment
+
+to support FCM, must add to Default.master/
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.0.0/firebase-messaging.js"></script>
+    <script type="text/javascript" src="runtime/firebaseConfig.js"></script>
+    <script type="text/javascript" src="scripts/register_fcm.js"></script>
+
+
+and config runtime/firebaseConfig.js properly setup(see sample). 
+
+To send FCM push message from the app web.config should contains the associated auth key(FCMServerKey). To handle push message, add below to appropriate place
+
+<script>
+    navigator.serviceWorker && navigator.serviceWorker.addEventListener("message",
+        function (message) {
+            console.log('general message received', message);
+            var data = message.data;
+            if (message.data && message.data.data.title && window.Notification) {
+                var notification = new Notification(message.data.data.title, message.data.data);
+
+                notification.onclick = function (event) {
+                    console.log(event);
+                    event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                    //window.open(message.data.data.click_action, '_blank');
+                    notification.close();
+                };
+                //no auto close !!!
+                //setTimeout(notification.close.bind(notification), 7000);
+            }
+        }
+    );      
+</script>~@~~@~en-US~@~
+12650~@~  11. 213.01127~@~11~@~213~@~2020-11-27 00:00:00.000~@~~@~~@~1. make WsXls as 'advanced' usage but no longer deploy or visible(existing projects can remove it)~@~~@~en-US~@~
+12651~@~  11. 214.01201~@~11~@~214~@~2020-12-01 00:00:00.000~@~~@~~@~1. enhance FCM(React) to handle iOS safari (has service worker but not notification)
+2. enhance FCM to handle Edge on Android(empty data for push event)
+3. refine url configuration management for notification click action~@~~@~en-US~@~
+12652~@~  11. 215.01202~@~11~@~215~@~2020-12-02 00:00:00.000~@~~@~~@~1. iOS Safari WebAuthn(Fido) support revision~@~~@~en-US~@~
+12653~@~  11. 216.01203~@~11~@~216~@~2020-12-03 00:00:00.000~@~~@~~@~1. Generated asmx honor(enforce) quick filter for Get master list call~@~~@~en-US~@~
+12654~@~  11. 217.01206~@~11~@~217~@~2020-12-06 00:00:00.000~@~~@~~@~1. add Postman like feature(for querying promethus etc.)~@~~@~en-US~@~
+12655~@~  11. 218.01207~@~11~@~218~@~2020-12-07 00:00:00.000~@~~@~~@~1. enhance Postman screen to require 2FA for production setup(for security and a demo of action requires 2FA)~@~~@~en-US~@~
+12656~@~  11. 219.01212~@~11~@~219~@~2020-12-12 00:00:00.000~@~~@~~@~1. add in-memory cache for FX rate retrieval
+2. use CRA v3 template for react modules(if not specified in web.config)
+3. enhance Postman screen for better post content/query string encoding handling~@~~@~en-US~@~
+12657~@~  11. 220.01215~@~11~@~220~@~2020-12-15 00:00:00.000~@~~@~~@~1. add Create React App(CRA) v4 template
+2. minor change to React code generation to work with crav4
+3. revision to fxrate retrieval/caching and helpers for ajax usage(both for both React and asp.net side)~@~~@~en-US~@~
+12658~@~  11. 221.01217~@~11~@~221~@~2020-12-17 00:00:00.000~@~~@~~@~1. add web worker support to React template(v3/v4)~@~~@~en-US~@~
+12659~@~  11. 222.01226~@~11~@~222~@~2020-12-26 00:00:00.000~@~~@~~@~1. make Wizard import more robust on format following template 
+2. add ssh helper(integration with Linux)
+3. improve WinProc(calling external EXE) for putty(ssh) and eth2 deposit client etc.
+~@~~@~en-US~@~
+12660~@~  11. 223~@~11~@~223~@~~@~~@~~@~~@~~@~~@~

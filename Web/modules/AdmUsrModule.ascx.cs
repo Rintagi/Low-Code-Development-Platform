@@ -71,6 +71,9 @@ namespace RO.Common3.Data
 			columns.Add("BorrowerId1", typeof(string));
 			columns.Add("GuarantorId1", typeof(string));
 			columns.Add("UsageStat", typeof(string));
+			columns.Add("NotificationTitle", typeof(string));
+			columns.Add("NotificationContent", typeof(string));
+			columns.Add("SendNotificationBtn", typeof(string));
 			return dt;
 		}
 	}
@@ -197,6 +200,7 @@ namespace RO.Web
 				DataTable dt = GetScreenTab();
 				cTab1.InnerText = dt.Rows[0]["TabFolderName"].ToString();
 				cTab2.InnerText = dt.Rows[1]["TabFolderName"].ToString();
+				cTab132.InnerText = dt.Rows[2]["TabFolderName"].ToString();
 				SetClientRule(null,false);
 				IgnoreConfirm(); InitPreserve();
 				try
@@ -212,7 +216,14 @@ namespace RO.Web
 				cCultureId1Search_Script();
 				cDefSystemId1Search_Script();
 				cUsrGroupLs1Search_Script();
-				// *** Page Load (End of) Web Rule starts here *** //
+				//WebRule: Suppress dirty flag handling
+                // suppress dirty flag signaling
+                cNotificationTitle.Attributes["OnChange"] = null;
+                cNotificationContent.Attributes["OnChange"] = null;
+                // suppress dirty flag check on post back
+                if (cSendNotificationBtn.Attributes["OnClick"] == null || cSendNotificationBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSendNotificationBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+
+				// *** WebRule End *** //
 			}
 			if (IsPostBack && !ScriptManager.GetCurrent(this.Page).IsInAsyncPostBack) {SetClientRule(null,false);};
 			if (!IsPostBack)	// Test for Viewstate being lost.
@@ -2606,6 +2617,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cGuarantorId1, dtAuth.Rows[37], cGuarantorId1P1, cGuarantorId1Label, cGuarantorId1P2, null, dtLabel.Rows[37], null, null, null);
 				SetGuarantorId1(cGuarantorId1,string.Empty);
 				base.SetFoldBehavior(cUsageStat, dtAuth.Rows[38], null, null, null, dtLabel.Rows[38], null, null, null);
+				base.SetFoldBehavior(cNotificationTitle, dtAuth.Rows[39], cNotificationTitleP1, cNotificationTitleLabel, cNotificationTitleP2, null, dtLabel.Rows[39], null, null, null);
+				base.SetFoldBehavior(cNotificationContent, dtAuth.Rows[40], cNotificationContentP1, cNotificationContentLabel, cNotificationContentP2, cNotificationContentE, null, dtLabel.Rows[40], null, null, null);
+				cNotificationContentE.Attributes["label_id"] = cNotificationContentLabel.ClientID; cNotificationContentE.Attributes["target_id"] = cNotificationContent.ClientID;
+				base.SetFoldBehavior(cSendNotificationBtn, dtAuth.Rows[41], null, null, null, dtLabel.Rows[41], null, null, null);
 			}
 			if ((cLoginName1.Attributes["OnChange"] == null || cLoginName1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLoginName1.Visible && !cLoginName1.ReadOnly) {cLoginName1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cUsrName1.Attributes["OnChange"] == null || cUsrName1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cUsrName1.Visible && !cUsrName1.ReadOnly) {cUsrName1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2647,6 +2662,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cLenderId1.Attributes["OnChange"] == null || cLenderId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLenderId1.Visible && cLenderId1.Enabled) {cLenderId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cBorrowerId1.Attributes["OnChange"] == null || cBorrowerId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cBorrowerId1.Visible && cBorrowerId1.Enabled) {cBorrowerId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cGuarantorId1.Attributes["OnChange"] == null || cGuarantorId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cGuarantorId1.Visible && cGuarantorId1.Enabled) {cGuarantorId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cNotificationTitle.Attributes["OnChange"] == null || cNotificationTitle.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cNotificationTitle.Visible && !cNotificationTitle.ReadOnly) {cNotificationTitle.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cNotificationContent.Attributes["OnChange"] == null || cNotificationContent.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cNotificationContent.Visible && !cNotificationContent.ReadOnly) {cNotificationContent.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		private DataTable SetFunctionality(DataTable dt)
@@ -2761,6 +2778,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[35]["ColVisible"].ToString() == "Y" && dt.Rows[35]["ColReadOnly"].ToString() != "Y") {cLenderId1.ClearSearch();}
 			if (dt.Rows[36]["ColVisible"].ToString() == "Y" && dt.Rows[36]["ColReadOnly"].ToString() != "Y") {cBorrowerId1.ClearSearch();}
 			if (dt.Rows[37]["ColVisible"].ToString() == "Y" && dt.Rows[37]["ColReadOnly"].ToString() != "Y") {cGuarantorId1.ClearSearch();}
+			if (dt.Rows[39]["ColVisible"].ToString() == "Y" && dt.Rows[39]["ColReadOnly"].ToString() != "Y") {cNotificationTitle.Text = string.Empty;}
+			if (dt.Rows[40]["ColVisible"].ToString() == "Y" && dt.Rows[40]["ColReadOnly"].ToString() != "Y") {cNotificationContent.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -2804,6 +2823,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cLenderId1.ClearSearch();
 			cBorrowerId1.ClearSearch();
 			cGuarantorId1.ClearSearch();
+			cNotificationTitle.Text = string.Empty;
+			cNotificationContent.Text = string.Empty;
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 		protected void cAdmUsr1List_TextChanged(object sender, System.EventArgs e)
@@ -2986,6 +3007,67 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cPicMed1_Click(object sender, System.Web.UI.ImageClickEventArgs e)
 		{
 			// *** On Change/ On Click Web Rule starts here *** //
+			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
+		}
+
+		protected void cSendNotificationBtn_Click(object sender, System.EventArgs e)
+		{
+			//WebRule: Send ad hoc notification
+            int usrId = int.Parse(cUsrId1.Text);
+            DataTable dt = new LoginSystem().GetUsrNotificationChannel(usrId);
+            // FCM legacy api
+            // https://firebase.google.com/docs/cloud-messaging/http-server-ref
+            string fcmServerKey = Config.FCMServerKey;
+            string fcmPostUrl = "https://fcm.googleapis.com/fcm/send";
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "authorization", "key=" + fcmServerKey } };
+            List<string> devices = new List<string>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                string fcmToken = dr["DeviceId"].ToString();
+                devices.Add(fcmToken);
+            }
+            bool dataOnly = true;
+            string notificationTitle = cNotificationTitle.Text;
+            string notificationContent = cNotificationContent.Text;
+            string notificationIconUrl = "/images/logo.png"; // relative to site hosting the service worker script
+            string collapse_key = "some_key"; // for notification grouping
+            string targets = string.Join(",", devices.Select(s => "'" + s + "'").ToArray());
+            string click_action = "/Adm#Profile"; // must be relative(to the fcmReactRoot defined in firebaseConfig.js) if launch from notification area from service worker
+            string postBody = (@"{
+'collapse_key' : '" + collapse_key + @"',"
+                + (dataOnly ? "" : @"
+'notification' : {
+    'body' : '" + notificationContent + @"',
+    'title': '" + notificationTitle + @"',
+    'icon': '" + notificationIconUrl + @"',
+     'click_action': '" + click_action + @"'
+ },") + @"
+'data' : {
+     'body' : '" + notificationContent + @"',
+     'title': '" + notificationTitle + @"',
+     'icon': '" + notificationIconUrl + @"',
+     'forUsrId' : 2,
+     'key_2' : 'Value for key_2',
+     'click_action': '" + click_action + @"'
+ },
+'webpush': {
+    'fcm_options': {
+    'link': '" + click_action + @"'
+    }
+ },
+'registration_ids': [" + targets + @"]
+}").Replace("\r\n", "").Replace("'", "\"");
+            try
+            {
+                HttpPostJSON(fcmPostUrl, postBody, headers);
+                return;
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+
+			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
 		}
 
@@ -3257,6 +3339,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["GuarantorId1"] = "Numeric"; drDisp["GuarantorId1"] = "AutoComplete";
 			try {dr["UsageStat"] = cUsageStat.Text;} catch {}
 			drType["UsageStat"] = string.Empty; drDisp["UsageStat"] = "Label";
+			try {dr["NotificationTitle"] = cNotificationTitle.Text.Trim();} catch {}
+			drType["NotificationTitle"] = string.Empty; drDisp["NotificationTitle"] = "TextBox";
+			try {dr["NotificationContent"] = cNotificationContent.Text;} catch {}
+			drType["NotificationContent"] = string.Empty; drDisp["NotificationContent"] = "MultiLine";
 			if (bAdd)
 			{
 			}

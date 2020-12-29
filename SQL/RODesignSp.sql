@@ -9656,6 +9656,32 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmPostman1028ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmPostman1028ById AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetAdmPostman1028ById
+ @KeyId1		nvarchar(1000)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+SELECT @fClause = 'FROM RODesign.dbo.VwRintagi b1317'
+SELECT @sClause = 'SELECT SystemId1317=b1317.SystemId'
++ ', SystemName1317=b1317.SystemName'
++ ', SystemAbbr1317=b1317.SystemAbbr'
++ ', ServerName1317=b1317.ServerName'
+SELECT @wClause = 'WHERE b1317.SystemId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmPuDbTable') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetAdmPuDbTable AS SELECT 1')
 GO
@@ -25769,6 +25795,61 @@ IF @keyId is not null SELECT @wClause = @wClause + 'a125.CheckBoxCd = ''' + conv
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPostContentType3S4423') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPostContentType3S4423 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlPostContentType3S4423
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PostContentType=a1328.MimeTypeId, PostContentTypeText=a1328.MimeType'
+SELECT @fClause = 'FROM RODesign.dbo.VwMIMEType a1328'
+SELECT @oClause = 'ORDER BY a1328.MimeType'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1328.MimeType LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1328.MimeTypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT PostContentType=null, PostContentTypeText=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -42260,6 +42341,124 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmPostman1028') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmPostman1028 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetExpAdmPostman1028
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM RODesign.dbo.VwRintagi b1317 (NOLOCK)'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId1317Text=b1317.SystemId'
++ ', SystemId1317=b1317.SystemId'
++ ', SystemName1317=b1317.SystemName'
++ ', SystemAbbr1317=b1317.SystemAbbr'
++ ', ServerName1317=b1317.ServerName'
+SELECT @oClause='ORDER BY b1317.SystemId'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1317.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1317.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1317.SystemId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmRelease98') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetExpAdmRelease98 AS SELECT 1')
 GO
@@ -53657,6 +53856,123 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmPostman1028') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmPostman1028 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetLisAdmPostman1028
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM RODesign.dbo.VwRintagi b1317 (NOLOCK)'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' SystemId1317=b1317.SystemId, SystemId1317Text=b1317.SystemName, b1317.Active, MatchCount=COUNT(1) OVER ()'
+SELECT @oClause='ORDER BY b1317.Active DESC,b1317.SystemName'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1317.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b1317.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b1317.SystemId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+
+SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
+IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1317.SystemName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmRelease98') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetLisAdmRelease98 AS SELECT 1')
 GO
@@ -64889,6 +65205,38 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetUsrNotificationChannel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetUsrNotificationChannel AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- Only in ??Design
+ALTER PROCEDURE [dbo].[GetUsrNotificationChannel]
+ @UsrId			int
+,@filterXml		varchar(max) = null
+/* WITH ENCRYPTION */
+AS
+DECLARE	 @sClause		varchar(4000)
+		,@fClause		varchar(4000)
+		,@wClause		varchar(4000)
+		,@dClause		varchar(4000)
+SET NOCOUNT ON
+
+SELECT
+*
+FROM
+dbo.UsrDevice d
+WHERE 
+d.UsrId = @UsrId
+AND d.Status = 'Y'
+ORDER BY d.LastAccessOnUTC DESC
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetUsrPref') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetUsrPref AS SELECT 1')
 GO
@@ -74298,6 +74646,58 @@ BEGIN
 END
 UPDATE dbo.Usr SET LoginName = @LoginName, UsrName = @UsrName, UsrEmail = @UsrEmail WHERE UsrId = @UsrId
 SELECT @@ROWCOUNT
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UpdUsrNotificationChannel') AND type='P')
+EXEC('CREATE PROCEDURE dbo.UpdUsrNotificationChannel AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- ??Design only:
+ALTER PROCEDURE [dbo].[UpdUsrNotificationChannel]
+ @UsrId		int
+,@DeviceId	varchar(max)
+,@PushNotificationType varchar(max)
+,@UserAgent		varchar(max)
+,@ClientIp	varchar(max) = null
+,@Fingerprint		varchar(max) = null
+,@AppSig		varchar(max) = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+
+UPDATE d
+SET LastAccessOnUTC = GETUTCDATE()
+, DeviceId = @DeviceId
+, ClientIP = @ClientIp
+FROM
+dbo.UsrDevice d
+WHERE 
+UsrId = @UsrId
+AND
+(
+DeviceId = @DeviceId
+OR
+(
+@Fingerprint IS NOT NULL AND Fingerprint = @Fingerprint
+)
+OR
+(@AppSig IS NOT NULL AND AppSig = @AppSig)
+)
+
+
+IF @@ROWCOUNT = 0
+BEGIN
+	INSERT INTO dbo.UsrDevice
+	(UsrId, DeviceId, UsrAgent, Status, LastAccessOnUTC, PushNotificationType, ClientIP, Fingerprint, AppSig)
+	SELECT
+	@UsrId, @DeviceId, @UserAgent, 'Y', GETUTCDATE(), @PushNotificationType, @ClientIp, @Fingerprint, @AppSig
+END
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF

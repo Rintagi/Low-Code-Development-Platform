@@ -182,4 +182,27 @@ public partial class SystemWs : AsmxBase
         var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", ""));
         return ret;
     }
+    
+    [WebMethod(EnableSession = false)]
+    public ApiResponse<SerializableDictionary<string, string>, object> GetFxRate(string FrISOCurrencySymbol, string ToISOCurrencySymbol)
+    {
+        Func<ApiResponse<SerializableDictionary<string, string>, object>> fn = () =>
+        {
+            ApiResponse<SerializableDictionary<string, string>, object> mr = new ApiResponse<SerializableDictionary<string, string>, object>();
+
+            SerializableDictionary<string, string> current = new SerializableDictionary<string, string>();
+            string rate = base.GetExtFxRate(FrISOCurrencySymbol, ToISOCurrencySymbol);
+            current.Add("FxRate", rate);
+            current.Add("FrISOCurrencySymbol", FrISOCurrencySymbol);
+            current.Add("ToISOCurrencySymbol", ToISOCurrencySymbol);
+
+            mr.status = "success";
+            mr.errorMsg = "";
+            mr.data = current;
+
+            return mr;
+        };
+        var ret = ProtectedCall(fn, true);
+        return ret;
+    }    
 }

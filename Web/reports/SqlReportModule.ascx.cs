@@ -1495,6 +1495,7 @@ namespace RO.Web
 			System.Xml.XmlNamespaceManager ns = new System.Xml.XmlNamespaceManager(rpt.NameTable);
 			ns.AddNamespace("x", rpt.DocumentElement.NamespaceURI);
 			System.Xml.XmlNodeList images = rpt.SelectNodes("//x:Image[x:Source='External']/x:Value", ns);
+            urlBase = urlBase + (urlBase.EndsWith("/") ? "" : "/");
 			foreach (System.Xml.XmlNode n in images)
 			{
                 if (!(n.InnerText.StartsWith("http:") || n.InnerText.StartsWith("https:")))

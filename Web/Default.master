@@ -63,6 +63,10 @@
     <script type="text/javascript" src="scripts/ClientRule.js"></script>
     <script type="text/javascript" src="scripts/dashboard.js"></script>
     <script type="text/javascript" src="scripts/UserRule.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js"></script>
+    <script type="text/javascript" src="runtime/firebaseConfig.js"></script>
+    <script type="text/javascript" src="scripts/register_fcm.js"></script>
     <!-- Google Analytics
     <meta name="google-site-verification" content="google75978239b0c2cb00.html">
     <script>
@@ -126,5 +130,25 @@
     </form>
 </div>
 <div id="mobileMenuArea" class="sb-slidebar sb-right"></div>
+<script>
+    navigator.serviceWorker && navigator.serviceWorker.addEventListener("message",
+        function (message) {
+            console.log('general message received', message);
+            var data = message.data;
+            if (message.data && message.data.data.title && window.Notification) {
+                var notification = new Notification(message.data.data.title, message.data.data);
+
+                notification.onclick = function (event) {
+                    console.log(event);
+                    event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                    //window.open(message.data.data.click_action, '_blank');
+                    notification.close();
+                };
+                //no auto close !!!
+                //setTimeout(notification.close.bind(notification), 7000);
+            }
+        }
+    );      
+</script>
 </body>
 </html>

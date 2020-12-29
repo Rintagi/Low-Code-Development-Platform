@@ -142,6 +142,7 @@
     <Compile Include="GoogleAuthenticator.cs" />
     <Compile Include="LunarCal.cs" />
     <Compile Include="PayPal.cs" />
+    <Compile Include="Prometheus.cs" />
     <Compile Include="QRCoder.cs" />
     <Compile Include="Robot.cs">
       <SubType>Code</SubType>

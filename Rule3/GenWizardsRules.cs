@@ -638,7 +638,7 @@ namespace RO.Rule3
             sb.Append("					fName = fName.Replace(\":\",\"\").Replace(\"..\",\"\");" + Environment.NewLine);
             sb.Append("					if (!Directory.Exists(Config.PathTmpImport)) { Directory.CreateDirectory(Config.PathTmpImport); }" + Environment.NewLine);
             sb.Append("					cBrowse.PostedFile.SaveAs(Config.PathTmpImport + fName);" + Environment.NewLine);
-			sb.Append("					cWorkSheet.DataSource = (new XLSImport()).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();" + Environment.NewLine);
+            sb.Append("					cWorkSheet.DataSource = (new XLSImport(Config.WsXlsUrl)).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();" + Environment.NewLine);
 			sb.Append("					cFNameO.Text = fNameO; cFName.Text = fName;" + Environment.NewLine);
 			sb.Append("				}" + Environment.NewLine);
             // Cannnot use PreMsgPopup, must throw because of full postback;
@@ -731,7 +731,7 @@ namespace RO.Rule3
 			sb.Append("		{" + Environment.NewLine);
 			sb.Append("			try" + Environment.NewLine);
 			sb.Append("			{" + Environment.NewLine);
-			sb.Append("				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport()).ImportFile(fileName, workSheet, startRow, fileFullName)));" + Environment.NewLine);
+            sb.Append("				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName, workSheet, startRow, fileFullName)));" + Environment.NewLine);
 			sb.Append("				DataRowCollection rows = ds.Tables[0].Rows;" + Environment.NewLine);
 			sb.Append("				DataColumnCollection cols = ds.Tables[0].Columns;" + Environment.NewLine);
 			sb.Append("				int iStart = int.Parse(startRow) - 1;" + Environment.NewLine);
@@ -830,7 +830,7 @@ namespace RO.Rule3
             sb.Append("		{" + Environment.NewLine);
             sb.Append("			try" + Environment.NewLine);
             sb.Append("			{" + Environment.NewLine);
-            sb.Append("				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport()).ImportFile(fileName, workSheet, startRow, fileFullName)));" + Environment.NewLine);
+            sb.Append("				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName, workSheet, startRow, fileFullName)));" + Environment.NewLine);
             sb.Append("				DataRowCollection rows = ds.Tables[0].Rows;" + Environment.NewLine);
             sb.Append("				DataColumnCollection cols = ds.Tables[0].Columns;" + Environment.NewLine);
             sb.Append("				int iStart = int.Parse(startRow) - 1;" + Environment.NewLine);
@@ -996,7 +996,7 @@ namespace RO.Rule3
         //    //sb.Append("				da.SelectCommand = myCmd;" + Environment.NewLine);
         //    //sb.Append("				DataSet ds = new DataSet();" + Environment.NewLine);
         //    //sb.Append("				da.Fill(ds, \"" + dw["MasterTableName"].ToString() + "\");" + Environment.NewLine);
-        //    sb.Append("				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport()).ImportFile(fileName, workSheet, startRow, fileFullName)));" + Environment.NewLine);
+        //    sb.Append("				DataSet ds = RO.Common3.XmlUtils.XmlToDataSet(((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName, workSheet, startRow, fileFullName)));" + Environment.NewLine);
         //    sb.Append("				DataRowCollection rows = ds.Tables[0].Rows;" + Environment.NewLine);
         //    sb.Append("				DataColumnCollection cols = ds.Tables[0].Columns;" + Environment.NewLine);
         //    sb.Append("				int iStart = int.Parse(startRow) - 1;" + Environment.NewLine);

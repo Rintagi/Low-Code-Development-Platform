@@ -203,3 +203,8 @@
 1280~@~AdmServerRuleOvrd [   10] Main: AtServerRuleOvrdId   100 [Default]~@~4356~@~1026~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 1282~@~AdmServerRuleOvrd [   80] Main: ServerRuledOvrdPrmId   100 [Default]~@~4361~@~1026~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 1283~@~AdmFlowChart [   10] Main: ChartId   100 [Default]~@~4378~@~1027~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1286~@~AdmPostman [   40] Main: ServerName   100 [Default]~@~4392~@~1028~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1287~@~AdmPostman [   30] Main: SystemAbbr   100 [Default]~@~4391~@~1028~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1288~@~AdmPostman [   20] Main: SystemName   100 [Default]~@~4390~@~1028~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1289~@~AdmPostman [   80] Main: Submit   100 [Default]~@~4420~@~1028~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
+1290~@~AdmPostman [   80] Main: Submit    10 [UsrGroup5]~@~4420~@~1028~@~Y~@~N~@~N~@~~@~~@~~@~8~@~5~@~10~@~800000005

@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'MaintMsgId233';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -585,18 +585,19 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.EmailUsers || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.EmailUsers || {}).readonly || !(authCol.EmailUsers || {}).visible}
-                                        onClick={this.EmailUsers({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.EmailUsers || (columnLabel.EmailUsers || {}).ColumnHeader || (columnLabel.EmailUsers || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.EmailUsers || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.EmailUsers || {}).readonly || !(authCol.EmailUsers || {}).visible}
+                                            onClick={this.EmailUsers({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.EmailUsers || (columnLabel.EmailUsers || {}).ColumnHeader || (columnLabel.EmailUsers || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>

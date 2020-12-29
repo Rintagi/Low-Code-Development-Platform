@@ -22,7 +22,7 @@ namespace RoboCoder.WebControls
         [Localizable(true)]
         public int TimeSkew
         {
-            get { try { return int.Parse(ViewState["TimeSkew"] as string ?? "1"); } catch { return 1; }; }
+            get { try { return int.Parse(ViewState["TimeSkew"] as string ?? "2"); } catch { return 2; }; }
             set { ViewState["TimeSkew"] = value.ToString(); }
         }
 

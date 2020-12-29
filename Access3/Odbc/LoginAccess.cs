@@ -184,8 +184,8 @@ namespace RO.Access3.Odbc
 				cmd.Parameters.Add("@LoginSuccess", OdbcType.Char).Value = "N";
 			}
             cmd.Parameters.Add("@IpAddress", OdbcType.VarChar).Value = IpAddress;
-            cmd.Parameters.Add("@Provider", OdbcType.VarChar).Value = Provider;
-            cmd.Parameters.Add("@ProviderLogiName", OdbcType.VarChar).Value = ProviderLoginName;
+            cmd.Parameters.Add("@Provider", OdbcType.VarChar).Value = string.IsNullOrEmpty(Provider) ? (object) System.DBNull.Value : Provider;
+            cmd.Parameters.Add("@ProviderLogiName", OdbcType.VarChar).Value = string.IsNullOrEmpty(ProviderLoginName) ? (object)System.DBNull.Value : ProviderLoginName;
             TransformCmd(cmd).ExecuteScalar();
 			cmd.Dispose();
 			cmd = null;
@@ -980,6 +980,57 @@ namespace RO.Access3.Odbc
                 cn.Close();
             }
             return Secret;
+        }
+
+        public override DataTable GetUsrNotificationChannel(int UsrId, string FilterXml)
+        {
+            if (da == null)
+            {
+                throw new System.ObjectDisposedException(GetType().FullName);
+            }
+            OdbcCommand cmd = new OdbcCommand("GetUsrNotificationChannel", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@usrId", OdbcType.Numeric).Value = UsrId;
+            cmd.Parameters.Add("@filterXml", OdbcType.VarChar).Value = string.IsNullOrEmpty(FilterXml) ? (object)System.DBNull.Value : FilterXml;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+
+        public override void UpdUsrNotificationChannel(int UsrId, string DeviceId, string UserAgent, string ClientIP, string Fingerprint, string AppSig, string NotificationType)
+        {
+            if (da == null)
+            {
+                throw new System.ObjectDisposedException(GetType().FullName);
+            }
+            OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr()));
+            cn.Open();
+            OdbcTransaction tr = cn.BeginTransaction();
+            OdbcCommand cmd = new OdbcCommand("UpdUsrNotificationChannel", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Transaction = tr;
+            try
+            {
+                cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = UsrId;
+                cmd.Parameters.Add("@DeviceId", OdbcType.VarChar).Value = DeviceId;
+                cmd.Parameters.Add("@NotificationType", OdbcType.VarChar).Value = NotificationType;
+                cmd.Parameters.Add("@UserAgent", OdbcType.VarChar).Value = UserAgent;
+                cmd.Parameters.Add("@ClientIP", OdbcType.VarChar).Value = ClientIP;
+                cmd.Parameters.Add("@Fingerprint", OdbcType.VarChar).Value = string.IsNullOrEmpty(Fingerprint) ? (object)DBNull.Value : (object)Fingerprint;
+                cmd.Parameters.Add("@AppSig", OdbcType.VarChar).Value = string.IsNullOrEmpty(AppSig) ? (object)DBNull.Value : (object)AppSig; ;
+                TransformCmd(cmd).ExecuteNonQuery();
+                tr.Commit();
+            }
+            catch (Exception e)
+            {
+                tr.Rollback(); ApplicationAssert.CheckCondition(false, "UpdUsrNotificationChannel", "", e.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                cn.Close();
+            }
         }
     }
 }

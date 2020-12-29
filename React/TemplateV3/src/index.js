@@ -14,6 +14,29 @@ import log from './helpers/logger'
 import * as serviceWorker from './registerServiceWorkerV3';
 import { setupRuntime, getRintagiConfig } from './helpers/config';
 
+/* sample trivial web worker implementation, can be removed/comment out */
+import * as Comlink from 'comlink';
+/* eslint-disable import/no-webpack-loader-syntax */
+import Foo from './worker/foo_worker';
+/* eslint-disable import/no-webpack-loader-syntax */
+import Bar from './worker/bar_worker';
+
+async function initFoo() {
+  const worker = new Foo();
+  const obj = Comlink.wrap(worker);
+  const x = await obj.inc();
+  console.log(x);
+}
+
+async function initBar() {
+  const worker = new Bar();
+  const obj = Comlink.wrap(worker);
+  const x = await obj.inc();
+  console.log(x);
+}
+initFoo();
+initBar();
+
 /* Rintagi runtime configuration(rintagi.js under public/runtime) is loaded in index.html so must be accessed via document namespace
  * this is for post-deployment override
  */

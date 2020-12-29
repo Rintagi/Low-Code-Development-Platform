@@ -55,6 +55,7 @@ namespace RO.Web
 		private string LcSysConnString;
 		private string LcAppConnString;
 		private string LcAppPw;
+		private int CommandTimeOut = Config.CommandTimeOut;
 
 		public AdmRptDbTableModule()
 		{
@@ -171,6 +172,11 @@ namespace RO.Web
 					cModifiedAfter.Text = dt.Rows[1]["LastCriteria"].ToString();
 				}
 				DataTable dtHlp = GetReportHlp();
+				try
+				{
+				    int.TryParse(dtHlp.Rows[0]["CommandTimeOut"].ToString(), out CommandTimeOut);
+				}
+				catch { }
 				cHelpMsg.HelpTitle = dtHlp.Rows[0]["ReportTitle"].ToString(); cHelpMsg.HelpMsg = dtHlp.Rows[0]["DefaultHlpMsg"].ToString();
 				cTitleLabel.Text = dtHlp.Rows[0]["ReportTitle"].ToString();
 				SetClientRule();
@@ -440,7 +446,7 @@ namespace RO.Web
 		{
 			string reportName = "AdmRptDbTable";
 			cCriteria.Visible = false; cClearCriButton.Visible = false; cShowCriButton.Visible = (bool)Session[KEY_bShCriVisible];
-			DataTable dt = (new AdminSystem()).GetRptDt(2,"GetAdmRptDbTable",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria(),LcAppConnString,LcAppPw,false,false,false,Config.CommandTimeOut);
+			DataTable dt = (new AdminSystem()).GetRptDt(2,"GetAdmRptDbTable",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria(),LcAppConnString,LcAppPw,false,false,false,CommandTimeOut);
 			CovertRptUTC(dt);
 			if (dt.Rows.Count > 0) {if (dt.Columns.Contains("ReportName")) {reportName = dt.Rows[0]["ReportName"].ToString();}}
 			else {PreMsgPopup("For your information, no data is currently available as per your reporting criteria.");}

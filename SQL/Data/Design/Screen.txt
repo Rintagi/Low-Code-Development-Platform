@@ -73,3 +73,4 @@
 1022~@~AdmLicense~@~Rintagi Installation~@~5~@~1317~@~~@~1317~@~7579~@~Y~@~~@~~@~~@~~@~~@~12~@~AdmScreenObj.aspx?id=26&key=4220&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=1022&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 1026~@~AdmServerRuleOvrd~@~Server Rule Override~@~6~@~1322~@~1321~@~1322~@~7625~@~Y~@~~@~~@~~@~~@~~@~12~@~AdmScreenObj.aspx?id=26&key=4356&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=1026&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 1027~@~AdmFlowchart~@~Flowchart IDE~@~5~@~1325~@~~@~1325~@~7665~@~Y~@~~@~~@~~@~~@~~@~12~@~AdmScreenObj.aspx?id=26&key=4378&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=1027&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
+1028~@~AdmPostman~@~Rintagi Postman~@~5~@~1317~@~~@~1317~@~7579~@~Y~@~~@~~@~~@~~@~~@~12~@~AdmScreenObj.aspx?id=26&key=4389&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=1028&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N

@@ -181,7 +181,7 @@ namespace RO.Web
                 System.Collections.Generic.List<string> messages = new System.Collections.Generic.List<string>();
                 try
                 {
-                    sheets = (new XLSImport()).GetSheetNames(path);
+                    sheets = (new XLSImport(Config.WsXlsUrl)).GetSheetNames(path);
                 }
                 catch (Exception er)
                 {
@@ -201,7 +201,7 @@ namespace RO.Web
 
                 try
                 {
-                    dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport()).ImportFile(fileName, sheetName, "1", path)).Tables[0];
+                    dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName, sheetName, "1", path)).Tables[0];
                 }
                 catch (Exception er)
                 {
@@ -286,6 +286,7 @@ namespace RO.Web
             }
 
         }
+
 		// *** WebRule End *** //
 
 		public AdmDbTableModule()
@@ -2703,7 +2704,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					fName = fName.Replace(":","").Replace("..","");
 					if (!Directory.Exists(Config.PathTmpImport)) { Directory.CreateDirectory(Config.PathTmpImport); }
 					cBrowse.PostedFile.SaveAs(Config.PathTmpImport + fName);
-					cWorkSheet.DataSource = (new XLSImport()).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();
+					cWorkSheet.DataSource = (new XLSImport(Config.WsXlsUrl)).GetSheetNames(Config.PathTmpImport + fName); cWorkSheet.DataBind();
 					cFNameO.Text = fNameO; cFName.Text = fName;
 				}
 				catch (Exception err) {bErrNow.Value = "Y"; PreMsgPopup("Unable to retrieve sheet names from \"" + fNameO + "\": " + err.Message); }
@@ -2739,7 +2740,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		{
 			try
 			{
-				DataTable dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport()).ImportFile(fileName,workSheet,startRow,fileFullName)).Tables[0];
+				DataTable dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName,workSheet,startRow,fileFullName)).Tables[0];
 				DataRowCollection rows = dtImp.Rows;
 				DataColumnCollection cols = dt.Columns;
 				Func<string, string, bool> isDateCol = (cl, c) => ("," + cl + ",").IndexOf("," + c + ",") >= 0;

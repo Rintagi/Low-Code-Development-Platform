@@ -50,6 +50,7 @@ import AdmRptStyleReduxObj from './AdmRptStyle';
 import AdmRptTblReduxObj from './AdmRptTbl';
 import AdmTemplateReduxObj from './AdmTemplate';
 import AdmLicenseReduxObj from './AdmLicense';
+import AdmPostmanReduxObj from './AdmPostman';
 import AdmRowOvrdReduxObj from './AdmRowOvrd';
 import AdmRulTierReduxObj from './AdmRulTier';
 import AdmTbdRuleReduxObj from './AdmTbdRule';
@@ -82,7 +83,7 @@ import AdmAppInfoReduxObj from './AdmAppInfo';
 import AdmWebRuleReduxObj from './AdmWebRule';
 import AdmWizardObjReduxObj from './AdmWizardObj';
 import AdmWizardRuleReduxObj from './AdmWizardRule';
-export default {
+let redux = {
     auth: authReducer,
     rintagi: rintagiReducer,
     global: globalReducer,
@@ -133,6 +134,7 @@ export default {
     AdmRptTbl: AdmRptTblReduxObj.ReduxReducer(),
     AdmTemplate: AdmTemplateReduxObj.ReduxReducer(),
     AdmLicense: AdmLicenseReduxObj.ReduxReducer(),
+    AdmPostman: AdmPostmanReduxObj.ReduxReducer(),
     AdmRowOvrd: AdmRowOvrdReduxObj.ReduxReducer(),
     AdmRulTier: AdmRulTierReduxObj.ReduxReducer(),
     AdmTbdRule: AdmTbdRuleReduxObj.ReduxReducer(),
@@ -166,3 +168,4 @@ export default {
     AdmWizardObj: AdmWizardObjReduxObj.ReduxReducer(),
     AdmWizardRule: AdmWizardRuleReduxObj.ReduxReducer(),
 }
+ export default redux;

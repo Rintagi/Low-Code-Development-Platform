@@ -66,7 +66,14 @@ namespace RO.Common3
 
 		public static string QuoteRequired(bool bSingle, string dataTypeSysName, string DefaultValue)
 		{
-            if ("Char,NChar,VarChar,NVarChar,String".IndexOf(dataTypeSysName) >= 0 && DefaultValue.IndexOf("LUser.") < 0 && DefaultValue.IndexOf("LImpr.") < 0 && DefaultValue.IndexOf("LCurr.") < 0 && DefaultValue.IndexOf("Config.") < 0 && DefaultValue.IndexOf(".ToString") < 0)
+            
+            if ("Char,NChar,VarChar,NVarChar,String".IndexOf(dataTypeSysName) >= 0 
+                && DefaultValue.IndexOf("LUser.") < 0 
+                && DefaultValue.IndexOf("LImpr.") < 0 
+                && DefaultValue.IndexOf("LCurr.") < 0 
+                && DefaultValue.IndexOf("Config.") < 0 
+                && DefaultValue.IndexOf(".ToString") < 0
+                )
 			{
 				if (bSingle)
                 {

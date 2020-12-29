@@ -819,6 +819,8 @@ public partial class AuthWs : AsmxBase
 
     private string RegisterWebAuthnSetup(string appDomainUrl, string registrationJSON)
     {
+        HttpRequest Request = HttpContext.Current.Request;
+        bool isSafari = Request.UserAgent.Contains("Safari");
         //var x = Newtonsoft.Json.JsonConvert.DeserializeObject(registrationJSON);
         var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
         var serverPath = new Uri(appDomainUrl).GetComponents(UriComponents.Path, UriFormat.Unescaped);
@@ -862,16 +864,19 @@ public partial class AuthWs : AsmxBase
             //                 AuthenticatorAttachment = AuthenticatorAttachment.Platform,
         };
         // AttestationConveyancePreference.None would suppress aaguid return for registration
-        AttestationConveyancePreference attConveyancePreference = AttestationConveyancePreference.Indirect;
-        //AttestationConveyancePreference attConveyancePreference = AttestationConveyancePreference.None;
+        // iOS Safari must use None 
+        // AttestationConveyancePreference attConveyancePreference = AttestationConveyancePreference.Indirect;
+        AttestationConveyancePreference attConveyancePreference = isSafari ? AttestationConveyancePreference.None : AttestationConveyancePreference.Indirect;
         List<PublicKeyCredentialDescriptor> excludedCredentials = dtLogin.AsEnumerable().Select(
                 dr =>
                 {
                     return new PublicKeyCredentialDescriptor()
                     {
                         Id = base64UrlDecode(dr["LoginName"].ToString()),
-                        Transports = new AuthenticatorTransport[]{
-                                AuthenticatorTransport.Ble, AuthenticatorTransport.Internal, AuthenticatorTransport.Lightning, AuthenticatorTransport.Nfc, AuthenticatorTransport.Usb
+                        Transports = 
+                            isSafari ? null 
+                                    : new AuthenticatorTransport[]{
+                                    AuthenticatorTransport.Ble, AuthenticatorTransport.Internal, AuthenticatorTransport.Lightning, AuthenticatorTransport.Nfc, AuthenticatorTransport.Usb
                             },
                         Type = PublicKeyCredentialType.PublicKey,
                     };

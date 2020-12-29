@@ -20,6 +20,7 @@ using System.Web.SessionState;
 using System.Linq;
 using System.Web.Configuration;
 using System.Configuration;
+using System.Net;
 
 // Need to run the following 3 lines to generate AdminWs.cs for C# calls at Windows SDK v6.1: CMD manually if AdminWs.asmx is changed:
 // C:\
@@ -1176,6 +1177,85 @@ public partial class AdminWs : WebService
         if (Typ == "C") { return csEmail; } else { return adminEmail; }
     }
 
+    protected List<string> GetClientIpChain(HttpRequest Request)
+    {
+        try
+        {
+            if (Request != null)
+            {
+                var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
+                                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Where(s => !string.IsNullOrEmpty((s ?? "").Trim()))
+                                .Select(s => new { addr = s, isPrivate = RO.Common3.Utils.IsPrivateIp(s) })
+                                .Aggregate(new { ipChain = new List<string>(), startNonLocal = new bool[1] { false } }
+                                    , (a, i) =>
+                                    {
+                                        if (!i.isPrivate || !a.startNonLocal[0]) a.ipChain.Add(i.addr);
+                                        if (!i.isPrivate) a.startNonLocal[0] = true;
+                                        return a;
+                                    })
+                                ;
+                if (proxied.ipChain.Count == 0 || !RO.Common3.Utils.IsPrivateIp(Request.UserHostAddress)) proxied.ipChain.Add(Request.UserHostAddress);
+                // this is the closest to the browser being reported, can be internal if browser is fronted by proxy
+                return proxied.ipChain;
+            }
+        }
+        catch
+        {
+            return new List<string> { "unknown" };
+        }
+        return new List<string> { "unknown" };
+    }
+    
+    public string GetVisitorIPAddress()
+    {
+        /* return the public ip of client, assuming it may go through proxy to reach the app */
+
+        List<string> ipChain = GetClientIpChain(HttpContext.Current.Request);
+        string visitorIPAddress = ipChain.LastOrDefault();
+        if (visitorIPAddress == "unknown") visitorIPAddress = string.Empty;
+        //string visitorIPAddress = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+        if (string.IsNullOrEmpty(visitorIPAddress)) { visitorIPAddress = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"]; }
+        if (string.IsNullOrEmpty(visitorIPAddress)) { visitorIPAddress = HttpContext.Current.Request.UserHostAddress; }
+        if (string.IsNullOrEmpty(visitorIPAddress) || visitorIPAddress.Trim() == "::1") { visitorIPAddress = "127.0.0.1"; }
+        if (string.IsNullOrEmpty(visitorIPAddress))
+        {
+            string stringHostName = Dns.GetHostName();
+            IPHostEntry ipHostEntries = Dns.GetHostEntry(stringHostName);
+            IPAddress[] arrIpAddress = ipHostEntries.AddressList;
+            try { visitorIPAddress = arrIpAddress[arrIpAddress.Length - 2].ToString(); }
+            catch
+            {
+                try { visitorIPAddress = arrIpAddress[0].ToString(); }
+                catch
+                {
+                    try { arrIpAddress = Dns.GetHostAddresses(stringHostName); visitorIPAddress = arrIpAddress[0].ToString(); }
+                    catch { visitorIPAddress = "127.0.0.1"; }
+                }
+            }
+        }
+        return visitorIPAddress;
+    }
+    public string GetVistorUserAgent()
+    {
+        var request = HttpContext.Current.Request;
+        return request.UserAgent;
+    }
+    
+    [WebMethod(EnableSession = true)]
+    public void UpdateNotificationChannel(string DeviceId, string Fingerprint, string AppSig, string NotificationType)
+    {
+        HttpContext Context = HttpContext.Current;
+        HttpSessionState Session = HttpContext.Current.Session;
+        LoginUsr LUser = Session[KEY_CacheLUser] as LoginUsr;
+
+        if (LUser != null && LUser.LoginName.ToLowerInvariant() != "anonymous")
+        {
+            (new LoginSystem()).UpdUsrNotificationChannel(LUser.UsrId, DeviceId, GetVistorUserAgent(), GetVisitorIPAddress(), Fingerprint, AppSig, NotificationType);
+            
+        }
+    }
+        
     [WebMethod]
     public string[] CreateInstaller(string iType, DateTime rebuildTime)
     {

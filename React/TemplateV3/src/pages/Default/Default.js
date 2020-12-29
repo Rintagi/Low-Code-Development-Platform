@@ -177,8 +177,8 @@ class Default extends Component {
                 {newSysList.map((obj, i) => {
                   return (
                     <div className="col-12 col-md-12 col-lg-12" key={i} id={obj.SystemId}>
-                      <button class="leftSliderButton"><span class="awssld__controls__arrow-left"></span></button>
-                      <button class="rightSliderButton"><span class="awssld__controls__arrow-right"></span></button>
+                      <button className="leftSliderButton"><span className="awssld__controls__arrow-left"></span></button>
+                      <button className="rightSliderButton"><span className="awssld__controls__arrow-right"></span></button>
                       <div className="card customCard">
                         <div className="card-body">
                           <div className="systemLogo">

@@ -134,3 +134,4 @@
 314~@~Screen: Rintagi Installation - View self, Add, Edit and Delete~@~1022~@~~@~3~@~A~@~N~@~N~@~N
 315~@~Screen: Rintagi Installation - View self and Edit~@~1022~@~~@~2~@~A~@~N~@~N~@~N
 317~@~Screen: Rintagi Installation - All access~@~1022~@~~@~8~@~A~@~N~@~Y~@~N
+318~@~Screen: Rintagi Postman - All access~@~1028~@~~@~8~@~A~@~N~@~Y~@~N

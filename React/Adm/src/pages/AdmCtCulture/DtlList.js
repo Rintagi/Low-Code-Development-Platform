@@ -33,7 +33,7 @@ class DtlList extends RintagiScreen {
     this.GetReduxState = () => (this.props.AdmCtCulture || {});
     this.titleSet = false;
     this.hasChangedContent = false;
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.MstKeyColumnName = 'CultureTypeId8';
     this.DtlKeyColumnName = 'CultureLblId242';
     this.SetCurrentRecordState = this.SetCurrentRecordState.bind(this);
@@ -228,10 +228,10 @@ class DtlList extends RintagiScreen {
     const columnLabel = AdmCtCultureState.ColumnLabel;
     const columnDefinition = Object.keys(columnLabel).reduce((a, o, i) => {
       const x = columnLabel[o];
-      if (x['DtlLstPosId'] == '1') { a['dTopL'] = x; };
-      if (x['DtlLstPosId'] == '2') { a['dBottomL'] = x; };
-      if (x['DtlLstPosId'] == '3') { a['dTopR'] = x; };
-      if (x['DtlLstPosId'] == '4') { a['dBottomR'] = x; };
+      if (x['DtlLstPosId'] === '1') { a['dTopL'] = x; };
+      if (x['DtlLstPosId'] === '2') { a['dBottomL'] = x; };
+      if (x['DtlLstPosId'] === '3') { a['dTopR'] = x; };
+      if (x['DtlLstPosId'] === '4') { a['dBottomR'] = x; };
       return a;
     }, {});
     const dTopL = columnDefinition['dTopL'] || {};

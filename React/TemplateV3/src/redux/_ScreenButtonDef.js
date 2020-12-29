@@ -1,4 +1,4 @@
-export default {
+let _ScreenButtonDef = {
     MstList: {
       MoreButton: { label: 'Master List More Button holder', iconClassName: 'fa fa-ellipsis-h icon-holder', className: 'mw-50', buttonType: 'More', visible: true, order: 1, expose: true },
       DropdownMenuButtons: {
@@ -68,3 +68,5 @@ export default {
       }
     }
   }
+
+  export default _ScreenButtonDef;

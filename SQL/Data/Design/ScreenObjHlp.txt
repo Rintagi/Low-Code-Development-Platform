@@ -5,7 +5,7 @@
 7~@~AdmUsr [  320] Status: VendorId (en-US)~@~7~@~1~@~Vendor~@~This is the vendor this user has access to, empty means all.~@~~@~
 8~@~AdmUsr [  350] Status: MemberId (en-US)~@~8~@~1~@~Member~@~This is the member this user has access to, empty means all.~@~~@~
 9~@~AdmUsr [  170] Main Info: Active (en-US)~@~9~@~1~@~Active~@~Uncheck this if this user needs to be disabled.~@~~@~
-10~@~AdmUsr [  250] Status: ModifiedOn (en-US)~@~10~@~1~@~Modified On~@~This is the date this user was last modified.~@~~@~
+10~@~AdmUsr [  270] Status: ModifiedOn (en-US)~@~10~@~1~@~Modified On~@~This is the date this user was last modified.~@~~@~
 11~@~AdmDbTable [   10] Main Info: TableId (en-US)~@~11~@~1~@~Table Id~@~This is the internal ID uniquely represents this database table.~@~~@~
 12~@~AdmDbTable [   30] Main Info: TableName (en-US)~@~12~@~1~@~Table Name~@~This is a unique table name that matches the actual table established in the database. Please add "()" suffix in the case of a table function which can also accept parameters (preceded by @) included as columns below.~@~Please enter a unique table name that matches the actual table established in the database. Please add "()" suffix in the case of a table function which can also accept parameters (preceded by @) included as columns below.~@~
 13~@~AdmDbTable [   40] Main Info: TableDesc (en-US)~@~13~@~1~@~Description~@~This is a short description for this table as a search reference.~@~Please provide a short description for this table as a search reference.~@~
@@ -223,8 +223,8 @@
 1018~@~AdmUsr [  220] Status: FailedAttempt (en-US)~@~1116~@~1~@~Failed Attempt~@~This is the number of times this users failed to login.~@~~@~
 1019~@~AdmUsr [  230] Status: LastSuccessDt (en-US)~@~1117~@~1~@~Last Success~@~This is the last time on which this user successfully login.~@~~@~
 1020~@~AdmUsr [  240] Status: LastFailedDt (en-US)~@~1118~@~1~@~Last Failed~@~This is the last time this user failed to login.~@~~@~
-1021~@~AdmUsr [  260] Status: HintQuestionId (en-US)~@~1119~@~1~@~Hint Question~@~This is the hint question in case password is forgotten and need to be emailed to.~@~~@~
-1022~@~AdmUsr [  270] Status: HintAnswer (en-US)~@~1120~@~1~@~Hint Answer~@~This is the hint answer in case password is forgotten and need to be emailed to.~@~~@~
+1021~@~AdmUsr [  280] Status: HintQuestionId (en-US)~@~1119~@~1~@~Hint Question~@~This is the hint question in case password is forgotten and need to be emailed to.~@~~@~
+1022~@~AdmUsr [  290] Status: HintAnswer (en-US)~@~1120~@~1~@~Hint Answer~@~This is the hint answer in case password is forgotten and need to be emailed to.~@~~@~
 1029~@~AdmChgPwd [   10] Main Info: UsrId (en-US)~@~1121~@~1~@~Usr Id~@~This is the internal ID uniquely represents this user.~@~~@~
 1032~@~AdmChgPwd [   20] Main Info: UsrPassword (en-US)~@~1124~@~1~@~New Password~@~This is new password set by administrator; no restriction or complexity requirement.~@~Please enter new password, no restriction or complexity requirement.~@~
 1044~@~AdmChgPwd [   30] Main Info: ConfirmPwd (en-US)~@~1136~@~1~@~Confirm Password~@~This confirms the previous password.~@~Please enter the same previous password as confirmation.~@~
@@ -378,7 +378,7 @@
 1336~@~AdmUsr [  320] Status: VendorId (zh-CN)~@~7~@~4~@~卖主~@~这是这家供应商已经进入,就是空的.~@~~@~
 1337~@~AdmUsr [  350] Status: MemberId (zh-CN)~@~8~@~4~@~会员~@~这是这家已经获得会员、空洞的手段.~@~~@~
 1338~@~AdmUsr [  170] Main Info: Active (zh-CN)~@~9~@~4~@~活跃~@~如果用户需要这种不受制约是残疾人.~@~~@~
-1339~@~AdmUsr [  250] Status: ModifiedOn (zh-CN)~@~10~@~4~@~改良~@~这是迄今为止这个用户最后修饰.~@~~@~
+1339~@~AdmUsr [  270] Status: ModifiedOn (zh-CN)~@~10~@~4~@~改良~@~这是迄今为止这个用户最后修饰.~@~~@~
 1340~@~AdmDbTable [   10] Main Info: TableId (zh-CN)~@~11~@~4~@~表编号~@~这是国内独一无二的身分代表这个数据库表.~@~~@~
 1344~@~AdmDbTable [  200] Main Info: ColumnId (zh-CN)~@~15~@~4~@~身份证栏~@~这是国内独一无二的身分代表这个数据表栏.~@~~@~
 1346~@~AdmDbTable [  240] Main Info: DataType (zh-CN)~@~17~@~4~@~数据类型~@~这是因为它是datatype宣布这一栏的数据库.~@~这是因为它是datatype宣布这一栏的数据库.~@~
@@ -553,7 +553,7 @@
 1597~@~AdmUsr [  220] Status: FailedAttempt (zh-CN)~@~1116~@~4~@~失败~@~这是多少次没有这个用户登录.~@~~@~
 1598~@~AdmUsr [  230] Status: LastSuccessDt (zh-CN)~@~1117~@~4~@~去年成功~@~这是最后一次,而这successully用户登录.~@~~@~
 1599~@~AdmUsr [  240] Status: LastFailedDt (zh-CN)~@~1118~@~4~@~上次失败~@~这是最后一次,用户无法登录.~@~~@~
-1601~@~AdmUsr [  270] Status: HintAnswer (zh-CN)~@~1120~@~4~@~一抹答案~@~这是暗示答案如密码遗忘,须以电邮.~@~~@~
+1601~@~AdmUsr [  290] Status: HintAnswer (zh-CN)~@~1120~@~4~@~一抹答案~@~这是暗示答案如密码遗忘,须以电邮.~@~~@~
 1602~@~AdmChgPwd [   10] Main Info: UsrId (zh-CN)~@~1121~@~4~@~硅肥身份证~@~这是代表这个独一无二的内部使用者身分.~@~~@~
 1604~@~AdmChgPwd [   30] Main Info: ConfirmPwd (zh-CN)~@~1136~@~4~@~确认密码~@~这证实了以前的密码.~@~请进入密码同以往作为确认.~@~
 1605~@~AdmUsrPref [  150] Applied: UsrGroupId (zh-CN)~@~1143~@~4~@~用户组~@~这是唯一的集团用户可以利用这个偏好,如果选择.~@~~@~
@@ -677,7 +677,7 @@
 1854~@~AdmUsr [  320] Status: VendorId (fr-FR)~@~7~@~2~@~Fournisseur~@~C'est le fournisseur que cet utilisateur a accès à, vident des moyens tous.~@~~@~
 1855~@~AdmUsr [  350] Status: MemberId (fr-FR)~@~8~@~2~@~Membre~@~C'est le membre que cet utilisateur a accès à, vident des moyens tous.~@~~@~
 1856~@~AdmUsr [  170] Main Info: Active (fr-FR)~@~9~@~2~@~Actif~@~Uncheck ceci si cet utilisateur doit être neutralisé.~@~~@~
-1857~@~AdmUsr [  250] Status: ModifiedOn (fr-FR)~@~10~@~2~@~Modifié dessus~@~C'est la date où cet utilisateur était Last modified.~@~~@~
+1857~@~AdmUsr [  270] Status: ModifiedOn (fr-FR)~@~10~@~2~@~Modifié dessus~@~C'est la date où cet utilisateur était Last modified.~@~~@~
 1858~@~AdmDbTable [   10] Main Info: TableId (fr-FR)~@~11~@~2~@~Identification de Tableau~@~C'est l'identification interne représente uniquement cette table de base de données.~@~~@~
 1862~@~AdmDbTable [  200] Main Info: ColumnId (fr-FR)~@~15~@~2~@~Identification de colonne~@~C'est l'identification interne représentant uniquement cette colonne de table de données.~@~~@~
 1864~@~AdmDbTable [  240] Main Info: DataType (fr-FR)~@~17~@~2~@~Type de données~@~C'est le datatype pour cette colonne car on lui déclare dans la base de données.~@~C'est le datatype pour cette colonne car on lui déclare dans la base de données.~@~
@@ -853,7 +853,7 @@
 2115~@~AdmUsr [  220] Status: FailedAttempt (fr-FR)~@~1116~@~2~@~Tentative échouée~@~C'est le nombre de fois ces des utilisateurs échoués à l'ouverture.~@~~@~
 2116~@~AdmUsr [  230] Status: LastSuccessDt (fr-FR)~@~1117~@~2~@~Dernier succès~@~C'est la dernière fois l'où cette d'utilisateur ouverture successully.~@~~@~
 2117~@~AdmUsr [  240] Status: LastFailedDt (fr-FR)~@~1118~@~2~@~Le bout échoue~@~C'est la dernière fois cet utilisateur échoué à l'ouverture.~@~~@~
-2119~@~AdmUsr [  270] Status: HintAnswer (fr-FR)~@~1120~@~2~@~Réponse de conseil~@~C'est la réponse de conseil au cas où le mot de passe serait oublié et le besoin d'être emailed à.~@~~@~
+2119~@~AdmUsr [  290] Status: HintAnswer (fr-FR)~@~1120~@~2~@~Réponse de conseil~@~C'est la réponse de conseil au cas où le mot de passe serait oublié et le besoin d'être emailed à.~@~~@~
 2120~@~AdmChgPwd [   10] Main Info: UsrId (fr-FR)~@~1121~@~2~@~Identification d'Usr~@~C'est l'identification interne représente uniquement cet utilisateur.~@~~@~
 2122~@~AdmChgPwd [   30] Main Info: ConfirmPwd (fr-FR)~@~1136~@~2~@~Confirmer le mot de passe~@~Ceci confirme le mot de passe précédent.~@~Veuillez entrer le même mot de passe précédent que la confirmation.~@~
 2123~@~AdmUsrPref [  150] Applied: UsrGroupId (fr-FR)~@~1143~@~2~@~Groupe d'utilisateur~@~C'est le seul groupe d'utilisateur pour employer cette préférence, si choisi.~@~~@~
@@ -1181,8 +1181,8 @@
 2691~@~AdmRptWiz [  280] Charting: RptChaTypeCd (en-US)~@~1739~@~1~@~Chart Type~@~This is the report chart type, if applicable.~@~~@~
 2692~@~AdmRptWiz [  290] Charting: ThreeD (en-US)~@~1740~@~1~@~View in 3D~@~This is checked when the chart is displayed in 3D, otherwise is 2D.~@~~@~
 2693~@~AdmUsr [  100] Main Info: UsrGroupLs (en-US)~@~1741~@~1~@~User Groups~@~These are the user groups this user belongs to.  User must belong to at least one user group.~@~Please select one or more user groups this user belongs to.  User must belong to at least one user group.~@~
-2696~@~AdmUsr [  280] Status: CompanyLs (en-US)~@~1742~@~1~@~Companies~@~These are the companies this user has access to; please select one or more.~@~~@~
-2699~@~AdmUsr [  290] Status: ProjectLs (en-US)~@~1743~@~1~@~Projects~@~These are the projects this user has access to; please select one or more.~@~~@~
+2696~@~AdmUsr [  250] Status: CompanyLs (en-US)~@~1742~@~1~@~Companies~@~These are the companies this user has access to; please select one or more.~@~~@~
+2699~@~AdmUsr [  260] Status: ProjectLs (en-US)~@~1743~@~1~@~Projects~@~These are the projects this user has access to; please select one or more.~@~~@~
 2702~@~AdmUsrGroup [   60] Main Info: CompanyId (en-US)~@~1744~@~1~@~Company~@~This is the company to override default authorities.~@~~@~
 2703~@~AdmUsrGroup [   70] Main Info: ProjectId (en-US)~@~1745~@~1~@~Project~@~This is the project to override default authorities.~@~~@~
 2704~@~AdmUsr [   40] Main Info: CultureId (en-US)~@~1746~@~1~@~User Culture~@~This is the culture setting when this user login.~@~Please select the culture setting when this user login.~@~Login Culture
@@ -1871,7 +1871,7 @@
 3630~@~AdmUsr [  320] Status: VendorId (hi-IN)~@~7~@~8~@~विक्रेता~@~इस विक्रेता इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
 3631~@~AdmUsr [  350] Status: MemberId (hi-IN)~@~8~@~8~@~सदस्य~@~यह सदस्य इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
 3632~@~AdmUsr [  170] Main Info: Active (hi-IN)~@~9~@~8~@~सक्रिय~@~यह सही का निशान हटाएँ अगर इस उपयोगकर्ता की जरूरत को निष्क्रिय कर सकता है.~@~~@~
-3633~@~AdmUsr [  250] Status: ModifiedOn (hi-IN)~@~10~@~8~@~संशोधित पर~@~यह तारीख इस उपयोगकर्ता अंतिम बार संशोधित किया गया है.~@~~@~
+3633~@~AdmUsr [  270] Status: ModifiedOn (hi-IN)~@~10~@~8~@~संशोधित पर~@~यह तारीख इस उपयोगकर्ता अंतिम बार संशोधित किया गया है.~@~~@~
 3634~@~AdmDbTable [   10] Main Info: TableId (hi-IN)~@~11~@~8~@~तालिका क्रमांक~@~यह आंतरिक आईडी विशिष्ट इस डाटाबेस टेबल का प्रतिनिधित्व करता है.~@~~@~
 3638~@~AdmDbTable [  200] Main Info: ColumnId (hi-IN)~@~15~@~8~@~कॉलम आईडी~@~यह आंतरिक विशिष्ट इस डेटा तालिका स्तंभ का प्रतिनिधित्व आईडी.~@~~@~
 3640~@~AdmDbTable [  240] Main Info: DataType (hi-IN)~@~17~@~8~@~डेटा प्रकार~@~यह इस स्तंभ के लिए डेटाप्रकार के रूप में यह डेटाबेस में घोषित किया है. बदले DateTime अगर समय भाग नजरअंदाज कर दिया जाना चाहिए की तिथि का उपयोग करें.~@~कृपया इस स्तंभ के लिए डेटाप्रकार चयन के रूप में यह डेटाबेस में घोषित किया है. बदले DateTime अगर समय भाग नजरअंदाज कर दिया जाना चाहिए की तिथि का उपयोग करें.~@~
@@ -2053,7 +2053,7 @@
 3851~@~AdmUsr [  220] Status: FailedAttempt (hi-IN)~@~1116~@~8~@~में असफल प्रयास~@~इस बार की संख्या इस उपयोगकर्ताओं को प्रवेश असफल रहा है.~@~~@~
 3852~@~AdmUsr [  230] Status: LastSuccessDt (hi-IN)~@~1117~@~8~@~पिछले सफलता~@~यह आखिरी बार है जिस पर इस उपयोगकर्ता सफलतापूर्वक लॉगिन है.~@~~@~
 3853~@~AdmUsr [  240] Status: LastFailedDt (hi-IN)~@~1118~@~8~@~पिछले विफल~@~यह आखिरी बार इस उपयोगकर्ता के लिए लॉगइन असफल है.~@~~@~
-3855~@~AdmUsr [  270] Status: HintAnswer (hi-IN)~@~1120~@~8~@~संकेत जवाब~@~यह संकेत जवाब के मामले में और पासवर्ड भूल की जरूरत करने के लिए ईमेल सकता है.~@~~@~
+3855~@~AdmUsr [  290] Status: HintAnswer (hi-IN)~@~1120~@~8~@~संकेत जवाब~@~यह संकेत जवाब के मामले में और पासवर्ड भूल की जरूरत करने के लिए ईमेल सकता है.~@~~@~
 3856~@~AdmChgPwd [   10] Main Info: UsrId (hi-IN)~@~1121~@~8~@~Usr आईडी~@~यह आंतरिक आईडी विशिष्ट इस उपयोगकर्ता का प्रतिनिधित्व करता है.~@~~@~
 3858~@~AdmChgPwd [   30] Main Info: ConfirmPwd (hi-IN)~@~1136~@~8~@~पासवर्ड की पुष्टि करें~@~यह पिछले पासवर्ड की पुष्टि करता है.~@~कृपया पुष्टि के रूप में ही पिछले पासवर्ड दर्ज करें.~@~
 3859~@~AdmUsrPref [  150] Applied: UsrGroupId (hi-IN)~@~1143~@~8~@~उपयोगकर्ता समूह~@~यह केवल उपयोगकर्ता समूह है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
@@ -2420,7 +2420,7 @@
 4376~@~AdmUsr [  320] Status: VendorId (pt-BR)~@~7~@~9~@~Vendedor~@~Este é o fornecedor deste utilizador tem acesso a vazio, todos os meios.~@~~@~
 4377~@~AdmUsr [  350] Status: MemberId (pt-BR)~@~8~@~9~@~Membro~@~Este é o membro deste utilizador tem acesso a vazio, todos os meios.~@~~@~
 4378~@~AdmUsr [  170] Main Info: Active (pt-BR)~@~9~@~9~@~Ativo~@~Desmarque esta se este usuário precisa ser desativado.~@~~@~
-4379~@~AdmUsr [  250] Status: ModifiedOn (pt-BR)~@~10~@~9~@~Modificado On~@~Esta é a data deste utilizador foi modificada pela última vez.~@~~@~
+4379~@~AdmUsr [  270] Status: ModifiedOn (pt-BR)~@~10~@~9~@~Modificado On~@~Esta é a data deste utilizador foi modificada pela última vez.~@~~@~
 4380~@~AdmDbTable [   10] Main Info: TableId (pt-BR)~@~11~@~9~@~Tabela Id~@~Esta é a identificação interna representa com exclusividade esta tabela de banco de dados.~@~~@~
 4384~@~AdmDbTable [  200] Main Info: ColumnId (pt-BR)~@~15~@~9~@~Id coluna~@~Esta é a identificação interna exclusiva que representa esta coluna tabela de dados.~@~~@~
 4386~@~AdmDbTable [  240] Main Info: DataType (pt-BR)~@~17~@~9~@~Tipo de dados~@~Este é o tipo de dados para esta coluna, uma vez que é declarada no banco de dados. Use Date em vez de data e hora, se parte do tempo deve ser ignorado.~@~Por favor, selecione o tipo de dados para esta coluna, uma vez que é declarada no banco de dados. Use Date em vez de data e hora, se parte do tempo deve ser ignorado.~@~
@@ -2602,7 +2602,7 @@
 4597~@~AdmUsr [  220] Status: FailedAttempt (pt-BR)~@~1116~@~9~@~Tentativa falhou~@~Este é o número de vezes que esta usuários não login.~@~~@~
 4598~@~AdmUsr [  230] Status: LastSuccessDt (pt-BR)~@~1117~@~9~@~Sucesso última~@~Esta é a última vez em que esse usuário o login com sucesso.~@~~@~
 4599~@~AdmUsr [  240] Status: LastFailedDt (pt-BR)~@~1118~@~9~@~Última Falha~@~Esta é a última vez que o usuário não login.~@~~@~
-4601~@~AdmUsr [  270] Status: HintAnswer (pt-BR)~@~1120~@~9~@~Resposta dica~@~Esta é a resposta em caso dica de senha é esquecido e precisa ser enviado para.~@~~@~
+4601~@~AdmUsr [  290] Status: HintAnswer (pt-BR)~@~1120~@~9~@~Resposta dica~@~Esta é a resposta em caso dica de senha é esquecido e precisa ser enviado para.~@~~@~
 4602~@~AdmChgPwd [   10] Main Info: UsrId (pt-BR)~@~1121~@~9~@~Usr Id~@~Este é o ID exclusivamente interna representa este usuário.~@~~@~
 4604~@~AdmChgPwd [   30] Main Info: ConfirmPwd (pt-BR)~@~1136~@~9~@~Confirme sua senha~@~Isso confirma a senha anterior.~@~Por favor, digite a mesma senha anterior como confirmação.~@~
 4605~@~AdmUsrPref [  150] Applied: UsrGroupId (pt-BR)~@~1143~@~9~@~Grupo de Usuários~@~Este é o grupo de usuários apenas estar usando essa preferência, se escolhida.~@~~@~
@@ -3175,7 +3175,7 @@
 5407~@~AdmUsr [  320] Status: VendorId (tr-TR)~@~7~@~11~@~Satıcı~@~Bu, bu kullanıcı erişimi olan, satıcı, boş tüm anlamına gelir.~@~~@~
 5408~@~AdmUsr [  350] Status: MemberId (tr-TR)~@~8~@~11~@~Üye~@~Bu, bu kullanıcıya erişim üyesidir, tüm boş anlamına gelir.~@~~@~
 5409~@~AdmUsr [  170] Main Info: Active (tr-TR)~@~9~@~11~@~Aktif~@~Bu kullanıcının devre dışı bırakılması gerekiyorsa bu işaretini kaldırın.~@~~@~
-5410~@~AdmUsr [  250] Status: ModifiedOn (tr-TR)~@~10~@~11~@~Tarihinde güncellenmiştir~@~Bu kullanıcının en son değiştirildiği tarih.~@~~@~
+5410~@~AdmUsr [  270] Status: ModifiedOn (tr-TR)~@~10~@~11~@~Tarihinde güncellenmiştir~@~Bu kullanıcının en son değiştirildiği tarih.~@~~@~
 5411~@~AdmDbTable [   10] Main Info: TableId (tr-TR)~@~11~@~11~@~Tablo Kimliği~@~Bu iç kimliği benzersiz bu veritabanı tablosu temsil eder.~@~~@~
 5415~@~AdmDbTable [  200] Main Info: ColumnId (tr-TR)~@~15~@~11~@~Sütun Kimliği~@~Bu benzersiz bu verileri tablo sütunu temsil eden iç kimliğidir.~@~~@~
 5417~@~AdmDbTable [  240] Main Info: DataType (tr-TR)~@~17~@~11~@~Veri Türü~@~Bu veritabanında ilan olarak bu sütun için veri türü. Tarihi yerine Datetime kullanın saat bölümünü göz ardı edilmelidir.~@~Lütfen veritabanında ilan olarak bu sütun için veri türünü seçin. Tarihi yerine Datetime kullanın saat bölümünü göz ardı edilmelidir.~@~
@@ -3357,7 +3357,7 @@
 5628~@~AdmUsr [  220] Status: FailedAttempt (tr-TR)~@~1116~@~11~@~Başarısız Denemesi~@~Bu kullanıcıların oturum açma başarısız oldu kaç kez.~@~~@~
 5629~@~AdmUsr [  230] Status: LastSuccessDt (tr-TR)~@~1117~@~11~@~Son Başarı~@~Bu kullanıcı başarılı bir giriş olduğu en son ne zaman.~@~~@~
 5630~@~AdmUsr [  240] Status: LastFailedDt (tr-TR)~@~1118~@~11~@~Son Başarısız~@~Bu kullanıcı oturum açma başarısız oldu en son ne zaman.~@~~@~
-5632~@~AdmUsr [  270] Status: HintAnswer (tr-TR)~@~1120~@~11~@~İpucu Cevap~@~Bu parolayı unutmuş durumda ipucu cevap ve e-postayla gönderilmesi gerekmektedir.~@~~@~
+5632~@~AdmUsr [  290] Status: HintAnswer (tr-TR)~@~1120~@~11~@~İpucu Cevap~@~Bu parolayı unutmuş durumda ipucu cevap ve e-postayla gönderilmesi gerekmektedir.~@~~@~
 5633~@~AdmChgPwd [   10] Main Info: UsrId (tr-TR)~@~1121~@~11~@~Usr Id~@~Bu iç ID Bu kullanıcının benzersiz temsil eder.~@~~@~
 5635~@~AdmChgPwd [   30] Main Info: ConfirmPwd (tr-TR)~@~1136~@~11~@~Şifre Tekrarı~@~Bu bir önceki şifre onaylar.~@~Aynı onay önceki şifrenizi giriniz.~@~
 5636~@~AdmUsrPref [  150] Applied: UsrGroupId (tr-TR)~@~1143~@~11~@~Kullanıcı Grubu~@~Bu sadece bir kullanıcı grubu seçilmiş ise, bu tercihi kullanarak.~@~~@~
@@ -3792,7 +3792,7 @@
 6233~@~AdmUsr [  320] Status: VendorId (ja-JP)~@~7~@~14~@~ベンダ~@~これは、このユーザーがアクセス権を持っているベンダーである、空はすべてを意味する。~@~~@~
 6234~@~AdmUsr [  350] Status: MemberId (ja-JP)~@~8~@~14~@~メンバー~@~これは、このユーザーがアクセス権を持つメンバーである、空はすべてを意味する。~@~~@~
 6235~@~AdmUsr [  170] Main Info: Active (ja-JP)~@~9~@~14~@~アクティブ~@~このユーザーを無効にする必要がある場合は、このチェックを外して。~@~~@~
-6236~@~AdmUsr [  250] Status: ModifiedOn (ja-JP)~@~10~@~14~@~に行わ~@~これは、このユーザーが最後に変更された日付です。~@~~@~
+6236~@~AdmUsr [  270] Status: ModifiedOn (ja-JP)~@~10~@~14~@~に行わ~@~これは、このユーザーが最後に変更された日付です。~@~~@~
 6237~@~AdmDbTable [   10] Main Info: TableId (ja-JP)~@~11~@~14~@~テーブルID~@~これは、内部​​IDは一意にこのデータベーステーブルを表すです。~@~~@~
 6241~@~AdmDbTable [  200] Main Info: ColumnId (ja-JP)~@~15~@~14~@~列ID~@~これは、一意にこのデータテーブルの列を表す内部IDです。~@~~@~
 6243~@~AdmDbTable [  240] Main Info: DataType (ja-JP)~@~17~@~14~@~データの種類~@~それはデータベース内で宣言されているので、これは、この列のデータ型です。時刻部分は無視されるべきである場合、Dateの代わりに日時を使用してください。~@~それはデータベースで宣言されているとして、この列のデータ型を選択してください。時刻部分は無視されるべきである場合、Dateの代わりに日時を使用してください。~@~
@@ -3974,7 +3974,7 @@
 6454~@~AdmUsr [  220] Status: FailedAttempt (ja-JP)~@~1116~@~14~@~未遂~@~これは、このユーザーがログインに失敗した回数です。~@~~@~
 6455~@~AdmUsr [  230] Status: LastSuccessDt (ja-JP)~@~1117~@~14~@~最後に成功~@~これは、このユーザーが正常にログインした最後の時間です。~@~~@~
 6456~@~AdmUsr [  240] Status: LastFailedDt (ja-JP)~@~1118~@~14~@~最後の失敗~@~これは、このユーザーがログインに失敗した最後の時間です。~@~~@~
-6458~@~AdmUsr [  270] Status: HintAnswer (ja-JP)~@~1120~@~14~@~ヒントの回答~@~これは、パスワードを忘れてしまった場合のヒントの答えであり、に電子メールで送信する必要があります。~@~~@~
+6458~@~AdmUsr [  290] Status: HintAnswer (ja-JP)~@~1120~@~14~@~ヒントの回答~@~これは、パスワードを忘れてしまった場合のヒントの答えであり、に電子メールで送信する必要があります。~@~~@~
 6459~@~AdmChgPwd [   10] Main Info: UsrId (ja-JP)~@~1121~@~14~@~USRイド~@~これは、内部​​IDは一意にこのユーザーを表すです。~@~~@~
 6461~@~AdmChgPwd [   30] Main Info: ConfirmPwd (ja-JP)~@~1136~@~14~@~パスワードを確認~@~これは、以前のパスワードを確認する。~@~確認と同じ以前のパスワードを入力してください。~@~
 6462~@~AdmUsrPref [  150] Applied: UsrGroupId (ja-JP)~@~1143~@~14~@~ユーザグループ~@~選択された場合、これは、このプリファレンスを使用する唯一のユーザーグループです。~@~~@~
@@ -4409,7 +4409,7 @@
 7059~@~AdmUsr [  320] Status: VendorId (ru-RU)~@~7~@~12~@~Продавец~@~Это поставщик этот пользователь имеет доступ к пустым означает все.~@~~@~
 7060~@~AdmUsr [  350] Status: MemberId (ru-RU)~@~8~@~12~@~Член~@~Это входит пользователь имеет доступ, означает, что все пустые.~@~~@~
 7061~@~AdmUsr [  170] Main Info: Active (ru-RU)~@~9~@~12~@~Активный~@~Снимите этот, если этот пользователь должен быть отключен.~@~~@~
-7062~@~AdmUsr [  250] Status: ModifiedOn (ru-RU)~@~10~@~12~@~Изменение~@~Это дата этого пользователя последнего изменения.~@~~@~
+7062~@~AdmUsr [  270] Status: ModifiedOn (ru-RU)~@~10~@~12~@~Изменение~@~Это дата этого пользователя последнего изменения.~@~~@~
 7063~@~AdmDbTable [   10] Main Info: TableId (ru-RU)~@~11~@~12~@~Таблица Id~@~Это внутренний идентификатор однозначно представляет эту таблицу базы данных.~@~~@~
 7067~@~AdmDbTable [  200] Main Info: ColumnId (ru-RU)~@~15~@~12~@~Идентификатор столбца~@~Это внутренний идентификатор однозначно представляющие эту колонку таблицы данных.~@~~@~
 7069~@~AdmDbTable [  240] Main Info: DataType (ru-RU)~@~17~@~12~@~Тип данных~@~Это тип данных для этого столбца, как он объявлен в базе данных. Используйте Дата вместо даты и времени, если время часть должна быть проигнорировано.~@~Пожалуйста, выберите тип данных для этого столбца, как он объявлен в базе данных. Используйте Дата вместо даты и времени, если время часть должна быть проигнорировано.~@~
@@ -4591,7 +4591,7 @@
 7280~@~AdmUsr [  220] Status: FailedAttempt (ru-RU)~@~1116~@~12~@~Неудачная попытка~@~Это сколько раз это не удалось пользователи Войти.~@~~@~
 7281~@~AdmUsr [  230] Status: LastSuccessDt (ru-RU)~@~1117~@~12~@~Последний успех~@~Это последний раз, на которых пользователь успешно Войти.~@~~@~
 7282~@~AdmUsr [  240] Status: LastFailedDt (ru-RU)~@~1118~@~12~@~Последнее не удалось~@~Это последний раз, этот пользователь не удалось Войти.~@~~@~
-7284~@~AdmUsr [  270] Status: HintAnswer (ru-RU)~@~1120~@~12~@~Подсказка Ответ~@~Это намек ответа в случае пароль был забыт, и их необходимо по электронной почте.~@~~@~
+7284~@~AdmUsr [  290] Status: HintAnswer (ru-RU)~@~1120~@~12~@~Подсказка Ответ~@~Это намек ответа в случае пароль был забыт, и их необходимо по электронной почте.~@~~@~
 7285~@~AdmChgPwd [   10] Main Info: UsrId (ru-RU)~@~1121~@~12~@~Usr Id~@~Это внутренний идентификатор однозначно представляет этот пользователь.~@~~@~
 7287~@~AdmChgPwd [   30] Main Info: ConfirmPwd (ru-RU)~@~1136~@~12~@~Подтвердите пароль~@~Это подтверждает предыдущие пароль.~@~Пожалуйста, введите тот же пароль, как предыдущие подтверждения.~@~
 7288~@~AdmUsrPref [  150] Applied: UsrGroupId (ru-RU)~@~1143~@~12~@~Группа пользователей~@~Это единственная группа, чтобы пользователь с помощью этого предпочтения, если выбрана.~@~~@~
@@ -5026,7 +5026,7 @@
 7885~@~AdmUsr [  320] Status: VendorId (es-ES)~@~7~@~13~@~Vendedor~@~Este es el proveedor de este usuario tiene acceso a todos los medios vacíos.~@~~@~
 7886~@~AdmUsr [  350] Status: MemberId (es-ES)~@~8~@~13~@~Miembro~@~Este es el miembro de este usuario tiene acceso a todos los medios vacíos.~@~~@~
 7887~@~AdmUsr [  170] Main Info: Active (es-ES)~@~9~@~13~@~Activo~@~Desactive esta opción si el usuario tiene que estar desactivado.~@~~@~
-7888~@~AdmUsr [  250] Status: ModifiedOn (es-ES)~@~10~@~13~@~Modificado el~@~Esta es la fecha en que se modificó este último usuario.~@~~@~
+7888~@~AdmUsr [  270] Status: ModifiedOn (es-ES)~@~10~@~13~@~Modificado el~@~Esta es la fecha en que se modificó este último usuario.~@~~@~
 7889~@~AdmDbTable [   10] Main Info: TableId (es-ES)~@~11~@~13~@~ID de la tabla~@~Este es el ID interno único representa esta tabla de base de datos.~@~~@~
 7893~@~AdmDbTable [  200] Main Info: ColumnId (es-ES)~@~15~@~13~@~Columna de Id~@~Este es el ID interno único que representa esta columna de la tabla de datos.~@~~@~
 7895~@~AdmDbTable [  240] Main Info: DataType (es-ES)~@~17~@~13~@~Tipo de datos~@~Este es el tipo de datos para esta columna tal como se declara en la base de datos. Fecha en vez de utilizar de fecha y hora, si parte de la hora debe ser ignorado.~@~Por favor, seleccione el tipo de datos para esta columna tal como se declara en la base de datos. Fecha en vez de utilizar de fecha y hora, si parte de la hora debe ser ignorado.~@~
@@ -5208,7 +5208,7 @@
 8106~@~AdmUsr [  220] Status: FailedAttempt (es-ES)~@~1116~@~13~@~Intento fallido~@~Este es el número de veces que los usuarios no inicio de sesión.~@~~@~
 8107~@~AdmUsr [  230] Status: LastSuccessDt (es-ES)~@~1117~@~13~@~El éxito pasado~@~Esta es la última vez en que este usuario a acceder correctamente.~@~~@~
 8108~@~AdmUsr [  240] Status: LastFailedDt (es-ES)~@~1118~@~13~@~Ha fallado la última~@~Esta es la última vez que este usuario no inicio de sesión.~@~~@~
-8110~@~AdmUsr [  270] Status: HintAnswer (es-ES)~@~1120~@~13~@~Sugerencia Respuesta~@~Esta es la respuesta pista en el caso de la contraseña es olvidada y necesita ser enviado por correo electrónico.~@~~@~
+8110~@~AdmUsr [  290] Status: HintAnswer (es-ES)~@~1120~@~13~@~Sugerencia Respuesta~@~Esta es la respuesta pista en el caso de la contraseña es olvidada y necesita ser enviado por correo electrónico.~@~~@~
 8111~@~AdmChgPwd [   10] Main Info: UsrId (es-ES)~@~1121~@~13~@~Usr Id~@~Este es el ID interno único representa este usuario.~@~~@~
 8113~@~AdmChgPwd [   30] Main Info: ConfirmPwd (es-ES)~@~1136~@~13~@~Confirm Password~@~Esto confirma la contraseña anterior.~@~Por favor, introduzca la misma contraseña anterior como una confirmación.~@~
 8114~@~AdmUsrPref [  150] Applied: UsrGroupId (es-ES)~@~1143~@~13~@~Grupo de usuarios~@~Este es el grupo de usuarios sólo para uso de esta preferencia, si es elegido.~@~~@~
@@ -5993,7 +5993,7 @@
 10211~@~AdmUsr [  320] Status: VendorId (de-DE)~@~7~@~68~@~Verkäufer~@~Dies ist der Verkäufer dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
 10212~@~AdmUsr [  350] Status: MemberId (de-DE)~@~8~@~68~@~Mitglied~@~Dies ist das Mitglied dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
 10213~@~AdmUsr [  170] Main Info: Active (de-DE)~@~9~@~68~@~Aktiv~@~Deaktivieren Sie diese Option, wenn dieser Benutzer deaktiviert werden.~@~~@~
-10214~@~AdmUsr [  250] Status: ModifiedOn (de-DE)~@~10~@~68~@~Geändert On~@~Dies ist das Datum dieser Benutzer zuletzt geändert wurde.~@~~@~
+10214~@~AdmUsr [  270] Status: ModifiedOn (de-DE)~@~10~@~68~@~Geändert On~@~Dies ist das Datum dieser Benutzer zuletzt geändert wurde.~@~~@~
 10215~@~AdmDbTable [   10] Main Info: TableId (de-DE)~@~11~@~68~@~Tabelle Id~@~Dies ist die interne ID eindeutig repräsentiert diese Datenbank-Tabelle.~@~~@~
 10219~@~AdmDbTable [  200] Main Info: ColumnId (de-DE)~@~15~@~68~@~Column Id~@~Dies ist die interne ID eindeutig repräsentieren diese Daten Tabellenspalte.~@~~@~
 10221~@~AdmDbTable [  240] Main Info: DataType (de-DE)~@~17~@~68~@~Datentyp~@~Dies ist der Datentyp für diese Spalte, wie es in der Datenbank wird erklärt. Verwenden Datum statt Datetime, wenn Uhrzeit sollte ignoriert werden.~@~Bitte wählen Sie den Datentyp für diese Spalte, wie sie in der Datenbank deklariert wird. Verwenden Datum statt Datetime, wenn Uhrzeit sollte ignoriert werden.~@~
@@ -6185,7 +6185,7 @@
 10432~@~AdmUsr [  220] Status: FailedAttempt (de-DE)~@~1116~@~68~@~Failed Attempt~@~Dies ist die Anzahl, wie oft diese Nutzer nicht anmelden.~@~~@~
 10433~@~AdmUsr [  230] Status: LastSuccessDt (de-DE)~@~1117~@~68~@~Last Success~@~Dies ist das letzte Mal, auf denen diese Benutzer erfolgreich anmelden.~@~~@~
 10434~@~AdmUsr [  240] Status: LastFailedDt (de-DE)~@~1118~@~68~@~Letzte fehlgeschlagen~@~Dies ist das letzte Mal, dieser Benutzer nicht anmelden.~@~~@~
-10436~@~AdmUsr [  270] Status: HintAnswer (de-DE)~@~1120~@~68~@~Hinweis Antwort~@~Dies ist der Hinweis Antwort bei vergessenem Passwort und müssen an zugesendet.~@~~@~
+10436~@~AdmUsr [  290] Status: HintAnswer (de-DE)~@~1120~@~68~@~Hinweis Antwort~@~Dies ist der Hinweis Antwort bei vergessenem Passwort und müssen an zugesendet.~@~~@~
 10437~@~AdmChgPwd [   10] Main Info: UsrId (de-DE)~@~1121~@~68~@~Usr Id~@~Dies ist die interne ID eindeutig repräsentiert dieses Benutzers.~@~~@~
 10439~@~AdmChgPwd [   30] Main Info: ConfirmPwd (de-DE)~@~1136~@~68~@~Passwort bestätigen~@~Dies bestätigt die bisherige Passwort.~@~Bitte geben Sie die gleichen alten Passwort als Bestätigung.~@~
 10440~@~AdmUsrPref [  150] Applied: UsrGroupId (de-DE)~@~1143~@~68~@~User Group~@~Dies ist die einzige Benutzergruppe verwenden Sie diese Einstellung, wenn gewählt.~@~~@~
@@ -6912,7 +6912,7 @@
 11338~@~AdmUsr [  320] Status: VendorId (ko-KR)~@~7~@~28~@~공급 업체~@~이이 사용자가에 액세스 할 수 있습니다 공급 업체이며, 빈은 모두를 의미합니다.~@~~@~
 11339~@~AdmUsr [  350] Status: MemberId (ko-KR)~@~8~@~28~@~회원~@~이이 사용자가에 액세스 할 수 있습니다 회원, 빈은 모두를 의미합니다.~@~~@~
 11340~@~AdmUsr [  170] Main Info: Active (ko-KR)~@~9~@~28~@~활동적인~@~이이 사용자가 비활성화해야하는 경우 선택을 취소합니다.~@~~@~
-11341~@~AdmUsr [  250] Status: ModifiedOn (ko-KR)~@~10~@~28~@~에 수정~@~이렇게하면이 사용자가 마지막으로 수정 된 날짜입니다.~@~~@~
+11341~@~AdmUsr [  270] Status: ModifiedOn (ko-KR)~@~10~@~28~@~에 수정~@~이렇게하면이 사용자가 마지막으로 수정 된 날짜입니다.~@~~@~
 11342~@~AdmDbTable [   10] Main Info: TableId (ko-KR)~@~11~@~28~@~테이블 이드~@~이 내부 ID는 고유이 데이터베이스 테이블을 나타내는 것입니다.~@~~@~
 11346~@~AdmDbTable [  200] Main Info: ColumnId (ko-KR)~@~15~@~28~@~열 이드~@~이 독특한이 데이터 테이블 열을 대표하는 내부 ID입니다.~@~~@~
 11348~@~AdmDbTable [  240] Main Info: DataType (ko-KR)~@~17~@~28~@~데이터 유형~@~즉, 데이터베이스에 선언 될 때이 항목에 대한 데이터 유형입니다. 시간 부분은 무시해야하는 경우 일 대신 날짜 _ 시간을 사용합니다.~@~이 데이터베이스에 선언 될 때이 항목에 대한 데이터 유형을 선택하십시오. 시간 부분은 무시해야하는 경우 일 대신 날짜 _ 시간을 사용합니다.~@~
@@ -7104,7 +7104,7 @@
 11559~@~AdmUsr [  220] Status: FailedAttempt (ko-KR)~@~1116~@~28~@~실패 시도~@~그러면이 사용자가 로그인하지 못했습니다 횟수입니다.~@~~@~
 11560~@~AdmUsr [  230] Status: LastSuccessDt (ko-KR)~@~1117~@~28~@~마지막 성공~@~이렇게하면이 사용자가 성공적으로 로그인하는 마지막 시간입니다.~@~~@~
 11561~@~AdmUsr [  240] Status: LastFailedDt (ko-KR)~@~1118~@~28~@~마지막 실패~@~이렇게하면이 사용자가 로그인하지 못했습니다 마지막 시간입니다.~@~~@~
-11563~@~AdmUsr [  270] Status: HintAnswer (ko-KR)~@~1120~@~28~@~답변을두기~@~이 암호를 잊어되어 경우에 힌트 답하고 이메일로 전송해야합니다.~@~~@~
+11563~@~AdmUsr [  290] Status: HintAnswer (ko-KR)~@~1120~@~28~@~답변을두기~@~이 암호를 잊어되어 경우에 힌트 답하고 이메일로 전송해야합니다.~@~~@~
 11564~@~AdmChgPwd [   10] Main Info: UsrId (ko-KR)~@~1121~@~28~@~USR 이드~@~이 내부 ID는 고유 사용자를 대표하는 것입니다.~@~~@~
 11566~@~AdmChgPwd [   30] Main Info: ConfirmPwd (ko-KR)~@~1136~@~28~@~비밀번호 확인~@~이 이전 암호를 확인합니다.~@~확인과 같은 이전 비밀번호를 입력하세요.~@~
 11567~@~AdmUsrPref [  150] Applied: UsrGroupId (ko-KR)~@~1143~@~28~@~사용자 그룹~@~이 선택한 경우이 환경 설정을 사용하는 유일한 사용자 그룹입니다.~@~~@~
@@ -7965,7 +7965,7 @@
 12629~@~AdmScreen [   40] Main Info: ViewOnly (en-US)~@~3103~@~1~@~View Only~@~This determine the view-only property of this screen.~@~Please select the view-only property of this screen.~@~
 13629~@~AdmScreenObj [  300] Main Info: LabelVertical (en-US)~@~3104~@~1~@~Label On Top~@~Check this to show label on top of this control.~@~~@~
 13631~@~AdmScreenTab [   50] Main Info: TabFolderLabel (en-US)~@~3106~@~1~@~If you have a lot of contents and you do not wish to clutter all of them on one page, tab-folder is your savior. You can define a tab with it's own unique name and have it translated into many different human languages.  Simply select that to determine which tab-folder you wish your field to be grouped into. Your designated fields on that tab-folder will show up only when the tab-folder is selected. I think it is beautiful. Hope you are with me on this.~@~~@~~@~
-13633~@~AdmUsr [  380] Status: UsageStat (en-US)~@~3108~@~1~@~~@~~@~~@~
+13633~@~AdmUsr [  390] Status: UsageStat (en-US)~@~3108~@~1~@~~@~~@~~@~
 13635~@~AdmScreenObj [  340] Main Info: HyperLinkUrl (en-US)~@~3110~@~1~@~Static Link URL~@~This is the static hyperlink URL in the absence of dynamic Key Column.~@~~@~
 13647~@~AdmScreen [  260] Miscellaneous: MoreInfo (en-US)~@~3112~@~1~@~For more information~@~~@~~@~
 13659~@~AdmUsrGroup [  100] Main Info: MoreInfo (en-US)~@~3114~@~1~@~~@~~@~~@~
@@ -8026,7 +8026,7 @@
 14724~@~AdmMember [   10] Main Info: SredMebrId (zh-CN)~@~3102~@~4~@~ID~@~这个ID唯一标识该会员的SR＆ED的目的。~@~~@~
 14726~@~AdmScreenObj [  300] Main Info: LabelVertical (zh-CN)~@~3104~@~4~@~标签上顶~@~勾选此显示标签上的这个控件的顶部。~@~~@~
 14727~@~AdmScreenTab [   50] Main Info: TabFolderLabel (zh-CN)~@~3106~@~4~@~如果你有很多的内容，你不希望弄乱它们全部在一个页面上，标签，文件夹是你的救星。你可以定义一个标签都有它自己独特的名称，并将它翻译成多种不同的人类语言。只需选择来确定你希望你的领域可分为哪一个标签文件夹中。您在该选项卡中文件夹指定字段将显示仅当选择该选项卡文件夹。我认为它是美丽的。希望你与我同在此。~@~~@~~@~
-14728~@~AdmUsr [  380] Status: UsageStat (zh-CN)~@~3108~@~4~@~~@~~@~~@~
+14728~@~AdmUsr [  390] Status: UsageStat (zh-CN)~@~3108~@~4~@~~@~~@~~@~
 14729~@~AdmScreenObj [  340] Main Info: HyperLinkUrl (zh-CN)~@~3110~@~4~@~静态链接网址~@~这是在没有动态键列的静态超链接的URL。~@~~@~
 14730~@~AdmScreen [  260] Miscellaneous: MoreInfo (zh-CN)~@~3112~@~4~@~欲了解更多信息~@~~@~~@~
 14731~@~AdmUsrGroup [  100] Main Info: MoreInfo (zh-CN)~@~3114~@~4~@~~@~~@~~@~
@@ -8100,7 +8100,7 @@
 14819~@~AdmMember [   10] Main Info: SredMebrId (ko-KR)~@~3102~@~28~@~신분증~@~이 ID는 고유 SR & ED 목적이 멤버를 식별합니다.~@~~@~
 14821~@~AdmScreenObj [  300] Main Info: LabelVertical (ko-KR)~@~3104~@~28~@~상단에 라벨~@~이 컨트롤의 상단에 라벨을 표시하려면이 옵션을 선택합니다.~@~~@~
 14822~@~AdmScreenTab [   50] Main Info: TabFolderLabel (ko-KR)~@~3106~@~28~@~당신이 내용을 많이 가지고 당신이 한 페이지에 모두를 혼란하지 않으려면, 탭 폴더는 구세주. 당신은 자신의 고유 한 이름으로 탭을 정의하고 여러 다른 인간의 언어로 번역 할 수 있습니다. 단순히 당신이로 그룹화 할 수 있도록 필드를하고자하는 탭으로 폴더를 결정하는 것을 선택합니다. 해당 탭 폴더에 지정된 필드는 탭으로 폴더를 선택한 경우에만 표시됩니다. 나는 아름다운 생각합니다. 당신이 나와 함께 있습니다 바랍니다.~@~~@~~@~
-14823~@~AdmUsr [  380] Status: UsageStat (ko-KR)~@~3108~@~28~@~~@~~@~~@~
+14823~@~AdmUsr [  390] Status: UsageStat (ko-KR)~@~3108~@~28~@~~@~~@~~@~
 14824~@~AdmScreenObj [  340] Main Info: HyperLinkUrl (ko-KR)~@~3110~@~28~@~정적 링크 URL~@~이것은 동적 인 키 열이 없을 정적 하이퍼 링크 URL이다.~@~~@~
 14825~@~AdmScreen [  260] Miscellaneous: MoreInfo (ko-KR)~@~3112~@~28~@~자세한 내용은~@~~@~~@~
 14826~@~AdmUsrGroup [  100] Main Info: MoreInfo (ko-KR)~@~3114~@~28~@~~@~~@~~@~
@@ -8143,7 +8143,7 @@
 14876~@~AdmMenuHlp [   30] Main Info: CultureId (zh-CN)~@~448~@~4~@~文化~@~这就是文化这个标签。~@~请选择培养此标签。~@~
 14877~@~AdmMenuHlp [   10] Main Info: MenuId (zh-CN)~@~446~@~4~@~菜单ID~@~这是代表该菜单的内部ID。~@~~@~
 14878~@~AdmUsrPref [  130] Style: UsrStyleSheet (zh-CN)~@~960~@~4~@~样式替代~@~这是压倒一切的样式表的命令。图像的URL从这里开始的根级别因而没有必要“../”。~@~~@~
-14879~@~AdmUsr [  260] Status: HintQuestionId (zh-CN)~@~1119~@~4~@~提示问题~@~这是以防密码提示问题忘记了，需要通过电子邮件发送给。~@~~@~
+14879~@~AdmUsr [  280] Status: HintQuestionId (zh-CN)~@~1119~@~4~@~提示问题~@~这是以防密码提示问题忘记了，需要通过电子邮件发送给。~@~~@~
 14880~@~AdmScreenObj [   80] Main Info: RefreshOnCUD (zh-CN)~@~1280~@~4~@~刷新CUD~@~选中后，该文件，DropDownList中，列表框，单选模式，或DataGridLink列将被刷新后，每一个创建，更新或删除并可能导致性能损失。~@~~@~
 14881~@~AdmDbTable [  320] Main Info: IsIndex (zh-CN)~@~1774~@~4~@~N / U-指数~@~当这列非唯一的非聚集索引的一部分，这是检查。~@~~@~
 14882~@~AdmCronJob [   90] Main Info: Day (zh-CN)~@~2023~@~4~@~天~@~这是本月来执行这项工作的具体UTC日;的范围是1  -  31;它是空的，如果需要天天跑;~@~请输入该月的特定日执行该作业;的范围是1  -  31;它是空的，如果需要天天跑;~@~
@@ -8361,14 +8361,14 @@
 16360~@~AdmSystems [  300] Main Info: UpdBaseSystemId (en-US)~@~4302~@~1~@~Update Base SystemId~@~when checked, all systemId referring to the given Design/App Db would be changed to current one(based on heuristic)~@~~@~
 16361~@~AdmSystems [  320] Main Info: UpdRefSystemId (en-US)~@~4303~@~1~@~Update Reference SystemId~@~when checked, all modules referencing old system Id would be changed to current one~@~~@~
 16362~@~AdmSystems [  300] Main Info: FromSystemId (en-US)~@~4304~@~1~@~From SystemId~@~Old system Id to update from, only needed if either Update Base SystemId or Update Reference System Id~@~~@~
-16363~@~AdmUsr [   10] Main Info: UsrId (en-US)~@~1~@~114~@~Identifiant d'utilisateur~@~Il s'agit de l'ID interne identifier de manière unique cet utilisateur.~@~~@~
-16364~@~AdmUsr [   80] Main Info: UsrEmail (en-US)~@~2~@~114~@~Courriel de l'utilisateur~@~Il s'agit de l'adresse e-mail de l'utilisateur, si disponible.~@~~@~
-16365~@~AdmUsr [   30] Main Info: UsrName (en-US)~@~3~@~114~@~Nom d'utilisateur~@~Il s'agit du nom d'utilisateur complet.~@~Veuillez saisir le nom d'utilisateur en entier.~@~Nom d'utilisateur
-16366~@~AdmUsr [  310] Status: CustomerId (en-US)~@~6~@~114~@~Client~@~Il s'agit du client auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16367~@~AdmUsr [  320] Status: VendorId (en-US)~@~7~@~114~@~Vendeur~@~Il s'agit du fournisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16368~@~AdmUsr [  350] Status: MemberId (en-US)~@~8~@~114~@~Membre~@~Il s'agit du membre auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16369~@~AdmUsr [  170] Main Info: Active (en-US)~@~9~@~114~@~actif~@~Décochez-la si cet utilisateur doit être désactivé.~@~~@~
-16370~@~AdmUsr [  250] Status: ModifiedOn (en-US)~@~10~@~114~@~Modifié le~@~Il s'agit de la date de dernière modification de cet utilisateur.~@~~@~
+16363~@~AdmUsr [   10] Main Info: UsrId (fr-CA)~@~1~@~114~@~Identifiant d'utilisateur~@~Il s'agit de l'ID interne identifier de manière unique cet utilisateur.~@~~@~
+16364~@~AdmUsr [   80] Main Info: UsrEmail (fr-CA)~@~2~@~114~@~Courriel de l'utilisateur~@~Il s'agit de l'adresse e-mail de l'utilisateur, si disponible.~@~~@~
+16365~@~AdmUsr [   30] Main Info: UsrName (fr-CA)~@~3~@~114~@~Nom d'utilisateur~@~Il s'agit du nom d'utilisateur complet.~@~Veuillez saisir le nom d'utilisateur en entier.~@~Nom d'utilisateur
+16366~@~AdmUsr [  310] Status: CustomerId (fr-CA)~@~6~@~114~@~Client~@~Il s'agit du client auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16367~@~AdmUsr [  320] Status: VendorId (fr-CA)~@~7~@~114~@~Vendeur~@~Il s'agit du fournisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16368~@~AdmUsr [  350] Status: MemberId (fr-CA)~@~8~@~114~@~Membre~@~Il s'agit du membre auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16369~@~AdmUsr [  170] Main Info: Active (fr-CA)~@~9~@~114~@~actif~@~Décochez-la si cet utilisateur doit être désactivé.~@~~@~
+16370~@~AdmUsr [  270] Status: ModifiedOn (fr-CA)~@~10~@~114~@~Modifié le~@~Il s'agit de la date de dernière modification de cet utilisateur.~@~~@~
 16371~@~AdmDbTable [   10] Main Info: TableId (en-US)~@~11~@~114~@~Identifiant de table~@~Il s'agit de l'ID interne qui représente uniquement cette table de base de données.~@~~@~
 16372~@~AdmDbTable [   30] Main Info: TableName (en-US)~@~12~@~114~@~Nom de la table~@~Il s'agit d'un nom de table unique qui correspond à la table réelle établie dans la base de données. Veuillez ajouter le suffixe "()" dans le cas d'une fonction de table qui peut également accepter des paramètres (précédés de @) inclus dans les colonnes ci-dessous.~@~Veuillez entrer un nom de table unique qui correspond à la table réelle établie dans la base de données. Veuillez ajouter le suffixe "()" dans le cas d'une fonction de table qui peut également accepter des paramètres (précédés de @) inclus dans les colonnes ci-dessous.~@~
 16373~@~AdmDbTable [   40] Main Info: TableDesc (en-US)~@~13~@~114~@~La description~@~Il s'agit d'une brève description de ce tableau comme référence de recherche.~@~Veuillez fournir une brève description de ce tableau comme référence de recherche.~@~
@@ -8459,7 +8459,7 @@
 16458~@~AdmAtRowAuth [   50] Main Info: AllowAdd (en-US)~@~310~@~114~@~Autoriser l'ajout~@~Ceci est vérifié si cette autorité de ligne autorise l'insertion.~@~~@~
 16459~@~AdmAtRowAuth [   60] Main Info: AllowUpd (en-US)~@~311~@~114~@~Autoriser la mise à jour~@~Ceci est vérifié si cette autorité de ligne autorise la mise à jour.~@~~@~
 16460~@~AdmAtRowAuth [   70] Main Info: AllowDel (en-US)~@~312~@~114~@~Autoriser la suppression~@~Ceci est vérifié si cette autorité de ligne autorise la mise à jour.~@~~@~
-16461~@~AdmUsr [  300] Status: InvestorId (en-US)~@~316~@~114~@~Investisseur~@~Il s'agit de l'investisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16461~@~AdmUsr [  300] Status: InvestorId (fr-CA)~@~316~@~114~@~Investisseur~@~Il s'agit de l'investisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
 16462~@~AdmCtCulture [   60] Main Info: CultureDefault (en-US)~@~418~@~114~@~Culture par défaut~@~Ceci est vérifié si cette culture est la seule et unique culture par défaut.~@~~@~
 16463~@~AdmCtDisplayType [   10] Main Info: TypeId (en-US)~@~419~@~114~@~ID de type~@~Il s'agit de l'ID interne qui représente uniquement ce type d'affichage, ne changez pas sans vérifier la référence.~@~Veuillez saisir un ID interne qui représente uniquement ce type d'affichage.~@~
 16464~@~AdmCtDisplayType [   30] Main Info: TypeDesc (en-US)~@~420~@~114~@~Type Description~@~Ceci est la description de cet affichage.~@~Veuillez entrer la description de cet affichage.~@~
@@ -8477,7 +8477,7 @@
 16476~@~AdmMenuHlp [   30] Main Info: CultureId (en-US)~@~448~@~114~@~Culture~@~C'est la culture de ce label.~@~Veuillez sélectionner la culture de cette étiquette.~@~
 16477~@~AdmMenuHlp [   40] Main Info: MenuText (en-US)~@~450~@~114~@~Étiquette du menu~@~Il s'agit de l'étiquette unique dans la langue culturelle sélectionnée pour cet élément de menu.~@~Veuillez saisir une étiquette unique dans la langue culturelle sélectionnée pour cet élément de menu.~@~
 16478~@~AdmScreen [   50] Main Info: SearchAscending (en-US)~@~494~@~114~@~Ordre croissant~@~Vérifiez si cette colonne de titre de recherche doit être triée par ordre alphabétique.~@~~@~
-16479~@~AdmUsr [   70] Main Info: DefSystemId (en-US)~@~497~@~114~@~Système par défaut~@~Il s'agit du système à afficher après la connexion.~@~Veuillez sélectionner le système à afficher après la connexion.~@~
+16479~@~AdmUsr [   70] Main Info: DefSystemId (fr-CA)~@~497~@~114~@~Système par défaut~@~Il s'agit du système à afficher après la connexion.~@~Veuillez sélectionner le système à afficher après la connexion.~@~
 16480~@~AdmUsrGroup [   50] Main Info: UsrGroupAuthId (en-US)~@~551~@~114~@~ID d'authentification~@~Il s'agit de l'ID interne qui identifie de manière non équivoque cette autorisation prioritaire pour ce groupe d'utilisateurs.~@~~@~
 16481~@~AdmUsrGroup [  110] Main Info: SystemId (en-US)~@~552~@~114~@~Système~@~Il s'agit du système permettant de remplacer les autorisations par défaut.~@~~@~
 16482~@~AdmUsrGroup [  120] Main Info: SysRowAuthorityId (en-US)~@~553~@~114~@~Autorité de ligne~@~Il s'agit de l'autorité de ligne prioritaire pour la combinaison sélectionnée de société, projet et système pour ce groupe d'utilisateurs.~@~Veuillez sélectionner l'autorité de ligne prioritaire pour la combinaison sélectionnée de société, projet et système pour ce groupe d'utilisateurs.~@~
@@ -8526,8 +8526,8 @@
 16525~@~AdmScreen [  240] Miscellaneous: ScreenObj (en-US)~@~925~@~114~@~Colonnes d'écran~@~Ceci est un raccourci pour faire apparaître des colonnes d'écran pour cet écran.~@~~@~
 16526~@~AdmScreen [  250] Miscellaneous: ScreenFilter (en-US)~@~928~@~114~@~Filtres d'écran~@~Ceci est un raccourci pour faire apparaître des filtres d'écran pour cet écran.~@~~@~
 16527~@~AdmDbTable [  100] Main Info: MultiDesignDb (en-US)~@~933~@~114~@~DB multi-design~@~Cochez cette case si le même tableau apparaît dans toutes les bases de données de conception d'application.~@~~@~
-16528~@~AdmUsr [  330] Status: AgentId (en-US)~@~934~@~114~@~Agent~@~Il s'agit de l'agent auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16529~@~AdmUsr [  340] Status: BrokerId (en-US)~@~935~@~114~@~Courtier~@~Il s'agit du courtier auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16528~@~AdmUsr [  330] Status: AgentId (fr-CA)~@~934~@~114~@~Agent~@~Il s'agit de l'agent auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16529~@~AdmUsr [  340] Status: BrokerId (fr-CA)~@~935~@~114~@~Courtier~@~Il s'agit du courtier auquel cet utilisateur a accès, vide signifie tout.~@~~@~
 16530~@~AdmUsrPref [   10] Main Info: UsrPrefId (fr-CA)~@~939~@~114~@~ID UsrPref~@~Il s'agit de l'ID interne représentant cette préférence utilisateur.~@~~@~
 16531~@~AdmUsrPref [  140] Applied: UsrId (fr-CA)~@~940~@~114~@~Utilisateur~@~C'est le seul utilisateur à utiliser cette préférence, s'il est choisi.~@~~@~
 16532~@~AdmUsrPref [  180] Applied: SystemId (fr-CA)~@~941~@~114~@~Système~@~C'est le seul système à appliquer cette préférence, s'il est choisi.~@~~@~
@@ -8580,12 +8580,12 @@
 16579~@~AdmReportCri [  240] Main Info: CultureId (en-US)~@~1097~@~114~@~Culture~@~Il s'agit de la culture de cette étiquette de critères, la culture par défaut doit être présente sur l'une des lignes.~@~Veuillez sélectionner la culture pour cette étiquette de critères, la culture par défaut doit être présente sur l'une des lignes.~@~
 16580~@~AdmReportCri [  250] Main Info: ColumnHeader (en-US)~@~1098~@~114~@~Étiquette de colonne~@~Il s'agit de l'intitulé de cette colonne de 50 caractères ou moins.~@~~@~
 16581~@~AdmReport [  310] Excel: XlsClause (fr-CA)~@~1099~@~114~@~Clause Xls formatée~@~Celui-ci sera rempli avec une clause standard lorsque sans assistance et "To Excel Only" est coché.~@~~@~
-16582~@~AdmUsr [   20] Main Info: LoginName (en-US)~@~1115~@~114~@~Identifiant~@~Il s'agit du nom de connexion unique de cet utilisateur.~@~Veuillez saisir un nom de connexion utilisateur unique pour cet utilisateur.~@~
-16583~@~AdmUsr [  220] Status: FailedAttempt (en-US)~@~1116~@~114~@~Tentative échouée~@~Il s'agit du nombre de fois où ces utilisateurs n'ont pas réussi à se connecter.~@~~@~
-16584~@~AdmUsr [  230] Status: LastSuccessDt (en-US)~@~1117~@~114~@~Dernier succès~@~C'est la dernière fois que cet utilisateur se connecte avec succès.~@~~@~
-16585~@~AdmUsr [  240] Status: LastFailedDt (en-US)~@~1118~@~114~@~Dernier échec~@~C'est la dernière fois que cet utilisateur ne parvient pas à se connecter.~@~~@~
-16586~@~AdmUsr [  260] Status: HintQuestionId (en-US)~@~1119~@~114~@~Question indice~@~Il s'agit de la question de conseil dans le cas où le mot de passe est oublié et doit être envoyé par e-mail.~@~~@~
-16587~@~AdmUsr [  270] Status: HintAnswer (en-US)~@~1120~@~114~@~soupçon de réponse~@~Il s'agit de la réponse de l'indice au cas où le mot de passe est oublié et doit être envoyé par e-mail.~@~~@~
+16582~@~AdmUsr [   20] Main Info: LoginName (fr-CA)~@~1115~@~114~@~Identifiant~@~Il s'agit du nom de connexion unique de cet utilisateur.~@~Veuillez saisir un nom de connexion utilisateur unique pour cet utilisateur.~@~
+16583~@~AdmUsr [  220] Status: FailedAttempt (fr-CA)~@~1116~@~114~@~Tentative échouée~@~Il s'agit du nombre de fois où ces utilisateurs n'ont pas réussi à se connecter.~@~~@~
+16584~@~AdmUsr [  230] Status: LastSuccessDt (fr-CA)~@~1117~@~114~@~Dernier succès~@~C'est la dernière fois que cet utilisateur se connecte avec succès.~@~~@~
+16585~@~AdmUsr [  240] Status: LastFailedDt (fr-CA)~@~1118~@~114~@~Dernier échec~@~C'est la dernière fois que cet utilisateur ne parvient pas à se connecter.~@~~@~
+16586~@~AdmUsr [  280] Status: HintQuestionId (fr-CA)~@~1119~@~114~@~Question indice~@~Il s'agit de la question de conseil dans le cas où le mot de passe est oublié et doit être envoyé par e-mail.~@~~@~
+16587~@~AdmUsr [  290] Status: HintAnswer (fr-CA)~@~1120~@~114~@~soupçon de réponse~@~Il s'agit de la réponse de l'indice au cas où le mot de passe est oublié et doit être envoyé par e-mail.~@~~@~
 16588~@~AdmChgPwd [   10] Main Info: UsrId (en-US)~@~1121~@~114~@~Identifiant Usr~@~Il s'agit de l'ID interne qui représente uniquement cet utilisateur.~@~~@~
 16589~@~AdmChgPwd [   20] Main Info: UsrPassword (en-US)~@~1124~@~114~@~nouveau mot de passe~@~Il s'agit du nouveau mot de passe défini par l'administrateur; aucune restriction ni exigence de complexité.~@~Veuillez saisir un nouveau mot de passe, aucune restriction ni exigence de complexité.~@~
 16590~@~AdmChgPwd [   30] Main Info: ConfirmPwd (en-US)~@~1136~@~114~@~Confirmez le mot de passe~@~Cela confirme le mot de passe précédent.~@~Veuillez saisir le même mot de passe précédent que la confirmation.~@~
@@ -8678,7 +8678,7 @@
 16677~@~AdmCtButtonHlp [   60] Main Info: ButtonToolTip (fr-CA)~@~1299~@~114~@~Info-bulle du bouton~@~Il s'agit de l'info-bulle par défaut à afficher sur ce type de bouton.~@~Veuillez saisir l'info-bulle par défaut à afficher sur ce type de bouton.~@~
 16678~@~AdmCtCulture [   20] Main Info: CultureTypeDesc (en-US)~@~1300~@~114~@~Description de la culture~@~Il s'agit de la description précisant la langue et le pays de cette culture.~@~Veuillez saisir une description précisant la langue et le pays de cette culture.~@~
 16679~@~AdmScreen [  160] Main Info: HasDeleteAll (en-US)~@~1301~@~114~@~Supprimer tout visible~@~Cochez cette case si l'option "Supprimer tout" doit être visible sur la grille de données.~@~~@~
-16680~@~AdmUsr [   50] Main Info: DefCompanyId (en-US)~@~1304~@~114~@~Société par défaut~@~Il s'agit de l'entreprise à sélectionner après la connexion.~@~~@~
+16680~@~AdmUsr [   50] Main Info: DefCompanyId (fr-CA)~@~1304~@~114~@~Société par défaut~@~Il s'agit de l'entreprise à sélectionner après la connexion.~@~~@~
 16681~@~AdmUsrPref [   70] Main Info: ComListVisible (fr-CA)~@~1305~@~114~@~Liste des sociétés visible~@~La liste des sociétés sera masquée lors de la connexion si "Non" est sélectionné.~@~La liste des sociétés sera masquée lors de la connexion si "Non" est sélectionné.~@~
 16682~@~AdmUsrPref [  160] Applied: CompanyId (fr-CA)~@~1306~@~114~@~Entreprise~@~C'est la seule entreprise à utiliser cette préférence, si elle est choisie.~@~~@~
 16683~@~AdmReport [  200] Main Info: GenerateRp (fr-CA)~@~1307~@~114~@~produire~@~Décochez cette case si aucun programme temporaire ne doit être généré pour ce rapport.~@~~@~
@@ -8776,7 +8776,7 @@
 16775~@~AdmReport [  320] Excel: XlsCode (fr-CA)~@~1477~@~114~@~S.Procedure~@~Ce contenu sera exécuté en tant que procédure stockée (SQL) sur la ou les bases de données pertinentes lorsqu'il n'est pas vide.~@~~@~
 16776~@~AdmReport [  300] Update: UpdCode (fr-CA)~@~1478~@~114~@~S.Procedure~@~Ce contenu sera exécuté en tant que procédure stockée (SQL) sur la ou les bases de données pertinentes lorsqu'il n'est pas vide.~@~~@~
 16777~@~AdmReport [  270] Parameters: ValClause (fr-CA)~@~1480~@~114~@~Clause de paramètre~@~Elle sera remplie d'une clause standard lorsqu'elle est sans surveillance et au moins une colonne de rapport est un paramètre. Cela ne concerne que SQL Reporting Service.~@~~@~
-16778~@~AdmUsr [   60] Main Info: DefProjectId (en-US)~@~1481~@~114~@~Projet par défaut~@~Il s'agit du projet à afficher après la connexion.~@~~@~
+16778~@~AdmUsr [   60] Main Info: DefProjectId (fr-CA)~@~1481~@~114~@~Projet par défaut~@~Il s'agit du projet à afficher après la connexion.~@~~@~
 16779~@~AdmScreenObj [   90] Main Info: TrimOnEntry (en-US)~@~1483~@~114~@~Couper à l'entrée~@~Lorsqu'elle n'est pas cochée, cette colonne ne sera pas rognée lors de toute insertion ou mise à jour, à condition qu'il s'agisse d'une zone de texte.~@~~@~
 16780~@~AdmReport [  100] Main Info: UnitCd (fr-CA)~@~1525~@~114~@~Unité~@~Il s'agit de l'unité de mesure pour les marges, positions, etc. de ce rapport. Uniquement applicable à SQL Reporting.~@~Veuillez sélectionner l'unité de mesure pour les marges, positions, etc. de ce rapport. Uniquement applicable à SQL Reporting.~@~
 16781~@~AdmReport [  110] Main Info: TopMargin (fr-CA)~@~1527~@~114~@~Marge supérieure~@~Ceci est la marge supérieure de ce rapport. Uniquement applicable à SQL Reporting.~@~Veuillez saisir la marge supérieure de ce rapport.~@~
@@ -8943,15 +8943,15 @@
 16942~@~AdmRptCha [   90] Main Info: SeriesGrp (en-US)~@~1738~@~114~@~Séries~@~Il s'agit du champ pour le regroupement des données par série, le cas échéant.~@~~@~
 16943~@~AdmRptWiz [  280] Charting: RptChaTypeCd (en-US)~@~1739~@~114~@~Type de graphique~@~Il s'agit du type de graphique de rapport, le cas échéant.~@~~@~
 16944~@~AdmRptWiz [  290] Charting: ThreeD (en-US)~@~1740~@~114~@~Voir en 3D~@~Ceci est vérifié lorsque le graphique est affiché en 3D, sinon 2D.~@~~@~
-16945~@~AdmUsr [  100] Main Info: UsrGroupLs (en-US)~@~1741~@~114~@~Groupes d'utilisateurs~@~Ce sont les groupes d'utilisateurs auxquels cet utilisateur appartient. L'utilisateur doit appartenir à au moins un groupe d'utilisateurs.~@~Veuillez sélectionner un ou plusieurs groupes d'utilisateurs auxquels cet utilisateur appartient. L'utilisateur doit appartenir à au moins un groupe d'utilisateurs.~@~
-16946~@~AdmUsr [  280] Status: CompanyLs (en-US)~@~1742~@~114~@~Entreprises~@~Ce sont les entreprises auxquelles cet utilisateur a accès; veuillez en sélectionner un ou plusieurs.~@~~@~
-16947~@~AdmUsr [  290] Status: ProjectLs (en-US)~@~1743~@~114~@~Projets~@~Ce sont les projets auxquels cet utilisateur a accès; veuillez en sélectionner un ou plusieurs.~@~~@~
+16945~@~AdmUsr [  100] Main Info: UsrGroupLs (fr-CA)~@~1741~@~114~@~Groupes d'utilisateurs~@~Ce sont les groupes d'utilisateurs auxquels cet utilisateur appartient. L'utilisateur doit appartenir à au moins un groupe d'utilisateurs.~@~Veuillez sélectionner un ou plusieurs groupes d'utilisateurs auxquels cet utilisateur appartient. L'utilisateur doit appartenir à au moins un groupe d'utilisateurs.~@~
+16946~@~AdmUsr [  250] Status: CompanyLs (fr-CA)~@~1742~@~114~@~Entreprises~@~Ce sont les entreprises auxquelles cet utilisateur a accès; veuillez en sélectionner un ou plusieurs.~@~~@~
+16947~@~AdmUsr [  260] Status: ProjectLs (fr-CA)~@~1743~@~114~@~Projets~@~Ce sont les projets auxquels cet utilisateur a accès; veuillez en sélectionner un ou plusieurs.~@~~@~
 16948~@~AdmUsrGroup [   60] Main Info: CompanyId (en-US)~@~1744~@~114~@~Entreprise~@~Il s'agit de la société qui remplace les autorisations par défaut.~@~~@~
 16949~@~AdmUsrGroup [   70] Main Info: ProjectId (en-US)~@~1745~@~114~@~Projet~@~Il s'agit du projet visant à remplacer les autorisations par défaut.~@~~@~
-16950~@~AdmUsr [   40] Main Info: CultureId (en-US)~@~1746~@~114~@~Culture utilisateur~@~Il s'agit du paramètre de culture lorsque cet utilisateur se connecte.~@~Veuillez sélectionner le paramètre de culture lorsque cet utilisateur se connecte.~@~Connexion Culture
-16951~@~AdmUsr [  180] Main Info: InternalUsr (en-US)~@~1747~@~114~@~Utilisateur interne~@~Ceci est vérifié si les imprimantes côté serveur doivent être mises à la disposition de cet utilisateur.~@~~@~
-16952~@~AdmUsr [  190] Main Info: TechnicalUsr (en-US)~@~1748~@~114~@~Utilisateur technique~@~Ceci est vérifié si la trace détaillée des erreurs techniques doit être mise à la disposition de cet utilisateur.~@~~@~
-16953~@~AdmUsr [  110] Main Info: UsrImprLink (en-US)~@~1749~@~114~@~Usurper l'identité~@~Cliquez sur le lien approprié pour afficher / modifier l'utilisateur emprunté.~@~~@~
+16950~@~AdmUsr [   40] Main Info: CultureId (fr-CA)~@~1746~@~114~@~Culture utilisateur~@~Il s'agit du paramètre de culture lorsque cet utilisateur se connecte.~@~Veuillez sélectionner le paramètre de culture lorsque cet utilisateur se connecte.~@~Connexion Culture
+16951~@~AdmUsr [  180] Main Info: InternalUsr (fr-CA)~@~1747~@~114~@~Utilisateur interne~@~Ceci est vérifié si les imprimantes côté serveur doivent être mises à la disposition de cet utilisateur.~@~~@~
+16952~@~AdmUsr [  190] Main Info: TechnicalUsr (fr-CA)~@~1748~@~114~@~Utilisateur technique~@~Ceci est vérifié si la trace détaillée des erreurs techniques doit être mise à la disposition de cet utilisateur.~@~~@~
+16953~@~AdmUsr [  110] Main Info: UsrImprLink (fr-CA)~@~1749~@~114~@~Usurper l'identité~@~Cliquez sur le lien approprié pour afficher / modifier l'utilisateur emprunté.~@~~@~
 16954~@~AdmRowOvrd [   30] Main Info: ReportId (en-US)~@~1750~@~114~@~rapport~@~Il s'agit du rapport auquel la substitution d'autorisation de ligne s'applique.~@~~@~
 16955~@~AdmMenuPerm [   50] Main Info: PermId (en-US)~@~1751~@~114~@~Entité~@~Il s'agit de l'entité qui se voit accorder / refuser l'accès à cet élément de menu.~@~Veuillez sélectionner l'entité qui se voit accorder / refuser l'accès à cet élément de menu.~@~
 16956~@~AdmUsrGroup [   40] Main Info: CompanyId (en-US)~@~1752~@~114~@~Entreprise~@~Il s'agit de la société à laquelle appartient ce groupe d'utilisateurs, le cas échéant.~@~~@~
@@ -9044,8 +9044,8 @@
 17043~@~AdmClnTier [  100] Main Info: WsCompilePath (en-US)~@~1906~@~114~@~Chemin WS compilé~@~Il s'agit du chemin compilé pour le serveur de services Web de ce niveau client (avec "/" de fin).~@~Veuillez entrer le chemin compilé pour le serveur de service Web de ce niveau client (avec "/" à la fin).~@~
 17044~@~AdmClnTier [   80] Main Info: XlsProgramPath (en-US)~@~1907~@~114~@~XLS Import Ws Path~@~Il s'agit du chemin d'accès au programme pour le serveur de service Web XLS Import de ce niveau client (avec "/" à la fin).~@~Veuillez entrer le chemin d'accès au programme pour le serveur de service Web XLS Import de ce niveau client (avec un "/" à la fin).~@~
 17045~@~AdmClnTier [  110] Main Info: XlsCompilePath (en-US)~@~1908~@~114~@~Chemin WS XLS compilé~@~Il s'agit du chemin compilé pour le serveur de service Web XLS Import de ce niveau client (avec "/" à la fin).~@~Veuillez entrer le chemin compilé pour le serveur de service Web XLS Import de ce niveau client (avec "/" à la fin).~@~
-17046~@~AdmUsr [  150] Main Info: PwdDuration (en-US)~@~1910~@~114~@~Durée du mot de passe~@~Le mot de passe utilisateur expirera dans ce nombre de jours à compter de la dernière date de modification; zéro signifie ne jamais expirer.~@~Veuillez saisir le nombre de jours d'expiration du mot de passe utilisateur à compter de la dernière date de modification; zéro signifie ne jamais expirer.~@~
-17047~@~AdmUsr [  160] Main Info: PwdWarn (en-US)~@~1911~@~114~@~Avertissement de mot de passe~@~Il s'agit du nombre de jours pendant lesquels l'utilisateur recevra un avertissement avant la date d'expiration du mot de passe; zéro signifie aucun avertissement.~@~Veuillez saisir le nombre de jours pendant lesquels l'utilisateur recevra un avertissement avant la date d'expiration du mot de passe; zéro signifie aucun avertissement.~@~
+17046~@~AdmUsr [  150] Main Info: PwdDuration (fr-CA)~@~1910~@~114~@~Durée du mot de passe~@~Le mot de passe utilisateur expirera dans ce nombre de jours à compter de la dernière date de modification; zéro signifie ne jamais expirer.~@~Veuillez saisir le nombre de jours d'expiration du mot de passe utilisateur à compter de la dernière date de modification; zéro signifie ne jamais expirer.~@~
+17047~@~AdmUsr [  160] Main Info: PwdWarn (fr-CA)~@~1911~@~114~@~Avertissement de mot de passe~@~Il s'agit du nombre de jours pendant lesquels l'utilisateur recevra un avertissement avant la date d'expiration du mot de passe; zéro signifie aucun avertissement.~@~Veuillez saisir le nombre de jours pendant lesquels l'utilisateur recevra un avertissement avant la date d'expiration du mot de passe; zéro signifie aucun avertissement.~@~
 17048~@~AdmMenuOpt [   10] Main Info: MenuOptId (en-US)~@~1912~@~114~@~ID de l'option~@~Il s'agit de l'identité de cette option de menu.~@~~@~
 17049~@~AdmMenuOpt [   20] Main Info: MenuOptName (en-US)~@~1913~@~114~@~Nom de l'option~@~Ce nom unique représente cette option de menu.~@~Veuillez saisir un nom unique pour représenter cette option de menu.~@~
 17050~@~AdmMenuOpt [   30] Main Info: MenuOptDesc (en-US)~@~1914~@~114~@~La description~@~Ceci est la description de cette option de menu.~@~~@~
@@ -9082,7 +9082,7 @@
 17081~@~AdmRowOvrd [  100] Main Info: AndCondition (en-US)~@~1981~@~114~@~État~@~Il s'agit de la condition And / Or pour ce remplacement de clé d'autorisation.~@~Veuillez sélectionner la condition And / Or pour ce remplacement de clé d'autorisation.~@~
 17082~@~AdmScreenObj [  100] Main Info: IgnoreConfirm (en-US)~@~1982~@~114~@~Ignorer Confirmer~@~Décochez-la pour demander aux info-bulles de confirmer ou non l'action de publication.~@~~@~
 17083~@~AdmDbTable [  310] Main Info: IsIndexU (en-US)~@~1983~@~114~@~Index unique~@~Ceci est vérifié lorsque cette colonne fait partie de l'index non cluster unique.~@~~@~
-17084~@~AdmUsr [  120] Main Info: PicMed (en-US)~@~1984~@~114~@~~@~Cliquez sur l'icône à droite pour télécharger votre photo la plus récente.~@~~@~
+17084~@~AdmUsr [  120] Main Info: PicMed (fr-CA)~@~1984~@~114~@~~@~Cliquez sur l'icône à droite pour télécharger votre photo la plus récente.~@~~@~
 17085~@~AdmEntity [   20] Main Info: EntityImg (en-US)~@~1985~@~114~@~Icon~@~Cliquez sur l'icône à droite pour télécharger votre image préférée pour représenter cette entité.~@~~@~
 17086~@~AdmReportCri [   80] Main Info: DefaultValue (en-US)~@~1986~@~114~@~Valeur par défaut~@~Entrez une valeur par défaut côté client en JavaScript; vous pouvez utiliser une fonction telle que currentDate () pour la date du jour, etc .; Peut nécessiter des guillemets simples et respecter la casse. Constante de date au format 'YYYY.MM.DD'.~@~~@~
 17087~@~AdmUsrPref [   40] Main Info: MasterPgFile (fr-CA)~@~1987~@~114~@~La page principale~@~Ce fichier de page maître sera utilisé comme mise en page MasterPageFile pour ce thème, si disponible. La valeur par défaut est "Default.master".~@~~@~
@@ -9148,3 +9148,22 @@
 17199~@~AdmFlowchart [   50] Main: launch (en-US)~@~4382~@~1~@~Launch Flowchart IDE~@~~@~~@~
 17201~@~AdmFlowchart [   60] Main: View (en-US)~@~4384~@~1~@~View Flowchart~@~~@~~@~
 17202~@~AdmFlowchart [   80] Main: Display (en-US)~@~4385~@~1~@~Display on Default Page~@~~@~~@~
+17203~@~AdmUsr [  400] Misc: NotificationTitle (en-US)~@~4386~@~1~@~Notification Title~@~~@~~@~
+17204~@~AdmUsr [  410] Misc: NotificationContent (en-US)~@~4387~@~1~@~Notification Content~@~~@~~@~
+17205~@~AdmUsr [  420] Misc: SendNotificationBtn (en-US)~@~4388~@~1~@~Send Notification~@~~@~~@~
+17206~@~AdmPostman [   10] Main: SystemId (en-US)~@~4389~@~1~@~SystemId~@~~@~~@~
+17207~@~AdmPostman [   20] Main: SystemName (en-US)~@~4390~@~1~@~SystemName~@~~@~~@~
+17208~@~AdmPostman [   30] Main: SystemAbbr (en-US)~@~4391~@~1~@~SystemAbbr~@~~@~~@~
+17209~@~AdmPostman [   40] Main: ServerName (en-US)~@~4392~@~1~@~ServerName~@~~@~~@~
+17230~@~AdmPostman [   50] Main: EndpointUrl (en-US)~@~4413~@~1~@~End Point Url~@~~@~~@~
+17231~@~AdmPostman [  110] Main: QueryString (en-US)~@~4414~@~1~@~Query String~@~in the form of A=B, seperate line for each or use '&' as seperator(replace '&' with %26 if it is part of the key/value)~@~~@~
+17232~@~AdmPostman [  140] Main: Header (en-US)~@~4415~@~1~@~Request Header~@~in the form of A: B, one line for each~@~~@~
+17233~@~AdmPostman [  150] Main: Cookie (en-US)~@~4416~@~1~@~Cookies~@~in the form of A=B, one line for each or use ';' as seperator for each~@~~@~
+17234~@~AdmPostman [   60] Main: Method (en-US)~@~4417~@~1~@~Method~@~default to GET~@~~@~
+17235~@~AdmPostman [  120] Main: Body (en-US)~@~4418~@~1~@~Request Body~@~~@~~@~
+17236~@~AdmPostman [   70] Main: Result (en-US)~@~4419~@~1~@~Result~@~~@~~@~
+17237~@~AdmPostman [   90] Main: Submit (en-US)~@~4420~@~1~@~Submit~@~~@~~@~
+17239~@~AdmPostman [   80] Main: OTPCode (en-US)~@~4422~@~1~@~Two FA Code~@~~@~~@~
+17240~@~AdmPostman [  130] Main: PostContentType (en-US)~@~4423~@~1~@~Post Content Type~@~Post body MIME Type, default to text/plain if empty~@~~@~
+17241~@~AdmPostman [  110] Main: QSUrlEncode (en-US)~@~4424~@~1~@~UrlEncode~@~uncheck only if you don't want key/value to be url encoded for the query string~@~~@~
+17243~@~AdmPostman [  140] Main: BodyUrlEncode (en-US)~@~4426~@~1~@~UrlEncode~@~check if body requires urlencode(only kicks in for x-www-form-urlencoded)~@~~@~

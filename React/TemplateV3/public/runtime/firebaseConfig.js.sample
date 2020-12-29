@@ -1,0 +1,29 @@
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// this would use default(global) name space
+// window. for browser front end
+// self. for service worker
+// can skip the name space when accessed
+
+// this json should be downloaded from firebase web console
+// which contains your firebase project configurations
+
+firebaseConfig = {
+    apiKey: "XXXX",
+    authDomain: "xxxx",
+    databaseURL: "xxxx",
+    projectId: "xxxx",
+    storageBucket: "xxxx",
+    messagingSenderId: "xxxx",
+    appId: "xxxx",
+    measurementId: "xxxx"
+  };
+
+// for push notification of FCM(to generate device token), find on firebase web admin console
+vapidKey = 'xxxx';
+
+// service worker js location(follow fcm naming convention, relative to react app location, only add prefix path if required like /RO/ for non-root site or / for forced parent )
+fcmSWUrl = '/RO/firebase-messaging-sw.js';
+
+// service worker scope for above(follow fcm convention only add prefix path if required like /RO/firebase-cloud-messaging-push-scope for non-root site)
+fcmSWScope = '/RO/firebase-cloud-messaging-push-scope';
+

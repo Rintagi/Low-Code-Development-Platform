@@ -1,6 +1,6 @@
 1~@~Master Record Custom Function
-2~@~Master Record Render
-3~@~Master Record Screen Column
+2~@~Master Record Save
+3~@~Master Record Render
 4~@~Master Record Screen Column
 5~@~Detail Record Custom Function
 6~@~Detail Record Save

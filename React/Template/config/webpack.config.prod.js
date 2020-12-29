@@ -4,6 +4,7 @@ const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin-legacy');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
@@ -27,6 +28,10 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
+
+// Variable used for enabling profiling in Production
+// passed into alias object. Uses a flag if passed into the build command
+const isEnvProductionProfile = process.argv.includes('--profile');
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
@@ -300,26 +305,47 @@ module.exports = {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified),
     // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-        // Disabled because of an issue with Uglify breaking seemingly valid code:
-        // https://github.com/facebookincubator/create-react-app/issues/2376
-        // Pending further investigation:
-        // https://github.com/mishoo/UglifyJS2/issues/2011
-        comparisons: false,
-      },
-      mangle: {
-        safari10: true,
-      },
-      output: {
-        comments: false,
-        // Turned on because emoji and regex is not minified properly using default
-        // https://github.com/facebookincubator/create-react-app/issues/2488
-        ascii_only: true,
+    new TerserPlugin({
+      terserOptions: {
+        parse: {
+          // We want terser to parse ecma 8 code. However, we don't want it
+          // to apply any minification steps that turns valid ecma 5 code
+          // into invalid ecma 5 code. This is why the 'compress' and 'output'
+          // sections only apply transformations that are ecma 5 safe
+          // https://github.com/facebook/create-react-app/pull/4234
+          ecma: 8,
+        },
+        compress: {
+          ecma: 5,
+          warnings: false,
+          // Disabled because of an issue with Uglify breaking seemingly valid code:
+          // https://github.com/facebook/create-react-app/issues/2376
+          // Pending further investigation:
+          // https://github.com/mishoo/UglifyJS2/issues/2011
+          comparisons: false,
+          // Disabled because of an issue with Terser breaking valid code:
+          // https://github.com/facebook/create-react-app/issues/5250
+          // Pending further investigation:
+          // https://github.com/terser-js/terser/issues/120
+          inline: 2,
+        },
+        mangle: {
+          safari10: true,
+        },
+        // Added for profiling in devtools
+        keep_classnames: isEnvProductionProfile,
+        keep_fnames: isEnvProductionProfile,
+        output: {
+          ecma: 5,
+          comments: false,
+          // Turned on because emoji and regex is not minified properly using default
+          // https://github.com/facebook/create-react-app/issues/2488
+          ascii_only: true,
+        },
       },
       sourceMap: shouldUseSourceMap,
     }),
+
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: cssFilename,

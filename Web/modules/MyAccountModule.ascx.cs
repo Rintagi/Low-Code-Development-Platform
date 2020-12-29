@@ -849,7 +849,24 @@ namespace RO.Web
                     SetUsrPreference();
                     base.LImpr = null; SetImpersonation(usr.UsrId);
                     base.VMenu = null;
-                    if (usr.LoginName != "Anonymous") LinkedUserLogin = (new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable()).ToList();
+                    if (usr.LoginName != "Anonymous")
+                    {
+                        LinkedUserLogin = (new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable()).ToList();
+                        string appSig = cMyAppSig.Text;
+                        string appMachine = cMyMachine.Text;
+                        string fcmToken = cFCMToken.Text;
+                        if (!string.IsNullOrEmpty(fcmToken))
+                        {
+                            try
+                            {
+                                new LoginSystem().UpdUsrNotificationChannel(usr.UsrId, fcmToken, Request.UserAgent, GetClientIp(), appMachine, appSig, "fcm");
+                            }
+                            catch (Exception ex)
+                            {
+                                ErrorTrace(ex, "warning");
+                            }
+                        }
+                    }
                     Session.Remove("ProjectList");
                     Session.Remove("CompanyList");
                     if (Provider != "SJ")
@@ -2109,6 +2126,7 @@ namespace RO.Web
         private void RegisterWebAuthnSetup(string appDomainUrl,  string registrationJSON)
         {
             //var x = Newtonsoft.Json.JsonConvert.DeserializeObject(registrationJSON);
+            bool isSafari = Request.UserAgent.Contains("Safari");
             var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
             var serverPath = new Uri(appDomainUrl).GetComponents(UriComponents.Path, UriFormat.Unescaped);
             string usrId = LUser.UsrId.ToString();
@@ -2150,14 +2168,18 @@ namespace RO.Web
                 UserVerification = UserVerificationRequirement.Discouraged,
                 //                 AuthenticatorAttachment = AuthenticatorAttachment.Platform,
             };
-            AttestationConveyancePreference attConveyancePreference = AttestationConveyancePreference.Indirect;
+            // iOS Safari cannot use Direct/Indirect, library don't support
+            AttestationConveyancePreference attConveyancePreference = isSafari ? AttestationConveyancePreference.None : AttestationConveyancePreference.Indirect;
             List<PublicKeyCredentialDescriptor> excludedCredentials = dtLogin.AsEnumerable().Select(
                     dr =>
                     {
                         return new PublicKeyCredentialDescriptor()
                         {
                             Id = base64UrlDecode(dr["LoginName"].ToString()),
-                            Transports = new AuthenticatorTransport[]{
+                            // iOS Safari cannot specify Transport
+                            Transports = isSafari 
+                                ? null 
+                                : new AuthenticatorTransport[]{
                                 AuthenticatorTransport.Ble, AuthenticatorTransport.Internal, AuthenticatorTransport.Lightning, AuthenticatorTransport.Nfc, AuthenticatorTransport.Usb
                             },
                             Type = PublicKeyCredentialType.PublicKey,
@@ -2181,7 +2203,7 @@ namespace RO.Web
             var fido2 = new Fido2(fido2Config);
 
             // must do this for the verification to work
-            var options = fido2.RequestNewCredential(user, excludedCredentials, authenticatorSelection, attConveyancePreference, clientExtensions);
+            var options = fido2.RequestNewCredential(user, null, authenticatorSelection, attConveyancePreference, clientExtensions);
             // the challenge is random byte but we need more info, replace it
             options.Challenge = challenge;
             string createRequestJson = options.ToJson();

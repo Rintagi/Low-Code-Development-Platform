@@ -29,7 +29,7 @@ namespace RO.Common3 {
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "2.0.50727.1432")]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Web.Services.WebServiceBindingAttribute(Name="XLSImportSoap", Namespace="http://tempuri.org/")]
     public partial class XLSImport : System.Web.Services.Protocols.SoapHttpClientProtocol {
@@ -101,6 +101,7 @@ namespace RO.Common3 {
             }
             return dt;
         }
+        private bool embedded = true;
         /// <remarks/>
         public XLSImport(string urlEndpoint=null) {
             if (string.IsNullOrEmpty(urlEndpoint))
@@ -110,6 +111,7 @@ namespace RO.Common3 {
             else
             {
                 this.Url = urlEndpoint;
+                embedded = false;
             }
         }
         
@@ -128,6 +130,7 @@ namespace RO.Common3 {
                 return sheets.ToArray();
             }
             catch {
+                if (embedded) throw;
                 object[] results = this.Invoke("GetSheetNames", new object[] {
                         fileFullName});
                 return ((string[])(results[0]));
@@ -176,6 +179,7 @@ namespace RO.Common3 {
                 return xml;
             }
             catch {
+                if (embedded) throw;
                 object[] results = this.Invoke("ImportFile", new object[] {
                         fileName,
                         workSheet,

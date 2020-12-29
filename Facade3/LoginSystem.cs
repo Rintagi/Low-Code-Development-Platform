@@ -281,5 +281,21 @@ namespace RO.Facade3
                 return dac.WrSetUsrOTPSecret(UsrId, bEnable, hostSecret);
             }
         }
+
+        public DataTable GetUsrNotificationChannel(int UsrId, string FilterXml = null)
+        {
+            using (LoginAccessBase dac = GetLoginAccess())
+            {
+                return dac.GetUsrNotificationChannel(UsrId, FilterXml);
+            }
+        }
+
+        public void UpdUsrNotificationChannel(int UsrId, string DeviceId, string UserAgent, string ClientIP, string Fingerprint, string AppSig, string NotificationType)
+        {
+            using (LoginAccessBase dac = GetLoginAccess())
+            {
+                dac.UpdUsrNotificationChannel(UsrId, DeviceId, UserAgent, ClientIP, Fingerprint, AppSig, NotificationType);
+            }
+        }
     }
 }

@@ -347,3 +347,5 @@ FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1324~@~3~@~utServerRuleOvrdPrm~@~Adm - Server Rule Override Permission(COW)~@~Y~@~N~@~~@~Server Rule suppression configuration(local copy on write, for merging)~@~~@~2~@~2020-04-30 15:26:55.353~@~2020-04-30 07:58:01.000
 1325~@~3~@~Flowchart~@~Adm - Flowchart~@~Y~@~N~@~~@~This captures the flowchart information.~@~~@~2~@~2020-07-07 16:38:58.473~@~2020-07-07 09:39:08.550
 1326~@~3~@~UsrProvider~@~Adm - User login provider(SSO)~@~N~@~N~@~~@~~@~~@~2~@~2020-08-12 17:51:13.933~@~2020-08-28 19:13:23.277
+1327~@~3~@~UsrDevice~@~Adm - User Device~@~N~@~N~@~~@~table to track user login devices(for push notification etc.)~@~~@~2~@~2020-11-23 05:25:07.330~@~2020-11-22 21:25:14.447
+1328~@~3~@~VwMIMEType~@~Adm - MIME Type~@~N~@~N~@~~@~~@~~@~2~@~2020-12-11 12:54:19.130~@~2020-12-11 04:53:44.000

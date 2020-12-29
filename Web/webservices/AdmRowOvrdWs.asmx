@@ -233,6 +233,7 @@ namespace RO.Web
             Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+                var effectiveFilterId = GetEffectiveScreenFilterId(filterId, true);                
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 Dictionary<string, string> context = new Dictionary<string, string>();
                 context["method"] = "GetLisAdmRowOvrd17";
@@ -243,7 +244,7 @@ namespace RO.Web
                 context["ssd"] = "";
                 context["scr"] = screenId.ToString();
                 context["csy"] = systemId.ToString();
-                context["filter"] = filterId;
+                context["filter"] = effectiveFilterId.ToString();
                 context["isSys"] = "N";
                 context["conn"] = string.Empty;
                 AutoCompleteResponse r = LisSuggests(searchStr, jss.Serialize(context), topN, _CurrentScreenCriteria);

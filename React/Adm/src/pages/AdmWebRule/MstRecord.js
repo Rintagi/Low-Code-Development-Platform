@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'WebRuleId128';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -757,54 +757,58 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.Snippet1 || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.Snippet1 || {}).readonly || !(authCol.Snippet1 || {}).visible}
-                                        onClick={this.Snippet1({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet1 || (columnLabel.Snippet1 || {}).ColumnHeader || (columnLabel.Snippet1 || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.Snippet4 || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.Snippet4 || {}).readonly || !(authCol.Snippet4 || {}).visible}
-                                        onClick={this.Snippet4({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet4 || (columnLabel.Snippet4 || {}).ColumnHeader || (columnLabel.Snippet4 || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.Snippet2 || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.Snippet2 || {}).readonly || !(authCol.Snippet2 || {}).visible}
-                                        onClick={this.Snippet2({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet2 || (columnLabel.Snippet2 || {}).ColumnHeader || (columnLabel.Snippet2 || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.Snippet3 || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.Snippet3 || {}).readonly || !(authCol.Snippet3 || {}).visible}
-                                        onClick={this.Snippet3({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.Snippet3 || (columnLabel.Snippet3 || {}).ColumnHeader || (columnLabel.Snippet3 || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.Snippet1 || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.Snippet1 || {}).readonly || !(authCol.Snippet1 || {}).visible}
+                                            onClick={this.Snippet1({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.Snippet1 || (columnLabel.Snippet1 || {}).ColumnHeader || (columnLabel.Snippet1 || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.Snippet4 || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.Snippet4 || {}).readonly || !(authCol.Snippet4 || {}).visible}
+                                            onClick={this.Snippet4({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.Snippet4 || (columnLabel.Snippet4 || {}).ColumnHeader || (columnLabel.Snippet4 || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.Snippet2 || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.Snippet2 || {}).readonly || !(authCol.Snippet2 || {}).visible}
+                                            onClick={this.Snippet2({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.Snippet2 || (columnLabel.Snippet2 || {}).ColumnHeader || (columnLabel.Snippet2 || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.Snippet3 || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.Snippet3 || {}).readonly || !(authCol.Snippet3 || {}).visible}
+                                            onClick={this.Snippet3({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.Snippet3 || (columnLabel.Snippet3 || {}).ColumnHeader || (columnLabel.Snippet3 || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.ReactEventId128 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

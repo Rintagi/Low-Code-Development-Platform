@@ -119,6 +119,11 @@ export function isIphone() {
   }
 }
 
+export function isSafari() {
+  if (navigator.userAgent.includes('Safari')) {
+    return true;
+  }
+}
 export function isHttps() {
   if (window.location.protocol === 'https:') {
     return true;
@@ -225,7 +230,7 @@ export function parsedUrl(url) {
 
     // IE 7 and 6 wont load "protocol" and "host" even with the above workaround,
     // so we take the protocol/host from window.location and place them manually
-    if (parser.host === "") {
+    if (parser.host === "" && parser.protocol !== "file:") {
         var newProtocolAndHost = window.location.protocol + "//" + window.location.host;
         if (url.charAt(1) === "/") {
             parser.href = newProtocolAndHost + url;

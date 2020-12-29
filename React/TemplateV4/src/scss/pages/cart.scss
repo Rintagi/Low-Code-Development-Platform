@@ -1,0 +1,111 @@
+.cart {
+
+  .cart__preview-img {
+    width: 50px;
+    height: 45px;
+    border: 1px solid #f0f0f0;
+    display: inline-block;
+    overflow: hidden;
+    text-align: center;
+    padding: 5px;
+    position: absolute;
+    top: 8px;
+
+    & + span {
+      padding-left: 60px;
+      display: block;
+      min-width: 400px;
+    }
+
+    img {
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+    }
+  }
+
+  .cart__table {
+
+    tbody td {
+      padding: 20px 10px;
+      position: relative;
+    }
+  }
+
+  .cart__table-btn {
+    background: transparent;
+    border: none;
+    line-height: 14px;
+    padding: 0 0 0 20px;
+    position: relative;
+    color: $color-additional;
+    cursor: pointer;
+    transition: all 0.3s;
+
+    svg {
+      height: 16px;
+      width: 16px;
+      position: absolute;
+      top: -2px;
+      left: 0;
+      fill: $color-additional;
+      transition: all 0.3s;
+    }
+
+    &:hover {
+      color: $color-red-hover;
+
+      svg {
+        fill: $color-red-hover;
+      }
+    }
+  }
+
+  .cart__sub-total {
+    margin-top: 20px;
+    font-weight: 700;
+  }
+
+  .cart__deliveries {
+    margin-top: 20px;
+  }
+
+  .cart__delivery-field{
+    flex-wrap: wrap;
+  }
+
+  .cart__deliveries-title {
+    font-weight: 600;
+  }
+
+  .cart__delivery {
+    margin-right: 50px;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    & > label {
+      margin-bottom: 0;
+    }
+  }
+
+  .cart__delivery-time, .cart__delivery-price {
+    font-size: 10px;
+    line-height: 13px;
+    margin: 0;
+    padding-left: 27px;
+  }
+
+  .cart__delivery-time {
+    color: $color-additional;
+    margin-bottom: 8px;
+  }
+
+  .cart__total {
+    width: 100%;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+}

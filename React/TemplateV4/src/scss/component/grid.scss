@@ -1,0 +1,21 @@
+.grid {
+  padding-bottom: 20px;
+
+  .card-body {
+    padding: 0;
+    text-align: center;
+    height: 62px;
+  }
+
+  .grid__small {
+
+    @media screen and (min-width: 768px) and (max-width: 1920px) {
+      display: none;
+    }
+  }
+
+  p {
+    margin-bottom: 0;
+    padding: 20px 15px;
+  }
+}

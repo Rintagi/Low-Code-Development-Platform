@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'ServerRuleId24';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -976,30 +976,32 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.SyncByDb || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.SyncByDb || {}).readonly || !(authCol.SyncByDb || {}).visible}
-                                        onClick={this.SyncByDb({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SyncByDb || (columnLabel.SyncByDb || {}).ColumnHeader || (columnLabel.SyncByDb || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.SyncToDb || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.SyncToDb || {}).readonly || !(authCol.SyncToDb || {}).visible}
-                                        onClick={this.SyncToDb({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.SyncToDb || (columnLabel.SyncToDb || {}).ColumnHeader || (columnLabel.SyncToDb || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.SyncByDb || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.SyncByDb || {}).readonly || !(authCol.SyncByDb || {}).visible}
+                                            onClick={this.SyncByDb({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.SyncByDb || (columnLabel.SyncByDb || {}).ColumnHeader || (columnLabel.SyncByDb || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.SyncToDb || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.SyncToDb || {}).readonly || !(authCol.SyncToDb || {}).visible}
+                                            onClick={this.SyncToDb({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.SyncToDb || (columnLabel.SyncToDb || {}).ColumnHeader || (columnLabel.SyncToDb || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.ModifiedBy24 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

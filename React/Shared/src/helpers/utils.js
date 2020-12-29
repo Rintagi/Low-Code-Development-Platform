@@ -336,7 +336,7 @@ export function fromBlobToFileObject(blob) {
 }
 
 export function imgPathTransform(imgPath) {
-  var fullUrl = (imgPath || '').match(/^[^:]:/i);
+  var fullUrl = (imgPath || '').match(/^[a-z,A-Z/]+:/i);
   if (fullUrl) return imgPath;
   var stockImg = (imgPath || '').replace(/^((~|\.\.)\/)images/,'/img');
   return process.env.PUBLIC_URL + stockImg;

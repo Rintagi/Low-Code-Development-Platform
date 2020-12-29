@@ -1,7 +1,34 @@
 <%@ Control Language="c#" Inherits="RO.Web.MyAccountModule" CodeFile="MyAccountModule.ascx.cs" CodeFileBaseClass="RO.Web.ModuleBase" %>
 <%@ Register TagPrefix="rcasp" Namespace="RoboCoder.WebControls" Assembly="WebControls, Culture=neutral" %>
+
 <script type="text/javascript" lang="javascript">
     var myMachine = null;
+    var appSig = null;
+
+    if (navigator.serviceWorker
+    && window.Notification
+    && window.firebase
+    && window.firebaseConfig
+    ) {
+        firebase.initializeApp(firebaseConfig);
+        register_fcm_sw();
+    }
+
+    function enableNotification(evt) {
+        if (evt.target.checked) {
+            setupFCM(firebase.messaging(), undefined, '/' + appSig, vapidKey)
+            .then(function (token) {
+                $("#<%= cFCMToken.ClientID %>").val(token);
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+        }
+        else {
+            $("#<%= cFCMToken.ClientID %>").val('');
+        }
+    }
+
     function mkFingerprint(components) {
         components.sort();
         var a = JSON.stringify(components);
@@ -9,6 +36,17 @@
         sha256.update(a);
         var h = btoa(sha256.finalize());
         myMachine = h;
+        var appDomainUrl = $("#<%= cAppDomainUrl.ClientID %>").val();
+        var lnk = document.createElement("a");
+        lnk.href = appDomainUrl;
+        var appPath = lnk.pathname;
+        var appIdKey = appPath.replace(/^\//, '') + '_AppSig';
+        if (!localStorage[appIdKey]) {
+            localStorage[appIdKey] = createUUID();
+        };
+        appSig = localStorage[appIdKey];
+        $("#<%= cMyMachine.ClientID %>").val(myMachine);
+        $("#<%= cMyAppSig.ClientID %>").val(appSig);
     }
 
     if (window.requestIdleCallback) {
@@ -21,7 +59,18 @@
         }, 500)
     }
 
-    $(document).ready(function () { RetrieveBrowserCap(AsyncInform, { url: 'AdminWs.asmx/BrowserCap', success: function (result) { /*alert(result.d);*/ }, error: function (xhr, er) { } }); });
+    $(document).ready(function () {
+        RetrieveBrowserCap(AsyncInform, { url: 'AdminWs.asmx/BrowserCap', success: function (result) { /*alert(result.d);*/ }, error: function (xhr, er) { } });
+        if (navigator.serviceWorker
+            &&
+            window.Notification
+            &&
+            window.firebaseConfig
+            &&
+            Notification.permission !== "denied") {
+            $('#EnableNotificationPanel').show();
+        }
+    });
     function Login() {
         //remove any current flags and red borders
         $(".flag").remove();
@@ -385,6 +434,7 @@
     function LoginWebAuthn() {
         var b64url = new base64Codec(true);
         var loginRequest = null;
+        var isSafari = navigator.userAgent.match(/Safari/) && true;
         try {
             registeredFido2 = localStorage["Fido2Login"] || "none";
         }
@@ -403,7 +453,8 @@
                     {
                         id: b64url.decode(registeredFido2),
                         type: "public-key",
-                        transports:["ble","internal","lightning","nfc","usb"],
+                            // iOS Safari cannot specify Transport
+                        transports: isSafari ? undefined : ["ble", "internal", "lightning", "nfc", "usb"],
                     },
                 ];
             }
@@ -541,6 +592,9 @@
             <asp:TextBox ID="cWebAuthnResult" runat="server" Visible="true" style="display:none;" />
             <asp:TextBox ID="cRegistrationRequest" runat="server" Visible="true" style="display:none;" />
             <asp:TextBox ID="cAssertionRequest" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cMyMachine" runat="server" style="display:none;" />
+            <asp:TextBox ID="cMyAppSig" runat="server" style="display:none;" />
+            <asp:TextBox ID="cFCMToken" runat="server" style="display:none;" />
 
             <asp:Panel ID="LoginPanel" CssClass="pNewPwd" DefaultButton="cLoginBtn" runat="server">
                 <div class="title-content">
@@ -563,6 +617,9 @@
                 </div>
                 <div class="input">
                     <asp:TextBox ID="cUsrPassword" CssClass="inp-txt" TextMode="Password" runat="server" />
+                </div>
+                <div id="EnableNotificationPanel" style="display:none;">
+                    <asp:CheckBox ID="cEnableNotification" Text="Enable Push Notification" CssClass="inp-txt" onclick="enableNotification(event);" runat="server" />
                 </div>
                 <asp:Panel ID="LoginMathPanel" Visible="false" runat="server">
                     <div>

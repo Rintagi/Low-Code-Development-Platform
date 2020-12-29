@@ -505,6 +505,22 @@ module.exports = function(webpackEnv) {
             // Make sure to add the new loader(s) before the "file" loader.
           ],
         },
+        // web worker, use worker-loader
+        {
+          test: /\_worker\.(c|m)?js$/i,
+          use: {
+            loader: "worker-loader",
+            options: isEnvProduction 
+              ? { 
+                inline:'fallback'
+              } 
+              : { 
+              filename: function(pathData) {
+                  return '[name].[hash].worker.js';
+              }
+            }
+          }
+        }
       ],
     },
     plugins: [

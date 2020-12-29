@@ -39,3 +39,4 @@
 51~@~TextBox~@~EncryptedTextBox~@~Partial content is displayed with leading "*"s and content is stored encrypted; datatype must be varchar and preferrably max.~@~N
 52~@~ListBox~@~AutoListBox~@~Enable multiple selection of a list with huge selection choices (searcheable); Underlying data type should be varchar. Keys are enclosed in brackets () comma delimited.~@~N
 53~@~DropDownList~@~WorkflowStatus~@~Underlying data type is char(1). A pair of tables created: 1. same name as column to capture workflow status; 2. same name with suffix "H" to capture history of status changes.~@~N
+54~@~TextBox~@~OTPTextBox~@~TOTP(Google Authenticator) Verification box~@~N

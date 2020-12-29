@@ -1837,9 +1837,10 @@ document.Rintagi = {{
   useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
   appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
   appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
-  systemId: {3}                
+  systemId: {3},
+  systemName: '" + Config.WebTitle + @"',                               
 }}
-", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName,systemId, siteApplicationPath);
+", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName,systemId, siteApplicationPath, Config.WebTitle);
 
 
                 //if (homeDir.Contains("NetworkService"))

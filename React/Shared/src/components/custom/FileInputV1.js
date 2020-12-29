@@ -271,7 +271,7 @@ class FileInputField extends Component {
       'fa-file-o': mimeType !== 'image/jpeg' || 'image/png' || 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || 'application/pdf',
     });
 
-    if (fileInfo.base64) this.getImgSize(fileContent, 'storedImgSize');
+    //if (fileInfo.base64) this.getImgSize(fileContent, 'storedImgSize');
 
     var MAX_WIDTH = (options.MinImageSize || {}).Width;
     var MAX_HEIGHT = (options.MinImageSize || {}).Height;

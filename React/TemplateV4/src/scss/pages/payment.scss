@@ -1,0 +1,27 @@
+.payment {
+  max-width: 740px;
+
+  .payment__total {
+    width: 100%;
+    font-weight: 700;
+    margin-bottom: 5px;
+    margin-top: 20px;
+  }
+
+  .payment__credit-name {
+    font-size: 10px;
+    line-height: 13px;
+    margin-top: 3px;
+    color: $color-additional;
+    text-align: center;
+    height: 0;
+  }
+
+  .payment__credit-card {
+    margin-right: 80px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

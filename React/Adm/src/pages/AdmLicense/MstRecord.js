@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'SystemId1317';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -837,18 +837,19 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.AcquireLicense || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.AcquireLicense || {}).readonly || !(authCol.AcquireLicense || {}).visible}
-                                        onClick={this.AcquireLicense({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.AcquireLicense || (columnLabel.AcquireLicense || {}).ColumnHeader || (columnLabel.AcquireLicense || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.AcquireLicense || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.AcquireLicense || {}).readonly || !(authCol.AcquireLicense || {}).visible}
+                                            onClick={this.AcquireLicense({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.AcquireLicense || (columnLabel.AcquireLicense || {}).ColumnHeader || (columnLabel.AcquireLicense || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.LicenseString || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -870,18 +871,19 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.RenewLicense || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.RenewLicense || {}).readonly || !(authCol.RenewLicense || {}).visible}
-                                        onClick={this.RenewLicense({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.RenewLicense || (columnLabel.RenewLicense || {}).ColumnHeader || (columnLabel.RenewLicense || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.RenewLicense || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.RenewLicense || {}).readonly || !(authCol.RenewLicense || {}).visible}
+                                            onClick={this.RenewLicense({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.RenewLicense || (columnLabel.RenewLicense || {}).ColumnHeader || (columnLabel.RenewLicense || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                             </Row>
                           </div>
                           <div className='form__form-group mart-5 mb-0'>

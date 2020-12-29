@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'SystemId45';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -707,18 +707,19 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.AddDbs || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.AddDbs || {}).readonly || !(authCol.AddDbs || {}).visible}
-                                        onClick={this.AddDbs({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.AddDbs || (columnLabel.AddDbs || {}).ColumnHeader || (columnLabel.AddDbs || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.AddDbs || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.AddDbs || {}).readonly || !(authCol.AddDbs || {}).visible}
+                                            onClick={this.AddDbs({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.AddDbs || (columnLabel.AddDbs || {}).ColumnHeader || (columnLabel.AddDbs || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.dbAppProvider45 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -1097,54 +1098,58 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.ResetFromGitRepo || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.ResetFromGitRepo || {}).readonly || !(authCol.ResetFromGitRepo || {}).visible}
-                                        onClick={this.ResetFromGitRepo({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.ResetFromGitRepo || (columnLabel.ResetFromGitRepo || {}).ColumnHeader || (columnLabel.ResetFromGitRepo || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.CreateReactBase || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.CreateReactBase || {}).readonly || !(authCol.CreateReactBase || {}).visible}
-                                        onClick={this.CreateReactBase({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.CreateReactBase || (columnLabel.CreateReactBase || {}).ColumnHeader || (columnLabel.CreateReactBase || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.RemoveReactBase || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.RemoveReactBase || {}).readonly || !(authCol.RemoveReactBase || {}).visible}
-                                        onClick={this.RemoveReactBase({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.RemoveReactBase || (columnLabel.RemoveReactBase || {}).ColumnHeader || (columnLabel.RemoveReactBase || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.PublishReactToSite || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.PublishReactToSite || {}).readonly || !(authCol.PublishReactToSite || {}).visible}
-                                        onClick={this.PublishReactToSite({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PublishReactToSite || (columnLabel.PublishReactToSite || {}).ColumnHeader || (columnLabel.PublishReactToSite || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.ResetFromGitRepo || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.ResetFromGitRepo || {}).readonly || !(authCol.ResetFromGitRepo || {}).visible}
+                                            onClick={this.ResetFromGitRepo({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.ResetFromGitRepo || (columnLabel.ResetFromGitRepo || {}).ColumnHeader || (columnLabel.ResetFromGitRepo || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.CreateReactBase || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.CreateReactBase || {}).readonly || !(authCol.CreateReactBase || {}).visible}
+                                            onClick={this.CreateReactBase({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.CreateReactBase || (columnLabel.CreateReactBase || {}).ColumnHeader || (columnLabel.CreateReactBase || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.RemoveReactBase || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.RemoveReactBase || {}).readonly || !(authCol.RemoveReactBase || {}).visible}
+                                            onClick={this.RemoveReactBase({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.RemoveReactBase || (columnLabel.RemoveReactBase || {}).ColumnHeader || (columnLabel.RemoveReactBase || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.PublishReactToSite || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.PublishReactToSite || {}).readonly || !(authCol.PublishReactToSite || {}).visible}
+                                            onClick={this.PublishReactToSite({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.PublishReactToSite || (columnLabel.PublishReactToSite || {}).ColumnHeader || (columnLabel.PublishReactToSite || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.FromSystemId || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

@@ -33,7 +33,7 @@ class DtlList extends RintagiScreen {
     this.GetReduxState = () => (this.props.AdmServerRuleOvrd || {});
     this.titleSet = false;
     this.hasChangedContent = false;
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.MstKeyColumnName = 'AtServerRuleOvrdId1322';
     this.DtlKeyColumnName = 'ServerRuledOvrdPrmId1321';
     this.SetCurrentRecordState = this.SetCurrentRecordState.bind(this);
@@ -228,10 +228,10 @@ class DtlList extends RintagiScreen {
     const columnLabel = AdmServerRuleOvrdState.ColumnLabel;
     const columnDefinition = Object.keys(columnLabel).reduce((a, o, i) => {
       const x = columnLabel[o];
-      if (x['DtlLstPosId'] == '1') { a['dTopL'] = x; };
-      if (x['DtlLstPosId'] == '2') { a['dBottomL'] = x; };
-      if (x['DtlLstPosId'] == '3') { a['dTopR'] = x; };
-      if (x['DtlLstPosId'] == '4') { a['dBottomR'] = x; };
+      if (x['DtlLstPosId'] === '1') { a['dTopL'] = x; };
+      if (x['DtlLstPosId'] === '2') { a['dBottomL'] = x; };
+      if (x['DtlLstPosId'] === '3') { a['dTopR'] = x; };
+      if (x['DtlLstPosId'] === '4') { a['dBottomR'] = x; };
       return a;
     }, {});
     const dTopL = columnDefinition['dTopL'] || {};

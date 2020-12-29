@@ -1,0 +1,208 @@
+.panel {
+  transition: 0.3s;
+
+  .panel__refresh{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    &:before{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 9;
+      top: 0;
+      left: 0;
+      border-radius: 5px;
+
+      @include themify($themes) {
+        background-color: themed('colorBackground');
+        opacity: 0.8;
+      }
+    }
+
+    svg{
+      fill: $color-fintrux;
+      position: absolute;
+      animation: refresh 1s infinite linear;
+      z-index: 10;
+      width: 48px;
+      height: 48px;
+      top: calc(50% - 24px);
+      left: calc(50% - 24px);
+    }
+
+    @keyframes refresh {
+      from{
+        transform: rotate(0deg);
+      }
+      to{
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  .panel__body {
+    position: relative;
+    padding: 35px 35px 50px 30px;
+    transition: height 0.3s;
+  }
+
+  &.panel--collapse{
+    height: 108px;
+
+    &.panel--divider .panel__title, .panel__title{
+      margin-bottom: 0;
+
+      .subhead{
+        opacity: 0;
+      }
+    }
+
+    &.panel--divider, &.panel--success, &.panel--primary, &.panel--warning, &.panel--danger{
+      height: 72px;
+    }
+
+    .panel__body {
+      padding: 35px 35px 35px 30px;
+    }
+  }
+
+  .panel__btns{
+    position: absolute;
+    top: 35px;
+    right: 30px;
+  }
+
+  .panel__btn {
+    width: 14px;
+    height: 14px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-left: 10px;
+
+    svg{
+      width: 14px;
+      height: 14px;
+      fill: $color-additional;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .panel__title {
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    transition: 0.3s;
+
+    .panel__label {
+      left: 100%;
+      background-color: $color-accent;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 13px;
+      padding: 3px 10px;
+      margin-left: 10px;
+    }
+
+    .subhead {
+      text-transform: none;
+      font-size: 14px;
+      line-height: 18px;
+      opacity: 0.7;
+      transition: 0.3s;
+    }
+
+    .panel__icon {
+      margin-right: 5px;
+    }
+  }
+
+  &.panel--divider {
+
+    .panel__body {
+      padding: 0;
+    }
+
+    .panel__title {
+      padding: 20px 40px 15px 30px;
+      margin-bottom: 15px;
+
+      @include themify($themes) {
+        border-bottom: solid 1px themed('colorBorder');
+      }
+    }
+
+    .panel__btns {
+      top: 20px;
+    }
+
+    .panel__content {
+      padding: 0 35px 40px 30px;
+    }
+  }
+
+  &.panel--success, &.panel--primary, &.panel--warning, &.panel--danger {
+
+    .panel__body {
+      padding: 0;
+    }
+
+    .panel__title {
+      padding: 20px 40px 15px 30px;
+      margin-bottom: 15px;
+
+      h5 {
+        color: white;
+      }
+    }
+
+    .panel__btns {
+      top: 20px;
+
+      svg{
+        fill: #ffffff;
+      }
+    }
+
+    .panel__content {
+      padding: 0 35px 40px 30px;
+    }
+  }
+
+  &.panel--success {
+
+    .panel__title {
+      background-color: $color-accent;
+    }
+  }
+
+  &.panel--danger {
+
+    .panel__title {
+      background-color: $color-red;
+    }
+  }
+
+  &.panel--warning {
+
+    .panel__title {
+      background-color: $color-yellow;
+    }
+  }
+
+  &.panel--primary {
+
+    .panel__title {
+      background-color: $color-blue;
+    }
+  }
+}

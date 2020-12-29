@@ -199,7 +199,7 @@
         public bool contentIsJSON = false;
     }
 
-    public class Utils
+    public partial class Utils
     {
         // Resize image into a thumnail.
         public static string BlobPlaceHolder(byte[] content, bool blobOnly = false)
@@ -1831,6 +1831,63 @@
             return new Tuple<int, string, string>(exitCode, ss, er);
         }
 
+        public static Tuple<Process, string, string> WinProcEx(string cmdPath, string homeDirectory, Dictionary<string, string> env, string cmd_arg, Action<string, Process, StreamWriter, string> stdoutHandler, Action<string, Process, StreamWriter, string> stderrHandler, Action<object, EventArgs> onExit, Action<StreamWriter, Process> initHandler = null, bool wait = true)
+        {
+            string workDirectory = homeDirectory;
+            string er = "";
+            string output = "";
+            ProcessStartInfo psi = new ProcessStartInfo(cmdPath, cmd_arg);
+            psi.UseShellExecute = false;
+            psi.RedirectStandardInput = true;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+            psi.StandardErrorEncoding = System.Text.UnicodeEncoding.UTF8;
+            psi.StandardOutputEncoding = System.Text.UnicodeEncoding.UTF8;
+            psi.WorkingDirectory = !string.IsNullOrEmpty(workDirectory) ? workDirectory : Path.GetTempPath();
+
+            if (env != null)
+            {
+                foreach (var k in env.Keys)
+                {
+                    psi.EnvironmentVariables[k] = env[k];
+                }
+            }
+
+            System.Diagnostics.Process proc = new Process();
+            proc.StartInfo = psi;
+            if (onExit != null) proc.Exited += new EventHandler(onExit);
+
+            proc.ErrorDataReceived += (o, e) =>
+            {
+                if (stderrHandler != null) stderrHandler(e.Data, proc, proc.StandardInput, "stderr"); else er = er + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+            };
+            proc.OutputDataReceived += (o, e) =>
+            {
+                if (stdoutHandler != null) stdoutHandler(e.Data, proc, proc.StandardInput, "stdout"); else output = output + (e.Data != null ? e.Data.ToString() + Environment.NewLine : string.Empty);
+            };
+            proc.Start();
+            proc.BeginErrorReadLine();
+            proc.BeginOutputReadLine();
+            proc.StandardInput.AutoFlush = true;
+            if (initHandler != null)
+            {
+                initHandler(proc.StandardInput, proc);
+            }
+            if (wait)
+            {
+                proc.WaitForExit();
+                proc.CancelErrorRead();
+                proc.CancelOutputRead();
+            }
+
+            int exitCode = proc.ExitCode;
+            //if (er != string.Empty)
+            //{
+            //    throw new ApplicationException(cmd_path + "\r\n" + er);
+            //}
+            return new Tuple<Process, string, string>(proc, output, er);
+        }
+
         public static void TaskKill(int pid)
         {
             try
@@ -1865,6 +1922,11 @@
         {
             var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             return (int)DateTime.SpecifyKind(time, DateTimeKind.Utc).Subtract(utc0).TotalSeconds;
+        }
+        public static DateTime FromUnixTime(int SecSince1970)
+        {
+            var utc = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(SecSince1970);
+            return utc;
         }
         public static void NeverThrow(Exception ex)
         {

@@ -1,0 +1,128 @@
+.project-summary {
+  position: relative;
+
+  .project-summary__info {
+    margin-bottom: 5px;
+
+    td {
+      padding-left: 10px;
+    }
+
+    th {
+      color: $color-additional;
+      font-weight: 600;
+    }
+
+    td, th {
+      padding-bottom: 5px;
+    }
+  }
+
+  .project-summary__stats {
+    display: flex;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .project-summary__stat {
+    margin-right: auto;
+    padding-right: 20px;
+
+    p {
+      font-size: 24px;
+      line-height: 32px;
+      margin: 0;
+    }
+
+    span {
+      color: $color-additional;
+      font-size: 13px;
+    }
+  }
+
+  .project-summary__progress {
+    max-width: 460px;
+    width: 100%;
+    margin: auto 0;
+
+    &:last-child {
+      margin: auto 0;
+    }
+  }
+
+  .project-summary__statistic-title {
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .project-summary__statistic {
+    width: 50%;
+  }
+
+  .project-summary__statistics {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .project-summary__statistics-refresh{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    &:before{
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 9;
+      top: 0;
+      left: 0;
+      border-radius: 5px;
+
+      @include themify($themes) {
+        background-color: themed('colorBackground');
+        opacity: 0.8;
+      }
+    }
+
+    svg{
+      fill: $color-accent;
+      position: absolute;
+      animation: refresh 1s infinite linear;
+      z-index: 10;
+      width: 48px;
+      height: 48px;
+      top: calc(50% - 24px);
+      left: calc(50% - 24px);
+    }
+
+    @keyframes refresh {
+      from{
+        transform: rotate(0deg);
+      }
+      to{
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  hr {
+    margin: 30px 0;
+  }
+
+  .project-summary__btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  @media screen and (max-width: 1200px) {
+
+    .project-summary__statistic {
+      width: 100%;
+    }
+  }
+}

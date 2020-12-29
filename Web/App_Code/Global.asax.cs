@@ -70,6 +70,7 @@ namespace RO
         {
             System.Net.ServicePointManager.SecurityProtocol =
                 System.Net.ServicePointManager.SecurityProtocol
+                | System.Net.SecurityProtocolType.Tls13
                 | System.Net.SecurityProtocolType.Tls12
                 | System.Net.SecurityProtocolType.Tls11 // some old proxy server needs this, should be something that is controllable via web.config
                 ;

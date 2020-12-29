@@ -289,7 +289,6 @@ namespace RO.Web
             InitializeComponent();
         }
 
-
         protected byte[] AddDoc(string docJson, string docId, string tableName, string keyColumnName, string columnName, string dbConnectionString, string dbPwd, string height, bool resizeToIcon = false)
         {
             byte[] storedContent = null;
@@ -388,64 +387,6 @@ namespace RO.Web
             }
             catch (Exception ex) { throw new Exception("invalid attachment format: " + Server.HtmlEncode(ex.Message)); }
         }
-
-        protected byte[] ResizeImage(byte[] image, int maxHeight = 360)
-        {
-
-            byte[] dc;
-
-            System.Drawing.Image oBMP = null;
-
-            using (var ms = new MemoryStream(image))
-            {
-                oBMP = System.Drawing.Image.FromStream(ms);
-                ms.Close();
-            }
-
-            UInt16 orientCode = 1;
-
-            try
-            {
-                using (var ms2 = new MemoryStream(image))
-                {
-                    var r = new ExifLib.ExifReader(ms2);
-                    r.GetTagValue(ExifLib.ExifTags.Orientation, out orientCode);
-                }
-            }
-            catch { }
-
-            int nHeight = maxHeight; // This is 36x10 line:7700 GenScreen
-            int nWidth = int.Parse((Math.Round(decimal.Parse(oBMP.Width.ToString()) * (nHeight / decimal.Parse(oBMP.Height.ToString())))).ToString());
-
-            var nBMP = new System.Drawing.Bitmap(oBMP, nWidth, nHeight);
-            using (System.IO.MemoryStream sm = new System.IO.MemoryStream())
-            {
-                // 1 = do nothing
-                if (orientCode == 3)
-                {
-                    // rotate 180
-                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
-                }
-                else if (orientCode == 6)
-                {
-                    //rotate 90
-                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
-                }
-                else if (orientCode == 8)
-                {
-                    // same as -90
-                    nBMP.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
-                }
-                nBMP.Save(sm, System.Drawing.Imaging.ImageFormat.Jpeg);
-                sm.Position = 0;
-                dc = new byte[sm.Length + 1];
-                sm.Read(dc, 0, dc.Length); sm.Close();
-            }
-            oBMP.Dispose(); nBMP.Dispose();
-
-            return dc;
-        }
-
 
         #region Web Form Designer generated code
         /// <summary>

@@ -1359,7 +1359,7 @@ namespace RO.Access3
             return otp;
         }
 
-        private object GetCallParam(string callp, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataRow row, DataRow dis)
+        private object GetCallParam(string callp, LoginUsr LUser, UsrImpr LImpr, UsrCurr LCurr, DataRow row, DataRow dis, string paramType)
         {
             object rtn = string.Empty;
             switch (callp.ToLower())
@@ -1434,8 +1434,8 @@ namespace RO.Access3
                             ? (object) row[callp].ToString()
                             : dis[callp].ToString().ToLower() == "password" 
                                 ? (object) new Credential(string.Empty, row[callp].ToString().Trim()).Password
-                                : dis[callp].ToString().ToLower() == "varbinary" 
-                                    ? (object) Convert.FromBase64String((string)row[callp].ToString())
+                                : paramType.ToLower() == "varbinary"
+                                ? (dis[callp].ToString().ToLower() == "imagebutton" ? (object) row[callp] : (object) Convert.FromBase64String((string)row[callp].ToString()))
                                     : (object)row[callp].ToString()
                                 ;  
                     break;
@@ -1447,6 +1447,7 @@ namespace RO.Access3
         {
             string callp = string.Empty;
             string param = string.Empty;
+            string paramType = string.Empty;
             StringBuilder callingParams = new StringBuilder();
             StringBuilder parameterNames = new StringBuilder();
             StringBuilder parameterTypes = new StringBuilder();
@@ -1469,22 +1470,23 @@ namespace RO.Access3
                         {
                             callp = Utils.PopFirstWord(callingParams, (char)44).Trim();
                             param = Utils.PopFirstWord(parameterNames, (char)44).Trim();
+                            paramType = Utils.PopFirstWord(parameterTypes, (char)44).Trim();
                             object val = 
                                 (callp ?? "").ToLower() == "Action.FiringEvent".ToLower() ? (object) firingEvent
                                 : (callp ?? "").ToLower() == "Action.MasterTable".ToLower() ? (object)drv["MasterTable"].ToString()
                                 : (callp ?? "").ToLower() == "Action.BeforeCRUD".ToLower() ? (object)beforeCRUD
                                 : (callp ?? "").ToLower() == "Action.ServerRuleId".ToLower() ? (object)drv["ServerRuleId"].ToString()
-                                : GetCallParam(callp, LUser, LImpr, LCurr, row, dis);
+                                : GetCallParam(callp, LUser, LImpr, LCurr, row, dis, paramType);
                             if (string.IsNullOrEmpty(callp) 
                                 || val == null
                                 || (val is string && string.IsNullOrEmpty(val as string)) 
                                 || val as string == Convert.ToDateTime("0001.01.01").ToString())
                             {
-                                cmd.Parameters.Add("@" + param, GetOleDbType(Utils.PopFirstWord(parameterTypes, (char)44).Trim())).Value = System.DBNull.Value;
+                                cmd.Parameters.Add("@" + param, GetOleDbType(paramType)).Value = System.DBNull.Value;
                             }
                             else
                             {
-                                cmd.Parameters.Add("@" + param, GetOleDbType(Utils.PopFirstWord(parameterTypes, (char)44).Trim())).Value = val;
+                                cmd.Parameters.Add("@" + param, GetOleDbType(paramType)).Value = val;
                             }
                         }
                         cmd.Transaction = tr; cmd.CommandTimeout = _CommandTimeout;
@@ -1582,7 +1584,12 @@ namespace RO.Access3
             cmd.Parameters.Add("@" + pKeyCol, GetOleDbType(pKeyOle)).Value = row[pKeyCol].ToString().Trim();
             foreach (DataColumn dc in cols)
             {
-                if (dc.ColumnName != pKeyCol && dc.ColumnName != pMKeyCol && "hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,label".IndexOf(disDt[dc.ColumnName].ToString().ToLower()) < 0 && !string.IsNullOrEmpty(typDt[dc.ColumnName].ToString()) && !(disDt[dc.ColumnName].ToString().ToLower() == "imagebutton" && typDt[dc.ColumnName].ToString().ToLower() == "varbinary"))
+                if (dc.ColumnName != pKeyCol 
+                    && dc.ColumnName != pMKeyCol 
+                    && "hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,label".IndexOf(disDt[dc.ColumnName].ToString().ToLower()) < 0 
+                    && !string.IsNullOrEmpty(typDt[dc.ColumnName].ToString()) 
+                    && !(disDt[dc.ColumnName].ToString().ToLower() == "imagebutton" 
+                    && typDt[dc.ColumnName].ToString().ToLower() == "varbinary"))
                 {
                     if (string.IsNullOrEmpty(row[dc.ColumnName].ToString().Trim()) || row[dc.ColumnName].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString())
                     {
@@ -1634,7 +1641,7 @@ namespace RO.Access3
             DataTable dtAud = null;
             DataView dvSRule = null;
             DataView dvCol = null;
-            using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+            using (GenScreensAccess dac = new GenScreensAccess())
             {
                 dtScr = dac.GetScreenById(ScreenId, CPrj, CSrc);
                 dtAud = dac.GetScreenAud(ScreenId, dtScr.Rows[0]["ScreenTypeName"].ToString(), CPrj.SrcDesDatabase, dtScr.Rows[0]["MultiDesignDb"].ToString(), CSrc);
@@ -1813,7 +1820,7 @@ namespace RO.Access3
             DataTable dtAud = null;
             DataView dvSRule = null;
             DataView dvCol = null;
-            using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+            using (GenScreensAccess dac = new GenScreensAccess())
             {
                 dtScr = dac.GetScreenById(ScreenId, CPrj, CSrc);
                 dtAud = dac.GetScreenAud(ScreenId, dtScr.Rows[0]["ScreenTypeName"].ToString(), CPrj.SrcDesDatabase, dtScr.Rows[0]["MultiDesignDb"].ToString(), CSrc);
@@ -2136,7 +2143,7 @@ namespace RO.Access3
             DataTable dtAud = null;
             DataView dvSRule = null;
             DataView dvCol = null;
-            using (Access3.GenScreensAccess dac = new Access3.GenScreensAccess())
+            using (GenScreensAccess dac = new GenScreensAccess())
             {
                 dtScr = dac.GetScreenById(ScreenId, CPrj, CSrc);
                 dtAud = dac.GetScreenAud(ScreenId, dtScr.Rows[0]["ScreenTypeName"].ToString(), CPrj.SrcDesDatabase, dtScr.Rows[0]["MultiDesignDb"].ToString(), CSrc);
@@ -2656,11 +2663,23 @@ namespace RO.Access3
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(row[ii].ToString().Trim()) || row[ii].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString() || row[ii].ToString().Trim() == Convert.ToDateTime("1899.12.30").ToString()
-                        || (",numeric,decimal,currency,double,".IndexOf(drv["DataTypeSByteOle"].ToString().ToLower()) >= 0 && row[ii].ToString().Trim() == "-") // "-" is a form of empty/null in excel for certain numeric formatting
-                        || row[ii].ToString().Trim() == "#N/A") // excel formula lookup result, should be another form of null
+                    if (ii >= row.ItemArray.Length // not enough column data
+                        || string.IsNullOrEmpty(row[ii].ToString().Trim()) 
+                        || row[ii].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString() 
+                        || row[ii].ToString().Trim() == Convert.ToDateTime("1899.12.30").ToString()
+                        || row[ii].ToString().Trim() == "#N/A" // excel formula lookup result, should be another form of null
+                        ) 
                     {
-                        cmd.Parameters.Add("@" + Robot.SmallCapToStart(drv["ColumnName"].ToString()) + drv["TableId"].ToString(), GetOleDbType(drv["DataTypeDByteOle"].ToString())).Value = System.DBNull.Value;
+                        cmd.Parameters.Add("@" + Robot.SmallCapToStart(drv["ColumnName"].ToString()) + drv["TableId"].ToString(), GetOleDbType(drv["DataTypeDByteOle"].ToString())).Value =  System.DBNull.Value;
+                    }
+                    else if (
+                        (",numeric,decimal,currency,double,".IndexOf(drv["DataTypeSByteOle"].ToString().ToLower()) >= 0 
+                            &&
+                            (row[ii].ToString().Trim().EndsWith("-") && row[ii].ToString().Length <= 2)
+                            ) // "-" or "$-" is a form of 0 in excel for certain numeric formatting
+                        ) 
+                    {
+                        cmd.Parameters.Add("@" + Robot.SmallCapToStart(drv["ColumnName"].ToString()) + drv["TableId"].ToString(), GetOleDbType(drv["DataTypeDByteOle"].ToString())).Value = 0;
                     }
                     else if (",numeric,decimal,double,".IndexOf(drv["DataTypeSByteOle"].ToString().ToLower()) >= 0 && row[ii].ToString().Trim().EndsWith("%"))
                     {
@@ -2698,7 +2717,7 @@ namespace RO.Access3
             System.Collections.Generic.Dictionary<string, string> ErrLst = new System.Collections.Generic.Dictionary<string, string>();
             DataView dvRul = null;
             DataView dvCol = null;
-            using (Access3.GenWizardsAccess dac = new Access3.GenWizardsAccess())
+            using (GenWizardsAccess dac = new GenWizardsAccess())
             {
                 dvRul = new DataView(dac.GetWizardRule(wizardId, CPrj, CSrc));
                 dvCol = new DataView(dac.GetWizardColumns(wizardId, CPrj, CSrc));

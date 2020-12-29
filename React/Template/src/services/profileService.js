@@ -44,6 +44,22 @@ export function updateProfile(newLoginName, newUsrName, newUsrEmail){
     )
 }
 
+export function updateNotificationChannel(deviceId, fingerprint, appSig, notificationType){
+    return fetchData(baseUrl+'/ProfileWs.asmx/UpdateNotificationChannel'
+        ,{
+            requestOptions: {
+                body: JSON.stringify({
+                    DeviceId : deviceId, 
+                    Fingerprint : fingerprint, 
+                    AppSig : appSig, 
+                    NotificationType: notificationType,
+                }),
+            },
+            ...(getAccessControlInfo())
+        }
+    )
+}
+
 export function resetPwd(resetLoginName, resetUsrEmail){
     return fetchData(baseUrl+'/ProfileWs.asmx/ResetPwd'
         ,{

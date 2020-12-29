@@ -268,7 +268,7 @@ import {CustomRoutePre, CustomRoutePost, SuppressGenRoute} from '../pages/Custom
 ");
             sb.Append(ImportInitialCnt);
             sb.Append(@"
-export default [
+let route = [
 ...(CustomRoutePre || []),
 ...(
 SuppressGenRoute ? [] : [
@@ -287,7 +287,8 @@ SuppressGenRoute ? [] : [
 ];
 
 ");
-            sb.Append(" document.Rintagi.systemId = '" + SystemId + "';");
+            sb.Append(" document.Rintagi.systemId = '" + SystemId + "';" + Environment.NewLine);
+            sb.Append(" export default route;" + Environment.NewLine);
             return sb;
         }
 
@@ -338,7 +339,7 @@ import { CustomReducer } from './Custom';
 ");
             sb.Append(ImportInitialCnt);
             sb.Append(@"
-export default {
+let redux = {
     auth: authReducer,
     rintagi: rintagiReducer,
     global: globalReducer,
@@ -352,6 +353,7 @@ export default {
             sb.Append(@"
 }
 ");
+            sb.Append(" export default redux;" + Environment.NewLine);
             return sb;
         }
 
@@ -688,7 +690,7 @@ class MstList extends RintagiScreen {
     this.hasChangedContent = false;
     this.titleSet = false;
     this.MstKeyColumnName = '[[---ScreenPrimaryKey---]]';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.SetCurrentRecordState = this.SetCurrentRecordState.bind(this);
     this.SearchBoxFocus = this.SearchBoxFocus.bind(this);
     this.SelectMstListRow = this.SelectMstListRow.bind(this);
@@ -1795,19 +1797,19 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
 
                                 //formik control
                                 string formikControlValue = @"
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol." + ColumnName + @" || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol." + ColumnName + @" || {}).readonly || !(authCol." + ColumnName + @" || {}).visible}
-                                        onClick={this." + ColumnName + @"({ naviBar, submitForm, currMst })} >
-                                        {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnHeader || (columnLabel." + ColumnName + @" || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-
+                                {(authCol." + ColumnName + @" || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol." + ColumnName + @" || {}).readonly || !(authCol." + ColumnName + @" || {}).visible}
+                                            onClick={this." + ColumnName + @"({ naviBar, submitForm, currMst })} >
+                                            {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnHeader || (columnLabel." + ColumnName + @" || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
 ";
                                 formikControlResults.Add(formikControlValue.Trim(new char[] { '\r', '\n' }));
                             }
@@ -2298,7 +2300,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = '[[---screenPrimaryKey---]]';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -2871,7 +2873,7 @@ class DtlList extends RintagiScreen {
     this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
     this.titleSet = false;
     this.hasChangedContent = false;
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.MstKeyColumnName = '[[---ScreenPrimaryKey---]]';
     this.DtlKeyColumnName = '[[---screenDetailKey---]]';
     this.SetCurrentRecordState = this.SetCurrentRecordState.bind(this);
@@ -3066,10 +3068,10 @@ class DtlList extends RintagiScreen {
     const columnLabel = [[---ScreenName---]]State.ColumnLabel;
     const columnDefinition = Object.keys(columnLabel).reduce((a, o, i) => {
       const x = columnLabel[o];
-      if (x['DtlLstPosId'] == '1') { a['dTopL'] = x; };
-      if (x['DtlLstPosId'] == '2') { a['dBottomL'] = x; };
-      if (x['DtlLstPosId'] == '3') { a['dTopR'] = x; };
-      if (x['DtlLstPosId'] == '4') { a['dBottomR'] = x; };
+      if (x['DtlLstPosId'] === '1') { a['dTopL'] = x; };
+      if (x['DtlLstPosId'] === '2') { a['dBottomL'] = x; };
+      if (x['DtlLstPosId'] === '3') { a['dTopR'] = x; };
+      if (x['DtlLstPosId'] === '4') { a['dBottomR'] = x; };
       return a;
     }, {});
     const dTopL = columnDefinition['dTopL'] || {};
@@ -3908,19 +3910,19 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
 
                                 //formik control
                                 string formikControlValue = @"
-                              <Col lg={12} xl={12}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol." + ColumnName + @" || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol." + ColumnName + @" || {}).readonly || !(authCol." + ColumnName + @" || {}).visible}
-                                        onClick={this." + ColumnName + @"({ naviBar, submitForm, currMst })} >
-                                        {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-
+                                {(authCol." + ColumnName + @" || {}).visible &&
+                                  <Col lg={12} xl={12}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol." + ColumnName + @" || {}).readonly || !(authCol." + ColumnName + @" || {}).visible}
+                                            onClick={this." + ColumnName + @"({ naviBar, submitForm, currMst })} >
+                                            {auxLabels." + ColumnName + @" || (columnLabel." + ColumnName + @" || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
 ";
                                 formikControlResults.Add(formikControlValue);
                             }
@@ -4331,7 +4333,7 @@ class DtlRecord extends RintagiScreen {
     this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
     this.blocker = null;
     this.titleSet = false;
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.MstKeyColumnName = '[[---ScreenPrimaryKey---]]';
     this.DtlKeyColumnName = '[[---ScreenDetailKey---]]';
     this.hasChangedContent = false;
@@ -6727,8 +6729,9 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 filterOptions[""_FilterValue""] = searchStr; 
                 AutoCompleteResponse r = GridLisSuggests(dtSuggest, topN, filterOptions, true);
 "
-: 
+:
 @"
+                var effectiveFilterId = GetEffectiveScreenFilterId(filterId, true);                
                 System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
                 Dictionary<string, string> context = new Dictionary<string, string>();
                 context[""method""] = ""GetLis[[---ScreenDef---]]"";
@@ -6739,7 +6742,7 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                 context[""ssd""] = """";
                 context[""scr""] = screenId.ToString();
                 context[""csy""] = systemId.ToString();
-                context[""filter""] = filterId;
+                context[""filter""] = effectiveFilterId.ToString();
                 context[""isSys""] = """ + Robot.GetIsSys(multiDesignDb, "N") + @""";
                 context[""conn""] = string.Empty;
                 AutoCompleteResponse r = LisSuggests(searchStr, jss.Serialize(context), topN, _CurrentScreenCriteria);

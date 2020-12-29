@@ -1,8 +1,88 @@
 import React, { Fragment, Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
+import { updateNotificationChannel } from '../../services/profileService';
+import { showNotification } from '../../redux/Notification';
+import { messaging, vapidKey, fcmSWUrl, fcmSWScope } from '../../app/FirebaseInit';
+import { getMyAppSig, getMyMachine, getFingerPrint } from '../../helpers/config';
+import * as fcmServiceWorker from '../../registerFCMServiceWorker';
 
-export default class LoginInfo extends Component {
+let appSig = getMyAppSig();
+let myMachine = getMyMachine();
+
+function requestPermission() {
+    console.log('Requesting permission...');
+    Notification && Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+            console.log('Notification permission granted.');
+            // TODO(developer): Retrieve a registration token for use with FCM.
+        } else {
+            console.log('Unable to get permission to notify.');
+        }
+    });
+}
+
+function setupFCM(component, usrId) {
+    navigator.serviceWorker && window.Notification && messaging &&
+    fcmServiceWorker.register({scope:fcmSWScope, serviceWorkJS:fcmSWUrl})
+        //Promise.resolve('abcd')
+        .then((registration) => {
+            console.log(registration);
+            console.log(window.location);
+            // navigator.serviceWorker.controller.postMessage({
+            registration && (registration.active || registration.waiting || registration.installing).postMessage({
+                type: 'SET_LOGIN_USER',
+                usrId: usrId,
+                basePath: window.location.pathname + '#',
+            });
+
+            //Get registration token. Initially this makes a network call, once retrieved
+            //subsequent calls to getToken will return from cache.
+            registration && 
+            (registration.active || registration.waiting || registration.installing) && 
+            window.Notification && 
+            Notification.permission === 'granted' 
+            && messaging.getToken(
+                {
+                   vapidKey: vapidKey,
+                   serviceWorkerRegistration: registration
+                }
+            ).then((currentToken) => {
+                if (currentToken) {
+                    console.log(`fcm token ${currentToken}`);
+                    getFingerPrint().then(myMachine=>{
+                        updateNotificationChannel(currentToken, myMachine, appSig, 'fcm');
+                    });
+                } 
+                else {
+                    // Show permission request.
+                    //requestPermission();
+                    console.log('No registration token available. Request permission to generate one.');
+                    // Show permission UI.
+                    //            updateUIForPushPermissionRequired();
+                    //            setTokenSentToServer(false);
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                //        showToken('Error retrieving registration token. ', err);
+                //        setTokenSentToServer(false);
+            });
+
+            // fcm messaging, replaced by generic one in componentDidMount
+            // messaging.onMessage((payload) => {
+            //     // only work if window in focus or fcm notification 'clicked'
+            //     console.log('Message received. ', payload);
+            //     // ...
+            // });
+        })
+        .catch(err => {
+
+        })
+}
+
+class LoginInfo extends Component {
     constructor(props) {
         super(props);
 
@@ -32,8 +112,38 @@ export default class LoginInfo extends Component {
     }
 
     componentDidMount() {
+        // communication between service worker and front end NOT related to fcm(which is via the messaging.x interface)  
+        // must use message.source or message.data.something to distinguish where it is coming from as there can be multiple 
+        // service workers  
+        navigator.serviceWorker && navigator.serviceWorker.addEventListener("message",
+            (message) => {
+                console.log('general message received', message);
+                const data = message.data;
+                if (message.data && message.data.data.title && window.Notification) {
+                    this.props.showNotification("I", { message: data.data.body })
+                    // const notification = new Notification(message.data.data.title, {
+                    //     ...message.data.data,
+                    // });
+
+                    // notification.onclick = (event) => {
+                    //     console.log(event);
+                    //     event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                    //     window.open(message.data.data.click_action, '_blank');
+                    //     notification.close();
+                    // };
+                    //no auto close !!!
+                    //setTimeout(notification.close.bind(notification), 7000);
+                }
+            }
+        );      
     }
 
+    componentDidUpdate(prevProps, prevStates) {
+        if (prevProps.user.UsrId !== this.props.user.UsrId) {
+            console.log(this.props.user);
+            navigator.serviceWorker && setupFCM(this, this.props.user.UsrId);
+        }
+    }
 
     render() {
         const isLoggedin = (this.props.user && this.props.user.UsrId);
@@ -89,4 +199,16 @@ export default class LoginInfo extends Component {
 
 }
 
+const mapStateToProps = (state) => ({
+});
+
+const mapDispatchToProps = (dispatch) => (
+  bindActionCreators(Object.assign({},
+    {
+      showNotification: showNotification,
+    },
+  ), dispatch)
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginInfo);
 

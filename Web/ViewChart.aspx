@@ -11,6 +11,15 @@
 <script type='text/javascript' src='scripts/jquery-ui-1.10.4.custom.min.js'></script>
 <script type='text/javascript' src='scripts/flowchart.js?version=1.6.5'></script>
 <script type='text/javascript' src='https://d3js.org/d3.v4.js'></script>
+<script type="text/javascript">
+/* ie11 polyfill */
+if (!String.prototype.startsWith) {
+    console.log('polyfill startsWith');
+    String.prototype.startsWith = function (search, pos) {
+        return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+    };
+}
+</script>
 </head>
 <body>
         <form id="ViewChartForm" method="post" runat="server">

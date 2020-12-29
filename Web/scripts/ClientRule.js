@@ -873,7 +873,7 @@ function email(prefix, suffix, typ) {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             url: "AdminWs.asmx/GetSupportInfo",
-            data: $.toJSON({ Typ: typ }),
+            data: ($.toJSON || JSON.stringify)({ Typ: typ }),
             error: function (xhr, textStatus, errorThrown) {
                 window.location = "mailto:" + prefix + "@" + suffix;
             },
@@ -1281,7 +1281,7 @@ function AsyncInform(o, params) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         url: params.url,
-        data: $.toJSON({ contextStr: $.toJSON(o) }),
+        data: ($.toJSON || JSON.stringify)({ contextStr: ($.toJSON || JSON.stringify)(o) }),
         error: function (xhr, textStatus, errorThrown) { if (params.error) params.error(xhr, errorThrown); },
         success: function (result, textStatus, xhr) { if (params.success) params.success(result); }
     });
@@ -1551,7 +1551,7 @@ function ShowChart(context, elementId, chartType) {
         dataType: "json",
         //url: "AutoComplete.aspx/GetChartData",
         url: "AutoComplete.aspx/RptGetChart",
-        data: $.toJSON({ contextStr: $.toJSON(context) }),
+        data: ($.toJSON || JSON.stringify)({ contextStr: ($.toJSON || JSON.stringify)(context) }),
         error: function (xhr, textStatus, errorThrown) {
             //$(input).removeClass("wait");
             //response([]);
@@ -1947,7 +1947,7 @@ function ShowCalenderPlanner(context, elementId) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         url: "AutoComplete.aspx/RptGetCalender",
-        data: $.toJSON({ contextStr: $.toJSON(context) }),
+        data: ($.toJSON || JSON.stringify)({ contextStr: ($.toJSON || JSON.stringify)(context) }),
         error: function (xhr, textStatus, errorThrown) {
             //$(input).removeClass("wait");
             //response([]);
@@ -2020,7 +2020,7 @@ function ApplyMultiSelect(e) {
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 url: $(e).attr('ac_url'),
-                data: $.toJSON({ query: term, contextKey: $.toJSON({ contextKey: $(e).attr('ac_context'), refColVal: null, pMKeyVal: null, refColValIsList: "N" }), topN: 0 }),
+                data: ($.toJSON || JSON.stringify)({ query: term, contextKey: ($.toJSON || JSON.stringify)({ contextKey: $(e).attr('ac_context'), refColVal: null, pMKeyVal: null, refColValIsList: "N" }), topN: 0 }),
                 error: function (xhr, textStatus, errorThrown) {
                     _ApplyMultiSelect(e);
                 },
@@ -2423,7 +2423,7 @@ function _ApplyMultiSelect(e) {
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     url: $(e).attr('ac_url'),
-                    data: $.toJSON({ query: term, contextKey: $.toJSON({ contextKey: $(e).attr('ac_context'), refColVal: refColVal, pMKeyVal: pMKeyVal, refColValIsList: refColValIsList }), topN: topN }),
+                    data: ($.toJSON || JSON.stringify)({ query: term, contextKey: ($.toJSON || JSON.stringify)({ contextKey: $(e).attr('ac_context'), refColVal: refColVal, pMKeyVal: pMKeyVal, refColValIsList: refColValIsList }), topN: topN }),
                     error: function (xhr, textStatus, errorThrown) {
                         response([]);
                     },
@@ -2570,7 +2570,7 @@ function getCurrentUsrInfo(handler) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         url: "AdminWs.asmx/GetCurrentUsrInfo",
-        data: $.toJSON({ Scope: 'basic' }),
+        data: ($.toJSON || JSON.stringify)({ Scope: 'basic' }),
         error: function (xhr, textStatus, errorThrown) {
             /**/
         },
@@ -2639,6 +2639,29 @@ function sendFile(file, url, success, failure) {
         }
     });
 }
+
+function getFxRate(FrISOCurrencySymbol, ToISOCurrencySymbol, handler) {
+    $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: "webservices/SystemWs.asmx/GetFxRate",
+        data: ($.toJSON || JSON.stringify)({ FrISOCurrencySymbol: FrISOCurrencySymbol, ToISOCurrencySymbol: ToISOCurrencySymbol }),
+        error: function (xhr, textStatus, errorThrown) {
+            /**/
+        },
+        success: function (mr, textStatus, xhr) {
+            var ret = mr.d;
+            if (ret && handler) {
+                handler(ret);
+            }
+            else if (handler) {
+                handler({});
+            }
+        }
+    });
+}
+
 /* below should be in-sync with React module version(web) as this is client side(js) sync of data
  */
 function parsedUrl(url) {
@@ -2933,6 +2956,85 @@ function eraseCookie(name) {
     document.cookie = name + '=; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/;';
 }
 /* end of React sync section */
+
+var createUUID = (function (uuidRegEx, uuidReplacer) {
+    return function () {
+        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(uuidRegEx, uuidReplacer).toUpperCase();
+    };
+})(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+        v = c == "x" ? r : (r & 3 | 8);
+    return v.toString(16);
+});
+
+function updateNotificationChannel(currentToken, notificationType, fingerprint, appSig) {
+    $.ajax({
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: "AdminWs.asmx/UpdateNotificationChannel",
+        data: ($.toJSON || JSON.stringify)({ DeviceId: currentToken, NotificationType: notificationType || null, Fingerprint: fingerprint || null, AppSig: appSig || null }),
+        error: function (xhr, textStatus, errorThrown) {
+            /**/
+        },
+        success: function (mr, textStatus, xhr) {
+            var ret = mr.d;
+            if (ret && handler) {
+                handler(ret);
+            }
+            else if (handler) {
+                handler({});
+            }
+        }
+    });
+}
+function setupFCM(fcmMessaging, usrId, basePath, vapidKey) {
+    if (fcmMessaging)
+        return register_fcm_sw()
+        //Promise.resolve('abcd')
+        .then(function (registration) {
+            console.log(registration);
+            console.log(window.location);
+            registration &&
+            (registration.active || registration.installing || registration.waiting).postMessage({
+                type: 'SET_LOGIN_USER',
+                usrId: usrId,
+                basePath: basePath,
+            });
+
+            //Get registration token. Initially this makes a network call, once retrieved
+            //subsequent calls to getToken will return from cache.
+            return registration
+            && (registration.active || registration.installing || registration.waiting)
+            && window.Notification
+            && Notification.permission !== 'denied'
+            && fcmMessaging.getToken(
+                {
+                    vapidKey: vapidKey,
+                    serviceWorkerRegistration: registration
+                }
+            ).then(function (currentToken) {
+                if (currentToken) {
+                    //updateNotificationChannel(currentToken, 'fcm')
+                    console.log(currentToken);
+                    return Promise.resolve(currentToken);
+                }
+                else {
+                    console.log('No registration token available. Request permission to generate one.');
+                    return Promise.reject(null);
+                }
+            }).catch(function (err) {
+                console.log('An error occurred while retrieving token. ', err);
+                return Promise.reject(err);
+            });
+
+        }).catch(function (err) {
+            console.log('An error occurred while retrieving token. ', err);
+            return Promise.reject(err);
+        })
+    else
+        return Promise.reject(null);
+}
 
 //function MouseOverEffect(e, i) { e.src = i; }
 

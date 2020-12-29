@@ -1,0 +1,260 @@
+<html>
+    <header>
+    <script>
+    var navU = window.navigator.userAgent;
+    var isIE = (!!(window.navigator && window.navigator.msSaveOrOpenBlob));
+    var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    var isAndroidMobile = navU.indexOf('Android') > -1 && navU.indexOf('Mozilla/5.0') > -1 && navU.indexOf('AppleWebKit') > -1;
+    var loaded = false;
+    var attempts = 0;
+    function removeElement(id) {
+        try {
+            var ele = document.getElementById(id);
+            ele.parentElement.removeChild(ele);
+        }
+        catch (e) {
+
+        }
+    }
+    function makeBlob(dataJSON) {
+        var mimeType = dataJSON.mimeType;
+        var data = dataJSON.base64;
+        var byteCharacters = atob(data);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        var blob = new Blob([byteArray], {
+            type: mimeType,
+        });
+        return {
+            base64:dataJSON.base64,
+            mimeType:dataJSON.mimeType,
+            fileName:dataJSON.fileName,
+            blob:blob,
+        }
+    }
+
+    function loadAttachment(dataObject)
+    {
+        var download = dataObject.download;
+        var data = dataObject.base64;
+        var blob = dataObject.blob;
+        if(!data) return;
+        var title = dataObject.title;
+        var mimeType = dataObject.mimeType;
+        var fileName = dataObject.fileName;
+        var isZip = (/zip/i).test(mimeType);
+        var isPDF = (/pdf/i).test(mimeType);
+        var isImage = (/image/i).test(mimeType);
+        var isText = (/text/i).test(mimeType);
+        var isOctetStream = (/octet-stream/i).test(mimeType);
+        var isBinary = isBinary || isZip;
+        document.title = title;
+        loaded = true;
+        if (!isImage && !isText && (download || isIE || iOS || isAndroidMobile || isBinary)) { 
+            var file = makeBlob(dataObject);
+            var blob = file.blob;
+            if (isIE) {
+                var p = window.document.createElement("div");
+                p.innerHTML = 'You are using IE, please view the downloaded attachment and close this window';
+                document.body.appendChild(p);
+                try {
+                    document.getElementById('ie').style='';
+                } 
+                catch (e) {
+
+                }
+
+                (window.navigator.msSaveOrOpenBlob)(blob, fileName);
+                // setTimeout(function(){
+                //     window.close();
+                // }, 500);
+                removeElement('downloadLink');
+                removeElement('contentIFrame');
+            }
+            else {
+                var a = window.document.getElementById('downloadLink')                
+                var url = URL.createObjectURL(blob);
+                a.href = url;
+                a.download = file.fileName;
+                a.innerText = 'click here if you don\'t see the download happens automatically'
+                a.click();
+                removeElement('contentIFrame');
+            }
+        }     
+        else if (isImage) {
+            var img = document.getElementById('img');
+            img.src = "data:" + mimeType + ";base64," + data;
+            removeElement('downloadLink');
+            removeElement('contentIFrame');
+        }
+        else if (isIE) {
+            var file = makeBlob(dataObject);
+            var blob = file.blob;
+            window.navigator.msSaveOrOpenBlob(blob, fileName);
+            try {
+                document.getElementById('ie').style='';
+            } catch (e) {
+
+            }
+            removeElement('downloadLink');
+            removeElement('contentIFrame');
+            var p = window.document.createElement("div");
+            p.innerHTML = 'You are using IE, please view the downloaded attachment and close this window';
+            document.body.appendChild(p);
+
+            // setTimeout(function(){
+            //     window.close();
+            // }, 500);
+        }    
+        else {
+            if (isBinary) {
+                var link = document.getElementById('downloadLink');
+                var file = makeBlob(dataObject);
+                var blob = file.blob;
+                var url = URL.createObjectURL(blob);
+                link.download = fileName;
+                link.href = "data:" + mimeType + ";name=" + fileName + ";base64," + data;
+                removeElement('contentIFrame');
+                link.href = url;
+                link.innerText = 'click here if you don\'t see the download happens automatically'
+                link.click();
+            }
+            else {
+                // for all other web browsers, display the content as iframe
+                var iframe = document.getElementById('contentIFrame');
+                iframe.src = "data:" + mimeType + ";name=" + fileName + ";base64," + data;
+                iframe.title = fileName;
+                removeElement('downloadLink');
+            }
+        }
+        removeElement('loading');
+    }
+
+    function postToUrl(dataObject)
+    {
+        var _r = dataObject._r;
+        var _actionUrl = dataObject._actionUrl;
+        document.getElementById('_r').value = _r;
+        document.getElementById('_form').action = _actionUrl;
+        var _formData = dataObject._formData || [];
+        for (var index = 0; index < _formData.length; index++) {
+            try {
+                var edef = _formData[index];
+                var id = edf.id;
+                var name = edf.name;
+                var val = edf.val;
+                var ele = document.getElementById(id);
+                ele.value = val;
+                ele.name = name || ele.name || id;
+            }
+            catch (e) {
+
+            }
+        }
+        var btn = document.getElementById('_submit');
+        btn.click();
+    }
+
+    function objectAssign(t, o) {
+        for (var key in o) {
+            if (o.hasOwnProperty(key)) {
+                t[key] = o[key];
+            }
+        }
+        return o;
+    }
+
+    function receiveMessage(event) {
+        var dataObject = event.data || {};
+        var sourceWindow = event.source;
+        var origin = event.origin;
+        var data = dataObject.base64;
+        var _actionUrl = dataObject._actionUrl;
+        var fileSig = getQS("fileSig");
+        if (_actionUrl && !data) {
+            postToUrl(dataObject);
+        }
+        else if(!data) {
+            return;
+        }
+        else {
+            var tgSig = getQS("fileSig");
+            var sig = dataObject.fileSig;
+            if (sig && sig === tgSig) {
+                var o = {};
+                o.fileSig = tgSig;
+                sessionStorage.setItem("PreviewAttachment", JSON.stringify(objectAssign(o, dataObject)));
+            }
+            loadAttachment(dataObject);
+        }
+    }
+    function getQS(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+    function loadFromSessionStorage() {
+        try {
+                var fileObjectJSON = sessionStorage["PreviewAttachment"];
+                var fileObject = JSON.parse(fileObjectJSON);
+                var sig = fileObject.fileSig;
+                var tgSig = getQS("fileSig");
+                if ((!sig || (tgSig && tgSig === sig)) && !loaded) {
+                    loadAttachment(fileObject);
+                }
+            } catch (e) {
+            }
+        if (!loaded && attempts < 5) {
+            attempts = attempts + 1;
+            setTimeout(loadFromSessionStorage, 500);
+        }
+    }
+    window.addEventListener("message", receiveMessage, false);
+    window.onload = function(ev) {
+        loadFromSessionStorage();
+    }
+    window.unload = function(ev){
+        var fileObjectJSON = sessionStorage["PreviewAttachment"];
+        if (fileObjectJSON) {
+            try {
+                var fileObject = JSON.parse(fileObjectJSON);
+                var sig = fileObject.fileSig;
+                var tgSig = getQS("fileSig");
+                if (sig && sig === tgSig) {
+                    //sessionStorage.removeItem("PreviewAttachment");
+                }
+            } catch (e) {
+
+            }
+        }
+    }
+    </script>    
+    </header>
+    <body>
+        <div id='body'></div>
+        <iframe id='contentIFrame' frameborder="0" style="position: absolute; border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" scrolling='yes' allowfullscreen></iframe> 
+        <!-- <embed id='embedded' type='application/pdf' width='100%' height='100%' /> -->
+        <img id='img'></img>
+        <!-- <img id='contentImg'/> -->
+        <p id='loading'>loading...</p>
+        <h1 style>
+                <a id='downloadLink' style='font-size: 40px'>
+                        
+                </a>
+                <form id='_form' method='post'>
+                    <input id='_r' name='_r' type='hidden' />
+                    <input id='_submit' type='submit' style='display:none;' />
+                </form>        
+        </h1>
+        <p id='ie' style='display:none;'>
+            you are using IE, please check the download file and close this window
+        </p>
+    </body>
+</html>

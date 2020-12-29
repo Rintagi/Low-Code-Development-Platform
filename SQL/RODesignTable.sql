@@ -28,6 +28,9 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwMailProfile') AND type='V')
 DROP VIEW dbo.VwMailProfile
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwMIMEType') AND type='V')
+DROP VIEW dbo.VwMIMEType
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwNumSuccess') AND type='V')
 DROP VIEW dbo.VwNumSuccess
 GO
@@ -3210,6 +3213,25 @@ AttemptDt
 )
 )
 END
+
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrDevice') AND type='U')
+DROP TABLE dbo.UsrDevice
+CREATE TABLE UsrDevice ( 
+UsrDeviceId int IDENTITY(1,1) NOT NULL ,
+UsrId int NOT NULL ,
+DeviceId varchar (max) NULL ,
+PushNotificationType varchar (5) NULL ,
+UsrAgent varchar (max) NULL ,
+LastAccessOnUTC datetime NULL ,
+Status char (1) NOT NULL CONSTRAINT DF_UsrDevice_Status DEFAULT ('Y'),
+Fingerprint varchar (max) NULL ,
+AppSig varchar (max) NULL ,
+ClientIP varchar (max) NULL ,
+CONSTRAINT PK_UsrDevice PRIMARY KEY CLUSTERED (
+UsrDeviceId
+)
+)
 
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrGroup') and type='U')

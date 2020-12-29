@@ -10,7 +10,7 @@ import { login, logout, getCurrentUser, getWebAuthnAssertionRequest, webauthnAss
 import { Link } from 'react-router-dom';
 import log from '../../helpers/logger';
 import { setSpinner } from '../../redux/Global';
-import { parsedUrl, base64UrlEncode, base64UrlDecode, base64Codec, coerceToArrayBuffer, IsMobile } from '../../helpers/domutils';
+import { parsedUrl, base64UrlEncode, base64UrlDecode, base64Codec, coerceToArrayBuffer, IsMobile, isSafari } from '../../helpers/domutils';
 
 class Login extends Component {
   constructor(props) {
@@ -126,7 +126,8 @@ class Login extends Component {
               {
                 id: b64url.decode(registeredFido2),
                 type: "public-key",
-                transports: ["ble", "internal", "lightning", "nfc", "usb"],
+                // can't use these for iOS safari
+                transports: isSafari() ? undefined : ["ble", "internal", "lightning", "nfc", "usb"],
               },
             ];
           }
@@ -194,16 +195,27 @@ class Login extends Component {
       this.props.getWebAuthnAssertionRequest(myUrl.href, loginName)
         .then(result => {
           log.debug(result);
-          _this.setState({
-            assertionRequest: ((result || {}).data || {}).assertionRequest,
-          });
+          if (!_this.isUnmounted) {
+            _this.setState({
+              assertionRequest: ((result || {}).data || {}).assertionRequest,
+            });  
+          }
+          else {
+            log.debug('unmounted login component');
+          }
         })
         .catch(error => {
           log.debug(error);
         })
     }
-
   }
+
+  componentWillUnmount() {
+    // NOTE setup flag
+    this.isUnmounted = true;
+    log.debug('login component unmounted');
+  }
+
   componentDidUpdate(prevProps, prevStats) {
 
     const from = ((this.props.location || {}).state || {}).from;

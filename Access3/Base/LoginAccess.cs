@@ -52,5 +52,7 @@ namespace RO.Access3
         public abstract void WrDelUsr(int UsrId);
         public abstract string WrGetUsrOTPSecret(int UsrId, string hostSecret = null);
         public abstract string WrSetUsrOTPSecret(int UsrId, bool bEnable, string hostSecret = null);
+        public abstract DataTable GetUsrNotificationChannel(int UsrId, string FilterXml = null);
+        public abstract void UpdUsrNotificationChannel(int UsrId, string DeviceId, string UserAgent, string ClientIP, string fingerprint, string appSig, string NotificationType);
     }
 }

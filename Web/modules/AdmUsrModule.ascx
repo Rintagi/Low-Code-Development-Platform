@@ -52,6 +52,23 @@
             if (!container.is(e.target) && container.has(e.target).length === 0 && !container.hasClass('hideMoreButtonSec')) { openButtonSec(); }
         }
     });
+	function pageLoad() {
+	$(window).resize(function () { try {$("#expand").dialog('option', 'position', { my:'center', at:'center', of:window });} catch(e){}; });
+	$("#expand").dialog({ maxWidth:675, maxHeight:575, width:'80%', height:'80%', modal:true, autoOpen:false, title:"Text Editor",
+	    buttons: {"Enter": function () {SaveExpand();$(this).dialog("close");}}
+	    });
+	}
+	$(".show-expand-button").live('click', function () {
+	    var title = $("#" + $(this).attr("label_id")).text();
+	    var target_textbox = $(this).attr("target_id");
+	    $('#<%=cExpandBox.ClientID %>').val($("#" + target_textbox).val());
+	    $('#<%=TarBox.ClientID %>').val(target_textbox);
+	    $("#expand").dialog("option", "title", title);
+	    $("#expand").dialog('open');
+	    document.getElementById('<%=cExpandBox.ClientID %>').focus();
+	});
+	function SaveExpand() {document.getElementById(document.getElementById('<%=TarBox.ClientID %>').value).value = document.getElementById('<%=cExpandBox.ClientID %>').value; document.getElementById('<%=bPgDirty.ClientID %>').value = 'Y'; ChkPgDirty();}
+$(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $('.chkMobile').val('isMobile');};});
 </script>
 <asp:PlaceHolder ID="FstPHolder" runat="server" Visible="false" />
 <asp:UpdatePanel ID="PanelTop" UpdateMode="Conditional" runat="server"><ContentTemplate>
@@ -163,6 +180,7 @@
 <ul id="tabs">
     <li><a id="cTab1" href="#" class="current" name="Tab1" runat="server"></a></li>
     <li><a id="cTab2" href="#" name="Tab2" runat="server"></a></li>
+    <li><a id="cTab132" href="#" name="Tab132" runat="server"></a></li>
 </ul>
 <div id="content">
 <div id="Tab1" runat="server">
@@ -368,6 +386,34 @@
     </div></div>
     </ContentTemplate></asp:UpdatePanel>
 </div>
+<div id="Tab132" style="display:none;" runat="server">
+    <asp:UpdatePanel id="UpdPanel132" UpdateMode="Conditional" runat="server"><Triggers></Triggers><ContentTemplate>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cNotificationTitleP1" class="r-td r-labelR" runat="server"><asp:Label id="cNotificationTitleLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cNotificationTitleP2" class="r-td r-content" runat="server"><asp:TextBox id="cNotificationTitle" CssClass="inp-txt" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cNotificationContentP1" class="r-td r-labelR" runat="server"><asp:Label id="cNotificationContentLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cNotificationContentP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cNotificationContent" CssClass="inp-txt" runat="server" /><asp:Image id="cNotificationContentE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cSendNotificationBtnP1" class="r-td r-labelR" runat="server"><asp:Label id="cSendNotificationBtnLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cSendNotificationBtnP2" class="r-td r-content" runat="server"><asp:Button id="cSendNotificationBtn" CssClass="small blue button" OnClick="cSendNotificationBtn_Click" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
+    </ContentTemplate></asp:UpdatePanel>
+</div>
 </div>
 </asp:Panel>
 <asp:label id="cFootLabel" CssClass="FootText" runat="server" />
@@ -381,6 +427,10 @@
 <input id="bExpNow" type="hidden" runat="server" />
 <input id="CtrlToFocus" type="hidden" runat="server" />
 <asp:TextBox ID="bViewState" runat="server" Visible="false" />
+<div id="expand" style="display:none;">
+	<input id="TarBox" type="hidden" runat="server" />
+    <div id="expandbox"><asp:TextBox ID="cExpandBox" TextMode="MultiLine" CssClass="inp-txt" runat="server" /></div>
+</div>
 <asp:Label ID="cMsgContent" runat="server" style="display:none;" EnableViewState="false"/>
 </ContentTemplate></asp:UpdatePanel>
 <asp:PlaceHolder ID="LstPHolder" runat="server" Visible="false" />

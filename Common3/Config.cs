@@ -117,6 +117,9 @@ namespace RO.Common3
         private static string wDesLegacyMD5Encrypt;
         private static string wHardenedTOTP;
         private static string wExportExcelCSV;
+        private static string wFCMServerKey;
+        private static string wFXMinuteToCache;
+
         static Config()
 		{
             wConverterUrl = ConfigurationManager.AppSettings["WsConverterUrl"];
@@ -266,6 +269,8 @@ namespace RO.Common3
             wDesLegacyMD5Encrypt = System.Configuration.ConfigurationManager.AppSettings["DesLegacyMD5Encrypt"];
             wHardenedTOTP = System.Configuration.ConfigurationManager.AppSettings["HardenedTOTP"];
             wExportExcelCSV = System.Configuration.ConfigurationManager.AppSettings["ExportExcelCSV"];
+            wFCMServerKey = System.Configuration.ConfigurationManager.AppSettings["FCMServerKey"];
+            wFXMinuteToCache = System.Configuration.ConfigurationManager.AppSettings["FXMinuteToCache"];
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -445,10 +450,12 @@ namespace RO.Common3
         public static string PaypalExpressAPIEncSignature { get { return wPaypalExpressAPIEncSignature; } }
         public static string PaypalRESTAPIClientID { get { return wPaypalRESTAPIClientID; } }
         public static string PaypalRESTAPIEncSecret { get { return wPaypalRESTAPIEncSecret; } }
-        public static string ReactTemplate { get { return string.IsNullOrEmpty(wReactTemplate) ? "Template" : wReactTemplate;; } }
+        public static string ReactTemplate { get { return string.IsNullOrEmpty(wReactTemplate) ? "TemplateV3" : wReactTemplate;; } }
         public static bool DesLegacyMD5Encrypt { get { return (wDesLegacyMD5Encrypt ?? "Y").ToUpper() == "Y"; } }
         public static bool HardenedTOTP { get { return (wHardenedTOTP ?? "N").ToUpper() == "Y"; } }
         public static bool ExportExcelCSV { get { return (wExportExcelCSV ?? "Y").ToUpper() == "Y"; } }
+        public static string FCMServerKey { get { return wFCMServerKey ; } }
+        public static string FXMinuteToCache { get { return wFXMinuteToCache; } }
 
         public static string RintagiLicense
         { 
@@ -491,7 +498,7 @@ namespace RO.Common3
 
 		public static string GetConnStr(string dbProvider, string dbServer, string dbDatabase, string dbService, string dbUserId, string driverType = "oledb")
 		{
-            bool useOdbc = (driverType??"").ToLower() == "odbc";
+            bool useOdbc = (driverType ?? "").ToLower() == "odbc" || (dbProvider ?? "").ToLower() == "odbc";
             bool useSqlClient = (driverType ?? "").ToLower() == "sqlclient";
             bool useOleDb = !useOdbc && !useSqlClient;
             //string defaultOleDbProvider = "SQLOLEDB";

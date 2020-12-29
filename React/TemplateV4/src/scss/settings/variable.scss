@@ -1,0 +1,95 @@
+$themes: (
+  light: (
+    colorBackground: white,
+    colorBackgroundBody: #f2f4f7,
+    colorText: #666666,
+    colorTextAdditional: #555555,
+    logoImg: url(../../img/logo/logo_light.svg),
+    colorHover: #fafbfe,
+    colorBorder: #eff1f5,
+    colorIcon: #999999,
+    imgInvert: invert(0%),
+    colorFieldsBorder: #e6e6e6,
+    colorFormBorder: #d4dae3,
+    colorBubble: #f9fafb,
+    colorBackgroundInverse: #232329,
+    colorBackgroundBodyInverse: #2a2a31,
+    colorTextInverse: #dddddd,
+    colorTextAdditionalInverse: #999999,
+    colorHoverInverse: #38373f,
+    colorBorderInverse: #333246,
+    colorIconInverse: #605f7b,
+    colorScrollbar: #B4BFD0,
+    colorFitness: #555555
+  ),
+  dark: (
+    colorBackground: #232329,
+    colorBackgroundBody: #2a2a31,
+    colorText: #dddddd,
+    colorTextAdditional: #999999,
+    logoImg: url(../../img/logo/logo_dark.svg),
+    colorHover: #38373f,
+    colorBorder: #333246,
+    colorIcon: #605f7b,
+    imgInvert: invert(100%),
+    colorFieldsBorder: #33333a,
+    colorBubble: #2a2a31,
+    colorBackgroundInverse: white,
+    colorBackgroundBodyInverse: #f2f4f7,
+    colorTextInverse: #555555,
+    colorTextAdditionalInverse: #555555,
+    colorHoverInverse: #fafbfe,
+    colorBorderInverse: #eff1f5,
+    colorIconInverse: #999999,
+    colorScrollbar: #606071,
+    colorFitness: #ffffff
+  )
+);
+
+@mixin themify($themes) {
+  @each $theme, $map in $themes {
+    .theme-#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), '#{$key}');
+        $theme-map: map-merge($theme-map, ($key: $value)) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@mixin hover-supported {
+  @media not all and (hover: none) {
+      &:hover {
+          @content;
+      }
+  }
+}
+
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}
+
+$color-accent: #247BA0;
+$color-accent-hover: darken($color-accent, 10%);
+$color-additional: #999999;
+$color-text: #555555;
+$color-additional-hover: darken($color-additional, 10%);
+
+$color-yellow: #f6da6e;
+$color-yellow-hover: darken($color-yellow, 10%);
+
+$color-violet: #c88ffa;
+$color-sucess: #4ce1b6;
+$color-green: #21A79B;
+
+$color-red: #ff4861;
+$color-red-hover: darken($color-red, 10%);
+
+$color-blue: #247BA0;
+$color-blue-hover: darken($color-blue, 10%);
+
+$color-fintrux: #247BA0;
+$color-fintrux-hover: darken($color-fintrux, 10%);

@@ -39,7 +39,7 @@ class MstRecord extends RintagiScreen {
     this.blocker = null;
     this.titleSet = false;
     this.MstKeyColumnName = 'UsrId1';
-    this.SystemName = 'FintruX';
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.confirmUnload = this.confirmUnload.bind(this);
     this.hasChangedContent = false;
     this.setDirtyFlag = this.setDirtyFlag.bind(this);
@@ -710,30 +710,32 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.PaypalBtn || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.PaypalBtn || {}).readonly || !(authCol.PaypalBtn || {}).visible}
-                                        onClick={this.PaypalBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PaypalBtn || (columnLabel.PaypalBtn || {}).ColumnHeader || (columnLabel.PaypalBtn || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.PaypalPayoutBtn || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.PaypalPayoutBtn || {}).readonly || !(authCol.PaypalPayoutBtn || {}).visible}
-                                        onClick={this.PaypalPayoutBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PaypalPayoutBtn || (columnLabel.PaypalPayoutBtn || {}).ColumnHeader || (columnLabel.PaypalPayoutBtn || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.PaypalBtn || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.PaypalBtn || {}).readonly || !(authCol.PaypalBtn || {}).visible}
+                                            onClick={this.PaypalBtn({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.PaypalBtn || (columnLabel.PaypalBtn || {}).ColumnHeader || (columnLabel.PaypalBtn || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
+                                {(authCol.PaypalPayoutBtn || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.PaypalPayoutBtn || {}).readonly || !(authCol.PaypalPayoutBtn || {}).visible}
+                                            onClick={this.PaypalPayoutBtn({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.PaypalPayoutBtn || (columnLabel.PaypalPayoutBtn || {}).ColumnHeader || (columnLabel.PaypalPayoutBtn || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.CCNbr || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -776,18 +778,19 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
-                              <Col lg={6} xl={6}>
-                                <div className='form__form-group'>
-                                  <div className='d-block'>
-                                    {(authCol.PaypalCCBtn || {}).visible &&
-                                      <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
-                                        disabled={(authCol.PaypalCCBtn || {}).readonly || !(authCol.PaypalCCBtn || {}).visible}
-                                        onClick={this.PaypalCCBtn({ naviBar, submitForm, currMst })} >
-                                        {auxLabels.PaypalCCBtn || (columnLabel.PaypalCCBtn || {}).ColumnHeader || (columnLabel.PaypalCCBtn || {}).ColumnName}
-                                      </Button>}
-                                  </div>
-                                </div>
-                              </Col>
+                                {(authCol.PaypalCCBtn || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.PaypalCCBtn || {}).readonly || !(authCol.PaypalCCBtn || {}).visible}
+                                            onClick={this.PaypalCCBtn({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.PaypalCCBtn || (columnLabel.PaypalCCBtn || {}).ColumnHeader || (columnLabel.PaypalCCBtn || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.CCType || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

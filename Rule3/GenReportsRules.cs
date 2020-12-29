@@ -1212,7 +1212,8 @@ namespace RO.Rule3
 			sb.Append("		private string LcSysConnString;" + Environment.NewLine);
 			sb.Append("		private string LcAppConnString;" + Environment.NewLine);
 			sb.Append("		private string LcAppPw;" + Environment.NewLine);
-			//sb.Append(Environment.NewLine);
+            sb.Append("		private int CommandTimeOut = Config.CommandTimeOut;" + Environment.NewLine);
+            //sb.Append(Environment.NewLine);
             //sb.Append("		private AdminWs AdminFacade()" + Environment.NewLine);
             //sb.Append("		{" + Environment.NewLine);
             //sb.Append("		    AdminWs ws = new AdminWs();" + Environment.NewLine);
@@ -1496,7 +1497,12 @@ namespace RO.Rule3
 			//}
 			//sb.Append("				}" + Environment.NewLine);
 			sb.Append("				DataTable dtHlp = GetReportHlp();" + Environment.NewLine);
-			sb.Append("				cHelpMsg.HelpTitle = dtHlp.Rows[0][\"ReportTitle\"].ToString(); cHelpMsg.HelpMsg = dtHlp.Rows[0][\"DefaultHlpMsg\"].ToString();" + Environment.NewLine);
+            sb.Append("				try" + Environment.NewLine);
+            sb.Append("				{" + Environment.NewLine);
+            sb.Append("				    int.TryParse(dtHlp.Rows[0][\"CommandTimeOut\"].ToString(), out CommandTimeOut);" + Environment.NewLine);
+            sb.Append("				}" + Environment.NewLine);
+            sb.Append("				catch { }" + Environment.NewLine);
+            sb.Append("				cHelpMsg.HelpTitle = dtHlp.Rows[0][\"ReportTitle\"].ToString(); cHelpMsg.HelpMsg = dtHlp.Rows[0][\"DefaultHlpMsg\"].ToString();" + Environment.NewLine);
 			sb.Append("				cTitleLabel.Text = dtHlp.Rows[0][\"ReportTitle\"].ToString();" + Environment.NewLine);
             //sb.Append("				if (base.LPref != null && base.LPref.PageBannerImg != null && base.LPref.PageBannerImg.Trim() != string.Empty) {cTitleLabel.Visible = false;} else {cTitleLabel.Text = dtHlp.Rows[0][\"ReportTitle\"].ToString();}" + Environment.NewLine);
             sb.Append("				SetClientRule();" + Environment.NewLine);
@@ -2054,7 +2060,7 @@ namespace RO.Rule3
                     //sb.Append("			else" + Environment.NewLine);
                     //sb.Append("			{" + Environment.NewLine);
                     //sb.Append("			dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,false,false);" + Environment.NewLine);
-                    sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
+                    sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) || !string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                     //sb.Append("			}" + Environment.NewLine);
 					sb.Append("			if (dt.Rows.Count > 0)" + Environment.NewLine);
 					sb.Append("			{" + Environment.NewLine);
@@ -2077,7 +2083,7 @@ namespace RO.Rule3
                 //sb.Append("			}" + Environment.NewLine);
                 //sb.Append("			else" + Environment.NewLine);
                 //sb.Append("			{" + Environment.NewLine);
-                sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
+                sb.Append("			DataTable dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) || !string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                 //sb.Append("			dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,false,false);" + Environment.NewLine);
                 //sb.Append("			}" + Environment.NewLine);
                 sb.Append("			CovertRptUTC(dt);" + Environment.NewLine);
@@ -2162,7 +2168,7 @@ namespace RO.Rule3
                 //sb.Append("				}" + Environment.NewLine);
                 //sb.Append("				else" + Environment.NewLine);
                 //sb.Append("				{" + Environment.NewLine);
-                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
+                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,false,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) || !string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                 //sb.Append("				dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,false,false);" + Environment.NewLine);
                 //sb.Append("				}" + Environment.NewLine);
                 sb.Append("				CovertRptUTC(dt);" + Environment.NewLine);
@@ -2192,7 +2198,7 @@ namespace RO.Rule3
                 //sb.Append("				}" + Environment.NewLine);
                 //sb.Append("				else" + Environment.NewLine);
                 //sb.Append("				{" + Environment.NewLine);
-                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,true,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "Config.CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
+                sb.Append("			    dt = (new AdminSystem()).GetRptDt(" + reportId.ToString() + ",\"Get" + dw["ProgramName"].ToString() + "\",base.LImpr,base.LCurr,UpdCriteria(false),GetRptCriteria()" + Robot.GetCnStr("N", "N") + ",false,true,false," + (string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) || !string.IsNullOrEmpty(dw["CommandTimeOut"].ToString()) ? "CommandTimeOut" : dw["CommandTimeOut"].ToString()) + ");" + Environment.NewLine);
                 //sb.Append("				dt = (new " + dw["ProgramName"].ToString() + "System()).Get" + dw["ProgramName"].ToString() + "(" + reportId.ToString() + ",base.LImpr,base.LCurr,UpdCriteria(false)" + Robot.GetCnCall("N", "N") + ",false,true,false);" + Environment.NewLine);
                 //sb.Append("				}" + Environment.NewLine);
 				sb.Append("				reportName = \"" + dw["ProgramName"].ToString() + "\";" + Environment.NewLine);

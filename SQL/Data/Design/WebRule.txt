@@ -1917,7 +1917,7 @@
                 System.Collections.Generic.List<string> messages = new System.Collections.Generic.List<string>();
                 try
                 {
-                    sheets = (new XLSImport()).GetSheetNames(path);
+                    sheets = (new XLSImport(Config.WsXlsUrl)).GetSheetNames(path);
                 }
                 catch (Exception er)
                 {
@@ -1937,7 +1937,7 @@
 
                 try
                 {
-                    dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport()).ImportFile(fileName, sheetName, "1", path)).Tables[0];
+                    dtImp = RO.Common3.XmlUtils.XmlToDataSet((new XLSImport(Config.WsXlsUrl)).ImportFile(fileName, sheetName, "1", path)).Tables[0];
                 }
                 catch (Exception er)
                 {
@@ -2021,7 +2021,8 @@
                 PreMsgPopup("We can only analyse/popular new table or table without column already defined");
             }
 
-        }~@~~@~~@~~@~~@~~@~~@~~@~
+        }
+~@~~@~~@~~@~~@~~@~~@~~@~
 170~@~4~@~Upload the worksheets to be scanned~@~Data Table and Columns: Upload the worksheets to be scanned~@~Upload the worksheets to be scanned~@~2~@~4149~@~~@~1~@~            ScanExcelSample(sender, e, true);~@~~@~~@~~@~~@~~@~~@~~@~
 171~@~4~@~Display the panel to upload spreadsheet with sample data~@~Data Table and Columns: Display the panel to upload spreadsheet with sample data~@~Display the panel to upload spreadsheet with sample data~@~2~@~4153~@~~@~1~@~            if (cUploadSheetP1.Visible) { HideShowUpload(true); } else { HideShowUpload(false); }~@~~@~~@~~@~~@~~@~~@~~@~
 172~@~4~@~Generate default content~@~Section Object: Generate default content~@~Generate default content~@~1001~@~4154~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Default", 0, 0, 0, string.Empty, string.Empty))
@@ -2830,4 +2831,167 @@ document.Rintagi = {{
             StreamWriter sw = new StreamWriter(projectRootPath + "/Web/modules/DefaultModule.ascx");
             try { sw.Write(sb); PreMsgPopup("Flowchart added to default page successfully"); }
             finally { sw.Close(); }
+~@~~@~~@~~@~~@~~@~~@~~@~
+195~@~4~@~Send ad hoc notification~@~User Manager: Send ad hoc notification~@~Send push notification to selected device(s)~@~1~@~4388~@~~@~1~@~            int usrId = int.Parse(cUsrId1.Text);
+            DataTable dt = new LoginSystem().GetUsrNotificationChannel(usrId);
+            // FCM legacy api
+            // https://firebase.google.com/docs/cloud-messaging/http-server-ref
+            string fcmServerKey = Config.FCMServerKey;
+            string fcmPostUrl = "https://fcm.googleapis.com/fcm/send";
+            Dictionary<string, string> headers = new Dictionary<string, string>() { { "authorization", "key=" + fcmServerKey } };
+            List<string> devices = new List<string>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                string fcmToken = dr["DeviceId"].ToString();
+                devices.Add(fcmToken);
+            }
+            bool dataOnly = true;
+            string notificationTitle = cNotificationTitle.Text;
+            string notificationContent = cNotificationContent.Text;
+            string notificationIconUrl = "/images/logo.png"; // relative to site hosting the service worker script
+            string collapse_key = "some_key"; // for notification grouping
+            string targets = string.Join(",", devices.Select(s => "'" + s + "'").ToArray());
+            string click_action = "/Adm#Profile"; // must be relative(to the fcmReactRoot defined in firebaseConfig.js) if launch from notification area from service worker
+            string postBody = (@"{
+'collapse_key' : '" + collapse_key + @"',"
+                + (dataOnly ? "" : @"
+'notification' : {
+    'body' : '" + notificationContent + @"',
+    'title': '" + notificationTitle + @"',
+    'icon': '" + notificationIconUrl + @"',
+     'click_action': '" + click_action + @"'
+ },") + @"
+'data' : {
+     'body' : '" + notificationContent + @"',
+     'title': '" + notificationTitle + @"',
+     'icon': '" + notificationIconUrl + @"',
+     'forUsrId' : 2,
+     'key_2' : 'Value for key_2',
+     'click_action': '" + click_action + @"'
+ },
+'webpush': {
+    'fcm_options': {
+    'link': '" + click_action + @"'
+    }
+ },
+'registration_ids': [" + targets + @"]
+}").Replace("\r\n", "").Replace("'", "\"");
+            try
+            {
+                HttpPostJSON(fcmPostUrl, postBody, headers);
+                return;
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(ex.Message);
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~
+196~@~1~@~Suppress dirty flag handling~@~User Manager: Suppress dirty flag handling~@~Suppress dirty flag handling for non-db fields/button postback~@~1~@~~@~~@~9~@~                // suppress dirty flag signaling
+                cNotificationTitle.Attributes["OnChange"] = null;
+                cNotificationContent.Attributes["OnChange"] = null;
+                // suppress dirty flag check on post back
+                if (cSendNotificationBtn.Attributes["OnClick"] == null || cSendNotificationBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSendNotificationBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+~@~~@~~@~~@~~@~~@~~@~~@~
+198~@~1~@~Suppress dirty flag handling~@~Rintagi Postman: Suppress dirty flag handling~@~Suppress dirty flag handling for non-db fields/button postback~@~1028~@~~@~~@~9~@~                cSaveButton.Visible = false;                
+                // suppress dirty flag signaling
+                cEndpointUrl.Attributes["OnChange"] = null;
+                cMethod.Attributes["OnChange"] = null;
+                cQueryString.Attributes["OnChange"] = null;
+                cCookie.Attributes["OnChange"] = null;
+                cBody.Attributes["OnChange"] = null;
+                cHeader.Attributes["OnChange"] = null;
+                cResult.Attributes["OnChange"] = null;
+                cOTPCode.Attributes["OnChange"] = null;
+                cPostContentType.Attributes["OnChange"] = null;
+                cQSUrlEncode.Attributes["OnClick"] = null;
+                cBodyUrlEncode.Attributes["OnClick"] = null;
+                // suppress dirty flag check on post back
+                if (cSubmit.Attributes["OnClick"] == null || cSubmit.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSubmit.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+~@~~@~~@~~@~~@~~@~~@~~@~
+199~@~1~@~Submit Request~@~Rintagi Postman: Submit Request~@~Send Web request~@~1028~@~4420~@~~@~1~@~            string url = cEndpointUrl.Text;
+            string method = cMethod.Text;
+            string[] qs = cQueryString.Text.Split(new char[] { '\n', '\r', '&'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] headers = cHeader.Text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] cookies = cCookie.Text.Split(new char[] { '\n', '\r',';'}, StringSplitOptions.RemoveEmptyEntries);
+            string body = cBody.Text;
+            string bodyMimeType = cPostContentType.SelectedItem.Text;
+            bool qsUrlEncode = cQSUrlEncode.Checked;
+            bool bodyUrlEncode = cBodyUrlEncode.Checked;
+
+            cOTPCode.EncryptionKey = (new LoginSystem()).WrGetUsrOTPSecret(LUser.UsrId);
+            if (Config.DeployType == "PRD" && !cOTPCode.IsValid)
+            {
+                PreMsgPopup("action requires 2FA code");
+                return;
+            }
+            try
+            {
+                var query = string.Join("&", qs.Select(s=> {
+                    if (qsUrlEncode)
+                    {
+                        var x = s.Split(new char[] { '=' });
+                        if (x.Count() > 1)
+                        {
+                            return HttpUtility.UrlEncode(x[0].Trim()) + "=" + HttpUtility.UrlEncode(string.Join("=", x.Skip(1)).Trim());
+                        }
+                        else return HttpUtility.UrlEncode(s);
+                    }
+                    else
+                    {
+                        return s;
+                    }
+                }
+                ));
+                Dictionary<string, string> h = headers.Aggregate(new Dictionary<string,string>(),(d,s)=>{
+                    var x = s.Split(new char[] { ':' });
+                    if (x.Count() > 1)
+                    {
+                        d.Add(x[0].Trim(), string.Join(":", x.Skip(1)).Trim());
+                    }
+                    return d;
+                });
+                Dictionary<string, string> c = cookies.Aggregate(new Dictionary<string, string>(), (d, s) =>
+                {
+                    var x = s.Split(new char[] { '=' });
+                    if (x.Count() > 1)
+                    {
+                        d.Add(x[0].Trim(), string.Join("=", x.Skip(1)).Trim());
+                    }
+                    return d;
+                });                    
+                if (url.ToLowerInvariant().StartsWith("http"))
+                {
+                    var urlWithQS = url + (string.IsNullOrEmpty(query) ? "" : (url.Contains("?") ? "&" : "?") + query);
+                    if (string.IsNullOrEmpty(method) || method.ToUpper() == "GET")
+                    {
+                        string result = InvokeWebHook(urlWithQS, "GET", h.Count > 0 ? h : null, c.Count > 0 ? c : null );
+                        cResult.Text = result;
+                    }
+                    else if (method.ToUpper() == "POST")
+                    {
+                        var encodedBody = !bodyUrlEncode || bodyMimeType != "application/x-www-form-urlencoded"
+                                ? body
+                                : string.Join("&", (body.Split(new char[] { '\n', '\r', '&' }, StringSplitOptions.RemoveEmptyEntries)).Select(s =>
+                                    {
+                                        var x = s.Split(new char[] { '=' });
+                                        if (x.Count() > 1)
+                                        {
+                                            return HttpUtility.UrlEncode(x[0].Trim()) + "=" + HttpUtility.UrlEncode(string.Join("=", x.Skip(1)).Trim());
+                                        }
+                                        else return HttpUtility.UrlEncode(s);
+                                    }
+                                    ));
+                        string result = HttpPost(urlWithQS, encodedBody, bodyMimeType, h.Count > 0 ? h : null, c.Count > 0 ? c : null);
+                        cResult.Text = result;
+                    }
+                }
+                else
+                {
+                    cResult.Text = "invalid url, only support http/https";
+                }
+            }
+            catch (Exception ex)
+            {
+                cResult.Text = ex.Message;
+            }
 ~@~~@~~@~~@~~@~~@~~@~~@~

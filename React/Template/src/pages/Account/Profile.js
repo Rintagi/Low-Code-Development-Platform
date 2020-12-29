@@ -11,26 +11,48 @@ import NaviBar from '../../components/custom/NaviBar';
 import { getNaviBar } from './index';
 import { Link } from 'react-router-dom';
 import log from '../../helpers/logger';
-import { getProfileInfo } from '../../services/profileService';
+import { getProfileInfo, updateNotificationChannel } from '../../services/profileService';
 import DocumentTitle from 'react-document-title';
 import { setTitle } from '../../redux/Global';
+import { showNotification } from '../../redux/Notification';
+import { messaging, vapidKey, fcmSWScope, fcmSWUrl } from '../../app/FirebaseInit';
+import { getMyAppSig, getMyMachine, getFingerPrint } from '../../helpers/config';
+import * as fcmServiceWorker from '../../registerFCMServiceWorker';
 
+let appSig = getMyAppSig();
+let myMachine = getMyMachine();
+
+function requestPermission() {
+  console.log('Requesting permission...');
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+      // TODO(developer): Retrieve a registration token for use with FCM.
+
+    } else {
+      console.log('Unable to get permission to notify.');
+    }
+  });
+}
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.titleSet = false;
-    this.SystemName = "FintruX";
+    this.SystemName = (document.Rintagi || {}).systemName || 'Rintagi';
     this.state = {
       submitting: false,
       loginName: '',
       userName: '',
       userEmail: '',
+      fcmToken: '',
       key: Date.now()
     };
 
     this.saveProfile = this.saveProfile.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
+    this.deleteFCMToken = this.deleteFCMToken.bind(this);
+    this.enableFCMNotification = this.enableFCMNotification.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +70,37 @@ class Profile extends Component {
           console.log(error);
         }
       )
+    }
+
+    if (window.Notification && navigator.serviceWorker && messaging) {
+      if (Notification.permission === "granted") {
+        fcmServiceWorker.register({scope:fcmSWScope, serviceWorkJS:fcmSWUrl})
+          //Promise.resolve('abcd')
+          .then((registration) => {
+            log.debug(registration);
+            registration && messaging.getToken(
+              {
+                vapidKey: vapidKey,
+                serviceWorkerRegistration: registration
+              }
+            ).then((currentToken) => {
+              this.setState({
+                fcmToken: currentToken
+              });
+              getFingerPrint().then((myMachine)=>{
+                  updateNotificationChannel(currentToken, myMachine, appSig, 'fcm')
+                  .then(result => {
+                    log.debug(result);
+                  })
+                  .catch(err => {
+                    log.debug(err);
+                  })
+              })
+            })
+          }).catch((err) => {
+            console.log('Error retrieving registration token. ', err);
+          });
+      }
     }
   }
 
@@ -88,6 +141,96 @@ class Profile extends Component {
     log.debug(event);
     // event.target.select();
     event.target.setSelectionRange(0, event.target.value.length);
+  }
+
+  deleteFCMToken(evt) {
+    navigator.serviceWorker && window.Notification && messaging &&     
+    fcmServiceWorker.register({scope:fcmSWScope, serviceWorkJS:fcmSWUrl})
+      //Promise.resolve('abcd')
+      .then((registration) => {
+        log.debug(registration);
+        registration && messaging.getToken(
+          {
+            vapidKey: vapidKey,
+            serviceWorkerRegistration: registration
+          }
+        ).then((currentToken) => {
+          messaging.deleteToken(currentToken).then(() => {
+            console.log(`Token deleted. ${currentToken}`);
+          }).catch((err) => {
+            console.log('Unable to delete token. ', err);
+          });
+        }
+        )
+      }).catch((err) => {
+        console.log('Error retrieving registration token. ', err);
+      });
+  }
+
+  enableFCMNotification(evt) {
+    navigator.serviceWorker && window.Notification && messaging &&
+    fcmServiceWorker.register({scope:fcmSWScope, serviceWorkJS:fcmSWUrl})
+      //Promise.resolve('abcd')
+      .then((registration) => {
+        log.debug(registration);
+        const usrId = this.props.user.UsrId;
+        if (registration) {
+          // pass in our info(would be done on app loading generally but on-demand enabling skipped that, see LoginInfo.js)
+          (registration.active || registration.waiting || registration.installing).postMessage({
+            type: 'SET_LOGIN_USER',
+            usrId: usrId,
+            basePath: window.location.pathname + '#',
+          });
+
+          Notification.requestPermission()
+            .then((permission) => {
+              if (permission === 'granted') {
+                console.log('Notification permission granted.');
+                // TODO(developer): Retrieve a registration token for use with FCM.
+                messaging.getToken(
+                  {
+                    vapidKey: vapidKey,
+                    serviceWorkerRegistration: registration
+                  }
+                ).then((currentToken) => {
+                  //weird firefox issue getToken needs to be called again to get the correct token
+                  messaging.getToken(
+                    {
+                      vapidKey: vapidKey,
+                      serviceWorkerRegistration: registration
+                    }
+                  ).then((currentToken) => {
+                    this.setState({
+                      fcmToken: currentToken
+                    });
+                    getFingerPrint().then((myMachine)=>{
+                      updateNotificationChannel(currentToken, myMachine, appSig, 'fcm')
+                      .then(result => {
+                        log.debug(result);
+                      })
+                      .catch(err => {
+                        log.debug(err);
+                      })
+                    });
+                  });                  
+                })
+              } else {
+                console.log('Unable to get permission to notify.');
+                this.props.showNotification("I", { message: 'please consider allow notification to have enhanced user experience' });
+              }
+            })
+            .catch(err => {
+              console.log('failed to get notification permission');
+            })
+            ;
+          if (Notification.permission !== "granted") {
+            this.props.showNotification("I", { message: 'please consider allow notification to have enhanced user experience' });
+          }
+        }
+      })
+      .catch(err => {
+        console.log('Error retrieving registration token. ', err);
+      });
   }
 
   render() {
@@ -164,6 +307,23 @@ class Profile extends Component {
                           </div>
                         </div>
 
+                        <div className='form__form-group'>
+                          <label className='form__form-group-label'>FCM Token</label>
+                          <div className='form__form-group-field'>
+                            <Field
+                              type="text"
+                              name="cFCMToken"
+                              value={this.state.fcmToken || ''}
+                            />
+                          </div>
+                          { window.Notification && navigator.serviceWorker &&
+                          <div>
+                            <Button type='button' onClick={this.deleteFCMToken}>delete</Button>
+                            <Button type='button' onClick={this.enableFCMNotification}>enable notification</Button>
+                          </div>
+                          }
+                          </div>
+
                         <div className="form__form-group mb-0">
                           <Row className="btn-bottom-row">
                             <Col xs={3} sm={2} className="btn-bottom-column">
@@ -199,6 +359,7 @@ const mapDispatchToProps = (dispatch) => (
     { getCurrentUser: getCurrentUser },
     { saveProfile: saveProfile },
     { setTitle: setTitle },
+    { showNotification: showNotification },
   ), dispatch)
 )
 
