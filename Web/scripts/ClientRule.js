@@ -2628,8 +2628,17 @@ function sendFile(file, url, success, failure) {
         url: url,
         data: formData,
         success: function (data, txtStatus, jqXHR) {
-            if (txtStatus !== 'error' && typeof (success) === "function") {
-                success(data, txtStatus, jqXHR);
+            if (txtStatus !== 'error') {
+                var contentType = jqXHR && jqXHR.getResponseHeader("content-type");
+                if (!(contentType || '').match('application/json')) {
+                    alert("Whoops something went wrong!");
+                }
+                else if (typeof (success) === "function") {
+                    success(data, txtStatus, jqXHR);
+                }
+            }
+            else {
+                alert("Whoops something went wrong!");
             }
         },
         processData: false,
@@ -2662,6 +2671,63 @@ function getFxRate(FrISOCurrencySymbol, ToISOCurrencySymbol, handler) {
     });
 }
 
+function connectWeb3(urlEndpoint, walletconnect) {
+    if (typeof urlEndpoint !== "undefined" && urlEndpoint) {
+        if (typeof window.Web3 !== "undefined") {
+            var web3 = new Web3(urlEndpoint);
+            if (typeof window.Promise !== "undefined") {
+                return new Promise(function (resolve, reject) {
+                    resolve(web3);
+                });
+            }
+            else
+                return web3;
+        }
+    }
+    else if (window.ethereum && !walletconnect) {
+        ethereum.autoRefreshOnNetworkChange = false;
+        var web3 = new Web3(ethereum);
+        return ethereum.request({ method: 'eth_requestAccounts' })
+                .then(function (addrList, b, c) {
+                    console.log(addrList);
+                    return {
+                        web3: web3,
+                        provider: ethereum,
+                    };
+                })
+                .catch(function (err) {
+                    console.log(addrList);
+                });
+    }
+    else if (window.WalletConnectProvider)
+    {
+        try {
+            var provider = new WalletConnectProvider.default({
+                infuraId: "", // required
+                pollingInterval: 60 * 60 * 1000, // in ms must do this to stop the frequent polling(default 1s, too much for infura)
+                rpc: {
+                    100: "https://rpc.xdaichain.com/", // required for any non-ethereum networkId(returned from remote wallet)
+                }
+            });
+            var web3 = new Web3(provider);
+            return provider.enable()
+                    .then(function (addrList, b, c) {
+                        console.log(addrList);
+                        return {
+                            web3: web3,
+                            provider: provider,
+                        };
+                    })
+                    .catch(function (err) {
+                        console.log(addrList);
+                    });
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+    return Promise.reject("no web3");
+}
 /* below should be in-sync with React module version(web) as this is client side(js) sync of data
  */
 function parsedUrl(url) {
@@ -3034,6 +3100,14 @@ function setupFCM(fcmMessaging, usrId, basePath, vapidKey) {
         })
     else
         return Promise.reject(null);
+}
+
+/* ie11 polyfill */
+if (!String.prototype.startsWith) {
+    console.log('polyfill startsWith');
+    String.prototype.startsWith = function (search, pos) {
+        return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+    };
 }
 
 //function MouseOverEffect(e, i) { e.src = i; }

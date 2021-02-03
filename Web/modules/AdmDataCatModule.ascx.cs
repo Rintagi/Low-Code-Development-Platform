@@ -44,6 +44,7 @@ namespace RO.Common3.Data
 			columns.Add("RptwizCatName181", typeof(string));
 			columns.Add("CatDescription181", typeof(string));
 			columns.Add("TableId181", typeof(string));
+			columns.Add("SampleImage181", typeof(object));
 			return dt;
 		}
 

@@ -25,6 +25,7 @@ namespace RO.Web
     using Fido2NetLib;
     using Fido2NetLib.Objects;
     using System.Threading.Tasks;
+    using Nethereum.Hex.HexConvertors.Extensions;
 
     public partial class MyAccountModule : RO.Web.ModuleBase
     {
@@ -391,10 +392,12 @@ namespace RO.Web
                     if (LUser != null && LUser.LoginName != "Anonymous")
                     {
                         RegisterWebAuthnSetup(extAppDomainUrl, null);
+                        RegisterEth1WalletSetup(extAppDomainUrl, null);
                     }
                     else
                     {
                         VerifyWebAuthnSetup(extAppDomainUrl, null);
+                        VerifyEth1WalletSetup(extAppDomainUrl, null);
                     }
                 }
             }
@@ -1055,7 +1058,25 @@ namespace RO.Web
                 PreMsgPopup("login failed");
             }
         }
+        public void Eth1WalletLoginBtn_Click(object sender, System.EventArgs e)
+        {
+            string sig = cWebAuthnResult.Text;
+            if (!string.IsNullOrEmpty(sig))
+            {
+                byte[] message = System.Text.UTF8Encoding.UTF8.GetBytes(cEth1AssertionRequest.Text);
+                try
+                {
+                    string messageSigner = new Nethereum.Signer.EthereumMessageSigner().EcRecover(message, sig);
+                    SSOLogin(null, messageSigner, "Eth1");
+                }
+                catch (Exception ex)
+                {
+                    Common3.Utils.NeverThrow(ex);
+                    PreMsgPopup("login failed");
+                }
 
+            }
+        }
         public void FacebookLoginBtn_Click(object sender, System.EventArgs e)
         {
             string accessToken = cFacebookAccessToken.Text;
@@ -1900,7 +1921,8 @@ namespace RO.Web
                 {"M","Microsoft"},
                 {"O","Office 365/Azure"},
                 {"W","Windows"},
-                {"Fido2","WebAuthn/Fido2"}
+                {"Fido2","WebAuthn/Fido2"},
+                {"Eth1","Eth1 Wallet"}
                 };
             new LoginSystem().LinkUserLogin(UsrId, ProviderCd, LoginName, LoginMeta);
             LinkedUserLogin = new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable().ToList();
@@ -1952,6 +1974,23 @@ namespace RO.Web
                 }
             }
             catch { }
+        }
+        protected void cLinkEth1WalletBtn_Click(object sender, EventArgs e)
+        {
+            string sig = cWebAuthnResult.Text;
+            if (!string.IsNullOrEmpty(sig))
+            {
+                var signer = new Nethereum.Signer.EthereumMessageSigner();
+                byte[] message = System.Text.UTF8Encoding.UTF8.GetBytes(cEth1RegistrationRequest.Text);
+                string signerAddress = signer.EcRecover(message, sig);
+                LinkUserLogin(LUser.UsrId, "Eth1", signerAddress);
+                PreMsgPopup(
+                    string.Format("WebAuthn(Fido2) registration successful with id {0}"
+                        , signerAddress
+                        )
+                    );
+
+            }
         }
 
         protected void cLinkWebAuthnBtn_Click(object sender, EventArgs e)
@@ -2125,6 +2164,7 @@ namespace RO.Web
         #region webauthn/fido2
         private void RegisterWebAuthnSetup(string appDomainUrl,  string registrationJSON)
         {
+            if (!Config.EnableFido2) return;
             //var x = Newtonsoft.Json.JsonConvert.DeserializeObject(registrationJSON);
             bool isSafari = Request.UserAgent.Contains("Safari");
             var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
@@ -2212,6 +2252,7 @@ namespace RO.Web
 
         private void VerifyWebAuthnSetup(string appDomainUrl, string registrationJSON, bool TwoFA = false)
         {
+            if (!Config.EnableFido2) return;
             //var x = Newtonsoft.Json.JsonConvert.DeserializeObject(registrationJSON);
             var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
             var serverPath = new Uri(appDomainUrl).GetComponents(UriComponents.Path, UriFormat.Unescaped);
@@ -2271,6 +2312,47 @@ namespace RO.Web
             var verificationRequest = Fido2NetLib.AssertionOptions.Create(fido2Config, challenge, allowedCredentials, UserVerificationRequirement.Preferred, clientExtensions);
             string verificationRequestJson = verificationRequest.ToJson();
             cAssertionRequest.Text = verificationRequestJson;
+        }
+
+        #endregion
+        #region eth1 wallet(metamask)
+        private void RegisterEth1WalletSetup(string appDomainUrl, string registrationJSON)
+        {
+            if (!Config.EnableCryptoWallet) return;
+            var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
+            var serverPath = new Uri(appDomainUrl).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+            string usrId = LUser.UsrId.ToString();
+            string usrIdB64 = System.Convert.ToBase64String(usrId.ToUtf8ByteArray());
+
+            string challenge =
+                Newtonsoft.Json.JsonConvert.SerializeObject(
+                new WebAuthnChallenge
+                {
+                    nonce = Guid.NewGuid().ToString(),
+                    usrId = serverPath + usrIdB64,
+                    appPath = serverPath,
+                    expiredAfter = Common3.Utils.ToUnixTime(DateTime.UtcNow.AddMinutes(30))
+                }
+                );
+            cEth1RegistrationRequest.Text = challenge;
+        }
+
+        private void VerifyEth1WalletSetup(string appDomainUrl, string registrationJSON, bool TwoFA = false)
+        {
+            if (!Config.EnableCryptoWallet) return;
+            var serverDomain = new Uri(appDomainUrl).GetComponents(UriComponents.Host, UriFormat.Unescaped);
+            var serverPath = new Uri(appDomainUrl).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+            string challenge =
+                Newtonsoft.Json.JsonConvert.SerializeObject(
+                new WebAuthnChallenge
+                {
+                    nonce = Guid.NewGuid().ToString(),
+                    usrId = null,
+                    appPath = serverPath,
+                    expiredAfter = Common3.Utils.ToUnixTime(DateTime.UtcNow.AddMinutes(30))
+                }
+                );
+            cEth1AssertionRequest.Text = challenge;
         }
 
         #endregion

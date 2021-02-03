@@ -993,6 +993,38 @@ public partial class AuthWs : AsmxBase
     }
 
     [WebMethod(EnableSession = false)]
+    public ApiResponse<SerializableDictionary<string, string>, object> GetWeb3SigningRequest()
+    {
+        Func<ApiResponse<SerializableDictionary<string, string>, object>> fn = () =>
+        {
+            HttpRequest Request = HttpContext.Current.Request;
+            string usrId = LUser == null ? "" : LUser.UsrId.ToString();
+            string challenge =
+                Newtonsoft.Json.JsonConvert.SerializeObject(
+                new WebAuthnChallenge
+                {
+                    nonce = Guid.NewGuid().ToString(),
+                    usrId = usrId,
+                    expiredAfter = RO.Common3.Utils.ToUnixTime(DateTime.UtcNow.AddMinutes(30))
+                }
+                );
+            ApiResponse<SerializableDictionary<string, string>, object> mr = new ApiResponse<SerializableDictionary<string, string>, object>();
+
+            SerializableDictionary<string, string> result = new SerializableDictionary<string, string>();
+
+            result.Add("signingRequest", challenge);
+
+            mr.status = "success";
+            mr.errorMsg = "";
+            mr.data = result;
+
+            return mr;
+        };
+        var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null), true);
+        return ret;
+    }
+    
+    [WebMethod(EnableSession = false)]
     public ApiResponse<SerializableDictionary<string, string>, object> GetWebAuthnAssertionRequest(string hostingDomainUrl, string loginName)
     {
         Func<ApiResponse<SerializableDictionary<string, string>, object>> fn = () =>
@@ -1041,7 +1073,8 @@ public partial class AuthWs : AsmxBase
                 {"M","Microsoft"},
                 {"O","Office 365/Azure"},
                 {"W","Windows"},
-                {"Fido2","WebAuthn/Fido2"}
+                {"Fido2","WebAuthn/Fido2"},
+                {"Eth1","Eth1 Wallet"}
                 };
         new LoginSystem().LinkUserLogin(UsrId, ProviderCd, LoginName, LoginMeta);
         LinkedUserLogin = new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable().ToList();
@@ -1243,7 +1276,7 @@ public partial class AuthWs : AsmxBase
             }
             else
             {
-                return new LoginApiResponse() { message = "valid webauthn assertion", status = "success" };
+                return new LoginApiResponse() { message = "webauthn asserted but not registered", status = "failed", error = "access_denied" };
             }
 
             //SSOLogin(null, credentialId, "Fido2");
@@ -1253,5 +1286,79 @@ public partial class AuthWs : AsmxBase
             RO.Common3.Utils.NeverThrow(ex);
             return new LoginApiResponse() { message = "invalid webauthn assertion", status = "failed", error = "access_denied"};
         }            
+    }
+    [WebMethod(EnableSession = false)]
+    public ApiResponse<SerializableDictionary<string, string>, object> Web3Registration(string requestJSON, string resultJSON)
+    {
+        var Request = HttpContext.Current.Request;
+
+        Func<ApiResponse<SerializableDictionary<string, string>, object>> fn = () =>
+        {
+            ApiResponse<SerializableDictionary<string, string>, object> mr = new ApiResponse<SerializableDictionary<string, string>, object>();
+            SerializableDictionary<string, string> result = new SerializableDictionary<string, string>();
+            string sig = resultJSON;
+            if (LUser != null 
+                && LUser.LoginName != "Anonymous" 
+                && !string.IsNullOrEmpty(sig))
+            {
+                var challenge = Newtonsoft.Json.JsonConvert.DeserializeObject<WebAuthnChallenge>(requestJSON);
+                var signer = new Nethereum.Signer.EthereumMessageSigner();
+                byte[] message = System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON);
+                string signerAddress = signer.EcRecover(message, sig);
+                LinkUserLogin(LUser.UsrId, "Eth1", signerAddress);
+                result["walletAddress"] = signerAddress;
+                result["message"] = string.Format("Eth1 Wallet registration successful with wallet address {0}{1}"
+                        , signerAddress
+                        , LUser.TwoFactorAuth ? "" : "\r\nPlease consider enable 2FA and/or choosing really random/complex password of at least 16 characters to harden other adhoc login"
+                        );
+
+                mr.status = "success";
+                mr.errorMsg = "";
+                mr.data = result;
+            }
+            else
+            {
+                mr.status = "failed";
+                mr.errorMsg = "Invalid Eth1 Wallet Registration Request";
+                mr.data = null;
+            }
+            return mr;
+        };
+        var ret = ProtectedCall(RestrictedApiCall(fn, GetSystemId(), 0, "R", null));
+        return ret;
+    }
+
+    [WebMethod(EnableSession = true)]
+    public LoginApiResponse Web3Assertion(string requestJSON, string resultJSON)
+    {
+        var context = HttpContext.Current;
+        HttpRequest Request = context.Request;
+        try
+        {
+            string sig = resultJSON;
+            var challenge = Newtonsoft.Json.JsonConvert.DeserializeObject<WebAuthnChallenge>(requestJSON);
+            var signer = new Nethereum.Signer.EthereumMessageSigner();
+            byte[] message = System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON);
+            string signerAddress = signer.EcRecover(message, sig);
+            var usr = SSOLogin(null, signerAddress, "Eth1");
+            if (usr != null && usr.UsrId > 0)
+            {
+                LoginApiResponse loginResponse = _Login(usr);
+                loginResponse.username = usr.LoginName;
+                return loginResponse;
+            }
+            else
+            {
+                return new LoginApiResponse() { message = "wallet address not registered", status = "failed", error = "access_denied" };
+            }
+
+            //SSOLogin(null, credentialId, "Fido2");
+        }
+        catch (Exception ex)
+        {
+            RO.Common3.Utils.NeverThrow(ex);
+            return new LoginApiResponse() { message = "invalid eth1 wallet assertion", status = "failed", error = "access_denied" };
+        }
     }    
+        
 }

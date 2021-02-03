@@ -45,6 +45,7 @@ namespace RO.Common3.Data
 			columns.Add("OrientationCd22", typeof(string));
 			columns.Add("CopyReportId22", typeof(string));
 			columns.Add("ModifiedBy22", typeof(string));
+			columns.Add("ModifiedOn22", typeof(string));
 			columns.Add("TemplateName22", typeof(string));
 			columns.Add("RptTemplate22", typeof(string));
 			columns.Add("CommandTimeOut22", typeof(string));

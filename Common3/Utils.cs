@@ -389,6 +389,8 @@
 
             byte[] dc;
 
+            if (image != null && image.Length < 3000) return image;
+
             System.Drawing.Image oBMP = null;
 
             using (var ms = new MemoryStream(image))

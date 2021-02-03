@@ -6,11 +6,36 @@ import { bindActionCreators } from 'redux';
 import { Formik, Field, Form } from 'formik';
 import { Redirect, withRouter } from 'react-router-dom';
 import LoadingIcon from 'mdi-react/LoadingIcon';
-import { login, logout, getCurrentUser, getWebAuthnAssertionRequest, webauthnAssertion } from '../../redux/Auth';
+import { login, logout, getCurrentUser, getWebAuthnAssertionRequest, webauthnAssertion, getWeb3SigningRequest, web3Assertion } from '../../redux/Auth';
 import { Link } from 'react-router-dom';
 import log from '../../helpers/logger';
 import { setSpinner } from '../../redux/Global';
 import { parsedUrl, base64UrlEncode, base64UrlDecode, base64Codec, coerceToArrayBuffer, IsMobile, isSafari } from '../../helpers/domutils';
+import { getRintagiConfig } from '../../helpers/config';
+import Web3 from "web3";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
+function trackWeb3(provider) {
+  provider.on("accountsChanged", (accounts) => {
+    log.debug("web3 account changed", provider, accounts);
+  });
+
+  // Subscribe to chainId change
+  provider.on("chainChanged", (chainId) => {
+    log.debug("web3 chain changed", provider, chainId);
+  });
+
+  // Subscribe to provider connection
+  provider.on("connect", (info) => {
+    const { chainId } = info || {}
+    log.debug("web3 connected", provider, info);
+  });
+
+  // Subscribe to provider disconnection
+  provider.on("disconnect", (code, reason) => {
+    log.debug("web3 disconnected", provider, code, reason);
+  });
+}
 
 class Login extends Component {
   constructor(props) {
@@ -23,6 +48,7 @@ class Login extends Component {
 
     this.showPassword = this.showPassword.bind(this);
     this.webAuthnLogin = this.webAuthnLogin.bind(this);
+    this.connectWeb3 = this.connectWeb3.bind(this);
     this.handleSubmit = ((values, { setSubmitting, setErrors /* setValues and other goodies */ }) => {
       this.setState({ submitting: true, setSubmitting: setSubmitting });
       // this.state.submitting = true;
@@ -182,6 +208,75 @@ class Login extends Component {
     }
   }
 
+  connectWeb3(metamask, values, { setSubmitting, setErrors, resetForm, setValues /* setValues and other goodies */ }) {
+    const _this = this;
+    const rintagi = getRintagiConfig() || {};
+    const web3rpc = rintagi.web3rpc || {};
+    const web3NetworkId = rintagi.web3Networkid || 1;
+    const infuraId = rintagi.infuraId
+    const web3rpcUrl = web3rpc[web3NetworkId];
+
+    return function (evt) {
+      // Create WalletConnect Provider
+      const provider = metamask && window.ethereum
+      ? ethereum
+      : new WalletConnectProvider({
+        infuraId: infuraId, // required
+        pollingInterval: 60 * 60 * 1000, // in ms must do this to stop the frequent polling(default 1s, too much for infura)
+        rpc: {
+          100: "https://rpc.xdaichain.com/", // required for any non-ethereum networkId(returned from remote wallet)
+          ...web3rpc,
+        }
+      });
+      // Enable session (triggers QR Code modal)
+      trackWeb3(provider);
+      try {
+        const signingRequest = _this.state.web3SigningRequest;
+        const web3Wallet= new Web3(provider);
+        const wallet = provider.enable()
+          .then(
+            (accounts) => {
+              log.debug(accounts);
+              if ((accounts || []).length > 0) {
+                return web3Wallet.eth.personal.sign(signingRequest, accounts[0]);    
+              }
+            }
+          )
+          .then((sig) => {
+            log.debug(sig);
+            _this.props.web3Assertion(signingRequest, sig)
+            .then(result => {
+              log.debug(result);
+            })
+            .catch(error => {
+              log.debug(error);
+            });
+          })
+          .catch(error => {
+            log.debug(error);
+          })
+          .finally(() => {
+            setTimeout(() => {
+              // must delay the disconnect or else the signing request would trigger another wallet connect modal popup
+              log.debug("disconnect");
+              provider.disconnect && provider.disconnect();              
+            }, 30000);
+          })
+          ;
+        log.debug(provider, web3Wallet);
+        const web3 = new Web3(web3rpcUrl);
+        return { web3, web3Wallet };
+        // setTimeout(() => {
+        //   log.debug('disconnect after 5s');
+        //   provider.disconnect();
+        // }, 60*60*1000);
+      }
+      catch (e) {
+        log.debug(e);
+      }
+    }
+  }
+
   componentDidMount() {
     // if (!this.props.user || !this.props.user.UsrId) {
     //   this.props.getCurrentUser();
@@ -208,6 +303,22 @@ class Login extends Component {
           log.debug(error);
         })
     }
+    const ethereum = typeof window != 'undefined' && window.ethereum;
+    if (ethereum || true) {
+      const _this = this;
+      const myUrl = parsedUrl(window.location);
+      this.props.getWeb3SigningRequest(myUrl.href)
+        .then(result => {
+          log.debug(result);
+          _this.setState({
+            web3SigningRequest: ((result || {}).data || {}).signingRequest,
+          });
+        })
+        .catch(error => {
+          log.debug(error);
+        })
+    }
+
   }
 
   componentWillUnmount() {
@@ -314,11 +425,18 @@ class Login extends Component {
                       <div className='form__form-group'>
                         <Link className="fill-fintrux" to="/forget-password">Forget Password?</Link>
                       </div>
-                      <Button color='success' className='btn btn-success account__btn' type="submit" disabled={isSubmitting}>{this.props.auth.Label.Login}</Button>
-                      <br />
+                      <Button color='success' className='btn btn-success account__btn mb-20' type="submit" disabled={isSubmitting}>{this.props.auth.Label.Login}</Button>
                       {
                         this.state.assertionRequest &&
-                        <Button color='success' className='btn btn-success account__btn' onClick={this.webAuthnLogin(values, { setSubmitting })} disabled={isSubmitting}>{"WebAuthn Login"}</Button>
+                        <Button color='success' className='btn btn-success account__btn mb-20' onClick={this.webAuthnLogin(values, { setSubmitting })} disabled={isSubmitting}>{"WebAuthn Login"}</Button>
+                      }
+                      {
+                        this.state.web3SigningRequest  &&
+                        <Button color='success' className='btn btn-success account__btn mb-20' onClick={this.connectWeb3(false, values, { setSubmitting })} disabled={isSubmitting}>{"Eth1 Mobile Wallet Login"}</Button>
+                      }
+                      {
+                        this.state.web3SigningRequest && window.ethereum &&
+                        <Button color='success' className='btn btn-success account__btn mb-20' onClick={this.connectWeb3(true, values, { setSubmitting })} disabled={isSubmitting}>{"MetaMask Login"}</Button>
                       }
                     </Form>
                   )}
@@ -346,6 +464,8 @@ const mapDispatchToProps = (dispatch) => (
     { setSpinner: setSpinner },
     { getWebAuthnAssertionRequest: getWebAuthnAssertionRequest },
     { webauthnAssertion: webauthnAssertion },
+    { getWeb3SigningRequest: getWeb3SigningRequest },
+    { web3Assertion: web3Assertion },
   ), dispatch)
 )
 

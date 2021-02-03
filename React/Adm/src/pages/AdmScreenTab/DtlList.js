@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import { Formik, Field, Form } from 'formik';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import MagnifyIcon from 'mdi-react/MagnifyIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import PlusIcon from 'mdi-react/PlusIcon';

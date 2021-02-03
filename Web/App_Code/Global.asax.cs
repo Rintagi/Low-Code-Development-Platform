@@ -147,6 +147,28 @@ namespace RO
                 {
                 }
             }
+            else
+            {
+                // IIS restriction, modifying cache-control invalidate default document handling in classic pipeline(so must switch to integrated if this is required)
+                if (Config.PageCacheControl > 0)
+                {
+                    // must deliberately set this for time based caching or it becomes public
+                    Response.Cache.SetCacheability(HttpCacheability.ServerAndPrivate);
+                    // no-cache, max-age and expiry has no effect on forward/backward button(and most likely history)
+                    // chrome/firefox default is no-cache if there is no cache-control, except forward/backward button
+                    Response.Cache.SetExpires(DateTime.UtcNow.AddSeconds(Config.PageCacheControl.Value));
+                }
+                else if (Config.PageCacheControl == 0)
+                {
+                    // deliberately want to retain default asp.net behavior(say to use classic pipeline
+                    // won't do anything to the cache control pipeline 
+                }
+                else  // extreme no-cache
+                {
+                    //this is absolutely no caching, effectively same as 'form post', even back/forward button in chrome would hit server
+                    Response.Cache.SetNoStore();
+                }
+            }
 		}
 
 		protected void Application_EndRequest(Object sender, EventArgs e)
@@ -185,7 +207,6 @@ namespace RO
                     }
                 }
             }
-
 		}
 
 		protected void Application_AuthenticateRequest(Object sender, EventArgs e)
@@ -217,6 +238,13 @@ namespace RO
                     }
                 }
                 catch { }
+                if (Request.Url.PathAndQuery.Contains("CronJob.aspx") 
+                    &&
+                    !string.IsNullOrEmpty(Request.QueryString["hash"])
+                    )
+                {
+                    return;
+                }
                 if (
                     (Request.IsAuthenticated && HttpContext.Current.User.Identity.Name.ToLower() != "anonymous") || Request.IsLocal || objErr.Message.ToString().Contains("proxy"))
                 {
@@ -459,6 +487,7 @@ namespace RO
                     request != null ? request.Url.PathAndQuery : (info != null ? info["Host"] : "")
                     , string.IsNullOrEmpty(xOriginalURL) ? "" : " Incoming " + xOriginalURL);
                 string machine = string.Format("Machine: {0}\r\n\r\n", Environment.MachineName);
+                string userAgent = string.Format("UserAgent: {0}\r\n\r\n", request != null ? request.UserAgent : "");
                 string roVersion = string.Format("RO Version: {0}\r\n\r\n", ROVersion);
                 string currentTime = string.Format("Server Time: {0} \r\n\r\n UTC: {1} \r\n\r\n", DateTime.Now.ToString("O"), DateTime.UtcNow.ToString("O"));
 
@@ -482,6 +511,7 @@ namespace RO
                             + "\r\n"
                             + sourceIP
                             + "UserId : " + (LoginUsrId ?? "") + " UserName: " + (LoginUserName ?? "") + "\r\n"
+                            + userAgent
                             + host 
                             + path
                             + machine

@@ -36,8 +36,8 @@ namespace RO.Common3.Data
 		{
 			DataColumnCollection columns = dt.Columns;
 			columns.Add("UsrId1", typeof(string));
-			columns.Add("UsrPassword1", typeof(string));
-			columns.Add("ConfirmPwd1", typeof(string));
+			columns.Add("UsrPassword1", typeof(object));
+			columns.Add("ConfirmPwd1", typeof(object));
 			columns.Add("SendMail", typeof(string));
 			columns.Add("ForcePwdChg", typeof(string));
 			return dt;

@@ -119,6 +119,9 @@ namespace RO.Common3
         private static string wExportExcelCSV;
         private static string wFCMServerKey;
         private static string wFXMinuteToCache;
+        private static int? wPageCacheControl;
+        private static string wEnableFido2;
+        private static string wEnableCryptoWallet;
 
         static Config()
 		{
@@ -271,6 +274,13 @@ namespace RO.Common3
             wExportExcelCSV = System.Configuration.ConfigurationManager.AppSettings["ExportExcelCSV"];
             wFCMServerKey = System.Configuration.ConfigurationManager.AppSettings["FCMServerKey"];
             wFXMinuteToCache = System.Configuration.ConfigurationManager.AppSettings["FXMinuteToCache"];
+            try
+            {
+                wPageCacheControl = int.Parse(System.Configuration.ConfigurationManager.AppSettings["PageCacheControl"]);
+            }
+            catch { }
+            wEnableFido2 = System.Configuration.ConfigurationManager.AppSettings["EnableFido2"];
+            wEnableCryptoWallet = System.Configuration.ConfigurationManager.AppSettings["EnableCryptoWallet"];
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -450,13 +460,15 @@ namespace RO.Common3
         public static string PaypalExpressAPIEncSignature { get { return wPaypalExpressAPIEncSignature; } }
         public static string PaypalRESTAPIClientID { get { return wPaypalRESTAPIClientID; } }
         public static string PaypalRESTAPIEncSecret { get { return wPaypalRESTAPIEncSecret; } }
-        public static string ReactTemplate { get { return string.IsNullOrEmpty(wReactTemplate) ? "TemplateV3" : wReactTemplate;; } }
+        public static string ReactTemplate { get { return string.IsNullOrEmpty(wReactTemplate) ? "TemplateV4" : wReactTemplate;; } }
         public static bool DesLegacyMD5Encrypt { get { return (wDesLegacyMD5Encrypt ?? "Y").ToUpper() == "Y"; } }
         public static bool HardenedTOTP { get { return (wHardenedTOTP ?? "N").ToUpper() == "Y"; } }
         public static bool ExportExcelCSV { get { return (wExportExcelCSV ?? "Y").ToUpper() == "Y"; } }
         public static string FCMServerKey { get { return wFCMServerKey ; } }
         public static string FXMinuteToCache { get { return wFXMinuteToCache; } }
-
+        public static int? PageCacheControl { get { return wPageCacheControl; } }
+        public static bool EnableFido2 { get { return (wEnableFido2 ?? "N").ToUpper() == "Y"; } }
+        public static bool EnableCryptoWallet { get { return (wEnableCryptoWallet ?? "N").ToUpper() == "Y"; } }
         public static string RintagiLicense
         { 
             get { return wLicense; } 
@@ -498,7 +510,8 @@ namespace RO.Common3
 
 		public static string GetConnStr(string dbProvider, string dbServer, string dbDatabase, string dbService, string dbUserId, string driverType = "oledb")
 		{
-            bool useOdbc = (driverType ?? "").ToLower() == "odbc" || (dbProvider ?? "").ToLower() == "odbc";
+            bool singleSQLCredential = Config.DesShareCred;
+            bool useOdbc = (driverType ?? "").ToLower() == "odbc" || (dbProvider ?? "").ToLower() == "odbc" || (singleSQLCredential && (Config.DesProvider ?? "").ToLower() == "odbc");
             bool useSqlClient = (driverType ?? "").ToLower() == "sqlclient";
             bool useOleDb = !useOdbc && !useSqlClient;
             //string defaultOleDbProvider = "SQLOLEDB";
@@ -510,21 +523,39 @@ namespace RO.Common3
                 || useSqlClient
                 )
 			{
-                bool singleSQLCredential = Config.DesShareCred;
                 bool bIntegratedSecurity = singleSQLCredential && Config.IntegratedSecurity;
                 string odbcDriverVersion = string.IsNullOrEmpty(Config.ODBCDriver) ? "ODBC Driver 13 for SQL Server" : Config.ODBCDriver;
                 string sqlClientDriverVersion = System.Configuration.ConfigurationManager.AppSettings["SqlClientDriver"] ?? "SQL Server Native Client 11.0";
                 if (useOdbc)
                 {
-                    return "Driver={" + odbcDriverVersion + "}; Server=" + dbServer + ";database=" + dbDatabase + ";" + (bIntegratedSecurity ? "Trusted_Connection=Yes" : "Uid=" + dbUserId + ";Pwd=");
+                    return "Driver={" + odbcDriverVersion + "}" 
+                                + "; Server=" + (singleSQLCredential ? Config.DesServer : dbServer) 
+                                + "; database=" + dbDatabase 
+                                + ";" + (bIntegratedSecurity 
+                                                ? "Trusted_Connection=Yes" 
+                                                : "Uid=" + (Config.DesShareCred ? Config.DesUserId : dbUserId) + ";Pwd=");
                 }
                 else if (useSqlClient)
                 {
-                    return "Driver={" + sqlClientDriverVersion + "}; Server=" + dbServer + ";database=" + dbDatabase + ";" + (bIntegratedSecurity ? "Trusted_Connection=Yes" : "Uid=" + dbUserId + ";Pwd=");
+                    return "Driver={" + sqlClientDriverVersion + "}" 
+                                + "; Server=" + dbServer 
+                                + "; database=" + dbDatabase
+                                + ";" + (bIntegratedSecurity ? "Trusted_Connection=Yes" : "Uid=" + (Config.DesShareCred ? Config.DesUserId : dbUserId) + ";Pwd=");
                 }
                 else
                 {
-                    return "Provider=" + (singleSQLCredential ? ((Config.DesProvider ?? "").ToLower() != "odbc" ? Config.DesProvider : defaultOleDbProvider) : ((dbProvider ?? "").ToLower() != "odbc" ? dbProvider : defaultOleDbProvider)) + ((dbProvider ?? "").ToUpper() == "MSOLEDBSQL" && false ? ";DataTypeCompatibility=80" : "") + ";Data Source=" + (singleSQLCredential ? Config.DesServer : dbServer) + ";database=" + dbDatabase + ";Connect Timeout=" + DesTimeout + ";" + (bIntegratedSecurity ? "Integrated Security=sspi;" : "User ID=" + dbUserId + ";") + dbService + ";password=";
+                    return "Provider=" 
+                                + (singleSQLCredential 
+                                    ? ((Config.DesProvider ?? "").ToLower() != "odbc" ? Config.DesProvider : defaultOleDbProvider) 
+                                    : ((dbProvider ?? "").ToLower() != "odbc" ? dbProvider : defaultOleDbProvider)) 
+                                + ((dbProvider ?? "").ToUpper() == "MSOLEDBSQL" && false ? ";DataTypeCompatibility=80" : "") 
+                                + ";Data Source=" + (singleSQLCredential ? Config.DesServer : dbServer) 
+                                + ";database=" + dbDatabase 
+                                + ";Connect Timeout=" + DesTimeout 
+                                + ";" + (bIntegratedSecurity 
+                                            ? "Integrated Security=sspi;"
+                                            : "User ID=" + (Config.DesShareCred ? Config.DesUserId : dbUserId) + ";") 
+                                + dbService + ";password=";
                 }
 			}
 			else	// Sybase for now.

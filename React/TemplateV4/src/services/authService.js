@@ -11,6 +11,7 @@ export const authService = {
     login, logout, renewAccessToken, getToken, getAccessToken, getAccessControlInfo
     , isAuthenticated, getUsr, getMenu, getReactQuickMenu, getSystems, getServerIdentity, getRefreshToken, setAccessScope, getAccessScope, resetPwdEmail, resetPassword
     , getWebAuthnAssertionRequest, getWebAuthnRegistrationRequest, webauthnAssertion, webauthnRegistration
+    , getWeb3SigningRequest, web3Assertion, web3Registration
 };
 
 const getMyMachine = getFingerPrint();
@@ -813,6 +814,134 @@ async function webauthnAssertion(requestJSON, resultJSON, scope) {
                     requestJSON: requestJSON || '',
                     resultJSON: resultJSON || '',
                     scope: scope || ''
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(result => {
+            const apiResult = fetchService.getAPIResult(result);
+            if (apiResult.accessCode || (apiResult.accessToken || {}).refresh_token) {
+                rememberUserHandle(apiResult.username);
+                if ((apiResult.accessToken || {}).refresh_token) {
+                    return renewAccessToken((apiResult.accessToken || {}).refresh_token)
+                        .then(
+                            accessToken => {
+                                return {
+                                    accessCode: apiResult.accessCode,
+                                    refresh_token: accessToken.refresh_token,
+                                    status: "success",
+                                }
+                            },
+                            error => {
+                                eraseUserHandle();
+                                return Promise.reject(error);
+                            }
+                        )
+                }
+                else
+                    return getToken(apiResult.accessCode)
+                        .then(
+                            accessToken => {
+                                return {
+                                    accessCode: apiResult.accessCode,
+                                    status: "success",
+                                }
+                            },
+                            error => {
+                                eraseUserHandle();
+                                return Promise.reject(error);
+                            }
+                        )
+            }
+            else {
+                return Promise.reject({
+                    status: "failed",
+                    errType: result.status === "success" ? result.data.value.d.error : result.errType,
+                    errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                })
+        }
+        },
+            (error => {
+                return Promise.reject(error);
+            })
+        )
+}
+
+async function getWeb3SigningRequest(hostingDomainUrl, loginName, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/GetWeb3SigningRequest"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    hostingDomainUrl: hostingDomainUrl || '',
+                    loginName: loginName || '',
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
+}
+
+async function web3Registration(requestJSON, resultJSON, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/Web3Registration"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    requestJSON: requestJSON || '',
+                    resultJSON: resultJSON || '',
+                })
+            },
+            ...(getAccessControlInfo())
+        })
+        .then(
+            async result => {
+                if (result.status === "success" && result.data.value.d && result.data.value.d.status === "success") {
+                    return {
+                        data: getAPIResult(result).data,
+                        supportingData: getAPIResult(result).supportingData || {}
+                    }
+                }
+                else {
+                    return Promise.reject({
+                        status: "failed",
+                        errType: result.status === "success" ? "api call error" : result.errType,
+                        errSubType: result.errSubType || (result.status === "success" ? result.data.value.d.error : null),
+                        errMsg: result.status === "success" ? result.data.value.d.message : result.errType
+                    })
+                }
+            },
+            error => {
+                return Promise.reject(error);
+            }
+        )
+}
+
+async function web3Assertion(requestJSON, resultJSON, scope) {
+    return fetchAPIResult(baseUrl + "/authWs.asmx/Web3Assertion"
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    requestJSON: requestJSON || '',
+                    resultJSON: resultJSON || '',
                 })
             },
             ...(getAccessControlInfo())

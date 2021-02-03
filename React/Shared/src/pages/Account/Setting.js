@@ -16,7 +16,7 @@ import * as systemService from '../../services/systemService';
 import NaviBar from '../../components/custom/NaviBar';
 import { getNaviBar } from './index';
 import {switchLanguage} from '../../helpers/formatter';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import { setTitle } from '../../redux/Global';
 import { getRintagiConfig } from '../../helpers/config';
 

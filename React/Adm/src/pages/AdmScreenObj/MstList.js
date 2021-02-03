@@ -26,7 +26,7 @@ import { checkBundleUpdate } from '../../redux/_Rintagi';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import log from '../../helpers/logger';
 
 class MstList extends RintagiScreen {
@@ -74,7 +74,11 @@ class MstList extends RintagiScreen {
     this.props.setSpinner(true);
   }
 
-
+  CriScreenId10InputChange() {
+    return function (name, v) {
+      this.props.SearchCriScreenId10(v);
+    }.bind(this);
+  }
 
   /* standard screen button actions for each screen, must implement if button defined */
   Print({ mst, mstId }) {
@@ -158,7 +162,7 @@ class MstList extends RintagiScreen {
     const refreshFn = (() => {
       this.props.SetScreenCriteria(values.search,
         {
-
+          ScreenId10: (values.cCriScreenId10) ? values.cCriScreenId10.value : '',
         },
         (values.cFilterId) ? values.cFilterId.value : 0);
     }).bind(this);
@@ -277,7 +281,8 @@ class MstList extends RintagiScreen {
     let filterBtnStyle = classNames({ 'filter-button-clicked': screenCriteria.ShowFilter });
     let filterActive = classNames({ 'filter-icon-active': screenCriteria.ShowFilter });
 
-
+    const CriScreenId10List = screenCriDdlSelectors.ScreenId10(AdmScreenObjState);
+    const CriScreenId10Selected = CriScreenId10List.filter(obj => { return obj.key === screenCriteria.ScreenId10.LastCriteria });
 
     const hasScreenFilter = screenFilterList.length > 0;
     const activeSelectionVisible = selectList.filter(v => v.isSelected).length > 0;
@@ -358,7 +363,7 @@ class MstList extends RintagiScreen {
                     </div>
                     <Formik
                       initialValues={{
-
+                        cCriScreenId10: CriScreenId10Selected[0],
                         search: screenCriteria.SearchStr || '',
                         cFilterId: (screenFilterSelected.length > 0 ? screenFilterSelected[0] : screenFilterList[0])
                       }}
@@ -378,7 +383,19 @@ class MstList extends RintagiScreen {
                               <div className='form__form-group'>
                                 <div className={`form__form-group filter-padding ${filterVisibility}`} key={screenCriteria.key}>
                                   <Row className='mb-5'>
-
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{(screenCriteria.ScreenId10 || {}).ColumnHeader}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <AutoCompleteField
+                                          name='cCriScreenId10'
+                                          onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'autocomplete', 'cCriScreenId10')}
+                                          onInputChange={this.CriScreenId10InputChange()}
+                                          value={values.cCriScreenId10}
+                                          defaultSelected={CriScreenId10Selected}
+                                          options={CriScreenId10List}
+                                        />
+                                      </div>
+                                    </Col>
                                   </Row>
                                   <Row>
                                     {hasScreenFilter && <Col xs={12} md={12}>
@@ -545,7 +562,7 @@ const mapDispatchToProps = (dispatch) => (
     { AddDtl: AdmScreenObjReduxObj.AddDtl.bind(AdmScreenObjReduxObj) },
     { changeMstListFilterVisibility: AdmScreenObjReduxObj.ChangeMstListFilterVisibility.bind(AdmScreenObjReduxObj) },
     { SetScreenCriteria: AdmScreenObjReduxObj.SetScreenCriteria.bind(AdmScreenObjReduxObj) },
-
+    { SearchCriScreenId10: AdmScreenObjReduxObj.SearchActions.SearchCriScreenId10.bind(AdmScreenObjReduxObj) },
     { checkBundleUpdate: checkBundleUpdate },
     { setTitle: setTitle },
     { setSpinner: setSpinner },

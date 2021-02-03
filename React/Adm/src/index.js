@@ -5,14 +5,18 @@ import App from './app/App';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import store from './app/store';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import ScrollToTop from './app/ScrollToTop';
 import { getUserConfirmation } from './helpers/navigation'
 // import { createBrowserHistory, useBasename } from "history";
 import { HashRouter, BrowserRouter } from "react-router-dom";
 import log from './helpers/logger'
 //import * as serviceWorker from './serviceWorker';
-import * as serviceWorker from './registerServiceWorkerV3';
+//import * as serviceWorker from './registerServiceWorkerV3';
 import { setupRuntime, getRintagiConfig } from './helpers/config';
+
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import reportWebVitals from './reportWebVitals';
 
 /* sample trivial web worker implementation, can be removed/comment out */
 import * as Comlink from 'comlink';
@@ -36,6 +40,12 @@ async function initBar() {
 }
 initFoo();
 initBar();
+
+window.addEventListener('unhandledrejection', function(event) {
+  // the event object has two special properties:
+  console.log(event.promise); // [object Promise] - the promise that generated the error
+  console.log(event.reason); // Error: Whoops! - the unhandled error object
+});
 
 /* Rintagi runtime configuration(rintagi.js under public/runtime) is loaded in index.html so must be accessed via document namespace
  * this is for post-deployment override
@@ -82,7 +92,7 @@ if (runtimeConfig.logLevel) log.setLevel(runtimeConfig.logLevel);
 
 //console.log((navigator.serviceWorker || {}).controller);
  //serviceWorker.register({scope:'/static/'});
-serviceWorker.register({updateViaCache:'none'});
+//serviceWorker.register({updateViaCache:'none'});
  
 /* below is app specific */
 document.backPath = '/my-network';
@@ -99,14 +109,16 @@ window.addEventListener('hashchange', (e) => {
 const baseName = process.env.NODE_ENV === "development" ? appProxyBasename : appBasename;
 
 render(
-  <Provider store={store}>
-    <Router basename={baseName} getUserConfirmation={getUserConfirmation}>
-      <ScrollToTop>
-        <App />
-      </ScrollToTop>
-    </Router>
-  </Provider>,
-  document.getElementById('root')
+  <HelmetProvider>
+    <Provider store={store}>
+      <Router basename={baseName} getUserConfirmation={getUserConfirmation}>
+        <ScrollToTop>
+          <App />
+        </ScrollToTop>
+      </Router>
+    </Provider>
+  </HelmetProvider>
+  , document.getElementById('root')
 );
 
 // import React from 'react';
@@ -126,3 +138,14 @@ render(
 // // unregister() to register() below. Note this comes with some pitfalls.
 // // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://cra.link/PWA
+// serviceWorkerRegistration.unregister();
+serviceWorkerRegistration.register();
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

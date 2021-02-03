@@ -96,6 +96,78 @@ const initState = {
   ticketLeft: null,
   ticketRight: null,
 }
+
+function handleLoginResult(dispatch, data, challenge) {
+  if (data.status === "success") {
+    //dispatchWithNotification(dispatch, { type: LOGIN.SUCCEEDED, payload: data.accessCode});
+    //dispatchWithNotification(dispatch, { type: GET_TOKEN.STARTED, payload: data.accessCode});
+    const { accessCode, refresh_token } = data;
+    return authService.getToken(refresh_token || accessCode, { grant_type: refresh_token && 'refresh_token' }).then(
+      data => {
+        //dispatchWithNotification(dispatch, { type: GET_TOKEN.SUCCEEDED, payload: data.data});
+        //dispatchWithNotification(dispatch, { type: GET_USER.STARTED, payload: data.data});
+        return authService.getUsr().then(
+          data => {
+            dispatchWithNotification(dispatch, { type: GET_USER.SUCCEEDED, payload: data.data });
+            authService.getMenu(systemId).then(
+              data => {
+                dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
+              },
+              error => {
+                dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
+              }
+            ).catch(error => {
+              console.log(error);
+            })
+
+            authService.getSystems().then(
+              data => {
+                dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });
+              },
+              error => {
+                dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
+              }
+            ).catch(error => {
+              console.log(error);
+            })
+
+            authService.getServerIdentity().then(
+              data => {
+                dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.SUCCEEDED, payload: data.data });
+              },
+              error => {
+                dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.FAILED, payload: error });
+              }
+            ).catch(error => {
+              console.log(error);
+            })
+
+            return Promise.resolve([data.data]);
+          },
+          error => {
+            dispatchWithNotification(dispatch, { type: GET_USER.FAILED, payload: error });
+            return Promise.reject(error);
+          }
+        ).catch(error => {
+          console.log(error);
+          return Promise.reject(error);
+        })
+      }, error => {
+        dispatchWithNotification(dispatch, { type: GET_TOKEN.FAILED, payload: error });
+        return Promise.reject(error);
+      }).catch(error => {
+        console.log(error);
+        return Promise.reject(error);
+      })
+  }
+  else {
+    dispatchWithNotification(dispatch, { type: LOGIN.FAILED, payload: data });
+    return Promise.reject(data);
+    //dispatchWithNotification(dispatch, getNotificationAction("E", data.error || data.errMsg));
+  }
+
+}
+
 export function authReducer(state = initState, action) {
   const payload = action.payload;
 
@@ -397,73 +469,7 @@ export function login(username, password) {
     dispatchWithNotification(dispatch, { type: LOGIN.STARTED, payload: { username: username } });
     return authService.login(username, password).then(
       (data) => {
-        if (data.status === "success") {
-          //dispatchWithNotification(dispatch, { type: LOGIN.SUCCEEDED, payload: data.accessCode});
-          //dispatchWithNotification(dispatch, { type: GET_TOKEN.STARTED, payload: data.accessCode});
-          const { accessCode, refresh_token } = data;
-          return authService.getToken(refresh_token || accessCode, { grant_type: refresh_token && 'refresh_token' }).then(
-            data => {
-              //dispatchWithNotification(dispatch, { type: GET_TOKEN.SUCCEEDED, payload: data.data});
-              //dispatchWithNotification(dispatch, { type: GET_USER.STARTED, payload: data.data});
-              return authService.getUsr().then(
-                data => {
-                  dispatchWithNotification(dispatch, { type: GET_USER.SUCCEEDED, payload: data.data });
-                  authService.getMenu(systemId).then(
-                    data => {
-                      dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
-                    },
-                    error => {
-                      dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
-                    }
-                  ).catch(error => {
-                    console.log(error);
-                  })
-
-                  authService.getSystems().then(
-                    data => {
-                      dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });
-                    },
-                    error => {
-                      dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
-                    }                   
-                  ).catch(error => {
-                    console.log(error);
-                  })
-
-                  authService.getServerIdentity().then(
-                    data => {
-                      dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.SUCCEEDED, payload: data.data });
-                    },
-                    error => {
-                      dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.FAILED, payload: error });
-                    }
-                  ).catch(error => {
-                    console.log(error);
-                  })
-
-                  return Promise.resolve([data.data]);
-                },
-                error => {
-                  dispatchWithNotification(dispatch, { type: GET_USER.FAILED, payload: error });
-                  return Promise.reject(error);
-                }
-              ).catch(error => {
-                console.log(error);
-                return Promise.reject(error);
-              })
-            }, error => {
-              dispatchWithNotification(dispatch, { type: GET_TOKEN.FAILED, payload: error });
-              return Promise.reject(error);
-            }).catch(error => {
-              console.log(error);
-              return Promise.reject(error);
-            })
-        }
-        else {
-          dispatchWithNotification(dispatch, { type: LOGIN.FAILED, payload: data });
-          return Promise.reject(data);
-          //dispatchWithNotification(dispatch, getNotificationAction("E", data.error || data.errMsg));
-        }
+        handleLoginResult(dispatch, data);
       },
       (error) => {
         console.log(error);
@@ -743,79 +749,56 @@ export function webauthnAssertion(requestJSON, resultJSON) {
   return (dispatch, getState, { webApi }) => {
     return authService.webauthnAssertion(requestJSON, resultJSON).then(
       (data) => {
-        if (data.status === "success") {
-          //dispatchWithNotification(dispatch, { type: LOGIN.SUCCEEDED, payload: data.accessCode});
-          //dispatchWithNotification(dispatch, { type: GET_TOKEN.STARTED, payload: data.accessCode});
-          const { accessCode, refresh_token } = data;
-          return authService.getToken(refresh_token || accessCode, { grant_type: refresh_token && 'refresh_token' }).then(
-            data => {
-              //dispatchWithNotification(dispatch, { type: GET_TOKEN.SUCCEEDED, payload: data.data});
-              //dispatchWithNotification(dispatch, { type: GET_USER.STARTED, payload: data.data});
-              return authService.getUsr().then(
-                data => {
-                  dispatchWithNotification(dispatch, { type: GET_USER.SUCCEEDED, payload: data.data });
-                  authService.getMenu(systemId).then(
-                    data => {
-                      dispatchWithNotification(dispatch, { type: GET_MENU.SUCCEEDED, payload: data.data });
-                    },
-                    error => {
-                      dispatchWithNotification(dispatch, { type: GET_MENU.FAILED, payload: error });
-                    }
-                  ).catch(error => {
-                    console.log(error);
-                  })
-
-                  authService.getSystems().then(
-                    data => {
-                      dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.SUCCEEDED, payload: data.data });
-                    },
-                    error => {
-                      dispatchWithNotification(dispatch, { type: GET_SYSTEMLIST.FAILED, payload: error });
-                    }                   
-                  ).catch(error => {
-                    console.log(error);
-                  })
-
-                  authService.getServerIdentity().then(
-                    data => {
-                      dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.SUCCEEDED, payload: data.data });
-                    },
-                    error => {
-                      dispatchWithNotification(dispatch, { type: GET_SERVERIDENTITY.FAILED, payload: error });
-                    }
-                  ).catch(error => {
-                    console.log(error);
-                  })
-
-                  return Promise.resolve([data.data]);
-                },
-                error => {
-                  dispatchWithNotification(dispatch, { type: GET_USER.FAILED, payload: error });
-                  return Promise.reject(error);
-                }
-              ).catch(error => {
-                console.log(error);
-                return Promise.reject(error);
-              })
-            }, error => {
-              dispatchWithNotification(dispatch, { type: GET_TOKEN.FAILED, payload: error });
-              return Promise.reject(error);
-            }).catch(error => {
-              console.log(error);
-              return Promise.reject(error);
-            })
-        }
-        else {
-          dispatchWithNotification(dispatch, { type: LOGIN.FAILED, payload: data });
-          return Promise.reject(data);
-          //dispatchWithNotification(dispatch, getNotificationAction("E", data.error || data.errMsg));
-        }
+        return handleLoginResult(dispatch, data, false);
       },
       (error) => {
         console.log(error);
         dispatchWithNotification(dispatch, { type: LOGIN.FAILED, payload: { ...error, errMsg: error.errMsg === "bot challenge" ? "login failed" : error.errMsg } });
         return Promise.reject(error);
       }
+    )
+  }
+}
+
+export function getWeb3SigningRequest(hostingDomainUrl) {
+  return (dispatch, getState, { webApi }) => {
+    return authService.getWeb3SigningRequest(hostingDomainUrl)
+      .then(
+        data => {
+          return data;
+        },
+        error => {
+          return Promise.reject(error);
+        }
       )
+  }
+}
+
+export function web3Registration(requestJSON, resultJSON) {
+  return (dispatch, getState, { webApi }) => {
+    return authService.web3Registration(requestJSON, resultJSON)
+      .then(
+        data => {
+          return data;
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      )
+  }
+}
+
+export function web3Assertion(requestJSON, resultJSON) {
+  return (dispatch, getState, { webApi }) => {
+    return authService.web3Assertion(requestJSON, resultJSON).then(
+      (data) => {
+        return handleLoginResult(dispatch, data, false);
+      },
+      (error) => {
+        console.log(error);
+        dispatchWithNotification(dispatch, { type: LOGIN.FAILED, payload: { ...error, errMsg: error.errMsg === "bot challenge" ? "login failed" : error.errMsg } });
+        return Promise.reject(error);
+      }
+    )
   }
 }

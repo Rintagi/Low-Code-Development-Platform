@@ -6,7 +6,7 @@ import { Formik, Field, Form } from 'formik';
 import { Redirect, withRouter } from 'react-router-dom';
 import EyeIcon from 'mdi-react/EyeIcon';
 import LoadingIcon from 'mdi-react/LoadingIcon';
-import { login, logout, getCurrentUser, changePassword, ShowSpinner, getWebAuthnRegistrationRequest, webauthnRegistration } from '../../redux/Auth';
+import { login, logout, getCurrentUser, changePassword, ShowSpinner, getWebAuthnRegistrationRequest, webauthnRegistration, getWeb3SigningRequest, web3Registration } from '../../redux/Auth';
 import { Row, Col } from 'reactstrap';
 import NaviBar from '../../components/custom/NaviBar';
 import { getNaviBar } from './index';
@@ -15,10 +15,34 @@ import queryString from 'query-string'
 import Alert from '../../components/Alert';
 import { Link } from 'react-router-dom';
 import log from '../../helpers/logger';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import { setTitle } from '../../redux/Global';
 import { parsedUrl, base64UrlEncode, base64UrlDecode, base64Codec, coerceToArrayBuffer, IsMobile } from '../../helpers/domutils';
+import { getRintagiConfig } from '../../helpers/config';
+import Web3 from "web3";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
+function trackWeb3(provider) {
+  provider.on("accountsChanged", (accounts) => {
+    log.debug("web3 account changed", provider, accounts);
+  });
+
+  // Subscribe to chainId change
+  provider.on("chainChanged", (chainId) => {
+    log.debug("web3 chain changed", provider, chainId);
+  });
+
+  // Subscribe to provider connection
+  provider.on("connect", (info) => {
+    const { chainId } = info || {}
+    log.debug("web3 connected", provider, info);
+  });
+
+  // Subscribe to provider disconnection
+  provider.on("disconnect", (code, reason) => {
+    log.debug("web3 disconnected", provider, code, reason);
+  });
+}
 class NewPassword extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +58,7 @@ class NewPassword extends Component {
     this.showPassword = this.showPassword.bind(this);
     this.changePassword = this.changePassword.bind(this);
     this.webauthnRegistration = this.webauthnRegistration.bind(this);
+    this.connectWeb3 = this.connectWeb3.bind(this);
   }
 
   componentDidMount() {
@@ -43,16 +68,33 @@ class NewPassword extends Component {
       const _this = this;
       const myUrl = parsedUrl(window.location);
       this.props.getWebAuthnRegistrationRequest(myUrl.href)
-              .then(result=>{
-                log.debug(result);
-                _this.setState({
-                  registrationRequest: ((result || {}).data || {}).registrationRequest,
-                });
-              })
-              .catch(error=>{
-                log.debug(error);
-              })
+        .then(result => {
+          log.debug(result);
+          _this.setState({
+            registrationRequest: ((result || {}).data || {}).registrationRequest,
+          });
+        })
+        .catch(error => {
+          log.debug(error);
+        })
     }
+
+    const ethereum = typeof window != 'undefined' && window.ethereum;
+    if (ethereum || true) {
+      const _this = this;
+      const myUrl = parsedUrl(window.location);
+      this.props.getWeb3SigningRequest(myUrl.href)
+        .then(result => {
+          log.debug(result);
+          _this.setState({
+            web3SigningRequest: ((result || {}).data || {}).signingRequest,
+          });
+        })
+        .catch(error => {
+          log.debug(error);
+        })
+    }
+
     this.setState({
       j: qs.j,
       p: qs.p,
@@ -124,22 +166,22 @@ class NewPassword extends Component {
     request.errorMessage = undefined;
     request.challenge = coerceToArrayBuffer(request.challenge, 'challenge');
     if (request.user && request.user.id) {
-        request.user.id = coerceToArrayBuffer(request.user.id, 'user.id');
+      request.user.id = coerceToArrayBuffer(request.user.id, 'user.id');
     }
     if (request.excludeCredentials && request.excludeCredentials) {
-        request.excludeCredentials = (request.excludeCredentials || []).map(function (c, i) {
-            c.id = coerceToArrayBuffer(c.id, 'excludeCredentials.' + i + '.id');
-            return c;
-        });
+      request.excludeCredentials = (request.excludeCredentials || []).map(function (c, i) {
+        c.id = coerceToArrayBuffer(c.id, 'excludeCredentials.' + i + '.id');
+        return c;
+      });
     }
     if (request.allowCredentials && request.allowCredentials) {
-        request.allowCredentials = (request.allowCredentials || []).map(function (c, i) {
-            c.id = coerceToArrayBuffer(c.id, 'allowCredentials.' + i + '.id');
-            return c;
-        });
+      request.allowCredentials = (request.allowCredentials || []).map(function (c, i) {
+        c.id = coerceToArrayBuffer(c.id, 'allowCredentials.' + i + '.id');
+        return c;
+      });
     }
     if (request.authenticatorSelection && !request.authenticatorSelection.authenticatorAttachment) {
-        request.authenticatorSelection.authenticatorAttachment = undefined;
+      request.authenticatorSelection.authenticatorAttachment = undefined;
     }
     return request;
   }
@@ -148,75 +190,166 @@ class NewPassword extends Component {
     const _this = this;
     const request = this.state.registrationRequest;
     return new Promise(function (resolve, reject) {
-        if (!request) reject("no request json");
-        else {
-            try {
-                const x = JSON.parse(request);
-                resolve(request);
-            } catch (e) {
-                reject(e);
-            }
+      if (!request) reject("no request json");
+      else {
+        try {
+          const x = JSON.parse(request);
+          resolve(request);
+        } catch (e) {
+          reject(e);
         }
+      }
     });
   }
-  
+
+  getWeb3RegistrationRequestAsync() {
+    const _this = this;
+    const request = this.state.web3RegistrationRequest;
+    return new Promise(function (resolve, reject) {
+      if (!request) reject("no request json");
+      else {
+        try {
+          const x = JSON.parse(request);
+          resolve(request);
+        } catch (e) {
+          reject(e);
+        }
+      }
+    });
+  }
+
   webauthnRegistration(values, { setSubmitting, setErrors, resetForm, setValues /* setValues and other goodies */ }) {
     const _this = this;
     const b64url = new base64Codec(true);
     let registrationRequest = null;
-    return function(evt) {
+    return function (evt) {
       _this.setState({ submitting: true, setSubmitting: setSubmitting });
       _this.getRegistrationRequestAsync()
-          .then((request) => {
-            registrationRequest = request;
-            const x = JSON.parse(request);
-            request = _this.transformWebAuthRequest(x);
-              return navigator.credentials.create({
-                  publicKey: request
-              })
+        .then((request) => {
+          registrationRequest = request;
+          const x = JSON.parse(request);
+          request = _this.transformWebAuthRequest(x);
+          return navigator.credentials.create({
+            publicKey: request
           })
-          .then(function (newCredentialInfo) {
-              var extensions = newCredentialInfo.getClientExtensionResults();
-              var result = {
-                  Id: newCredentialInfo.id,
-                  RawId: b64url.encode(newCredentialInfo.rawId),
-                  Type: newCredentialInfo.type,
-                  Response: {
-                      AttestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
-                      ClientDataJson: b64url.encode(newCredentialInfo.response.clientDataJSON),
-                  },
-                  Extensions: extensions,
-                  attestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
-                  platform: navigator.platform,
-                  isMobile: IsMobile(),
-              };
-              var resultJSON = JSON.stringify(result);
-              _this.props.webauthnRegistration(registrationRequest, resultJSON)
-              .then(result=>{
-                log.debug(result);
-                if (((result || {}).data || {}).credentialId) {
-                  localStorage["Fido2Login"] = newCredentialInfo.id;
-                  if (result.data.message) {
-                    alert(result.data.message);
-                  }
+        })
+        .then(function (newCredentialInfo) {
+          var extensions = newCredentialInfo.getClientExtensionResults();
+          var result = {
+            Id: newCredentialInfo.id,
+            RawId: b64url.encode(newCredentialInfo.rawId),
+            Type: newCredentialInfo.type,
+            Response: {
+              AttestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
+              ClientDataJson: b64url.encode(newCredentialInfo.response.clientDataJSON),
+            },
+            Extensions: extensions,
+            attestationObject: b64url.encode(newCredentialInfo.response.attestationObject),
+            platform: navigator.platform,
+            isMobile: IsMobile(),
+          };
+          var resultJSON = JSON.stringify(result);
+          _this.props.webauthnRegistration(registrationRequest, resultJSON)
+            .then(result => {
+              log.debug(result);
+              if (((result || {}).data || {}).credentialId) {
+                localStorage["Fido2Login"] = newCredentialInfo.id;
+                if (result.data.message) {
+                  alert(result.data.message);
                 }
-              })
-              .catch(error=>{
-                log.debug(error);
-                alert("registration failed");
-              });
-      }).catch((err) => {
+              }
+            })
+            .catch(error => {
+              log.debug(error);
+              alert("registration failed");
+            });
+        }).catch((err) => {
           alert(err);
           // No acceptable authenticator or user refused consent. Handle appropriately.
-      }).finally(
-        ()=>{
-          _this.setState({ submitting: false });  
-        }
-      );
+        }).finally(
+          () => {
+            _this.setState({ submitting: false });
+          }
+        );
       console.log(values);
-  
+
     }
-  }  
+  }
+
+  connectWeb3(metamask, values, { setSubmitting, setErrors, resetForm, setValues /* setValues and other goodies */ }) {
+    const _this = this;
+    const rintagi = getRintagiConfig() || {};
+    const web3rpc = rintagi.web3rpc || {};
+    const web3NetworkId = rintagi.web3Networkid || 1;
+    const infuraId = rintagi.infuraId
+    const web3rpcUrl = web3rpc[web3NetworkId];
+
+    return function (evt) {
+      // Create WalletConnect Provider
+      const provider = metamask && window.ethereum
+      ? ethereum
+      : new WalletConnectProvider({
+        infuraId: infuraId, // required
+        pollingInterval: 60 * 60 * 1000, // in ms must do this to stop the frequent polling(default 1s, too much for infura)
+        rpc: {
+          100: "https://rpc.xdaichain.com/", // required for any non-ethereum networkId(returned from remote wallet)
+          ...web3rpc,
+        }
+      });
+      // Enable session (triggers QR Code modal)
+      trackWeb3(provider);
+      try {
+        const signingRequest = _this.state.web3SigningRequest;
+        const web3Wallet= new Web3(provider);
+        const wallet = provider.enable()
+          .then(
+            (accounts) => {
+              log.debug(accounts);
+              if ((accounts || []).length > 0) {
+                return web3Wallet.eth.personal.sign(signingRequest, accounts[0]);    
+              }
+            }
+          )
+          .then((sig) => {
+            log.debug(sig);
+            _this.props.web3Registration(signingRequest, sig)
+            .then(result => {
+              log.debug(result);
+              if (((result || {}).data || {}).walletAddress) {
+                if (result.data.message) {
+                  alert(result.data.message);
+                }
+              }
+            })
+            .catch(error => {
+              log.debug(error);
+              alert("registration failed");
+            });
+          })
+          .catch(error => {
+            log.debug(error);
+          })
+          .finally(() => {
+            setTimeout(() => {
+              // must delay the disconnect or else the signing request would trigger another wallet connect modal popup
+              log.debug("disconnect");
+              provider.disconnect && provider.disconnect();              
+            }, 30000);
+          })
+          ;
+        log.debug(provider, web3Wallet);
+        const web3 = new Web3(web3rpcUrl);
+        return { web3, web3Wallet };
+        // setTimeout(() => {
+        //   log.debug('disconnect after 5s');
+        //   provider.disconnect();
+        // }, 60*60*1000);
+      }
+      catch (e) {
+        log.debug(e);
+      }
+    }
+  }
 
   render() {
 
@@ -330,13 +463,31 @@ class NewPassword extends Component {
                             </Col>
                           </Row>
                         </div>
-                        { this.state.registrationRequest &&
+                        {this.state.registrationRequest &&
                           <div className="form__form-group mb-0">
-                          <Row className="btn-bottom-row">
-                            <Col xs={1} sm={12} className="btn-bottom-column">
-                              <Button color='success' className='btn btn-success account__btn' onClick={this.webauthnRegistration(values, {setSubmitting})} disabled={isSubmitting}>{"WebAuthn Registration"}</Button>
-                            </Col>
-                          </Row>
+                            <Row className="btn-bottom-row">
+                              <Col xs={1} sm={12} className="btn-bottom-column">
+                                <Button color='success' className='btn btn-success account__btn' onClick={this.webauthnRegistration(values, { setSubmitting })} disabled={isSubmitting}>{"WebAuthn Registration"}</Button>
+                              </Col>
+                            </Row>
+                          </div>
+                        }
+                        {this.state.web3SigningRequest &&
+                          <div className="form__form-group mb-0">
+                            <Row className="btn-bottom-row">
+                              <Col xs={1} sm={12} className="btn-bottom-column">
+                                <Button color='success' className='btn btn-success account__btn' onClick={this.connectWeb3(false, values, { setSubmitting })} disabled={isSubmitting}>{"Eth1 Mobile Wallet Registration"}</Button>
+                              </Col>
+                            </Row>
+                          </div>
+                        }
+                        {this.state.web3SigningRequest && window.ethereum &&
+                          <div className="form__form-group mb-0">
+                            <Row className="btn-bottom-row">
+                              <Col xs={1} sm={12} className="btn-bottom-column">
+                                <Button color='success' className='btn btn-success account__btn' onClick={this.connectWeb3(true, values, { setSubmitting })} disabled={isSubmitting}>{"MetaMask Wallet Registration"}</Button>
+                              </Col>
+                            </Row>
                           </div>
                         }
                       </Form>
@@ -365,6 +516,8 @@ const mapDispatchToProps = (dispatch) => (
     { changePassword: changePassword },
     { getWebAuthnRegistrationRequest: getWebAuthnRegistrationRequest },
     { webauthnRegistration: webauthnRegistration },
+    { getWeb3SigningRequest: getWeb3SigningRequest },
+    { web3Registration: web3Registration },
     { setTitle: setTitle },
   ), dispatch)
 )

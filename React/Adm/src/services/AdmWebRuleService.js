@@ -471,6 +471,23 @@ export function GetEventId128List(query, topN, filterBy, accessScope) {
 }
 
 
+export function GetForCompanyId128List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmWebRuleWs.asmx/GetForCompanyId128List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
+
 export function GetReactEventId128List(query, topN, filterBy, accessScope) {
     return fetchData(baseUrl + '/AdmWebRuleWs.asmx/GetReactEventId128List'
         , {

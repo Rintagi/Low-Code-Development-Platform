@@ -59,7 +59,7 @@
 125~@~3~@~CtCheckBox~@~Adm - CheckBox Code Table~@~N~@~N~@~~@~This is a code table with two rows: Yes and No.~@~~@~54~@~2006-12-27 20:40:25.000~@~
 126~@~3~@~CtClientScript~@~Adm - Client-Side Script Stock~@~N~@~N~@~~@~This is a code table capturing all stock client rules.~@~~@~55~@~2013-06-17 16:26:38.927~@~2013-06-17 09:26:48.537
 127~@~3~@~ClientRule~@~Adm - Client Rule~@~Y~@~N~@~~@~This captures all defined client-rules information.~@~~@~55~@~2016-03-04 19:02:30.463~@~2016-03-04 11:12:24.523
-128~@~3~@~WebRule~@~Adm - Web Rule~@~Y~@~N~@~~@~This captures all the web rules and contents for generation.~@~~@~55~@~2019-08-28 23:06:56.760~@~2019-08-28 16:07:25.970
+128~@~3~@~WebRule~@~Adm - Web Rule~@~Y~@~N~@~~@~This captures all the web rules and contents for generation.~@~~@~2~@~2021-01-05 03:47:29.103~@~2021-01-04 19:47:43.200
 129~@~3~@~CtEvent~@~Adm - Event Code Table~@~N~@~N~@~~@~This is a code table capturing the events for web rules.~@~~@~54~@~2006-12-28 23:38:18.263~@~
 130~@~3~@~VwScrButton~@~Adm - Button Type View (Screen)~@~N~@~Y~@~CREATE VIEW [dbo].[VwScrButton]
 AS
@@ -346,6 +346,6 @@ FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1323~@~3~@~utServerRuleOvrd~@~Adm - Server Rule Override (local COW)~@~Y~@~N~@~~@~Server Rule override(enable/disable), local setup copy on write~@~~@~2~@~2020-04-30 14:56:26.497~@~2020-04-30 07:56:45.640
 1324~@~3~@~utServerRuleOvrdPrm~@~Adm - Server Rule Override Permission(COW)~@~Y~@~N~@~~@~Server Rule suppression configuration(local copy on write, for merging)~@~~@~2~@~2020-04-30 15:26:55.353~@~2020-04-30 07:58:01.000
 1325~@~3~@~Flowchart~@~Adm - Flowchart~@~Y~@~N~@~~@~This captures the flowchart information.~@~~@~2~@~2020-07-07 16:38:58.473~@~2020-07-07 09:39:08.550
-1326~@~3~@~UsrProvider~@~Adm - User login provider(SSO)~@~N~@~N~@~~@~~@~~@~2~@~2020-08-12 17:51:13.933~@~2020-08-28 19:13:23.277
+1326~@~3~@~UsrProvider~@~Adm - User login provider(SSO)~@~N~@~N~@~~@~~@~~@~2~@~2021-01-31 11:49:41.593~@~2021-01-31 03:59:38.413
 1327~@~3~@~UsrDevice~@~Adm - User Device~@~N~@~N~@~~@~table to track user login devices(for push notification etc.)~@~~@~2~@~2020-11-23 05:25:07.330~@~2020-11-22 21:25:14.447
 1328~@~3~@~VwMIMEType~@~Adm - MIME Type~@~N~@~N~@~~@~~@~~@~2~@~2020-12-11 12:54:19.130~@~2020-12-11 04:53:44.000

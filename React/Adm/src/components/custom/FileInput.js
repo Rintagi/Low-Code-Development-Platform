@@ -83,9 +83,12 @@ function addPreviewUrl(o) {
   }
   return {
     ...o,
-    previewUrl: o.mimeType
+    previewUrl: o.iconUrl ||
+      (o.mimeType
       && o.mimeType.match(/image/)
-      && (o.base64 || o.icon) ? 'data:' + o.mimeType + ';base64,' + (o.base64 || o.icon) : '',
+      && (o.base64 || o.icon) 
+      ? 'data:' + o.mimeType + ';base64,' + (o.base64 || o.icon) 
+      : ''),
     contentUrl: o.mimeType
       && (o.base64 || o.icon) ? 'data:' + o.mimeType + ';base64,' + (o.base64 || o.icon) : '',
   }
@@ -521,7 +524,11 @@ class FileInputField extends Component {
   }
 
   icon = i => {
-    const mimeType = (this.state.files.sort((a, b) => a.DocId - b.DocId)[i] || {}).mimeType;
+    const file = (this.state.files.sort((a, b) => a.DocId - b.DocId))[i];
+    const mimeType = (file || {}).mimeType;
+    const iconUrl = (file || {}).iconUrl;
+    
+    if (this.iconUrl) return '';
 
     if (mimeType === 'image/png') {
       return 'fa-file-image-o';
@@ -677,10 +684,10 @@ class FileInputField extends Component {
                         style={{ minWidth: "40px", minHeight: "40px", backgroundImage: 'url(' + addPreviewUrl(obj).previewUrl + ')' }}
                         onClick={(obj || {}).base64 || (obj || {}).icon ? this.previewSelectedFile(i) : this.downloadFile(i)} >
                         {(!(obj || {}).base64 && !(obj || {}).icon) && <Skeleton height="100px" widthRandomness="0" />}
-                        {obj && (obj.mimeType || '').match(/image/) && (!obj.base64 && !obj.icon) &&
+                        {obj && (obj.mimeType || '').match(/image/) && (!obj.base64 && !obj.icon) && !obj.iconUrl &&
                           <i className={`fa ${this.icon(i)} fs-38 color-green fileUpload-icon`}></i>
                         }
-                        {obj && !(obj.mimeType || '').match(/image/) &&
+                        {obj && !(obj.mimeType || '').match(/image/) && !obj.iconUrl &&                          
                           <i className={`fa ${this.icon(i)} fs-38 color-green fileUpload-icon`}></i>
                         }
                         {obj && obj.ts && <p className={`dropzone__img-name truncate-inline pb-17 ${this.props.disabled && 'bblr-4'}`}><u>{moment(obj.ts).format('MMM D, YYYY')}</u></p>}

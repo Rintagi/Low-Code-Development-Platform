@@ -24,6 +24,7 @@ using System.Web.Configuration;
 using System.Security.Cryptography.X509Certificates;
 using RoboCoder.WebControls;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace RO.Web
 {
@@ -230,7 +231,7 @@ namespace RO.Web
             };
             foreach (var x in botSignature)
             {
-                if (userAgent.ToLower().Contains(x.Key.ToLower())) return true;
+                if ((userAgent??"").ToLower().Contains(x.Key.ToLower())) return true;
             }
             return false;
         }
@@ -3192,7 +3193,9 @@ namespace RO.Web
         {
             string rowFilter = "";
 
-            if (!string.IsNullOrEmpty(val.Key.Trim()) && !string.IsNullOrEmpty(columnName))
+            if (!string.IsNullOrEmpty(val.Key.Trim()) 
+                && !string.IsNullOrEmpty(columnName) 
+                && dt.Columns.Contains(columnName))
             {
                 string[] needQuoteType = { "Char", "Date", "Time", "String" };
                 bool needQuote = needQuoteType.Any(dt.Columns[columnName].DataType.ToString().Contains);
@@ -3207,11 +3210,11 @@ namespace RO.Web
                 {
                     if (val.Value)
                     {
-                        rowFilter = string.Format("{0} IN ({1}) OR {0} IS NULL", columnName, val);
+                        rowFilter = string.Format("{0} IN ({1}) OR {0} IS NULL", columnName, val.Key);
                     }
                     else
                     {
-                        rowFilter = string.Format("{0} = {1} OR {0} IS NULL", columnName, val);
+                        rowFilter = string.Format("{0} = {1} OR {0} IS NULL", columnName, val.Key);
                     }
                 }
             }
@@ -3255,7 +3258,10 @@ namespace RO.Web
             //                && appPath.ToLower() != extBasePath.ToLower();
                 ;
         }
-
+        protected bool RunWebRule(string forCompanyId, int webRuleId)
+        {
+            return (LImpr != null && LImpr.Companys != null && ("," + LImpr.Companys + ",").Contains("," + forCompanyId + ","));
+        }
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)
         {
             var Request = Context.Request;
@@ -3450,6 +3456,12 @@ namespace RO.Web
             return new List<string> { "unknown" };
         }
 
+        protected void ResetCachePolicy()
+        {
+            // this is required as multiple calls to Response.Cache.SetXXX etc. has not effect, the first call always take effect, not subsequent override
+            var cache = Response.Cache;
+            typeof(HttpCachePolicy).InvokeMember("Reset", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod, null, cache, null);
+        }
         public static List<string> GetExceptionMessage(Exception ex)
         {
             List<string> msg = new List<string>();
@@ -3477,6 +3489,8 @@ namespace RO.Web
         {
 
             byte[] dc;
+
+            if (image != null && image.Length < 3000) return image;
 
             System.Drawing.Image oBMP = null;
 
@@ -3582,7 +3596,7 @@ namespace RO.Web
                 {
                     Array.Resize(ref streamHeader, 256 + contentHeader.Length);
                     Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), streamHeader, compactHeaderLength);
-                    Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), 0, streamHeader, 256, headerLength);
+                    Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), 0, streamHeader, 256, headerLength);
                 }
                 if (content.Length == 0 || dummyImage)
                 {

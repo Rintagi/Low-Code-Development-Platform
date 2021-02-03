@@ -1398,8 +1398,8 @@ namespace RO.Access3.Odbc
                 case "money":
                     otp = OdbcType.Numeric; break;
                 case "binary":
-                case "image":
                     otp = OdbcType.Binary; break;
+                case "image":
                 case "varbinary":
                     otp = OdbcType.VarBinary; break;
                 case "wchar":
@@ -2911,7 +2911,7 @@ namespace RO.Access3.Odbc
             cmd.Parameters.Add("@DocName", OdbcType.NVarChar).Value = DocName;
             cmd.Parameters.Add("@MimeType", OdbcType.VarChar).Value = MimeType;
             cmd.Parameters.Add("@DocSize", OdbcType.Numeric).Value = DocSize;
-            cmd.Parameters.Add("@DocImage", OdbcType.Binary).Value = dc;
+            cmd.Parameters.Add("@DocImage", OdbcType.VarBinary).Value = dc;
             cmd.Parameters.Add("@InputBy", OdbcType.Numeric).Value = lu.UsrId;
             cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
@@ -2984,7 +2984,7 @@ namespace RO.Access3.Odbc
             cmd.Parameters.Add("@DocName", OdbcType.NVarChar).Value = DocName;
             cmd.Parameters.Add("@MimeType", OdbcType.VarChar).Value = MimeType;
             cmd.Parameters.Add("@DocSize", OdbcType.Numeric).Value = DocSize;
-            cmd.Parameters.Add("@DocImage", OdbcType.Binary).Value = dc;
+            cmd.Parameters.Add("@DocImage", OdbcType.VarBinary).Value = dc;
             cmd.Parameters.Add("@InputBy", OdbcType.Numeric).Value = lu.UsrId;
             cmd.Parameters.Add("@DocId", OdbcType.Numeric).Value = DocId;
             cmd.CommandTimeout = _CommandTimeout;
@@ -3018,11 +3018,11 @@ namespace RO.Access3.Odbc
             cmd.CommandType = CommandType.Text;
             if (dc == null)
             {
-                cmd.Parameters.Add("@DocImage", OdbcType.Binary).Value = System.DBNull.Value;
+                cmd.Parameters.Add("@DocImage", OdbcType.VarBinary).Value = System.DBNull.Value;
             }
             else
             {
-                cmd.Parameters.Add("@DocImage", OdbcType.Binary).Value = dc;
+                cmd.Parameters.Add("@DocImage", OdbcType.VarBinary).Value = dc;
             }
             cmd.Parameters.Add("@DocId", OdbcType.Numeric).Value = DocId;
             cmd.CommandTimeout = _CommandTimeout;

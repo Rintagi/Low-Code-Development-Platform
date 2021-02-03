@@ -2164,6 +2164,7 @@ ServiceEventId tinyint NULL ,
 ServiceRuleProg nvarchar (max) NULL ,
 AsmxEventId tinyint NULL ,
 AsmxRuleProg nvarchar (max) NULL ,
+ForCompanyId int NULL ,
 CONSTRAINT PK_WebRule PRIMARY KEY CLUSTERED (
 WebRuleId
 )

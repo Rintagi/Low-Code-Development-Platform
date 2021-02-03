@@ -11,9 +11,9 @@ export default class AutoCompleteField extends Component {
       lastSelectedValue:this.props.defaultSelected
     }
   }
-  renderMenu=(results, menuProps) => {
+  renderMenu=((results, menuProps) => {
     this.currentMatches = results;
-    return (<TypeaheadMenu {...menuProps} options={results} />);    
+    return (<TypeaheadMenu {...menuProps} labelKey='label' options={results} />);    
     /* this are for more advanced customization say showing multiple columns like icon/photo etc., not needed for now
     return (
     <Menu {...menuProps}>
@@ -25,17 +25,19 @@ export default class AutoCompleteField extends Component {
     </Menu>
     )
     */
-  }
+  }).bind(this)
+
   // handleFocus = (...rest)=>{
   //   this.hasFocus = true;
   // }
-  handleFocus = (event) => {
+  handleFocus = ((event) => {
     this.hasFocus = true;
     // event.preventDefault();
     // const target = event.target;
     // setTimeout(target.select.bind(target), 0);
-  }
-  handleKeyDown = (inputChar,...rest) =>{
+  }).bind(this)
+
+  handleKeyDown = ((inputChar,...rest) =>{
     const value = inputChar.target.value;
     this.isEnter = inputChar.keyCode === 13;
     this.isTab = inputChar.keyCode === 9;
@@ -47,7 +49,7 @@ export default class AutoCompleteField extends Component {
         if (pickFirst) this.props.onChange(this.props.name || (this.props.field || {}).name,[this.currentMatches[0]], {fieldname:this.props.fieldname,listidx:this.props.listidx, fieldpath:this.props.fieldpath});
         else if (this.isEmpty) this.props.onChange(this.props.name || (this.props.field || {}).name,[{}], {fieldname:this.props.fieldname,listidx:this.props.listidx, fieldpath:this.props.fieldpath});
         else if (this.isEnter || this.isEscape ) {
-          const instance = this.typeahead.getInstance();
+          const instance = typeof this.typeahead.getInput === "function" ? this.typeahead : this.typeahead.getInstance();
           const priorValue = (this.currentValue || this.state.lastSelectedValue || this.props.defaultSelected || [null])[0] ;
           const priorSelected = priorValue || this.props.value || {};
           const priorLabel = priorSelected.label;
@@ -63,34 +65,37 @@ export default class AutoCompleteField extends Component {
 
       }
     }
-  }
-  handleMenuShow = (...rest) => {
+  }).bind(this)
+
+  handleMenuShow = ((...rest) => {
     this.menuVisible = true;
-  }
-  handleMenuHide = (...rest) => {
+  }).bind(this)
+
+  handleMenuHide = ((...rest) => {
     this.menuVisible = false;
-  }
+  }).bind(this)
+
   handlePaginate = () =>{
     const _this = this;
     return function(e, ...rest) {
       if (typeof _this.props.onPaginate === "function") {
-        const instance = (_this.typeahead && _this.typeahead.getInstance()) || {};
+        const instance = !_this.typeahead ? {} : typeof _this.typeahead.getInput === "function" ? _this.typeahead : this.typeahead.getInstance();
         const shownResults = (instance.state || {}).shownResults;
         const value = (instance.state || {}).text;
         _this.props.onPaginate(_this.props.name || (_this.props.field || {}).name, value, shownResults , {fieldname:_this.props.fieldname,listidx:_this.props.listidx, fieldpath:_this.props.fieldpath});
       }
     }
   }
-  handleChange = (value,...rest) => {
+  handleChange = ((value,...rest) => {
     this.currentValue = value;
     if (this.typeahead) {
-      const instance = this.typeahead.getInstance();
+      const instance = typeof this.typeahead.getInput === "function" ? this.typeahead : this.typeahead.getInstance();
       if (!instance.getInput().value) {
         this.handleInputChange("");
         if (!this.hasFocus) {
           if (typeof this.props.onBlur === "function") this.props.onBlur(this.props.name || (this.props.field || {}).name, true);
           instance.focus();
-          setTimeout(()=>{instance._hideMenu();},0); // not public interface
+          setTimeout(()=>{(instance._hideMenu || instance.hideMenu)();},0); // _hideMenu was not public interface, hideMenu was added in V4+
         }
         else {
           //instance.blur();
@@ -106,9 +111,9 @@ export default class AutoCompleteField extends Component {
     ) {
       this.props.onChange(this.props.name || (this.props.field || {}).name, value, {fieldname:this.props.fieldname,listidx:this.props.listidx, fieldpath:this.props.fieldpath});
     }
-  };
+  }).bind(this)
 
-  handleBlur = (e) => {
+  handleBlur = ((e) => {
     this.hasFocus = false;
     // this is going to call setFieldTouched and manually update touched.this.props.name
     const value = e.target.value;
@@ -121,12 +126,12 @@ export default class AutoCompleteField extends Component {
         this.props.onChange(this.props.name || (this.props.field || {}).name,[this.currentMatches[0]], {listidx:this.props.listidx, fieldpath:this.props.fieldpath});
       }
     }
-  };
+  }).bind(this)
 
-  handleInputChange = (value,...rest) => {
+  handleInputChange = ((value,...rest) => {
     // this is going to call setFieldValue and manually update values.this.props.name
     if (typeof this.props.onInputChange === "function") this.props.onInputChange(this.props.name || (this.props.field || {}).name, value, {fieldname:this.props.fieldname,listidx:this.props.listidx, fieldpath:this.props.fieldpath});
-  };
+  }).bind(this)
 
   filterBy = (option,props)=>{
     /* customeized client side filtering */

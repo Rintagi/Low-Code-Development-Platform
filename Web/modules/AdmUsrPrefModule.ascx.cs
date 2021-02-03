@@ -45,6 +45,7 @@ namespace RO.Common3.Data
 			columns.Add("PrjListVisible93", typeof(string));
 			columns.Add("SysListVisible93", typeof(string));
 			columns.Add("PrefDefault93", typeof(string));
+			columns.Add("SampleImage93", typeof(object));
 			columns.Add("UsrStyleSheet93", typeof(string));
 			columns.Add("UsrId93", typeof(string));
 			columns.Add("UsrGroupId93", typeof(string));

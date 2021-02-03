@@ -1336,8 +1336,9 @@ namespace RO.Access3
                     otp = OleDbType.Double; break;
                 case "currency": case "money":
                     otp = OleDbType.Currency; break;
-                case "binary": case "image":
+                case "binary": 
                     otp = OleDbType.Binary; break;
+                case "image":
                 case "varbinary":
                     otp = OleDbType.VarBinary; break;
                 case "wchar": case "nchar":
@@ -2841,7 +2842,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@DocName", OleDbType.VarWChar).Value = DocName;
             cmd.Parameters.Add("@MimeType", OleDbType.VarChar).Value = MimeType;
             cmd.Parameters.Add("@DocSize", OleDbType.Numeric).Value = DocSize;
-            cmd.Parameters.Add("@DocImage", OleDbType.Binary).Value = dc;
+            cmd.Parameters.Add("@DocImage", OleDbType.VarBinary).Value = dc;
             cmd.Parameters.Add("@InputBy", OleDbType.Numeric).Value = lu.UsrId;
             cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
@@ -2914,7 +2915,7 @@ namespace RO.Access3
             cmd.Parameters.Add("@DocName", OleDbType.VarWChar).Value = DocName;
             cmd.Parameters.Add("@MimeType", OleDbType.VarChar).Value = MimeType;
             cmd.Parameters.Add("@DocSize", OleDbType.Numeric).Value = DocSize;
-            cmd.Parameters.Add("@DocImage", OleDbType.Binary).Value = dc;
+            cmd.Parameters.Add("@DocImage", OleDbType.VarBinary).Value = dc;
             cmd.Parameters.Add("@InputBy", OleDbType.Numeric).Value = lu.UsrId;
             cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
             cmd.CommandTimeout = _CommandTimeout;
@@ -2948,11 +2949,11 @@ namespace RO.Access3
             cmd.CommandType = CommandType.Text;
             if (dc == null)
             {
-                cmd.Parameters.Add("@DocImage", OleDbType.Binary).Value = System.DBNull.Value;
+                cmd.Parameters.Add("@DocImage", OleDbType.VarBinary).Value = System.DBNull.Value;
             }
             else
             {
-                cmd.Parameters.Add("@DocImage", OleDbType.Binary).Value = dc;
+                cmd.Parameters.Add("@DocImage", OleDbType.VarBinary).Value = dc;
             }
             cmd.Parameters.Add("@DocId", OleDbType.Numeric).Value = DocId;
             cmd.CommandTimeout = _CommandTimeout;

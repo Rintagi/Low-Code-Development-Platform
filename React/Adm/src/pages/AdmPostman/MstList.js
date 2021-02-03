@@ -26,7 +26,7 @@ import { checkBundleUpdate } from '../../redux/_Rintagi';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import log from '../../helpers/logger';
 
 class MstList extends RintagiScreen {

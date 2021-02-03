@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Prompt, Redirect } from 'react-router';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import { Formik, Field, Form } from 'formik';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import classNames from 'classnames';
 import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
@@ -16,6 +16,7 @@ import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import { default as FileInputField } from '../../components/custom/FileInput';
+import SignaturePanel from '../../components/custom/SignaturePanel';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
@@ -191,7 +192,8 @@ class MstRecord extends RintagiScreen {
           ModifiedBy95: (values.cModifiedBy95 || {}).value || '',
           ModifiedOn95: values.cModifiedOn95 || '',
           TestCulture95: (values.cTestCulture95 || {}).value || '',
-          SignOff95: values.cSignOff95 || '',
+          TestCurrency95: values.cTestCurrency95 || '',
+          SignOff95: this.StripEmbeddedBase64Prefix(values.cSignOff95) || '',
         },
         [],
         {
@@ -881,7 +883,11 @@ class MstRecord extends RintagiScreen {
                                     {((this.constructor.ShowSpinner(AdmUsrImprState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         {values.cSignOff95 &&
-                                          <img alt='' src={values.cSignOff95} />
+                                          <SignaturePanel  
+                                            name='cSignOff95' 
+                                            src={values.cSignOff95} 
+                                            onChange={this.SignatureChange(setFieldValue, setFieldTouched, 'cSignOff95')}
+                                            value={values.cSignOff95} />
                                         }
                                       </div>
                                     }

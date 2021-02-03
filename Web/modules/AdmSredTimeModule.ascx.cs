@@ -45,6 +45,7 @@ namespace RO.Common3.Data
 			columns.Add("EnteredBy272", typeof(string));
 			columns.Add("EnteredOn272", typeof(string));
 			columns.Add("ModifiedBy272", typeof(string));
+			columns.Add("ModifiedOn272", typeof(string));
 			columns.Add("Accomplished272", typeof(string));
 			return dt;
 		}

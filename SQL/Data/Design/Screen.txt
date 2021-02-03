@@ -31,7 +31,7 @@
 79~@~AdmClientRule~@~Client Rule~@~5~@~127~@~~@~127~@~1142~@~Y~@~~@~1138~@~~@~~@~~@~~@~AdmScreenObj.aspx?id=26&key=1257&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=79&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 80~@~AdmWebRule~@~Web Rule~@~5~@~128~@~~@~128~@~1144~@~Y~@~~@~1128~@~~@~~@~~@~~@~AdmScreenObj.aspx?id=26&key=1283&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=80&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~N~@~Y~@~N~@~N~@~N~@~N
 81~@~AdmCtButtonHlp~@~Button Default~@~7~@~131~@~~@~~@~~@~Y~@~~@~~@~~@~~@~~@~30~@~AdmScreenObj.aspx?id=26&key=1295&sys=3&typ=N~@~~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
-82~@~AdmAppInfo~@~Version Tracking~@~5~@~135~@~~@~135~@~1213~@~N~@~~@~1218~@~~@~~@~~@~~@~AdmScreenObj.aspx?id=26&key=1347&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=82&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~N~@~Y~@~N~@~N~@~N~@~N
+82~@~AdmAppInfo~@~Version Tracking~@~5~@~135~@~~@~135~@~1213~@~N~@~~@~1218~@~~@~~@~~@~~@~AdmScreenObj.aspx?cri0=82&typ=N&sys=3~@~AdmScreenFilter.aspx?cri0=82&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~N~@~Y~@~N~@~N~@~N~@~N
 83~@~AdmAppItem~@~Release Content~@~5~@~136~@~~@~136~@~1221~@~N~@~~@~~@~~@~~@~~@~~@~AdmScreenObj.aspx?id=26&key=1350&sys=3&typ=N~@~~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~N~@~Y~@~N~@~N~@~N~@~N
 86~@~AdmMsgCenter~@~Message Center~@~6~@~146~@~147~@~146~@~1309~@~Y~@~~@~~@~~@~~@~~@~12~@~AdmScreenObj.aspx?id=26&key=1408&sys=3&typ=N~@~~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N
 87~@~AdmSystems~@~Systems Maintenance~@~5~@~45~@~~@~45~@~368~@~Y~@~~@~367~@~~@~~@~~@~12~@~AdmScreenObj.aspx?id=26&key=1428&typ=N&sys=3~@~AdmScreenFilter.aspx?id=181&cri1=87&typ=N&sys=3~@~Y~@~Y~@~Y~@~Y~@~Y~@~Y~@~N~@~Y~@~N~@~N~@~N~@~N

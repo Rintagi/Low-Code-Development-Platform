@@ -2764,6 +2764,8 @@ namespace RO.Web
 
             byte[] dc;
 
+            if (image != null && image.Length < 3000) return image;
+
             System.Drawing.Image oBMP = null;
 
             using (var ms = new MemoryStream(image))
@@ -2869,7 +2871,7 @@ namespace RO.Web
                 {
                     Array.Resize(ref streamHeader, 256 + contentHeader.Length);
                     Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), streamHeader, compactHeaderLength);
-                    Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), 0, streamHeader, 256, headerLength);
+                    Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), 0, streamHeader, 256, headerLength);
                 }
                 if (content.Length == 0 || dummyImage)
                 {
@@ -3412,7 +3414,7 @@ namespace RO.Web
             {
                 var regex = new System.Text.RegularExpressions.Regex("C[0-9]+$");
                 var scrCriId = sp.Replace(regex.Replace(sp, ""), "").Replace("C", "");
-                int CriCnt = (new AdminSystem()).CountScrCri(scrCriId, string.IsNullOrEmpty(conn) ? "N" : "Y", LcSysConnString, LcAppPw);
+                int CriCnt = (new AdminSystem()).CountScrCri(scrCriId, isSys == "Y" ? "Y" : "N", LcSysConnString, LcAppPw);
                 _MkScreenIn(screenId, scrCriId, sp, isSys == "Y" ? "Y" : "N", true);
                 dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, CriCnt, requiredValid, topN,
                 searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2),"") : "", ui, uc,
@@ -3841,7 +3843,7 @@ namespace RO.Web
             {
                 Array.Resize(ref streamHeader, 256 + headerLength);
                 Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), streamHeader, compactHeaderLength);
-                Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), 0, streamHeader, 255, headerLength);
+                Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), 0, streamHeader, 255, headerLength);
             }
             return streamHeader;
         }
@@ -5571,11 +5573,14 @@ namespace RO.Web
                         ||
                         (dr["ApplyToMst"].ToString() == "N" && !isMaster)
                         )
-                        && 
+                        &&
                         (
                         (dr["ScreenFilterId"].ToString() == filterId && !filterIdIsName)
                         ||
                         (dr["FilterName"].ToString() == filterId && filterIdIsName)
+                        ||
+                        /* filter is mandatory if defined in webform, follow that behavior so if no filter given, use first one */
+                        (filterId == "0" || string.IsNullOrEmpty(filterId))
                         )
                         )
                     {

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Prompt, Redirect } from 'react-router';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import { Formik, Field, Form } from 'formik';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import classNames from 'classnames';
 import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
@@ -16,6 +16,7 @@ import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import { default as FileInputField } from '../../components/custom/FileInput';
+import SignaturePanel from '../../components/custom/SignaturePanel';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
@@ -94,6 +95,7 @@ class MstRecord extends RintagiScreen {
 
   ScreenId128InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchScreenId128(v, filterBy); } }
   ScreenObjId128InputChange() { const _this = this; return function (name, v) { const filterBy = ((_this.props.AdmWebRule || {}).Mst || {}).ScreenId128; _this.props.SearchScreenObjId128(v, filterBy); } }
+  ForCompanyId128InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchForCompanyId128(v, filterBy); } }
   Snippet1({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
     return function (evt) {
       this.OnClickColumeName = 'Snippet1';
@@ -167,6 +169,7 @@ class MstRecord extends RintagiScreen {
           ScreenObjId128: (values.cScreenObjId128 || {}).value || '',
           ButtonTypeId128: (values.cButtonTypeId128 || {}).value || '',
           EventId128: (values.cEventId128 || {}).value || '',
+          ForCompanyId128: (values.cForCompanyId128 || {}).value || '',
           WebRuleProg128: values.cWebRuleProg128 || '',
           ReactEventId128: (values.cReactEventId128 || {}).value || '',
           ReactRuleProg128: values.cReactRuleProg128 || '',
@@ -384,6 +387,8 @@ class MstRecord extends RintagiScreen {
     const ButtonTypeId128 = currMst.ButtonTypeId128;
     const EventId128List = AdmWebRuleReduxObj.ScreenDdlSelectors.EventId128(AdmWebRuleState);
     const EventId128 = currMst.EventId128;
+    const ForCompanyId128List = AdmWebRuleReduxObj.ScreenDdlSelectors.ForCompanyId128(AdmWebRuleState);
+    const ForCompanyId128 = currMst.ForCompanyId128;
     const WebRuleProg128 = currMst.WebRuleProg128;
     const ReactEventId128List = AdmWebRuleReduxObj.ScreenDdlSelectors.ReactEventId128(AdmWebRuleState);
     const ReactEventId128 = currMst.ReactEventId128;
@@ -445,6 +450,7 @@ class MstRecord extends RintagiScreen {
                     cScreenObjId128: ScreenObjId128List.filter(obj => { return obj.key === ScreenObjId128 })[0],
                     cButtonTypeId128: ButtonTypeId128List.filter(obj => { return obj.key === ButtonTypeId128 })[0],
                     cEventId128: EventId128List.filter(obj => { return obj.key === EventId128 })[0],
+                    cForCompanyId128: ForCompanyId128List.filter(obj => { return obj.key === ForCompanyId128 })[0],
                     cWebRuleProg128: formatContent(WebRuleProg128 || '', 'MultiLine'),
                     cReactEventId128: ReactEventId128List.filter(obj => { return obj.key === ReactEventId128 })[0],
                     cReactRuleProg128: formatContent(ReactRuleProg128 || '', 'MultiLine'),
@@ -733,6 +739,33 @@ class MstRecord extends RintagiScreen {
                                       </div>
                                     }
                                     {errors.cEventId128 && touched.cEventId128 && <span className='form__form-group-error'>{errors.cEventId128}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.ForCompanyId128 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.ForCompanyId128 || {}).ColumnHeader} {(columnLabel.ForCompanyId128 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.ForCompanyId128 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.ForCompanyId128 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmWebRuleState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cForCompanyId128'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cForCompanyId128', false, values)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cForCompanyId128', true)}
+                                          onInputChange={this.ForCompanyId128InputChange()}
+                                          value={values.cForCompanyId128}
+                                          defaultSelected={ForCompanyId128List.filter(obj => { return obj.key === ForCompanyId128 })}
+                                          options={ForCompanyId128List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.ForCompanyId128 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cForCompanyId128 && touched.cForCompanyId128 && <span className='form__form-group-error'>{errors.cForCompanyId128}</span>}
                                   </div>
                                 </Col>
                               }
@@ -1050,6 +1083,7 @@ const mapDispatchToProps = (dispatch) => (
     { AddMst: AdmWebRuleReduxObj.AddMst.bind(AdmWebRuleReduxObj) },
     { SearchScreenId128: AdmWebRuleReduxObj.SearchActions.SearchScreenId128.bind(AdmWebRuleReduxObj) },
     { SearchScreenObjId128: AdmWebRuleReduxObj.SearchActions.SearchScreenObjId128.bind(AdmWebRuleReduxObj) },
+    { SearchForCompanyId128: AdmWebRuleReduxObj.SearchActions.SearchForCompanyId128.bind(AdmWebRuleReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },

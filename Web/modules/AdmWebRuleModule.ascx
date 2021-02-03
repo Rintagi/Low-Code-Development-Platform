@@ -221,6 +221,10 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cEventId128P1" class="r-td r-labelR" runat="server"><asp:Label id="cEventId128Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cEventId128P2" class="r-td r-content" runat="server"><asp:DropDownList id="cEventId128" CssClass="inp-ddl" DataValueField="EventId128" DataTextField="EventId128Text" runat="server" /><asp:RequiredFieldValidator id="cRFVEventId128" ControlToValidate="cEventId128" display="none" runat="server" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cForCompanyId128P1" class="r-td r-labelR" runat="server"><asp:Label id="cForCompanyId128Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cForCompanyId128P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cForCompanyId128" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbForCompanyId128" DataValueField="ForCompanyId128" DataTextField="ForCompanyId128Text" runat="server" /></div>
+    	</div>
     </div></div></div>
     <div class="r-td rc-6-11"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">

@@ -2701,4 +2701,94 @@ To send FCM push message from the app web.config should contains the associated 
 2. add ssh helper(integration with Linux)
 3. improve WinProc(calling external EXE) for putty(ssh) and eth2 deposit client etc.
 ~@~~@~en-US~@~
-12660~@~  11. 223~@~11~@~223~@~~@~~@~~@~~@~~@~~@~
+12660~@~  11. 223.01231~@~11~@~223~@~2020-12-31 00:00:00.000~@~~@~~@~1. add cache control policy mechanism to dynamic pages(for consistent browser behavior control)~@~~@~en-US~@~
+12661~@~  11. 224.10106~@~11~@~224~@~2021-01-06 00:00:00.000~@~~@~~@~1. add mechanism to make webrule execution conditional by company id
+2. add qrcode/barcode reader support to React template
+3. add qrcode generation support to React template~@~~@~en-US~@~
+12662~@~  11. 225.10107~@~11~@~225~@~2021-01-07 00:00:00.000~@~~@~1. existing web(and user rule/user access project) must change to target .Net 4.8(refer to sampleweb.config for place that needs to be changed)
+2. app pool must change to integrated pipeline~@~1. move everything to target .Net 4.8
+2. add signature component for React
+~@~~@~en-US~@~
+12663~@~  11. 226.10108~@~11~@~226~@~2021-01-08 00:00:00.000~@~~@~~@~1. content sanitization(html content) for webform autocomplete control
+2. enhance version tracking prerequisite useful by adding quick filter
+3. enhance screen/screen object/screen filter popup flow~@~~@~en-US~@~
+12664~@~  11. 227.10109~@~11~@~227~@~2021-01-09 00:00:00.000~@~~@~~@~1. replace react 2 react components to be compatible with React 17.x onward~@~~@~en-US~@~
+12665~@~  11. 228.10112~@~11~@~228~@~2021-01-12 00:00:00.000~@~~@~~@~1. switch to React V4 template as default
+2. review React AutoComplete control to be compatible with newer react-bootstrap-typeahead module
+3. fallback to react-datepicker 1.8 for breaking change in 2.0.0+
+4. ignore npm temp directories(node_modules etc.) when doing backup by installer
+5. only sanitize html content for webform autocomplete list but not value in search box(textbox)~@~~@~en-US~@~
+12666~@~  11. 229.10113~@~11~@~229~@~2021-01-13 00:00:00.000~@~~@~~@~1. change parameter type from binary to varbinary(access3 layer) for image/document upload for odbc driver compatibility 
+2. better image button upload error reporting
+3. only resize image button upload when size exceed 3k(avoid image size bulk up after resize)
+~@~~@~en-US~@~
+12667~@~  11. 230.10131~@~11~@~230~@~2021-01-31 00:00:00.000~@~~@~must add these to Default.master or other master page if not present aleady
+
+    <script type="text/javascript" src="scripts/fingerprint2.min.js"></script>
+    <script type="text/javascript" src="scripts/sjcl.js"></script>    
+
+must add the following in Default.master or other master page for crypto wallet(ethereum)  as well as FCM integration support(bottom of the page) 
+
+<script>
+    navigator.serviceWorker && navigator.serviceWorker.addEventListener("message",
+        function (message) {
+            console.log('general message received', message);
+            var data = message.data;
+            if (message.data && message.data.data.title && window.Notification) {
+                var notification = new Notification(message.data.data.title, message.data.data);
+
+                notification.onclick = function (event) {
+                    console.log(event);
+                    event.preventDefault(); // prevent the browser from focusing the Notification's tab
+                    //window.open(message.data.data.click_action, '_blank');
+                    notification.close();
+                };
+                //no auto close !!!
+                //setTimeout(notification.close.bind(notification), 7000);
+            }
+        }
+    );      
+</script>
+    <!--
+      Use unpkg CDN to load all NPM packages to vanilla Javascript - read more at http://unpkg.com
+      On your deployment, you properly either want to use a preprocessing tool like webpack
+      to include these files, or extract NPM archives and manually host the files inside.
+      TODO: Pin down all versions.
+    <script type="text/javascript" src="https://unpkg.com/web3@1.2.11/dist/web3.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.3.4/dist/umd/index.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@walletconnect/qrcode-modal@1.3.4/dist/umd/index.min.js"></script>
+    -->
+
+    <script type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script type="text/javascript" src="scripts/polyfill.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js"></script>
+    <script type="text/javascript" src="runtime/firebaseConfig.js"></script>
+    <script type="text/javascript" src="scripts/register_fcm.js"></script>
+    <script type="text/javascript" src="js/web3.min.js"></script>
+    <script type="text/javascript" src="js/walletconnect_web3provider.min.js"></script>
+    <script type="text/javascript" src="js/walletconnect_qrcode_modal.min.js"></script>
+
+may need to add the following to web.config for assembly redirection
+
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="Numbers" publicKeyToken="9cd62db60ea5554c" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-1.7.3.0" newVersion="1.7.3.0"/>
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-12.0.0.0" newVersion="12.0.0.0"/>
+      </dependentAssembly>   
+    </assemblyBinding>
+  </runtime>~@~1. add master page changes required for various new javascript related features
+2. add ethereum crypto wallet support
+3. add ethereum support via Nethereum library
+4. enhance system to preserve user defined DB index when there is table structure change(sync to DB as well as during deployment on target system)
+5. check target system .NET version compatibility during deployment
+6. add culture sensitive checkbox(yes/no) dropdown choice
+7. fix report criteria dropdown cascade filtering issue
+~@~~@~en-US~@~
+12668~@~  11. 231~@~11~@~231~@~~@~~@~~@~~@~~@~~@~

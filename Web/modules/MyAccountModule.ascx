@@ -338,7 +338,9 @@
     }
     Sys.Application.add_load(function () {
         var parentURL = $("#<%= cRedirectParent.ClientID %>").val();
-        if (parentURL && parentURL != "") window.top.location.href = parentURL;
+        if (parentURL && parentURL != "") {
+            window.top.location.href = parentURL;
+        }
         var silentLogin = function () {
             if ($('#<%= cJWTLogin.ClientID %>').length > 0 && IsMobile()) {
                 // only on mobile
@@ -542,6 +544,86 @@
         return false;
     }
 
+    function LoginEth1Wallet(walletconnect) {
+        var assertionRequest = $("#<%= cEth1AssertionRequest.ClientID %>").val();
+        var fnOK = function () {
+            <%= this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.cEth1WalletLoginBtn)) %>;
+        };
+
+        var web3 = null;
+        var provider = null;
+        connectWeb3(undefined, walletconnect)
+            .then(function (_web3) {
+                web3 = _web3.web3;
+                provider = _web3.provider;
+                return web3.eth.getAccounts();
+            })
+            .then(function (accounts) {
+                console.log(accounts);
+                if (accounts && accounts.length > 0) {
+                    return web3.eth.personal.sign(assertionRequest, accounts[0]);
+                }
+            })
+            .then(function (sig) {
+                console.log(sig);
+                if (sig) {
+                    $("#<%= cWebAuthnResult.ClientID %>").val(sig);
+                    if (provider.disconnect) {
+                        provider.disconnect();
+                    }
+                    fnOK();
+                    return web3.eth.personal.ecRecover(assertionRequest, sig);
+                }
+            })
+            .then(function (addr) {
+                console.log(addr);
+            })
+            .catch(function (e) {
+                console.log(e);
+            });
+        return false;
+    }
+
+    function RegisterEth1Wallet(walletconnect) {
+        var registrationRequest = $("#<%= cEth1RegistrationRequest.ClientID %>").val();
+        var fnOK = function () {
+            <%= this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.cLinkEth1WalletBtn)) %>;
+        };
+
+        var web3 = null;
+        var provider = null;
+        connectWeb3(walletconnect)
+            .then(function (_web3) {
+                web3 = _web3.web3;
+                provider = _web3.provider;
+                return web3.eth.getAccounts();
+            })
+            .then(function (accounts) {
+                console.log(accounts);
+                if (accounts && accounts.length > 0) {
+                    return web3.eth.personal.sign(registrationRequest, accounts[0]);
+                }
+            })
+            .then(function (sig) {
+                console.log(sig);
+                if (sig) {
+                    $("#<%= cWebAuthnResult.ClientID %>").val(sig);
+                    if (provider.disconnect) {
+                        provider.disconnect();
+                    }
+                    fnOK();
+                    return web3.eth.personal.ecRecover(registrationRequest, sig);
+                }
+            })
+            .then(function (addr) {
+                console.log(addr);
+            })
+            .catch(function (e) {
+                console.log(e);
+            });
+        return false;
+    }
+
     Sys.Application.add_load(function () {
         var credentialsContainer = typeof navigator != 'undefined' && navigator.credentials;
         var fido2 = credentialsContainer && typeof window != 'undefined' && window.PublicKeyCredential;
@@ -555,6 +637,24 @@
             }
             if (assertionRequest) {
                 $("#<%= cWebAuthnLoginBtn.ClientID %>").show();
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        var hasEthereum = typeof window.ethereum !== "undefined";
+        var hasWalletConnect = typeof window.WalletConnectProvider !== "defined";
+        var hasWeb3 = typeof window.Web3 !== "undefined" && Web3.version;
+        if ((hasEthereum || hasWalletConnect) && hasWeb3) {
+            var registrationRequest = $("#<%= cEth1RegistrationRequest.ClientID %>").val();
+            var assertionRequest = $("#<%= cEth1AssertionRequest.ClientID %>").val();
+            if (registrationRequest) {
+                if (hasEthereum) $("#<%= cLinkEth1WalletBtn.ClientID %>").show();
+                if (hasWalletConnect) $("#<%= cLinkEth1WalletBtn.ClientID %>").show();
+            }
+            if (assertionRequest) {
+                if (hasEthereum) $("#<%= cEth1WalletLoginBtn.ClientID %>").show();
+                if (hasWalletConnect) $("#<%= cMetaMaskLoginBtn.ClientID %>").show();
             }
         }
     });
@@ -592,6 +692,8 @@
             <asp:TextBox ID="cWebAuthnResult" runat="server" Visible="true" style="display:none;" />
             <asp:TextBox ID="cRegistrationRequest" runat="server" Visible="true" style="display:none;" />
             <asp:TextBox ID="cAssertionRequest" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cEth1RegistrationRequest" runat="server" Visible="true" style="display:none;" />
+            <asp:TextBox ID="cEth1AssertionRequest" runat="server" Visible="true" style="display:none;" />
             <asp:TextBox ID="cMyMachine" runat="server" style="display:none;" />
             <asp:TextBox ID="cMyAppSig" runat="server" style="display:none;" />
             <asp:TextBox ID="cFCMToken" runat="server" style="display:none;" />
@@ -640,6 +742,12 @@
                 </div>
                 <div class="LoginButton">
                     <asp:Button ID="cWebAuthnLoginBtn" Style="display: none;" Text="WebAuthn(Fido2) Passwordless Login" OnClientClick="return LoginWebAuthn();" OnClick="WebAuthnLoginBtn_Click" CssClass="btn_login" runat="server" />
+                </div>
+                <div class="LoginButton">
+                    <asp:Button ID="cMetaMaskLoginBtn" Style="display: none;" Text="MetaMask Passwordless Login" OnClientClick="return LoginEth1Wallet(false);" OnClick="Eth1WalletLoginBtn_Click" CssClass="btn_login" runat="server" />
+                </div>
+                <div class="LoginButton">
+                    <asp:Button ID="cEth1WalletLoginBtn" Style="display: none;" Text="Eth1 Mobile Wallet Passwordless Login" OnClientClick="return LoginEth1Wallet(true);" OnClick="Eth1WalletLoginBtn_Click" CssClass="btn_login" runat="server" />
                 </div>
                 <asp:Panel ID="separatePanel" Visible="false" runat="server">
                     <div class="separateLine"></div>
@@ -816,6 +924,8 @@
                 <%--new change--%>
                 <asp:Panel ID="TwoFactorAuthenticationPanel" runat="server">
                     <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cLinkWebAuthnBtn" runat="server" OnClientClick="return RegisterWebAuthn();" Style="display: none;" Text="Register WebAuthn(Fido2) Passwordless Login" OnClick="cLinkWebAuthnBtn_Click" Visible="true" /></div>
+                    <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cLinkEth1WalletBtn" runat="server" OnClientClick="return RegisterEth1Wallet(true);" Style="display: none;" Text="Register Eth1 Mobile Wallet Login" OnClick="cLinkEth1WalletBtn_Click" Visible="true" /></div>
+                    <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cLinkMetaMaskBtn" runat="server" OnClientClick="return RegisterEth1Wallet(false);" Style="display: none;" Text="Register MetaMask Login" OnClick="cLinkEth1WalletBtn_Click" Visible="true" /></div>
                     <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cForgetOTPCache" runat="server" OnClick="cForgetOTPCache_Click" Visible="true" /></div>
                     <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cDisableTwoFactor" runat="server" OnClick="cDisableTwoFactor_Click" Visible="true" /></div>
                     <div class="TwoFactorAuthenticationBtn"><asp:Button ID="cResetTwoFactorKey" runat="server" OnClick="cResetTwoFactorKey_Click" Visible="true" /></div>

@@ -35,7 +35,7 @@ class AdmScreenObjRedux extends RintagiScreenRedux {
 
     ]
     this.ScreenCriDdlDef = [
-
+      { columnName: 'ScreenId10', payloadDdlName: 'ScreenId10List', isAutoComplete: true, apiServiceName: 'GetScreenCriScreenId10List', actionTypeName: 'GET_DDL_CRIScreenId10' },
     ]
     this.SearchActions = {
       ...[...this.ScreenDdlDef].reduce((a, v) => { a['Search' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
@@ -115,7 +115,7 @@ class AdmScreenObjRedux extends RintagiScreenRedux {
 export function ShowMstFilterApplied(state) {
   return !state
     || !state.ScreenCriteria
-
+    || (state.ScreenCriteria.ScreenId10 || {}).LastCriteria
     || state.ScreenCriteria.SearchStr;
 }
 

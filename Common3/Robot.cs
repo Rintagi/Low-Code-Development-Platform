@@ -73,6 +73,8 @@ namespace RO.Common3
                 && DefaultValue.IndexOf("LCurr.") < 0 
                 && DefaultValue.IndexOf("Config.") < 0 
                 && DefaultValue.IndexOf(".ToString") < 0
+                && DefaultValue.IndexOf("base.") < 0
+                && DefaultValue.IndexOf("this.") < 0
                 )
 			{
 				if (bSingle)

@@ -55,6 +55,7 @@ namespace RO.Common3.Data
 			columns.Add("RowsToExamine", typeof(string));
 			columns.Add("BtnScan", typeof(string));
 			columns.Add("ModifiedBy3", typeof(string));
+			columns.Add("ModifiedOn3", typeof(string));
 			columns.Add("LastSyncDt3", typeof(string));
 			columns.Add("VirtualSql3", typeof(string));
 			return dt;

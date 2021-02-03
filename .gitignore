@@ -83,4 +83,5 @@ npm
 *.user
 *.suo
 *.cache
+.eslintcache
 Thumbs.db

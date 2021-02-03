@@ -294,6 +294,23 @@ export function GetRefColumnContent(mstId, dtlId, refKeyId, isMaster, refScreenC
 
 /*screen criteria dll and screen dropdownlist/autocomplete*/
 
+export function GetScreenCriScreenId10List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 1086,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
 export function GetGridGrpCd14List(query, topN, filterBy, accessScope) {
     return fetchData(baseUrl + '/AdmScreenObjWs.asmx/GetGridGrpCd14List'
         , {

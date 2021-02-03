@@ -64,7 +64,8 @@ namespace RO.Rule3
             || DisplayName == "Label" // for some reason this is treated as 'input' even though the save SQL ignore this
             || (DisplayMode == "ImageButton" && !string.IsNullOrEmpty(TableId))
             ) 
-            && string.IsNullOrEmpty(DdlRefColumnId)
+            && 
+            (string.IsNullOrEmpty(DdlRefColumnId) || DisplayMode == "Currency")
             )
             || DisplayName == "ComboBox"
             || DisplayName == "DropDownList"
@@ -79,7 +80,7 @@ namespace RO.Rule3
             string DdlRefColumnId = dr["DdlRefColumnId"].ToString();
             string DisplayMode = dr["DisplayMode"].ToString();
             string DisplayName = dr["DisplayName"].ToString();
-            return !string.IsNullOrEmpty(DdlRefColumnId)
+            return (!string.IsNullOrEmpty(DdlRefColumnId) && DisplayMode != "Currency")
                         &&
                         (
                         (DisplayName == "TextBox" && DisplayMode != "Document")
@@ -237,12 +238,14 @@ namespace RO.Rule3
             {
                 string ImportInitialValue = "";
                 string ExportDefaultValue = "";
-                foreach (DataRow dr in dt.Rows)
+                DataView dv = dt.DefaultView;
+                dv.Sort = "ProgramName";
+                foreach (DataRowView drv in dv)
                 {
-                    string generateSc = dr["GenerateSc"].ToString();
-                    string generateSr = dr["GenerateSr"].ToString();
-                    string reactGenerated = dr["ReactGenerated"].ToString();
-                    string programName = dr["ProgramName"].ToString();
+                    string generateSc = drv["GenerateSc"].ToString();
+                    string generateSr = drv["GenerateSr"].ToString();
+                    string reactGenerated = drv["ReactGenerated"].ToString();
+                    string programName = drv["ProgramName"].ToString();
 
                     if ((generateSc == "Y" || generateSr == "Y") && reactGenerated == "Y")
                     {
@@ -304,12 +307,14 @@ SuppressGenRoute ? [] : [
             {
                 string ImportInitialValue = "";
                 string ExportDefaultValue = "";
-                foreach (DataRow dr in dt.Rows)
+                DataView dv = dt.DefaultView;
+                dv.Sort = "ProgramName";
+                foreach (DataRowView drv in dv)
                 {
-                    string generateSc = dr["GenerateSc"].ToString();
-                    string generateSr = dr["GenerateSr"].ToString();
-                    string reactGenerated = dr["ReactGenerated"].ToString();
-                    string programName = dr["ProgramName"].ToString();
+                    string generateSc = drv["GenerateSc"].ToString();
+                    string generateSr = drv["GenerateSr"].ToString();
+                    string reactGenerated = drv["ReactGenerated"].ToString();
+                    string programName = drv["ProgramName"].ToString();
 
                     if ((generateSc == "Y" || generateSr == "Y") && reactGenerated == "Y")
                     {
@@ -680,7 +685,7 @@ import { checkBundleUpdate } from '../../redux/_Rintagi';
 import { setTitle, setSpinner } from '../../redux/Global';
 import { getNaviBar } from './index';
 import MstRecord from './MstRecord';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import log from '../../helpers/logger';
 
 class MstList extends RintagiScreen {
@@ -1997,7 +2002,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                             }
 
                             //save button function call
-                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": this.StripEmbeddedBase64Prefix(values.c" + columnId + ") || '',";
                             saveBtnResults.Add(saveBtnValue);
 
                             //render label
@@ -2027,7 +2032,11 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
                                     {((this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         {values.c" + columnId + @" &&
-                                          <img alt='' src={values.c" + columnId + @"} />
+                                          <SignaturePanel  
+                                            name='c" + columnId + @"' 
+                                            src={values.c" + columnId + @"} 
+                                            onChange={this.SignatureChange(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                            value={values.c" + columnId + @"} />
                                         }
                                       </div>
                                     }
@@ -2257,6 +2266,8 @@ isHyperLink ? @"
             string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())).Select(s => addIndent(s, 20)));
             string formikControlCnt = string.Join(Environment.NewLine, formikControlResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())));
             string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Where(s => !string.IsNullOrEmpty((s ?? "").Trim())).Select(s => addIndent(s, 4)));
+            string customImport = "";
+            string baseScreen = "RintagiScreen";
 
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
@@ -2266,7 +2277,7 @@ import { connect } from 'react-redux';
 import { Prompt, Redirect } from 'react-router';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import { Formik, Field, Form } from 'formik';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import classNames from 'classnames';
 import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
@@ -2277,6 +2288,7 @@ import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import ListBox from '../../components/custom/ListBox';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import { default as FileInputField } from '../../components/custom/FileInput';
+import SignaturePanel from '../../components/custom/SignaturePanel';
 import RintagiScreen from '../../components/custom/Screen';
 import ModalDialog from '../../components/custom/ModalDialog';
 import { showNotification } from '../../redux/Notification';
@@ -2292,8 +2304,9 @@ import { getRintagiConfig } from '../../helpers/config';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
 import log from '../../helpers/logger';
-
-class MstRecord extends RintagiScreen {
+"
++ customImport + @"
+class MstRecord extends " + baseScreen + @" {
   constructor(props) {
     super(props);
     this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
@@ -2845,7 +2858,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import { Formik, Field, Form } from 'formik';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import MagnifyIcon from 'mdi-react/MagnifyIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import PlusIcon from 'mdi-react/PlusIcon';
@@ -4033,7 +4046,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                             }
 
                             //save button function call
-                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": values.c" + columnId + " || '',";
+                            string saveBtnValue = !directSaveToDB ? "" : columnId + ": this.StripEmbeddedBase64Prefix(values.c" + columnId + ") || '',";
                             saveBtnResults.Add(saveBtnValue);
 
                             //render label
@@ -4063,7 +4076,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                                     {((this.constructor.ShowSpinner([[---ScreenName---]]State)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
                                         {values.c" + columnId + @" &&
-                                          <img alt='' src={values.c" + columnId + @"} />
+                                          <SignaturePanel  
+                                            name='c" + columnId + @"' 
+                                            src={values.c" + columnId + @"} 
+                                            onChange={this.SignatureChange(setFieldValue, setFieldTouched, 'c" + columnId + @"')}
+                                            value={values.c" + columnId + @"} />
                                         }
                                       </div>
                                     }
@@ -4292,7 +4309,8 @@ isHyperLink ? @"
             string formikInitialCnt = string.Join(Environment.NewLine, formikInitialResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => addIndent(s, 20)));
             string formikControlCnt = string.Join(Environment.NewLine, formikControlResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => s.Trim(new char[] { '\r', '\n' })));
             string bindActionCreatorsCnt = string.Join(Environment.NewLine, bindActionCreatorsResults.Where(s => !string.IsNullOrWhiteSpace((s ?? "").Trim())).Select(s => addIndent(s, 4)));
-
+            string customImport = "";
+            string baseScreen = "RintagiScreen";
             StringBuilder sb = new StringBuilder();
             sb.Append(@"
 import React, { Component } from 'react';
@@ -4302,13 +4320,14 @@ import { Prompt, Redirect } from 'react-router';
 import { Formik, Field, Form } from 'formik';
 import { Button, Row, Col, ButtonToolbar, ButtonGroup, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown, Nav, NavItem, NavLink } from 'reactstrap';
 import classNames from 'classnames';
-import DocumentTitle from 'react-document-title';
+import DocumentTitle from '../../components/custom/DocumentTitle';
 import LoadingIcon from 'mdi-react/LoadingIcon';
 import CheckIcon from 'mdi-react/CheckIcon';
 import DatePicker from '../../components/custom/DatePicker';
 import NaviBar from '../../components/custom/NaviBar';
 import { default as FileInputFieldV1 } from '../../components/custom/FileInputV1';
 import { default as FileInputField } from '../../components/custom/FileInput';
+import SignaturePanel from '../../components/custom/SignaturePanel';
 import AutoCompleteField from '../../components/custom/AutoCompleteField';
 import DropdownField from '../../components/custom/DropdownField';
 import ModalDialog from '../../components/custom/ModalDialog';
@@ -4326,8 +4345,9 @@ import { getRintagiConfig } from '../../helpers/config';
 import Skeleton from 'react-skeleton-loader';
 import ControlledPopover from '../../components/custom/ControlledPopover';
 import log from '../../helpers/logger';
-
-class DtlRecord extends RintagiScreen {
+"
++ customImport + @"
+class DtlRecord extends " + baseScreen + @" {
   constructor(props) {
     super(props);
     this.GetReduxState = () => (this.props.[[---ScreenName---]] || {});
@@ -6313,7 +6333,8 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                             }
                         }
 
-                        if (!isRefColumnControl)
+                        if (!isRefColumnControl
+                            )
                         {
                             if (!string.IsNullOrEmpty(DefaultValue))
                             {

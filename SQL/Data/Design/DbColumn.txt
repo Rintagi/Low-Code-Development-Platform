@@ -354,10 +354,10 @@
 1127~@~128~@~20~@~~@~RuleTypeId~@~WebRule - RuleTypeId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the rule type for this Web Rule.~@~
 1128~@~128~@~50~@~~@~RuleDescription~@~WebRule - RuleDescription~@~11~@~500~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the detail description for this web rule.~@~
 1129~@~128~@~60~@~~@~ScreenId~@~WebRule - ScreenId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the screen to apply this web rule.~@~
-1130~@~128~@~80~@~~@~ScreenObjId~@~WebRule - ScreenObjId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the screen column to apply this web rule, if applicable.~@~
-1131~@~128~@~90~@~~@~ButtonTypeId~@~WebRule - ButtonTypeId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the button to apply this web rule, if applicable.~@~
-1132~@~128~@~100~@~~@~EventId~@~WebRule - EventId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the event to fire this web rule.~@~
-1133~@~128~@~110~@~~@~WebRuleProg~@~WebRule - WebRuleProg~@~11~@~0~@~~@~~@~N~@~N~@~N~@~N~@~N~@~Please copy to here the well tested rule applied to the program.~@~
+1130~@~128~@~70~@~~@~ScreenObjId~@~WebRule - ScreenObjId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the screen column to apply this web rule, if applicable.~@~
+1131~@~128~@~80~@~~@~ButtonTypeId~@~WebRule - ButtonTypeId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the button to apply this web rule, if applicable.~@~
+1132~@~128~@~90~@~~@~EventId~@~WebRule - EventId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the event to fire this web rule.~@~
+1133~@~128~@~100~@~~@~WebRuleProg~@~WebRule - WebRuleProg~@~11~@~0~@~~@~~@~N~@~N~@~N~@~N~@~N~@~Please copy to here the well tested rule applied to the program.~@~
 1134~@~129~@~10~@~~@~EventId~@~CtEvent - EventId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal ID uniquely identifies this event for web rule.~@~
 1135~@~129~@~20~@~~@~EventCode~@~CtEvent - EventCode~@~14~@~6~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This unique code is used internally to generate the appropriate event code.~@~
 1136~@~129~@~30~@~~@~EventDesc~@~CtEvent - EventDesc~@~11~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the description of this event for web rule.~@~
@@ -1429,14 +1429,14 @@
 7542~@~14~@~380~@~~@~DtlLstPosId~@~ScreenObj - DtlLstPosId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Please select the search position for mobile presentation.~@~
 7543~@~1314~@~10~@~~@~DtlLstPosId~@~CtDtlLstPos - DtlLstPosId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is a single digit uniquely represents this position for detail list search.~@~
 7544~@~1314~@~20~@~~@~DtlLstPosNm~@~CtDtlLstPos - DtlLstPosNm~@~11~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique name describing this position for detail list search.~@~
-7545~@~128~@~190~@~~@~AsmxRuleProg~@~WebRule - AsmxRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested ASMX rule to be generated onto the program.~@~
-7546~@~128~@~180~@~~@~AsmxEventId~@~WebRule - AsmxEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this ASMX rule.~@~
-7547~@~128~@~170~@~~@~ServiceRuleProg~@~WebRule - ServiceRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested service rule to be generated onto the program.~@~
-7548~@~128~@~160~@~~@~ServiceEventId~@~WebRule - ServiceEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this service rule.~@~
-7549~@~128~@~150~@~~@~ReduxRuleProg~@~WebRule - ReduxRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested Redux rule to be generated onto the program.~@~
-7550~@~128~@~140~@~~@~ReduxEventId~@~WebRule - ReduxEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this redux rule.~@~
-7551~@~128~@~130~@~~@~ReactRuleProg~@~WebRule - ReactRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested React rule to be generated onto the program.~@~
-7552~@~128~@~120~@~~@~ReactEventId~@~WebRule - ReactEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this react rule.~@~
+7545~@~128~@~180~@~~@~AsmxRuleProg~@~WebRule - AsmxRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested ASMX rule to be generated onto the program.~@~
+7546~@~128~@~170~@~~@~AsmxEventId~@~WebRule - AsmxEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this ASMX rule.~@~
+7547~@~128~@~160~@~~@~ServiceRuleProg~@~WebRule - ServiceRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested service rule to be generated onto the program.~@~
+7548~@~128~@~150~@~~@~ServiceEventId~@~WebRule - ServiceEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this service rule.~@~
+7549~@~128~@~140~@~~@~ReduxRuleProg~@~WebRule - ReduxRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested Redux rule to be generated onto the program.~@~
+7550~@~128~@~130~@~~@~ReduxEventId~@~WebRule - ReduxEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this redux rule.~@~
+7551~@~128~@~120~@~~@~ReactRuleProg~@~WebRule - ReactRuleProg~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the well tested React rule to be generated onto the program.~@~
+7552~@~128~@~110~@~~@~ReactEventId~@~WebRule - ReactEventId~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the event to fire this react rule.~@~
 7553~@~1315~@~10~@~~@~RuleServiceTypeId~@~CtRuleServiceType - RuleServiceTypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 7554~@~1315~@~20~@~~@~RuleServiceTypeDesc~@~CtRuleServiceType - RuleServiceTypeDesc~@~11~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7555~@~1316~@~10~@~~@~RuleReduxTypeId~@~CtRuleReduxType - RuleReduxTypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
@@ -1564,3 +1564,4 @@
 7686~@~1328~@~20~@~~@~MimeType~@~VwMIMEType - MimeType~@~15~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7687~@~1328~@~30~@~~@~MimeTypeDesc~@~VwMIMEType - MimeTypeDesc~@~15~@~200~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7688~@~1328~@~10~@~~@~MimeTypeId~@~VwMIMEType - MimeTypeId~@~3~@~4~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
+7689~@~128~@~190~@~~@~ForCompanyId~@~WebRule - ForCompanyId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~

@@ -539,3 +539,15 @@
 1712~@~~@~1076~@~114~@~ID d'audit
 1713~@~~@~1077~@~114~@~11/12 / Règle
 1720~@~AdmServerRuleOvrd    10: Screen (en-US)~@~1085~@~1~@~Screen
+1721~@~AdmScreenObj    10: Screen (en-US)~@~1086~@~1~@~Screen
+1722~@~AdmScreenObj    10: Screen (zh-CN)~@~1086~@~4~@~屏幕
+1723~@~AdmScreenObj    10: Screen (fr-FR)~@~1086~@~2~@~Écran
+1724~@~AdmScreenObj    10: Screen (hi-IN)~@~1086~@~8~@~परदा
+1725~@~AdmScreenObj    10: Screen (pt-BR)~@~1086~@~9~@~Tela
+1726~@~AdmScreenObj    10: Screen (tr-TR)~@~1086~@~11~@~Ekran
+1727~@~AdmScreenObj    10: Screen (ja-JP)~@~1086~@~14~@~スクリーン
+1728~@~AdmScreenObj    10: Screen (ru-RU)~@~1086~@~12~@~Экран
+1729~@~AdmScreenObj    10: Screen (es-ES)~@~1086~@~13~@~Pantalla
+1730~@~AdmScreenObj    10: Screen (de-DE)~@~1086~@~68~@~Bildschirm
+1731~@~AdmScreenObj    10: Screen (ko-KR)~@~1086~@~28~@~화면
+1732~@~AdmScreenObj    10: Screen (fr-CA)~@~1086~@~114~@~Écran

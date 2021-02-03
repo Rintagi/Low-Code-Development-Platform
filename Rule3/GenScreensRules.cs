@@ -6,11 +6,12 @@ namespace RO.Rule3
 	using System.Text;
 	using System.Text.RegularExpressions;
     using System.Linq;
+    using System.Collections.Generic;
     using RO.Common3;
 	using RO.Common3.Data;
 	using RO.SystemFramewk;
 	using RO.Access3;
-
+    
 	public class GenScreensRules
 	{
         private GenScreensAccessBase GetGenScreensAccess(int CommandTimeout = 1800)
@@ -53,7 +54,26 @@ namespace RO.Rule3
             else if (justify == "L") return "text-align:left;";
             else return "";
         }
-        
+        private string WrapConditionalWebRule(string blockIndent, DataRowView drv)
+        {
+            string companyId = drv["ForCompanyId"].ToString();
+            string webRuleId = drv["WebRuleId"].ToString();
+            string webRule = drv["WebRuleProg"].ToString().Replace("\r\n","\n").Replace("\r","\n");
+            if (string.IsNullOrEmpty(companyId))
+            {
+                return webRule.Replace("\n",Environment.NewLine) + Environment.NewLine;
+            }
+            string[] srcLines = webRule.Split(new char[] { '\n' });
+            //string oneTab = "\\t";
+            //string initBlockIndent = srcLines.Length > 0 ? String.Concat(srcLines[0].TakeWhile(c => char.IsWhiteSpace(c))) : "";
+            //Regex leadingSpace = new Regex("^" + initBlockIndent);
+            //srcLines = srcLines.Select(s => blockIndent + oneTab + leadingSpace.Replace(s, "")).ToArray();
+            return
+                (blockIndent + "if (RunWebRule(\"" + companyId + "\", " + webRuleId + "))" + "\n"
+                + blockIndent + "{" + "\n"
+                + string.Join("\n", srcLines) + "\n"
+                + blockIndent + "}" + "\n").Replace("\n", Environment.NewLine) + Environment.NewLine;
+        }
         public bool DeleteProgram(string programName, Int32 screenId, string appDatabase, string multiDesignDb, string sysProgram, CurrPrj CPrj, CurrSrc CSrc, CurrTar CTar)
 		{
 			try
@@ -1795,7 +1815,7 @@ namespace RO.Rule3
 			string cName;
 			string sEvent;
 			bool bWebRule;
-			//bool bListBox;
+            //bool bListBox;
 			int iOffset = 0;
 			//DataTable dt = null;
 			StringBuilder sb = new StringBuilder();
@@ -1947,10 +1967,17 @@ namespace RO.Rule3
 					bWebRule = true;
 					sb.Append(Environment.NewLine);
 					sb.Append("		//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("		", drvr));
 				}
 			}
-            if (bWebRule) { sb.Append("		// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("		// *** Custom Function/Procedure Web Rule starts here *** //" + Environment.NewLine); }
+            if (bWebRule) 
+            { 
+                sb.Append("		// *** WebRule End *** //" + Environment.NewLine); 
+            } 
+            else 
+            { 
+                sb.Append("		// *** Custom Function/Procedure Web Rule starts here *** //" + Environment.NewLine); 
+            }
             //sb.Append(Environment.NewLine);
             //sb.Append("		private AdminWs AdminFacade()" + Environment.NewLine);
             //sb.Append("		{" + Environment.NewLine);
@@ -2091,7 +2118,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append("	" + drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append("	" + WrapConditionalWebRule("			", drvr));
                 }
             }
             if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Criteria Trigger (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -2118,7 +2145,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(WrapConditionalWebRule("				", drvr));
 				}
 			}
             if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Page Load (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -2191,7 +2218,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(WrapConditionalWebRule("			", drvr));
 				}
 			}
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Page Init (Front of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -2203,7 +2230,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("			", drvr));
 				}
 			}
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Page Init (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3428,7 +3455,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine).Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("			", drvr));
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -3441,7 +3468,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("			", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3453,7 +3480,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3469,7 +3496,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("			", drvr));
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -3482,7 +3509,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("			", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3494,7 +3521,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("			", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3531,7 +3558,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("			", drvr));
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -3544,7 +3571,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3609,7 +3636,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -3714,7 +3741,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("   ", drvr));
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Criteria Trigger (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -4774,7 +4801,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** List Selection (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5238,7 +5265,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Default Value (Folder) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5441,7 +5468,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** Default Value (Folder) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5789,7 +5816,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** List Selection (End of) Web Rule starts here *** //" + Environment.NewLine); }
@@ -5888,7 +5915,7 @@ namespace RO.Rule3
 							{
 								bWebRule = true;
 								sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-								sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+								sb.Append(WrapConditionalWebRule("   ", drvr));
 							}
 						}
                         if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** On Change/ On Click Web Rule starts here *** //" + Environment.NewLine); }
@@ -6129,7 +6156,7 @@ namespace RO.Rule3
 							{
 								bWebRule = true;
 								sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-								sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+								sb.Append(WrapConditionalWebRule("   ", drvr));
 							}
 						}
                         if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** On Change/ On Click Web Rule starts here *** //" + Environment.NewLine); }
@@ -6357,7 +6384,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6370,7 +6397,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6418,7 +6445,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6434,7 +6461,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6447,7 +6474,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6459,7 +6486,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6475,7 +6502,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6488,7 +6515,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6500,7 +6527,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6516,7 +6543,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6529,7 +6556,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6541,7 +6568,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6557,7 +6584,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6570,7 +6597,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6582,7 +6609,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6598,7 +6625,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6611,7 +6638,7 @@ namespace RO.Rule3
                         {
                             bWebRule = true;
                             sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                            sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                            sb.Append(WrapConditionalWebRule("   ", drvr));
                         }
                     }
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6690,7 +6717,7 @@ namespace RO.Rule3
                         {
                             bWebRule = true;
                             sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                            sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                            sb.Append(WrapConditionalWebRule("   ", drvr));
                         }
                     }
                     if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Default Value (Grid) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6702,7 +6729,7 @@ namespace RO.Rule3
                         {
                             bWebRule = true;
                             sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                            sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                            sb.Append(WrapConditionalWebRule("   ", drvr));
                         }
                     }
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6750,7 +6777,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6763,7 +6790,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6775,7 +6802,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6791,7 +6818,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6804,7 +6831,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6818,7 +6845,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6834,7 +6861,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -6847,7 +6874,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -6871,7 +6898,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7194,7 +7221,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -7207,7 +7234,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7219,7 +7246,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (after) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7269,7 +7296,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -7282,7 +7309,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7317,7 +7344,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -7697,7 +7724,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -7710,7 +7737,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** GridItemDataBound (before) Web Rule End *** //" + Environment.NewLine); }
@@ -7939,7 +7966,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** GridItemDataBound (after) Web Rule End *** //" + Environment.NewLine); }
@@ -8367,7 +8394,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); }
@@ -8385,7 +8412,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("				//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("				// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("				// *** Delete Grid Row (before) Web Rule End *** //" + Environment.NewLine); }
@@ -8410,7 +8437,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8423,7 +8450,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8440,7 +8467,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8456,7 +8483,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8469,7 +8496,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8487,7 +8514,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8503,7 +8530,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8516,7 +8543,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8529,7 +8556,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8545,7 +8572,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8558,7 +8585,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8572,7 +8599,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8588,7 +8615,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8601,7 +8628,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8618,7 +8645,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8635,7 +8662,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(WrapConditionalWebRule("   ", drvr));
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8648,7 +8675,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8668,7 +8695,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8684,7 +8711,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("   ", drvr));
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8697,7 +8724,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("   ", drvr));
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8708,7 +8735,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("   ", drvr));
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8724,7 +8751,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("   ", drvr));
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8737,7 +8764,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("   ", drvr));
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8761,7 +8788,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("   ", drvr));
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8777,7 +8804,7 @@ namespace RO.Rule3
                 {
                     bWebRule = true;
                     sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                    sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                    sb.Append(WrapConditionalWebRule("   ", drvr));
                 }
             }
             if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8790,7 +8817,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("   ", drvr));
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8809,7 +8836,7 @@ namespace RO.Rule3
                     {
                         bWebRule = true;
                         sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-                        sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+                        sb.Append(WrapConditionalWebRule("   ", drvr));
                     }
                 }
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8829,7 +8856,7 @@ namespace RO.Rule3
 				{
 					bWebRule = true;
 					sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-					sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+					sb.Append(WrapConditionalWebRule("   ", drvr));
 				}
 			}
 			if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -8842,7 +8869,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8963,7 +8990,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
                 if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -8991,7 +9018,7 @@ namespace RO.Rule3
 					{
 						bWebRule = true;
 						sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-						sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+						sb.Append(WrapConditionalWebRule("   ", drvr));
 					}
 				}
 				if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); }
@@ -9004,7 +9031,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (Before) Web Rule starts here *** //" + Environment.NewLine); }
@@ -9037,7 +9064,7 @@ namespace RO.Rule3
 						{
 							bWebRule = true;
 							sb.Append("			//WebRule: " + drvr["RuleName"].ToString() + Environment.NewLine);
-							sb.Append(drvr["WebRuleProg"].ToString().Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine) + Environment.NewLine);
+							sb.Append(WrapConditionalWebRule("   ", drvr));
 						}
 					}
                     if (bWebRule) { sb.Append("			// *** WebRule End *** //" + Environment.NewLine); } else { sb.Append("			// *** System Button Click (After) Web Rule starts here *** //" + Environment.NewLine); }
@@ -11475,18 +11502,18 @@ namespace RO.Rule3
                     if ((
                             (",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
                             || drv["DdlRefColumnId"].ToString() == string.Empty 
-                            || drv["DisplayMode"].ToString().ToLower() == "currency") 
-                            && 
-                            (drv["SystemValue"].ToString() == string.Empty 
-                            /* default always doesn't mean the front end value cannot be passed on, useful for server rule logic
-                            || drv["DefAlways"].ToString() != "Y" 
-                             */
-                            )
-                            /* still has client side field even for imagebutton/varbinary, useful for server rule(and make it consistent with grid treatment
-                            && 
-                            (drv["DisplayName"].ToString().ToLower() != "imagebutton" 
-                            || drv["DataTypeSqlName"].ToString().ToLower() != "varbinary")
-                             */
+                            || drv["DisplayMode"].ToString().ToLower() == "currency")
+                        /* default always doesn't mean the front end value cannot be passed on, useful for server rule logic
+                        && 
+                        (drv["SystemValue"].ToString() == string.Empty 
+                        || drv["DefAlways"].ToString() != "Y" 
+                        )
+                         */
+                        /* still has client side field even for imagebutton/varbinary, useful for server rule(and make it consistent with grid treatment
+                        && 
+                        (drv["DisplayName"].ToString().ToLower() != "imagebutton" 
+                        || drv["DataTypeSqlName"].ToString().ToLower() != "varbinary")
+                         */
                         ) 
                         || drv["DisplayMode"].ToString().ToLower() == "document")
                     {
@@ -11514,11 +11541,11 @@ namespace RO.Rule3
                     if (((",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
                             || drv["DdlRefColumnId"].ToString() == string.Empty 
                             || drv["DisplayMode"].ToString().ToLower() == "currency") 
-                        && (drv["SystemValue"].ToString() == string.Empty
                             /* default always doesn't mean the front end value cannot be passed on, useful for server rule logic
+                        && (drv["SystemValue"].ToString() == string.Empty
                             || drv["DefAlways"].ToString() != "Y"
-                             */
                             )
+                             */
                         ) 
                         || drv["DisplayMode"].ToString().ToLower() == "document")
                     {

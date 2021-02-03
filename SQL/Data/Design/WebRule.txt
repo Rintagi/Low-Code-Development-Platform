@@ -1,12 +1,12 @@
-5~@~1~@~Default to appropriate events for Screen Columns~@~Web Rule: Default to appropriate events for Screen Columns~@~Default to appropriate events for Screen Columns~@~80~@~1287~@~~@~1~@~if ("1".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"1");}~@~~@~~@~~@~~@~~@~~@~~@~
-6~@~1~@~Default to appropriate events for buttons~@~Web Rule: Default to appropriate events for buttons~@~Default to appropriate events only for buttons~@~80~@~1288~@~~@~1~@~            if ("6".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"6");}~@~~@~~@~~@~~@~~@~~@~~@~
+5~@~1~@~Default to appropriate events for Screen Columns~@~Web Rule: Default to appropriate events for Screen Columns~@~Default to appropriate events for Screen Columns~@~80~@~1287~@~~@~1~@~if ("1".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"1");}~@~~@~~@~~@~~@~~@~~@~~@~~@~
+6~@~1~@~Default to appropriate events for buttons~@~Web Rule: Default to appropriate events for buttons~@~Default to appropriate events only for buttons~@~80~@~1288~@~~@~1~@~            if ("6".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"6");}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 9~@~2~@~Prevent production access to stored procedure, also Rintai Paas Analyst~@~Server Rule: Prevent production access to stored procedure, also Rintai Paas Analyst~@~Make server rule content readonly on production system and for Rintagi Analyst plus confirm message.~@~14~@~~@~~@~9~@~if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled = false;}
 				else
 				{
 					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedure from the physical database for sure?');";}
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedure to physical database for sure?');";}
-				}~@~~@~~@~~@~~@~~@~~@~~@~
+				}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 12~@~4~@~Synchronize by the physical database~@~Data Table and Columns: Synchronize by the physical database~@~Synchronize by the physical database~@~2~@~1402~@~~@~1~@~			string tid = cAdmDbTable2List.SelectedValue;
 			WebRule wr = new WebRule();
 			if (cTableName3.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please enter the table name to synchronize from and try again."); }
@@ -38,12 +38,12 @@
 				if (tid.IndexOf("Error:") >= 0) { bErrNow.Value = "Y"; PreMsgPopup(tid); tid = cAdmDbTable2List.SelectedValue; }
 				else { bInfoNow.Value = "Y"; PreMsgPopup("Data table and columns synchronized by the physical database successfully."); }
 			}
-			bPgDirty.Value = "N"; cPgDirty.Style["display"] = "none"; PopAdmDbTable2List(sender, e, false, tid.ToString());~@~~@~~@~~@~~@~~@~~@~~@~
+			bPgDirty.Value = "N"; cPgDirty.Style["display"] = "none"; PopAdmDbTable2List(sender, e, false, tid.ToString());~@~~@~~@~~@~~@~~@~~@~~@~~@~
 13~@~1~@~Confirm message for Synchronization icons~@~Data Table and Columns: Confirm message for Synchronization icons~@~Customize confirm message for Synchronization icons~@~2~@~~@~~@~9~@~                if (cBtnScan.Attributes["OnClick"] == null || cBtnScan.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cBtnScan.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
                 if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncByDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
                 if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize by physical database for sure?');";}
                 if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize to physical database for sure?');";}
-                HideShowIcons(sender, e); HideShowUpload(true);~@~~@~~@~~@~~@~~@~~@~~@~
+                HideShowIcons(sender, e); HideShowUpload(true);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 15~@~4~@~Initialization~@~Data Table and Columns: Initialization~@~Initialization~@~2~@~~@~~@~11~@~            HideShowUpload(true);
             if (LCurr.DbId == 3) { cMultiDesignDb3.Enabled = true; } else { cMultiDesignDb3.Enabled = false; }
             /* Automate code table screen creation: */
@@ -56,7 +56,7 @@
                 string key = (new RO.WebRules.WebRule()).WrGetScreenId("Ct" + cTableName3.Text, (string)Session[KEY_sysConnectionString], LcAppPw);
                 string cid = string.IsNullOrEmpty(key) ? "&cid=" + cTableId3.Text : string.Empty;
                 cAnalToDb.Attributes["onclick"] = "if (confirm('Proceed to create/retrieve a grid-only screen for this code table for sure?')) { SearchLink('AdmScreen.aspx?typ=N&ctb=Ct" + cTableName3.Text + cid + "','','',''); return false; }";
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 16~@~4~@~Synchronize to the physical database~@~Data Table and Columns: Synchronize to the physical database~@~Synchronize to the physical database and post changes to next release~@~2~@~1405~@~~@~1~@~			string err = string.Empty;
 			WebRule wr = new WebRule();
 			if (cTableId3.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please select a table to synchronize and try again."); }
@@ -91,7 +91,7 @@
 				if (err != string.Empty) { bErrNow.Value = "Y"; PreMsgPopup(err); }
 				else { bInfoNow.Value = "Y"; PreMsgPopup("Data table and columns synchronized to the physical database successfully."); }
 			}
-			bPgDirty.Value = "N"; cPgDirty.Style["display"] = "none"; PopAdmDbTable2List(sender, e, false, cAdmDbTable2List.SelectedValue);~@~~@~~@~~@~~@~~@~~@~~@~
+			bPgDirty.Value = "N"; cPgDirty.Style["display"] = "none"; PopAdmDbTable2List(sender, e, false, cAdmDbTable2List.SelectedValue);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 17~@~4~@~Synchronize to the physical database~@~Server Rule: Synchronize to the physical database~@~Synchronize s.proc. to the physical database immdediately~@~14~@~1418~@~~@~1~@~            string err = string.Empty;
 			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not synchronize this administration stored procedure to physical database."); }
 			else if (cServerRuleId24.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this server rule first then try again."); }
@@ -117,7 +117,7 @@
                     }
                     catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
 				}
-			}~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 18~@~4~@~Obtain sp from the physical database~@~Server Rule: Obtain sp from the physical database~@~Obtain stored procedure from the physical database~@~14~@~1420~@~~@~1~@~string ss = string.Empty;
 			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not manipulate this administration stored procedure."); }
 			else if (cServerRuleId24.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this server rule first then try again."); }
@@ -139,7 +139,7 @@
 					catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 					cLastGenDt24.Text = ss; cSaveButton_Click(sender, new EventArgs());
 				}
-			}~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 20~@~4~@~Tanslate from default culture to selected culture~@~Culture Translation: Tanslate from default culture to selected culture~@~Tanslate all not-yet-translated items from default culture to selected culture.~@~8~@~~@~51~@~14~@~            if (string.IsNullOrEmpty(cAdmCtCulture8List.SelectedValue) || string.IsNullOrEmpty(cCultureTypeId8.Text) || string.IsNullOrEmpty(cCultureTypeName8.Text))
 			{
 				bInfoNow.Value = "Y"; PreMsgPopup("Please select an existing culture to translate and try again.");
@@ -174,7 +174,7 @@
 				StartCountDown(ch);
 				bInfoNow.Value = "Y"; PreMsgPopup("Translation has started.  This translation engine requires internet connection and may take several hours.  Please check back later for status. Thank you for your patience.");
 			}
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 23~@~4~@~Add physical databases~@~Systems Maintenance: Add physical databases~@~Add physical application and design databases immediately~@~87~@~1450~@~~@~1~@~            if (!string.IsNullOrEmpty(cdbAppDatabase45.Text))
             {
                 RO.Rule3.Deploy deploy = new RO.Rule3.Deploy();
@@ -185,14 +185,14 @@
             else
             {
                 bErrNow.Value = "Y"; PreMsgPopup("Application database and design database cannot be empty, please try again.");
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 25~@~2~@~Prevent production access to stored procedure~@~Report Definition: Prevent production access to stored procedure~@~Make server rule content readonly on production system and add confirm message~@~67~@~~@~~@~9~@~if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled = false; cUpdCode22.Enabled = false; cXlsCode22.Enabled = false;}
 				else
 				{
 					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedures from the physical database for sure?');";}
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedures to physical database for sure?');";}
-				}~@~~@~~@~~@~~@~~@~~@~~@~
+				}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 26~@~4~@~Obtain s.procs from the physical database~@~Report Definition: Obtain s.procs from the physical database~@~Obtain stored procedures from the physical database~@~67~@~1473~@~~@~1~@~            WebRule wr = new WebRule();
 			string err = string.Empty;
 			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not manipulate these administration stored procedures."); }
@@ -240,7 +240,7 @@
                         catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
                     }
 				}
-			}~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 27~@~4~@~Synchronize to the physical database~@~Report Definition: Synchronize to the physical database~@~Synchronize all stored procedures to the physical database immdediately~@~67~@~1474~@~~@~1~@~            string err = string.Empty;
 			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not synchronize these administration stored procedures to physical database."); }
 			else if (cReportId22.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please add this report definition first then try again."); }
@@ -284,7 +284,7 @@
                     }
                     catch (Exception er) { bErrNow.Value = "Y"; PreMsgPopup(er.Message); return; }
 				}
-			}~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 38~@~4~@~Procedures for translation~@~Culture Translation: Procedures for translation~@~Procedures for translation~@~8~@~~@~~@~16~@~        private static object _lock = new object();
 
 		private class CacheHolder
@@ -334,7 +334,7 @@
 				}
 			}
 		}
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 39~@~4~@~Check translation status~@~Culture Translation: Check translation status~@~Check translation status.~@~8~@~~@~56~@~14~@~bInfoNow.Value = "Y";
 			if (this.Application["TranslateON"] != null)
 			{
@@ -344,17 +344,17 @@
 				}
 				else { PreMsgPopup(this.Application["TranslateON"].ToString()); }
 			}
-			else { PreMsgPopup("Please start the translation engine and try again."); }~@~~@~~@~~@~~@~~@~~@~~@~
+			else { PreMsgPopup("Please start the translation engine and try again."); }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 40~@~4~@~Ask before translate or fill FX table~@~Culture Translation: Ask before translate or fill FX table~@~Add confirm message for translation trigger and FX trigger.~@~8~@~~@~~@~18~@~if (this.Application["TranslateON"] == null || this.Application["TranslateON"].ToString() != "Y")
 			{
 				cUndoAllButton.Attributes["OnClick"] = "return confirm('Proceed to start translation engine?');";
 				cDeleteButton.Attributes["OnClick"] = "return confirm('Proceed to fill FX Rate table with current rates for this culture?');";
 			}
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 41~@~2~@~Prevent unauthorized changes~@~Culture Translation: Prevent unauthorized changes~@~Prevent applications from changing culture types.~@~8~@~~@~11~@~6~@~			if (Config.AppNameSpace != "RO")
 			{
 				bErrNow.Value = "Y"; PreMsgPopup("Please do not attempt to modify any of the culture types as they will be overwritten by future Rintagi upgrade. If you wish to add a new culture, kindly contact cs@robocoder.com to request your new culture to be added in future Rintagi upgrade and email you a special script to implement your need ASAP.  Thank you."); return string.Empty;
-			}~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 46~@~4~@~Email all active users~@~Maintenance Message: Email all active users~@~Email maintenance message to all active users~@~109~@~1874~@~~@~1~@~            if (cMaintMsgId233.Text != string.Empty && cMaintMessage233.Text != string.Empty)
             {
                 try
@@ -371,7 +371,7 @@
                     cLastEmailDt233.Text = DateTime.Now.ToLongDateString();
                 }
                 catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 59~@~4~@~Create program upon program name change or add screen~@~Screen Definition: Create program upon program name change or add screen~@~Generate program as soon as program name is changed or a new screen is added.~@~9~@~~@~11~@~10~@~if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new screen has been added successfully.
 			{
 				try
@@ -385,15 +385,15 @@
 					//Response.Redirect(Request.RawUrl);
 				}
 				catch {}
-			}~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 61~@~4~@~Signal create program needed upon program name change and validate program name~@~Screen Definition: Signal create program needed upon program name change and validate program name~@~Validate program name and set a flag to signal create program needed upon program name change.~@~9~@~~@~11~@~6~@~            if (base.SystemsList.Rows.Find(cSystemId.SelectedValue)["dbAppDatabase"].ToString() == base.CPrj.EntityCode + "View" && !cProgramName15.Text.StartsWith("u_"))
             {
                 cProgramName15.Text = "u_" + cProgramName15.Text;
             }
             bool bRegenNeeded = false;
-            if (cAdmScreen9List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName15.Text, Int32.Parse(cAdmScreen9List.SelectedValue), 0, 0, (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+            if (cAdmScreen9List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName15.Text, Int32.Parse(cAdmScreen9List.SelectedValue), 0, 0, (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 62~@~4~@~Signal create program needed upon program name change~@~Report Definition: Signal create program needed upon program name change~@~Set a flag to signal create program needed upon program name change.~@~67~@~~@~11~@~6~@~bool bRegenNeeded = false;
-            if (cAdmReport67List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName22.Text, 0, Int32.Parse(cAdmReport67List.SelectedValue), 0, (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+            if (cAdmReport67List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName22.Text, 0, Int32.Parse(cAdmReport67List.SelectedValue), 0, (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 63~@~4~@~Create program upon program name change or add report~@~Report Definition: Create program upon program name change or add report~@~Generate program as soon as program name is changed or a new report is added.~@~67~@~~@~11~@~10~@~			if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new report has been added successfully.
 			{
 				try
@@ -407,9 +407,9 @@
 					this.Redirect(Request.RawUrl);
 				}
 				catch {}
-			}~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 64~@~4~@~Signal create program needed upon program name change~@~Wizard Column: Signal create program needed upon program name change~@~Set a flag to signal create program needed upon program name change.~@~49~@~~@~11~@~6~@~bool bRegenNeeded = false;
-            if (cAdmWizardObj49List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName71.Text, 0, 0, Int32.Parse(cAdmWizardObj49List.SelectedValue), (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+            if (cAdmWizardObj49List.SelectedValue != string.Empty && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded(cProgramName71.Text, 0, 0, Int32.Parse(cAdmWizardObj49List.SelectedValue), (string)Session[KEY_sysConnectionString], LcAppPw)) { bRegenNeeded = true; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 65~@~4~@~Create program upon program name change or add wizard~@~Wizard Object: Create program upon program name change or add wizard~@~Generate program as soon as program name is changed or a new wizard is added.~@~49~@~~@~11~@~10~@~           if (bRegenNeeded || pid != string.Empty)		// ProgramName changed or a new wizard has been added successfully.
 			{
 				try
@@ -422,8 +422,8 @@
 					this.Redirect(Request.RawUrl);
 				}
 				catch {}
-			}~@~~@~~@~~@~~@~~@~~@~~@~
-66~@~2~@~Prevent web rule from being accessed~@~Web Rule: Prevent web rule from being accessed~@~Prevent web rule from being accessed for some systems.~@~80~@~~@~~@~18~@~if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionally blocked from you for the time being. Please contact administrator if you have any questions."); }~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
+66~@~2~@~Prevent web rule from being accessed~@~Web Rule: Prevent web rule from being accessed~@~Prevent web rule from being accessed for some systems.~@~80~@~~@~~@~18~@~if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionally blocked from you for the time being. Please contact administrator if you have any questions."); }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 68~@~1~@~Prepare db for document management or workflow ststus plus hide/show appropriate fields~@~Screen Object: Prepare db for document management or workflow ststus plus hide/show appropriate fields~@~Prepare database for document management or workflow status plus hide/show appropriate fields.~@~10~@~81~@~~@~1~@~            if (",3,5,17,29,32,53,".IndexOf("," + cDisplayModeId14.SelectedValue + ",") >= 0)   // DropDownList, ListBox, RadioButtonList, DataGridLink or Document or WorkflowStatus
             {
                 cRefreshOnCUD14P1.Visible = true; cRefreshOnCUD14P2.Visible = true;
@@ -509,7 +509,7 @@
                     }
                     catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
                 }
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 74~@~2~@~Confirm Document and WorkflowStatus Type plus show/hide fields~@~Screen Object: Confirm Document and WorkflowStatus Type plus show/hide fields~@~Confirm Document and WorkflowStatus Type before creating associated tables~@~10~@~~@~~@~9~@~                cDisplayModeId14.Attributes["OnChange"] = "if (this.value!='32' && this.value!='53')  {document.getElementById('" + bConfirm.ClientID + "').value='N';} else {document.getElementById('" + bConfirm.ClientID + "').value='Y';};" + cDisplayModeId14.Attributes["OnChange"];
                 if (Request.QueryString["mod"] != null && Request.QueryString["mod"].ToLower() == "e")
                 {
@@ -520,8 +520,8 @@
                 {
                     cGroupRowId14P1.Visible = true; cGroupRowId14P2.Visible = true;
                     cGroupColId14P1.Visible = true; cGroupColId14P2.Visible = true;
-                }~@~~@~~@~~@~~@~~@~~@~~@~
-75~@~4~@~Embed translated label~@~Static Page: Embed translated label~@~Embed translated label for ease of searching~@~114~@~~@~~@~11~@~            cStaticPHolder.Controls.Add(new LiteralControl("<div><div style=\"position:relative\"><iframe frameborder=\"0\" src=\"AdmLabelVw.aspx?typ=N&cri=N&cri0=" + base.LUser.CultureId.ToString() + "&cri1=" + cStaticPgNm259.Text + "\" style=\"width:100%;height:100vh;\"></iframe></div></div>"));~@~~@~~@~~@~~@~~@~~@~~@~
+                }~@~~@~~@~~@~~@~~@~~@~~@~~@~
+75~@~4~@~Embed translated label~@~Static Page: Embed translated label~@~Embed translated label for ease of searching~@~114~@~~@~~@~11~@~            cStaticPHolder.Controls.Add(new LiteralControl("<div><div style=\"position:relative\"><iframe frameborder=\"0\" src=\"AdmLabelVw.aspx?typ=N&cri=N&cri0=" + base.LUser.CultureId.ToString() + "&cri1=" + cStaticPgNm259.Text + "\" style=\"width:100%;height:100vh;\"></iframe></div></div>"));~@~~@~~@~~@~~@~~@~~@~~@~~@~
 77~@~4~@~Save translated label tag~@~Static Page: Save translated label tag~@~Replace all html text enclosed by "[=[" and "]]" with "[[9999]]" and insert the text into custom labels for translation.~@~114~@~~@~11~@~10~@~            if (newTranslateTag.Count > 0)
             {
 
@@ -567,7 +567,7 @@
                     ds.Tables["AdmLabel"].Rows.Add(dr); ds.Tables["AdmLabel"].Rows.Add(drType); ds.Tables["AdmLabel"].Rows.Add(drDisp);
                     pid = (new AdminSystem()).AddData(112, false, base.LUser, base.LImpr, base.LCurr, ds, (string)Session[KEY_sysConnectionString], LcAppPw, base.CPrj, base.CSrc);
                 }
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 78~@~4~@~Search translated label tag~@~Static Page: Search translated label tag~@~Look for text that are enclosed by "[=[" and "]]" and prepare them for auto-replacement by label keys.~@~114~@~~@~11~@~6~@~            System.Collections.Generic.Dictionary<string, string> newTranslateTag = new System.Collections.Generic.Dictionary<string, string>();
             System.Collections.Generic.Dictionary<string, string> updateTranslateTag = new System.Collections.Generic.Dictionary<string, string>();
             if (ValidPage() && LUser.CultureId == 1)
@@ -608,7 +608,7 @@
                 {
                     cStaticPgHtm259.Content = html;
                 }
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 80~@~4~@~Replace the screen with the entire menu tree.~@~Menu IDE: Replace the screen with the entire menu tree.~@~Replace the screen with the entire menu tree.~@~121~@~~@~~@~11~@~            ScriptManager.RegisterStartupScript(this, this.GetType(), "CustomCss", @"<link rel='stylesheet' type='text/css' media='screen' href='css/ide.css' />", false);
             ScriptManager.RegisterStartupScript(this, this.GetType(), "DraggableMenu", @"<script type='text/javascript' src='scripts/menuide.js'></script>", false);
             ScriptManager.RegisterStartupScript(this, this.GetType(), "SortableMenu", @"<script type='text/javascript' src='scripts/jquery.nestedSortable.js'></script>", false);
@@ -796,7 +796,7 @@
             tb.Text = sb.ToString();
             tb.CssClass = "menuItemList";
 
-            cMenuListLabel.Controls.Add(tb);~@~~@~~@~~@~~@~~@~~@~~@~
+            cMenuListLabel.Controls.Add(tb);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 82~@~1~@~Fill in the length of standard data types~@~Data Table and Columns: Fill in the length of standard data types~@~Fill in the length of standard data types and prevent editing~@~2~@~17~@~~@~1~@~            if (cAdmDbTableGrid.EditIndex > -1 && cAdmDbTableGrid.Items.Count > cAdmDbTableGrid.EditIndex)
             {
                 TextBox tb1 = ((TextBox)cAdmDbTableGrid.Items[cAdmDbTableGrid.EditIndex].FindControl("cColumnLength5"));
@@ -819,7 +819,7 @@
                         tb1.Enabled = true; break;
                 }
                 if (!tb1.Enabled) { tb1.BackColor = System.Drawing.Color.FromName(Config.ReadOnlyBColor); } else { tb1.BackColor = System.Drawing.Color.Empty; }
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 83~@~4~@~Fill FX Rate table for selected culture currency~@~Culture Translation: Fill FX Rate table for selected culture currency~@~Fill foreign exchange table for selected culture currency~@~8~@~~@~57~@~14~@~            if (string.IsNullOrEmpty(cCultureTypeId8.Text))
             {
                 bErrNow.Value = "Y"; PreMsgPopup("Please select a culture for the FX rates to all other currencies and try again.");
@@ -847,7 +847,7 @@
                 }
                 bInfoNow.Value = "Y"; PreMsgPopup("Foreign Exchange Table is filled for this culture successfully.");
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 85~@~4~@~Get currency code~@~Culture Translation: Get currency code~@~Obtain currency code to validate this culture.~@~8~@~33~@~~@~1~@~            try
             {
                 cCurrencyCd8.Text = (new System.Globalization.RegionInfo((new CultureInfo(cCultureTypeName8.Text)).LCID)).ISOCurrencySymbol;
@@ -857,22 +857,22 @@
                 bErrNow.Value = "Y"; PreMsgPopup("'" + cCultureTypeName8.Text + "' is not a valid culture, please try again.");
                 cCurrencyCd8.Text = string.Empty; cCultureTypeName8.Text = string.Empty;
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 88~@~2~@~Initialize remove button~@~Custom Label: Initialize remove button~@~Initialize remove button to prompt~@~112~@~~@~~@~9~@~                if (cRemoveBtn.Attributes["OnClick"] == null || cRemoveBtn.Attributes["OnClick"].IndexOf("return confirm") < 0) { cRemoveBtn.Attributes["OnClick"] += "return confirm('Proceed to remove all other translated labels for sure?');"; }
                 if (cCultureId215.SelectedValue == "1") { cRemoveBtn.Visible = true; } else { cRemoveBtn.Visible = false; }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 89~@~4~@~Set remove button visibility~@~Custom Label: Set remove button visibility~@~Set remove button visibility~@~112~@~1967~@~~@~1~@~            if (cCultureId215.SelectedValue == "1") { cRemoveBtn.Visible = true; } else { cRemoveBtn.Visible = false; }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 90~@~4~@~Remove translated labels~@~Custom Label: Remove translated labels~@~Remove translated labels~@~112~@~3078~@~~@~1~@~            (new WebRule()).RmTranslatedLbl(cLabelId215.Text, (string)Session[KEY_sysConnectionString], LcAppPw);
             bInfoNow.Value = "Y"; PreMsgPopup("All translations of this label have been deleted.");
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 91~@~4~@~Send email notice to user~@~Change Password: Send email notice to user~@~Send email notice to user upon update~@~71~@~~@~11~@~6~@~            if (ValidPage() && !string.IsNullOrEmpty(cAdmChgPwd71List.SelectedValue) && cSendMail.Checked)
             {
                 DataTable dt = (new WebRule()).WrGetUsrEmail(cUsrId1.Text);
                 string from = base.SysCustServEmail(base.LCurr.SystemId);
                 string bd = "Your account (" + dt.Rows[0]["UsrName"].ToString() + ") password has been changed. Please do not hesitate to contact the undersigned if you have any question.<br /><br />" + Config.WebTitle + " system administrator";
                 base.SendEmail(Config.WebTitle + ": System Password Change", bd, dt.Rows[0]["UsrEmail"].ToString(), from, from, "System Administrator", true);
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 92~@~1~@~Default member to chosen criteria~@~Time Tracking for SR&ED: Default member to chosen criteria~@~When adding a new row, make member the same as the chosen criteria~@~123~@~~@~~@~12~@~            if (cAdmSredTimeGrid.EditIndex > -1 && GetDataItemIndex(cAdmSredTimeGrid.EditIndex) == e.Item.DataItemIndex)
             {
                 if (string.IsNullOrEmpty(dvAdmSredTimeGrid[e.Item.DataItemIndex]["MemberId272"].ToString()))
@@ -881,7 +881,7 @@
                     if (cComboBox != null) { SetMemberId272((RoboCoder.WebControls.ComboBox)e.Item.FindControl("cMemberId272"), cComboBox.SelectedValue, cAdmSredTimeGrid.EditItem); }
                 }
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 93~@~4~@~Pull up the member or create one~@~Member for SR&ED: Pull up the member or create one~@~Pull up associated member or create one if not exist~@~122~@~3090~@~~@~1~@~            if (cAdmMemberGrid.EditIndex > -1 && cAdmMemberGrid.Items.Count > cAdmMemberGrid.EditIndex)
             {
                 RoboCoder.WebControls.ComboBox UserId = (RoboCoder.WebControls.ComboBox)sender;
@@ -903,7 +903,7 @@
                     }
                 }
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 94~@~4~@~Hide/Show appropriate fields~@~Screen Definition: Hide/Show appropriate fields~@~Hide/Show appropriate fields based on screen type~@~9~@~45~@~~@~1~@~            if (cScreenTypeId15.SelectedValue == "5")       // Tab-folder only.
             {
                 cSearchTableId15P1.Visible = true; cSearchTableId15P2.Visible = true;
@@ -948,7 +948,7 @@
                 cGridRows15P1.Visible = true; cGridRows15P2.Visible = true;
                 cHasDeleteAll15P1.Visible = true; cHasDeleteAll15P2.Visible = true;
                 cShowGridHead15P1.Visible = true; cShowGridHead15P2.Visible = true;
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 95~@~4~@~Custom function to hide or show icons/upload~@~Data Table and Columns: Custom function to hide or show icons/upload~@~Custom function to hide or show icons and upload panel~@~2~@~~@~~@~16~@~        private void HideShowIcons(object sender, EventArgs e)
         {
             if (Config.DeployType == "PRD" && base.SystemsList.Rows.Find(cSystemId.SelectedValue)["dbAppDatabase"].ToString() != base.CPrj.EntityCode + "View")
@@ -977,17 +977,17 @@
                 cRowsToExamineP1.Visible = true; cRowsToExamineP2.Visible = true;
                 cBtnScanP1.Visible = true; cBtnScanP2.Visible = true;
             }
-        }~@~~@~~@~~@~~@~~@~~@~~@~
+        }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 96~@~4~@~Tie hide / show icons to cSystemId event~@~Data Table and Columns: Tie hide / show icons to cSystemId event~@~Tie hide / show icons to cSystemId event~@~2~@~~@~~@~18~@~            cSystemId.SelectedIndexChanged += HideShowIcons;
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 97~@~4~@~Make sure essential fields are not copied~@~User Manager: Make sure essential fields are not copied~@~Make sure essential fields are not copied~@~1~@~~@~8~@~6~@~            cFailedAttempt1.Text = string.Empty;
             cLastSuccessDt1.Text = string.Empty;
             cLastFailedDt1.Text = string.Empty;
             cHintQuestionId1.ClearSelection();
             cHintAnswer1.Text = string.Empty;
-            cModifiedOn1.Text = string.Empty;~@~~@~~@~~@~~@~~@~~@~~@~
+            cModifiedOn1.Text = string.Empty;~@~~@~~@~~@~~@~~@~~@~~@~~@~
 98~@~4~@~Make sure essential fields are not copied~@~Timed-Job Schedule: Make sure essential fields are not copied~@~Make sure essential fields are not copied~@~118~@~~@~8~@~6~@~            cLastRun264.Text = string.Empty;
-            cNextRun264.Text = string.Empty;~@~~@~~@~~@~~@~~@~~@~~@~
+            cNextRun264.Text = string.Empty;~@~~@~~@~~@~~@~~@~~@~~@~~@~
 99~@~4~@~Usage calendar display (2 of 2)~@~User Manager: Usage calendar display (2 of 2)~@~Usage calendar display (2 of 2)~@~1~@~~@~~@~11~@~            if (!string.IsNullOrEmpty(cUsrId1.Text))
             {
                 DataView dv = new DataView((new AdminSystem()).GetDdl(1, "WrGetUageCalender", false, true, 0, cUsrId1.Text, (string)Session[KEY_sysConnectionString], LcAppPw, string.Empty, base.LImpr, base.LCurr));
@@ -1010,7 +1010,7 @@
             {
                 ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "CalendarSel", @"<script type='text/javascript' language='javascript'>DC={};</script>", false);
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 100~@~4~@~Usage calendar display (1 of 2) and height customization~@~User Manager: Usage calendar display (1 of 2) and height customization~@~Usage calendar display (1 of 2) and height customization~@~1~@~~@~~@~18~@~            if (!IsPostBack)
             {
                 string defaultYear = DateTime.Today.Year.ToString();
@@ -1028,13 +1028,13 @@
                 .responsive-calendar .day.less-hour {background-color:#e32403;}
                 .responsive-calendar .day.over-hour {background-color:#4100d9;}
                 .responsive-calendar .day.norm-hour {background-color:#00cf80;}
-            </style>", false);~@~~@~~@~~@~~@~~@~~@~~@~
-102~@~4~@~Set filter on criteria "User Name" change~@~User Manager: Set filter on criteria "User Name" change~@~Set filter to "All Users" or default on criteria "User Name"~@~1~@~~@~~@~19~@~                if (!string.IsNullOrEmpty(((TextBox)cCriteria.FindControl("x" + (GetScrCriteria())[1]["ColumnName"].ToString())).Text)) { cFilterId.SelectedIndex = 4; }~@~~@~~@~~@~~@~~@~~@~~@~
+            </style>", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
+102~@~4~@~Set filter on criteria "User Name" change~@~User Manager: Set filter on criteria "User Name" change~@~Set filter to "All Users" or default on criteria "User Name"~@~1~@~~@~~@~19~@~                if (!string.IsNullOrEmpty(((TextBox)cCriteria.FindControl("x" + (GetScrCriteria())[1]["ColumnName"].ToString())).Text)) { cFilterId.SelectedIndex = 4; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 103~@~4~@~Paste default script~@~Section Object: Paste default script~@~Paste default script for special type~@~1001~@~3123~@~~@~1~@~            if (cLinkTypeCd1277.SelectedValue == "CRS")
             {
                 cPageObjSrp1277.Text = "    $(window).load(function () { $('.flexslider').flexslider({ animation:'fade', pauseOnHover:true, slideshowSpeed:7000 }); });";
-            }~@~~@~~@~~@~~@~~@~~@~~@~
-106~@~4~@~Hide irrelevant Module dropdown~@~Section Object: Hide irrelevant Module dropdown~@~Hide irrelevant Module dropdown.~@~1001~@~~@~~@~9~@~                cSystem.Visible = false;~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
+106~@~4~@~Hide irrelevant Module dropdown~@~Section Object: Hide irrelevant Module dropdown~@~Hide irrelevant Module dropdown.~@~1001~@~~@~~@~9~@~                cSystem.Visible = false;~@~~@~~@~~@~~@~~@~~@~~@~~@~
 107~@~4~@~Synchronize the label with the controlling menu~@~Menu Label: Synchronize the label with the controlling menu~@~Synchronize the label with the controlling menu on the fly.~@~36~@~~@~11~@~10~@~            string menuText = ""; string menuCulture;
             DataTable dtUpdated = (DataTable)Session[KEY_dtAdmMenuHlpGrid];
             string defaultMenuText = "";
@@ -1058,7 +1058,7 @@
                             }
                         }
                     </script>
-            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 108~@~4~@~Store the url for launch later~@~Menu Item: Store the url for launch later~@~Store the url for launch later by the controlling menu.~@~35~@~~@~11~@~10~@~            string MenuUrl;
             string ScreenId = cScreenId39.SelectedValue;
             string WizardId = cWizardId39.SelectedValue;
@@ -1081,13 +1081,13 @@
                             }
                         }
                     </script>
-            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 123~@~4~@~Testing lunar calendar conversion~@~Release Tracking: Testing lunar calendar conversion~@~Testing lunar calendar conversion~@~82~@~1344~@~~@~1~@~            try
             {
                 DateTime vdt = DateTime.Parse(cVersionDt135.Text);
                 cLunarDt.Text = "[" + LunarCal.GetLCYearZodiac(vdt) + "] " + LunarCal.GetLCDateTimeForChina(vdt);
             }
-            catch { }~@~~@~~@~~@~~@~~@~~@~~@~
+            catch { }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 124~@~4~@~Replace the screen with the entire object tree.~@~Object IDE: Replace the screen with the entire object tree.~@~Replace the screen with the entire object tree.~@~1007~@~~@~~@~11~@~            /* This code was after Add New Tab Button
             <a id='folderBtn' href='#' onclick='showFolderSec(); return false;'>Folder</a>
             <a id='grdBtn' href='#' onclick='showGrdSec(); return false;'>Grid</a>
@@ -1203,7 +1203,7 @@
                 tbScreenId.Text = screenId.ToString();
                 TextBox tbDeleteId = cNaviPanel.FindControl("tbDeleteId") as TextBox;
                 tbDeleteId.Text = "";
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 125~@~4~@~Initialization~@~Object IDE: Initialization~@~Initialization~@~1007~@~~@~~@~18~@~            TextBox tbURL = new TextBox();
             tbURL.CssClass = "tbURL";
             tbURL.ID = "tbURL";
@@ -1228,7 +1228,7 @@
             cNaviPanel.Controls.Add(columnItemList);
             cNaviPanel.Controls.Add(tabList);
             cNaviPanel.Controls.Add(tbScreenId);
-            cNaviPanel.Controls.Add(tbDeleteId);~@~~@~~@~~@~~@~~@~~@~~@~
+            cNaviPanel.Controls.Add(tbDeleteId);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 126~@~4~@~Insert code snippet to pop up window from TabFolder~@~Web Rule: Insert code snippet to pop up window from TabFolder~@~Insert code snippet to pop up window from TabFolder~@~80~@~3310~@~~@~1~@~            StringBuilder sb = new StringBuilder();
             sb.Append("            // Apply to either 'List Selection' or 'Page Load' event;" + Environment.NewLine);
             sb.Append("            // SearchLink(url, keyCtrlID, dlgWidth, dlgHeight)" + Environment.NewLine);
@@ -1237,7 +1237,7 @@
             sb.Append("            /*" + Environment.NewLine);
             sb.Append("            c???.Attributes[\"onclick\"] = \"SearchLink('??.aspx?typ=N&key=\" + c?.Text + \"','\" + \"','',''); return false;\";" + Environment.NewLine);
             sb.Append("            */" + Environment.NewLine);
-            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 127~@~4~@~Insert code snippet to send emails~@~Web Rule: Insert code snippet to send emails~@~Insert code snippet to send emails~@~80~@~3311~@~~@~1~@~            StringBuilder sb = new StringBuilder();
             sb.Append("            // Three syntaxes:" + Environment.NewLine);
             sb.Append("            // SendEmail(subject, body, to, from, reply to, reply from, title, isHtml)" + Environment.NewLine);
@@ -1254,7 +1254,7 @@
             sb.Append("            Int32 iSent = base.SendEmail(sbj, bod, mto, mfr, mfr, \"\", true);" + Environment.NewLine);
             sb.Append("            if (iSent > 8000) { throw new Exception(\"Daily limit of 8,000 emails sent exceeded.\"); }" + Environment.NewLine);
             sb.Append("            */" + Environment.NewLine);
-            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 128~@~4~@~Insert code snippet to check then save~@~Web Rule: Insert code snippet to check then save~@~Insert code snippet to checking something then save~@~80~@~3313~@~~@~1~@~            StringBuilder sb = new StringBuilder();
             sb.Append("            /*" + Environment.NewLine);
             sb.Append("            if (c???.Text != string.Empty && !c??.Checked) {" + Environment.NewLine);
@@ -1266,7 +1266,7 @@
             sb.Append("                catch (Exception err) { c??.Checked = false; bErrNow.Value = \"Y\"; PreMsgPopup(err.Message); }" + Environment.NewLine);
             sb.Append("            }" + Environment.NewLine);
             sb.Append("            */" + Environment.NewLine);
-            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 131~@~4~@~Synchronize the label with the controlling object~@~Screen Object Label: Synchronize the label with the controlling object~@~Synchronize the label with the controlling object~@~1006~@~~@~11~@~10~@~            DataTable dtHlp = (new AdminSystem()).GetDtlById(10, "WrGetScreenObjById", cScreenObjId14.Text, (string)Session[KEY_sysConnectionString], LcAppPw, 0, base.LImpr, base.LCurr);
             string objText = dtHlp.Rows[0]["ColumnHeader21"].ToString();
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "tmp", @"
@@ -1278,7 +1278,7 @@
                             if ( (objText = window.parent) && (objText = objText.updObjText) && ('function' == typeof objText || 'object' == typeof objText) ){ objText(val); }
                         }
                     </script>
-            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 134~@~4~@~Synchronize the label with the controlling object~@~Screen Tab Folders: Synchronize the label with the controlling object~@~Synchronize the label with the controlling object~@~54~@~~@~11~@~10~@~            string tabText = "";
             DataTable dtUpdated = (DataTable)Session[KEY_dtAdmScreenTabGrid];
             foreach (DataRow dr in dtUpdated.Rows)
@@ -1294,7 +1294,7 @@
                             if ( (tabText = window.parent) && (tabText = tabText.updTabText) && ('function' == typeof tabText || 'object' == typeof tabText) ){ tabText(val); }
                         }
                     </script>
-            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 135~@~4~@~Synchronize the label with the controlling object~@~Screen Object: Synchronize the label with the controlling object~@~Synchronize the label with the controlling object~@~10~@~~@~11~@~10~@~            int filterId = 0;
             string key = string.Empty;
             if (!string.IsNullOrEmpty(Request.QueryString["key"]) && bUseCri.Value == string.Empty) { key = Request.QueryString["key"].ToString(); }
@@ -1328,7 +1328,7 @@
                             if ( (objMandatory = window.parent) && (objMandatory = objMandatory.updObjMandatory) && ('function' == typeof objMandatory || 'object' == typeof objMandatory) ){ objMandatory(val); }
                         }
                     </script>
-            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 138~@~4~@~Create code table screen when requested~@~Screen Definition: Create code table screen when requested~@~Create code table screen when requested~@~9~@~~@~~@~9~@~                if (!string.IsNullOrEmpty(Request.QueryString["ctb"]))
                 {
                     if (!string.IsNullOrEmpty(Request.QueryString["cid"]))
@@ -1339,10 +1339,10 @@
                         cSaveButton_Click(sender, new EventArgs());
                     }
                     this.Redirect((((Config.SslUrl).StartsWith("http") ? (new Uri(Config.SslUrl)) : Request.Url).GetLeftPart(UriPartial.Scheme) + Request.Url.Host + Request.Url.AbsolutePath.ToLower()).Replace("admscreen", Request.QueryString["ctb"].ToString()) + "?msy=" + LCurr.DbId.ToString());
-                }~@~~@~~@~~@~~@~~@~~@~~@~
+                }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 142~@~4~@~Initialize MasterTable flag~@~Screen Object: Initialize MasterTable flag~@~Initialize MasterTable flag~@~10~@~74~@~~@~1~@~            string mtb = (new RO.WebRules.WebRule()).WrGetMasterTable(cScreenId14.Text, cColumnId14.SelectedValue, (string)Session[KEY_sysConnectionString], LcAppPw);
             if (string.IsNullOrEmpty(mtb)) { cMasterTable14.Enabled = true; } else { cMasterTable14.Checked = GetBool(mtb); cMasterTable14.Enabled = false; }
-            cMasterTable14_CheckedChanged(sender, new EventArgs());~@~~@~~@~~@~~@~~@~~@~~@~
+            cMasterTable14_CheckedChanged(sender, new EventArgs());~@~~@~~@~~@~~@~~@~~@~~@~~@~
 143~@~4~@~Initialize Hide on ...~@~Screen Object: Initialize Hide on ...~@~Initialize Hide on Mobile & Tablet~@~10~@~73~@~~@~1~@~            DataTable dt = (DataTable)Session[KEY_dtScreenId14];
             DataView dv = dt != null ? dt.DefaultView : null;
             dv.RowFilter = "ScreenId14=" + cScreenId14.SelectedValue;
@@ -1357,17 +1357,17 @@
                 cHideOnMobile14P1.Visible = true; cHideOnMobile14P2.Visible = true;
                 cHideOnTablet14P1.Visible = true; cHideOnTablet14P2.Visible = true;
                 cDtlLstPosId14P1.Visible = true; cDtlLstPosId14P2.Visible = true;
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 144~@~4~@~Hide fields, change order, etc.~@~Server Rule: Hide fields, change order, etc.~@~Hide appropriate fields and change execution order, etc.~@~14~@~163~@~~@~1~@~            if (cBeforeCRUD24.SelectedValue == "C")
             {
                 cMasterTable24.Checked = true; cMasterTable24P1.Visible = false; cMasterTable24P2.Visible = false;
             }
-            else { cMasterTable24P1.Visible = true; cMasterTable24P2.Visible = true; }~@~~@~~@~~@~~@~~@~~@~~@~
+            else { cMasterTable24P1.Visible = true; cMasterTable24P2.Visible = true; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 147~@~4~@~Show hints (after save button click)~@~Timed-Job Schedule: Show hints (after save button click)~@~Show hints (after save button click) to bypass post-back issue~@~118~@~~@~11~@~6~@~            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateMenuList", @"
                 <script>
                     Sys.Application.add_load(function (e) { getCronJobMsg(); });
                 </script>
-            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 148~@~4~@~Show hints (after selecting a record)~@~Timed-Job Schedule: Show hints (after selecting a record)~@~Show hints (after selecting a record)~@~118~@~~@~~@~11~@~            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateMenuList", @"
                 <script>
                     Sys.Application.add_load(function (e) {
@@ -1476,7 +1476,7 @@
                         });
                     });
                 </script>
-            ", false);~@~~@~~@~~@~~@~~@~~@~~@~
+            ", false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 149~@~4~@~Hide and show based on rule method~@~Client Rule: Hide and show based on rule method~@~Hide and show based on rule method~@~79~@~4073~@~~@~1~@~            cScreenId127.ClearSearch();
             cReportId127.ClearSearch();
             cScreenObjHlpId127.ClearSearch();
@@ -1560,7 +1560,7 @@
                 cReportId127P1.Visible = false; cReportId127P2.Visible = false;
                 cReportCriHlpId127P1.Visible = false; cReportCriHlpId127P2.Visible = false;
                 SetEScriptVisible(false); SetSScriptVisible(false); SetVScriptVisible(false);
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 150~@~4~@~Hide and show functions~@~Client Rule: Hide and show functions~@~Hide and show functions~@~79~@~~@~~@~16~@~        private void SetEScriptVisible(bool bVisible)
         {
             cRuleCntTypeId127P1.Visible = bVisible; cRuleCntTypeId127P2.Visible = bVisible;
@@ -1579,14 +1579,14 @@
             cUserScriptEvent127P1.Visible = bVisible; cUserScriptEvent127P2.Visible = bVisible;
             cUserScriptName127P1.Visible = bVisible; cUserScriptName127P2.Visible = bVisible;
             cScriptParam127P1.Visible = bVisible; cScriptParam127P2.Visible = bVisible;
-        }~@~~@~~@~~@~~@~~@~~@~~@~
+        }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 151~@~4~@~Initialization~@~Sign Up: Initialization~@~Initialization~@~1018~@~~@~~@~18~@~            cTokenMsgP2.Visible = false; cConfirmationTokenP2.Visible = false; cResnedTokenP2.Visible = false; cSubmitP2.Visible = false; cUsrPassword270.Visible = false;
             if ((cSignUpBtn.Attributes["OnClick"] == null || cSignUpBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0)) { cSignUpBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
             if ((cSubmit.Attributes["OnClick"] == null || cSubmit.Attributes["OnClick"].IndexOf("_bConfirm") < 0)) { cSubmit.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
             if ((cResnedToken.Attributes["OnClick"] == null || cResnedToken.Attributes["OnClick"].IndexOf("_bConfirm") < 0)) { cResnedToken.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
             Literal criLiteral = new Literal();
             criLiteral.Text = "<p style='text-align: center;'>By clicking 'Join' I agree to Rintagi's <a href='http://www.rintagi.com/home/terms_of_service.pdf' target='_blank'>Terms of Service</a></p>";
-            cSignUpMsg.Controls.Add(criLiteral);~@~~@~~@~~@~~@~~@~~@~~@~
+            cSignUpMsg.Controls.Add(criLiteral);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 152~@~4~@~Join button click~@~Sign Up: Join button click~@~Generate and send token to email entered.~@~1018~@~4099~@~~@~1~@~            if (ValidPage())
             {
                 Guid g = Guid.NewGuid();
@@ -1625,7 +1625,7 @@
                 }
                 catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message + "<br /><br />Please contact customer service at your earliest convenience, thank you."); return; }
             }
-            ShowDirty(false); PanelTop.Update();~@~~@~~@~~@~~@~~@~~@~~@~
+            ShowDirty(false); PanelTop.Update();~@~~@~~@~~@~~@~~@~~@~~@~~@~
 153~@~4~@~submit button click~@~Sign Up: submit button click~@~Create user account and login after entering token and password.~@~1018~@~4098~@~~@~1~@~            if (ValidPage() && cConfirmationToken.Text == cToken.Text)
             {
                 if (cUsrPassword270.Text == "Password") { cUsrPassword270.Text = null; }
@@ -1664,7 +1664,7 @@
             else
             {
                 bErrNow.Value = "Y"; PreMsgPopup("Please enter a correct confirmation token and try again."); return;
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 154~@~4~@~resend button click~@~Sign Up: resend button click~@~Resend token when requested.~@~1018~@~4095~@~~@~1~@~            Guid g = Guid.NewGuid();
             string GuidString = g.ToString();
             string generatedToken = GuidString.Left(6);
@@ -1683,7 +1683,7 @@
                 //return;
             }
             catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message + "<br /><br />Please contact customer service at your earliest convenience, thank you."); return; }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 155~@~4~@~Pop up detail changes~@~Screen Audit Header: Pop up detail changes~@~Pop up detail changes~@~1019~@~~@~~@~8~@~            HtmlTableRow trow = e.Item.FindControl("cAdmScrAuditGridRow") as HtmlTableRow;
             DataTable tdt = (DataTable)Session[KEY_dtAdmScrAuditGrid];
             DataView tdv = tdt != null ? tdt.DefaultView : null;
@@ -1691,12 +1691,12 @@
             if (!string.IsNullOrEmpty(tkey))
             {
                 trow.Attributes["onclick"] = "SearchLink('AdmScrAuditDtl.aspx?cri0=" + tkey + "&typ=N&sys=" + (string.IsNullOrEmpty(Request.QueryString["sys"]) ? cSystemId.SelectedValue : Request.QueryString["sys"].ToString()) + "','','',''); return false;"; return;
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 156~@~4~@~Hide criteria panel and systems module~@~Screen Audit Detail: Hide criteria panel and systems module~@~Hide criteria panel and systems module~@~1020~@~~@~~@~9~@~                cCriPanel.Visible = false;
-                cSystemLabel.Visible = false; cSystemId.Visible = false;~@~~@~~@~~@~~@~~@~~@~~@~
+                cSystemLabel.Visible = false; cSystemId.Visible = false;~@~~@~~@~~@~~@~~@~~@~~@~~@~
 157~@~4~@~Hide systems module and initialization~@~Screen Audit Header: Hide systems module and initialization~@~Hide systems module and initialization~@~1019~@~~@~~@~9~@~                cSystemLabel.Visible = false; cSystemId.Visible = false;
-                if (cExpRtfButton.Attributes["OnClick"] == null || cExpRtfButton.Attributes["OnClick"].IndexOf("return confirm") < 0) { cExpRtfButton.Attributes["OnClick"] += "return confirm('Purge all audit trails older than six (6) years for sure?');"; }~@~~@~~@~~@~~@~~@~~@~~@~
-160~@~4~@~Purge audit trail~@~Screen Audit Header: Purge audit trail~@~Purge audit trails older than 6 years.~@~1019~@~~@~4~@~14~@~            (new WebRule()).PurgeScrAudit(6, (string)Session[KEY_sysConnectionString], LcAppPw);~@~~@~~@~~@~~@~~@~~@~~@~
+                if (cExpRtfButton.Attributes["OnClick"] == null || cExpRtfButton.Attributes["OnClick"].IndexOf("return confirm") < 0) { cExpRtfButton.Attributes["OnClick"] += "return confirm('Purge all audit trails older than six (6) years for sure?');"; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
+160~@~4~@~Purge audit trail~@~Screen Audit Header: Purge audit trail~@~Purge audit trails older than 6 years.~@~1019~@~~@~4~@~14~@~            (new WebRule()).PurgeScrAudit(6, (string)Session[KEY_sysConnectionString], LcAppPw);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 161~@~1~@~Paypal redirection setup~@~Paypal Payment: Paypal redirection setup~@~To prepare being 'redirected' from paypal express checkout~@~1021~@~~@~~@~9~@~                if (!string.IsNullOrEmpty(Request.QueryString["token"]))
                 {
                     // callback from paypal express payment, retrieve back state info, this is needed because
@@ -1796,7 +1796,7 @@
                         PreMsgPopup("user cancelled payment request");
                     }
                 }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 162~@~1~@~Paypal Express Checkout Button action~@~Paypal Payment: Paypal Express Checkout Button action~@~Setup to redirect to Paypal Express Checkout, the 'facilitator' account used must be setup first in Paypal Developer Portal. But the actual pay to account can be any valid paypal account and the option to pay as guest(credit card but not creating paypal account) depends on if the payee has guest option enabled. Only business pro account has this ability as it seems.~@~1021~@~4131~@~~@~1~@~            if (ValidPage())
             {
                 PaypalExpress paypal = new RO.Common3.PaypalExpress(true, Config.PaypalExpressAPIUserName, Config.PaypalExpressAPIEncPwd, Config.PaypalExpressAPIEncSignature);
@@ -1841,7 +1841,7 @@
                     PreMsgPopup(string.Join("<br/>", ret.AllKeys.Select(k => string.Format("{0}={1}", k, ret[k])).ToArray()));
                 }
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 163~@~1~@~Paypal Direct Payout button~@~Paypal Payment: Paypal Direct Payout button~@~this use paypal REST API to payout to paypal account directly(can be in the backend) from specific paypal account login for the REST API(with payout enabled in developer portal)~@~1021~@~4132~@~~@~1~@~            if (ValidPage())
             {
                 Paypal payPal = new RO.Common3.Paypal(Config.PaypalRESTAPIClientID, Config.PaypalRESTAPIEncSecret);
@@ -1867,9 +1867,9 @@
                     PreMsgPopup(ex.Message);
                 }
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 164~@~1~@~Paypal Express button image~@~Paypal Payment: Paypal Express button image~@~needs to be done on master record selection change, just pull in paypal express checkout image url~@~1021~@~~@~~@~11~@~                cPaypalBtn.ImageUrl = "https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif";
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 165~@~1~@~Paypal Direct Credit Card Charge button~@~Paypal Payment: Paypal Direct Credit Card Charge button~@~this use paypal REST API to charge the supplied credit card information directly(can be in the backend) and the fund go directly to the specific paypal account used for the API login(with direct credit card enabled in developer portal, only available in selected country like US, check)~@~1021~@~4135~@~~@~1~@~            if (ValidPage())
             {
                 Paypal payPal = new RO.Common3.Paypal(Config.PaypalRESTAPIClientID, Config.PaypalRESTAPIEncSecret);
@@ -1890,7 +1890,7 @@
                 }
 
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 166~@~4~@~Insert code snippet to pop up window from Grid~@~Web Rule: Insert code snippet to pop up window from Grid~@~Insert code snippet to pop up window from Grid~@~80~@~4140~@~~@~1~@~            StringBuilder sb = new StringBuilder();
             sb.Append("            // Apply to 'OnItemDataBound' event;" + Environment.NewLine);
             sb.Append("            // SearchLink(url, keyCtrlID, dlgWidth, dlgHeight)" + Environment.NewLine);
@@ -1903,8 +1903,8 @@
             sb.Append("                gr.Attributes[\"onclick\"] = \"SearchLink('???.aspx?typ=N&key=\" + dv??ListGrid[e.Item.DataItemIndex][\"?Id?\"].ToString() + \"','\" + \"','',''); return false;\";" + Environment.NewLine);
             sb.Append("            }" + Environment.NewLine);
             sb.Append("            */" + Environment.NewLine);
-            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~
-168~@~4~@~Scan spreadsheet~@~Data Table and Columns: Scan spreadsheet~@~Invoke Excel Scanning based on already uploaded file~@~2~@~4152~@~~@~1~@~            ScanExcelSample(sender, e, false);~@~~@~~@~~@~~@~~@~~@~~@~
+            cWebRuleProg128.Text = sb.ToString(); ShowDirty(true);~@~~@~~@~~@~~@~~@~~@~~@~~@~
+168~@~4~@~Scan spreadsheet~@~Data Table and Columns: Scan spreadsheet~@~Invoke Excel Scanning based on already uploaded file~@~2~@~4152~@~~@~1~@~            ScanExcelSample(sender, e, false);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 169~@~4~@~Function to upload Excel / scan uploaded sample~@~Data Table and Columns: Function to upload Excel / scan uploaded sample~@~Upload spreadsheet or scan uploaded sample and populate columns~@~2~@~~@~~@~16~@~        private void ScanExcelSample(object sender, EventArgs e, bool populateSheetNameOnly)
         {
             DataTable dtAdmDbTableGrid = (DataTable)Session[KEY_dtAdmDbTableGrid];
@@ -2022,9 +2022,9 @@
             }
 
         }
-~@~~@~~@~~@~~@~~@~~@~~@~
-170~@~4~@~Upload the worksheets to be scanned~@~Data Table and Columns: Upload the worksheets to be scanned~@~Upload the worksheets to be scanned~@~2~@~4149~@~~@~1~@~            ScanExcelSample(sender, e, true);~@~~@~~@~~@~~@~~@~~@~~@~
-171~@~4~@~Display the panel to upload spreadsheet with sample data~@~Data Table and Columns: Display the panel to upload spreadsheet with sample data~@~Display the panel to upload spreadsheet with sample data~@~2~@~4153~@~~@~1~@~            if (cUploadSheetP1.Visible) { HideShowUpload(true); } else { HideShowUpload(false); }~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
+170~@~4~@~Upload the worksheets to be scanned~@~Data Table and Columns: Upload the worksheets to be scanned~@~Upload the worksheets to be scanned~@~2~@~4149~@~~@~1~@~            ScanExcelSample(sender, e, true);~@~~@~~@~~@~~@~~@~~@~~@~~@~
+171~@~4~@~Display the panel to upload spreadsheet with sample data~@~Data Table and Columns: Display the panel to upload spreadsheet with sample data~@~Display the panel to upload spreadsheet with sample data~@~2~@~4153~@~~@~1~@~            if (cUploadSheetP1.Visible) { HideShowUpload(true); } else { HideShowUpload(false); }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 172~@~4~@~Generate default content~@~Section Object: Generate default content~@~Generate default content~@~1001~@~4154~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Default", 0, 0, 0, string.Empty, string.Empty))
             if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
@@ -2034,7 +2034,7 @@
             else
             {
                 bErrNow.Value = "Y"; PreMsgPopup("DefaultModule not generated.");
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 173~@~4~@~Generate header content~@~Section Object: Generate header content~@~Generate header content~@~1001~@~4155~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Header", 0, 0, 0, string.Empty, string.Empty))
             if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
@@ -2044,7 +2044,7 @@
             else
             {
                 bErrNow.Value = "Y"; PreMsgPopup("HeaderModule not generated.");
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 174~@~4~@~Generate footer content~@~Section Object: Generate footer content~@~Generate footer content~@~1001~@~4156~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Footer", 0, 0, 0, string.Empty, string.Empty))
             if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
@@ -2054,7 +2054,7 @@
             else
             {
                 bErrNow.Value = "Y"; PreMsgPopup("FooterModule not generated.");
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 175~@~4~@~Generate sidebar content~@~Section Object: Generate sidebar content~@~Generate sidebar content~@~1001~@~4157~@~~@~1~@~            //if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Sidebar", 0, 0, 0, string.Empty, string.Empty))
             if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV")
             {
@@ -2064,7 +2064,7 @@
             else
             {
                 bErrNow.Value = "Y"; PreMsgPopup("SidebarModule not generated.");
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 177~@~4~@~Hide/Show appropriate fields~@~Screen Object: Hide/Show appropriate fields~@~Hide/Show appropriate fields based on display type~@~10~@~81~@~~@~1~@~            if (cDisplayModeId14.SelectedValue == "28")       // Image only.
             {
                 cResizeWidth14P1.Visible = true; cResizeWidth14P2.Visible = true;
@@ -2074,7 +2074,7 @@
             {
                 cResizeWidth14P1.Visible = false; cResizeWidth14P2.Visible = false;
                 cResizeHeight14P1.Visible = false; cResizeHeight14P2.Visible = false;
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 178~@~4~@~Create React Code Base~@~Systems Maintenance: Create React Code Base~@~Create prerequisite for React code~@~87~@~4216~@~~@~1~@~            try
             {
                 if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
@@ -2111,7 +2111,8 @@ document.Rintagi = {{
   useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
   appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
   appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
-  systemId: {3}                
+  systemId: {3},                
+  systemName: '" + Config.WebTitle + @"',                             
 }}
 ", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName,systemId, siteApplicationPath);
 
@@ -2209,7 +2210,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 179~@~4~@~Remove React Code Base~@~Systems Maintenance: Remove React Code Base~@~Remove all React code within this system~@~87~@~4217~@~~@~1~@~            try
             {
                 if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
@@ -2231,7 +2232,7 @@ document.Rintagi = {{
             catch (Exception ex)
             {
                 PreMsgPopup(ex.Message);
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 180~@~4~@~Reset from Git Repo~@~Systems Maintenance: Reset from Git Repo~@~Bring system up-to-date from all Git repo contributions; all local changes permanently removed. use web.config key GitCheckoutBranch to specify specific branch. use form origin/master to track remote branch. require credential in remote url(and only support http:// transport)~@~87~@~4218~@~~@~1~@~            try
             {
                 string webRoot = Server.MapPath(@"~/").Replace(@"\", "/");
@@ -2344,7 +2345,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 181~@~4~@~Publish React to Site~@~Systems Maintenance: Publish React to Site~@~Ready React code for production~@~87~@~4219~@~~@~1~@~            try
             {
                 if (string.IsNullOrEmpty(cSystemAbbr45.Text)) throw new Exception("pick the module first and make sure the Abbr is not empty");
@@ -2375,7 +2376,8 @@ document.Rintagi = {{
   useBrowserRouter: false,    // whether to use # based router(default) or standard browser based router(set to true, need server rewrite support, cannot be used for CDN or static file directory)
   appBasename: '{0}/react/{1}', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
   appProxyBasename: '{0}/reactproxy', // basename after domain where all the react stuff is seated , no ending slash, only used for browserRouter as basename
-  systemId: {3}                
+  systemId: {3},                
+  systemName: '" + Config.WebTitle + @"',                             
 }}
 ", siteApplicationPath == "/" ? "/" : siteApplicationPath.Substring(1), systemAbbr, machineName, systemId, siteApplicationPath);
 
@@ -2529,10 +2531,10 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 182~@~1~@~GrabLicenseDetail~@~Rintagi Installation: GrabLicenseDetail~@~retrieve current saved license~@~1022~@~~@~~@~11~@~            var LicenseServer = !string.IsNullOrEmpty(Config.LicenseServer) ? Config.LicenseServer
                                 : "https://www.rintagi.com";
-            ShowLicenseDetail(LicenseServer, null);~@~~@~~@~~@~~@~~@~~@~~@~
+            ShowLicenseDetail(LicenseServer, null);~@~~@~~@~~@~~@~~@~~@~~@~~@~
 183~@~4~@~AcquireLicense~@~Rintagi Installation: AcquireLicense~@~renew license from license server~@~1022~@~4254~@~~@~1~@~            var newLicense = RO.Common3.Utils.RenewLicense(cLicenseServerUrl.Text, cInstallID.Text, cAppID.Text, cAppNameSpace.Text);
             if (!string.IsNullOrEmpty(newLicense))
             {
@@ -2543,7 +2545,7 @@ document.Rintagi = {{
             {
                 PreMsgPopup("cannot renew license, check server URL and make sure you have purchased a valid license");
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 184~@~4~@~UpdateLicense~@~Rintagi Installation: UpdateLicense~@~save license string to web.config~@~1022~@~4252~@~~@~1~@~            if (!string.IsNullOrEmpty(cLicenseString.Text))
             {
                 System.Configuration.Configuration config = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~");
@@ -2551,7 +2553,7 @@ document.Rintagi = {{
                 else config.AppSettings.Settings.Add("RintagiLicense", cLicenseString.Text);
                 config.Save(System.Configuration.ConfigurationSaveMode.Modified);
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 185~@~1~@~ShowLicenseDetail~@~Rintagi Installation: ShowLicenseDetail~@~decode and show license detail~@~1022~@~~@~~@~16~@~        private void ShowLicenseDetail(string LicenseServer, string licenseString)
         {
             var InstallationDetail = RO.Common3.Utils.GetInstallDetail();
@@ -2602,7 +2604,7 @@ document.Rintagi = {{
             }
 
         }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 187~@~1~@~Cronjob tracking~@~Timed-Job Schedule: Cronjob tracking~@~test run of cronjob ~@~118~@~~@~~@~9~@~                if (IsCronInvoked())
                 {
                     try
@@ -2622,11 +2624,11 @@ document.Rintagi = {{
                     }
                 }
 
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 188~@~2~@~modify button behavior~@~Rintagi Installation: modify button behavior~@~~@~1022~@~~@~~@~9~@~                cSaveButton.Visible = false;
                 if (cAcquireLicense.Attributes["OnClick"] == null || cAcquireLicense.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cAcquireLicense.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
                 if (cRenewLicense.Attributes["OnClick"] == null || cRenewLicense.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cRenewLicense.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 189~@~4~@~Webhook~@~Rintagi Installation: Webhook~@~Webhook handling(non-manned usage)~@~1022~@~~@~~@~17~@~            var qs = Request.QueryString;
             // anything in the form of ?something&somethingelse, i.e. without =
             var qsFlags = Request.QueryString[null];
@@ -2776,7 +2778,7 @@ document.Rintagi = {{
                     }
                 }
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 190~@~4~@~Helper Functions RptTemplate Doc handling~@~Report Definition: Helper Functions RptTemplate Doc handling~@~~@~67~@~~@~~@~16~@~        protected string WrRptTemplateDoc(string MasterId, string DocId, string UsrId, string DocTableName, string MasterTableName, string MasterColumnName, string MasterKey, string dbConnectionString, string dbPassword)
         {
             // delete
@@ -2801,8 +2803,8 @@ document.Rintagi = {{
             new AdminSystem().UpdDbDoc(DocId, MasterTblName, DocFileName, MimeType, DocSize, dc, dbConnectionString, dbPassword, CurrUser, MasterId);
         }
 
-~@~~@~~@~~@~~@~~@~~@~~@~
-191~@~4~@~Button to launch flowchart editor~@~Flow Chart IDE: Button to launch flowchart editor~@~Button to launch flowchart editor~@~1027~@~~@~~@~9~@~if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "SearchLink('flowchart.html','myFlowChart','100%','90vh'); return false;"; }~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
+191~@~4~@~Button to launch flowchart editor~@~Flow Chart IDE: Button to launch flowchart editor~@~Button to launch flowchart editor~@~1027~@~~@~~@~9~@~if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "SearchLink('flowchart.html','myFlowChart','100%','90vh'); return false;"; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 193~@~4~@~Hide and show view button and add logic~@~Flowchart IDE: Hide and show view button and add logic~@~Hide and show view button and add logic~@~1027~@~~@~~@~11~@~if (!string.IsNullOrEmpty(cChartId1325.Text))
             {
                 cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue + "'); return false;";
@@ -2817,7 +2819,7 @@ document.Rintagi = {{
             {
                 cView.Visible = true;
                 cDisplay.Visible = true;
-            }~@~~@~~@~~@~~@~~@~~@~~@~
+            }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 194~@~4~@~Display on Default Button~@~Flowchart IDE: Display on Default Button~@~Display on Default Button~@~1027~@~4385~@~~@~1~@~string projectRootPath = Config.RuleTierPath;
             var lines = File.ReadAllLines(projectRootPath + "/Web/modules/DefaultModule.ascx");
             string firstLine = lines[0];
@@ -2831,7 +2833,7 @@ document.Rintagi = {{
             StreamWriter sw = new StreamWriter(projectRootPath + "/Web/modules/DefaultModule.ascx");
             try { sw.Write(sb); PreMsgPopup("Flowchart added to default page successfully"); }
             finally { sw.Close(); }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 195~@~4~@~Send ad hoc notification~@~User Manager: Send ad hoc notification~@~Send push notification to selected device(s)~@~1~@~4388~@~~@~1~@~            int usrId = int.Parse(cUsrId1.Text);
             DataTable dt = new LoginSystem().GetUsrNotificationChannel(usrId);
             // FCM legacy api
@@ -2885,13 +2887,13 @@ document.Rintagi = {{
             {
                 PreMsgPopup(ex.Message);
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 196~@~1~@~Suppress dirty flag handling~@~User Manager: Suppress dirty flag handling~@~Suppress dirty flag handling for non-db fields/button postback~@~1~@~~@~~@~9~@~                // suppress dirty flag signaling
                 cNotificationTitle.Attributes["OnChange"] = null;
                 cNotificationContent.Attributes["OnChange"] = null;
                 // suppress dirty flag check on post back
                 if (cSendNotificationBtn.Attributes["OnClick"] == null || cSendNotificationBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSendNotificationBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 198~@~1~@~Suppress dirty flag handling~@~Rintagi Postman: Suppress dirty flag handling~@~Suppress dirty flag handling for non-db fields/button postback~@~1028~@~~@~~@~9~@~                cSaveButton.Visible = false;                
                 // suppress dirty flag signaling
                 cEndpointUrl.Attributes["OnChange"] = null;
@@ -2907,7 +2909,7 @@ document.Rintagi = {{
                 cBodyUrlEncode.Attributes["OnClick"] = null;
                 // suppress dirty flag check on post back
                 if (cSubmit.Attributes["OnClick"] == null || cSubmit.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSubmit.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 199~@~1~@~Submit Request~@~Rintagi Postman: Submit Request~@~Send Web request~@~1028~@~4420~@~~@~1~@~            string url = cEndpointUrl.Text;
             string method = cMethod.Text;
             string[] qs = cQueryString.Text.Split(new char[] { '\n', '\r', '&'}, StringSplitOptions.RemoveEmptyEntries);
@@ -2994,4 +2996,28 @@ document.Rintagi = {{
             {
                 cResult.Text = ex.Message;
             }
-~@~~@~~@~~@~~@~~@~~@~~@~
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
+200~@~1~@~Customized Cache Policy~@~User Manager: Customized Cache Policy~@~Demo call for overriding cache policy ~@~1~@~~@~~@~9~@~                // hackish helper to flush all prior settings
+                // must do this to 'clear' all prior call settings(say in global.asax.cs Begin_Request)
+                // there is no 'incremental', must be full override by resetting to default
+                ResetCachePolicy();
+
+                // this is absolutely no caching, effectively same as 'form post', even back/forward button in chrome
+                // Response.Cache.SetNoStore();
+
+                // Set the cache response expiration to 300 seconds (use your own value here).
+                Response.Cache.SetExpires(DateTime.UtcNow.AddSeconds(300));
+
+                // Set both server and browser caching.
+                Response.Cache.SetCacheability(HttpCacheability.ServerAndPrivate);
+
+                // Prevent browser's default max-age=0 header on first request
+                // from invalidating the server cache on each request.
+                Response.Cache.SetValidUntilExpires(true);
+
+                // Set an HTTP ETag header on the page using a random GUID.
+                Response.Cache.SetETag(System.Guid.NewGuid().ToString().Replace("-", ""));
+
+                // Set last modified time.
+                Response.Cache.SetLastModified(DateTime.UtcNow);
+~@~~@~~@~~@~~@~~@~~@~~@~~@~

@@ -326,6 +326,84 @@ END
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fGetIndex') AND type='IF')
+DROP FUNCTION dbo.fGetIndex
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE FUNCTION [dbo].[fGetIndex]
+(
+)
+RETURNS TABLE
+/* WITH ENCRYPTION */  
+AS
+RETURN 
+(
+/* retrieve all index definition of the current database */
+
+/* WARNING ! 
+   THIS IS Rintagi supplied function, any local change would be overwritten when upgrade DEV package is applied
+ */  
+SELECT
+TableName = t.name, 
+IndexName = i.name,
+Cluster = CASE WHEN is_primary_key=1 THEN 'CLUSTERED' 
+			WHEN is_primary_key=0 THEN 'NONCLUSTERED'
+			END ,
+[Unique] = CASE WHEN is_unique=1 THEN 'UNIQUE' 
+			WHEN is_unique=0 THEN 'NONCLUSTERED'
+			END,
+[Create] = 'CREATE' 
++
+CASE WHEN is_unique=0 THEN '' 
+ELSE ' UNIQUE'
+END   
++ 
+CASE WHEN is_primary_key=1 THEN ' CLUSTERED' 
+WHEN is_primary_key=0 THEN ' NONCLUSTERED'
+END  
+
++ ' INDEX ' +
+QUOTENAME(i.name) + ' ON ' +
+QUOTENAME(t.name) + ' ( '  + 
+STUFF(REPLACE(REPLACE((
+        SELECT QUOTENAME(c.name) + CASE WHEN ic.is_descending_key = 1 THEN ' DESC' ELSE '' END AS [data()]
+        FROM sys.index_columns AS ic
+        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 0
+        ORDER BY ic.key_ordinal
+        FOR XML PATH
+    ), '<row>', ', '), '</row>', ''), 1, 2, '') + ' ) '  -- keycols
++ COALESCE(' INCLUDE ( ' +
+    STUFF(REPLACE(REPLACE((
+        SELECT QUOTENAME(c.name) AS [data()]
+        FROM sys.index_columns AS ic
+        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 1
+        ORDER BY ic.index_column_id
+        FOR XML PATH
+    ), '<row>', ', '), '</row>', ''), 1, 2, '') + ' ) ',    -- included cols
+    '')
++ ISNULL('WHERE ' + i.filter_definition,''),
+[Drop] =
+CASE WHEN is_primary_key = 1 THEN
+	'ALTER TABLE ' + QUOTENAME(t.name) + ' DROP CONSTRAINT ' + QUOTENAME(i.name)
+ELSE 
+	'DROP INDEX ' + QUOTENAME(i.name) + ' ON ' + QUOTENAME(t.name)
+END 
+,
+[Rebuild] = 'ALTER INDEX ' + QUOTENAME(i.name)  + ' ON ' +QUOTENAME(t.name) + ' REBUILD '
+FROM sys.tables AS t
+INNER JOIN sys.indexes AS i ON t.object_id = i.object_id
+--LEFT JOIN sys.dm_db_index_usage_stats AS u ON i.object_id = u.object_id AND i.index_id = u.index_id
+WHERE t.is_ms_shipped = 0
+AND i.type <> 0
+)
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fInitCap') AND type='FN')
 DROP FUNCTION dbo.fInitCap
 GO
@@ -12881,6 +12959,7 @@ SELECT @sClause = 'SELECT WebRuleId128=b128.WebRuleId'
 + ', ScreenObjId128=b128.ScreenObjId'
 + ', ButtonTypeId128=b128.ButtonTypeId'
 + ', EventId128=b128.EventId'
++ ', ForCompanyId128=b128.ForCompanyId'
 + ', WebRuleProg128=b128.WebRuleProg'
 + ', ReactEventId128=b128.ReactEventId'
 + ', ReactRuleProg128=b128.ReactRuleProg'
@@ -20930,6 +21009,63 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT FontWeight167=null, FontWeight167Text=null, FontWeightName=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlForCompanyId3S4427') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlForCompanyId3S4427 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlForCompanyId3S4427
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ForCompanyId128=a132.CompanyId, ForCompanyId128Text=a132.CompanyDesc, a132.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Company a132'
+SELECT @oClause = 'ORDER BY a132.CompanyDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a132.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a132.CompanyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a132.CompanyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','a132.','Y','N',null,'N','CompanyId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a132.','N',null,'CompanyId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ForCompanyId128=null, ForCompanyId128Text=null, Active=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -30984,6 +31120,61 @@ GO
 SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE GetDdlScreenId103C1085
+ @screenId		int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+,@bAll		char(1)=null
+,@keyId		varchar(max)=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct a15.ScreenId, a15.ScreenDesc'
+SELECT @fClause = 'FROM dbo.Screen a15'
+SELECT @oClause = 'ORDER BY a15.ScreenDesc'
+SELECT @wClause = 'WHERE ( 1=1 ' 
+ + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a15.ScreenDesc LIKE ''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ') ' 
+ + CASE WHEN @bAll = 'N' THEN ' AND (a15.ScreenId IN ' + CASE WHEN left(ISNULL(@keyId,'-1'),1) = '(' THEN ISNULL(@keyId,'-1') ELSE '(' + ISNULL(@keyId,'-1') + ')' END + ')' ELSE '' END SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT ScreenId=null, ScreenDesc=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlScreenId103C1086') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlScreenId103C1086 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlScreenId103C1086
  @screenId		int
 ,@Usrs		varchar(4000)
 ,@RowAuthoritys		varchar(4000)
@@ -44711,6 +44902,7 @@ ALTER PROCEDURE GetExpAdmScreenObj10
 ,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
+,@ScreenId1086	Int
 ,@screenFilterId	int
 ,@currCompanyId	int
 ,@currProjectId	int
@@ -44851,6 +45043,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@Cri10', ISNULL(REPLACE(REPLACE(@ScreenId1086, CHAR(191), ','), '''', ''''''), 'NULL'))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -44868,6 +45061,10 @@ END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+ELSE
+BEGIN
+	IF @ScreenId1086 is not null SELECT @wClause = @wClause + ' AND (b14.ScreenId = ' + convert(varchar,@ScreenId1086) + ')'
+END
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
 GO
@@ -47088,6 +47285,7 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenObjId,ColumnDesc,ScreenId FROM dbo.ScreenObj (NOLOCK))x1130 ON b128.ScreenObjId = x1130.ScreenObjId AND x1129.ScreenId = x1130.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ButtonTypeId,ButtonTypeDesc FROM RODesign.dbo.VwScrButton (NOLOCK))x1131 ON b128.ButtonTypeId = x1131.ButtonTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EventId,EventDesc FROM RODesign.dbo.CtEvent (NOLOCK))x1132 ON b128.EventId = x1132.EventId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CompanyId,CompanyDesc FROM ROCmon.dbo.Company (NOLOCK))x7689 ON b128.ForCompanyId = x7689.CompanyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleReactTypeId,RuleReactTypeDesc FROM RODesign.dbo.CtRuleReactType (NOLOCK))x7552 ON b128.ReactEventId = x7552.RuleReactTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleReduxTypeId,RuleReduxTypeDesc FROM RODesign.dbo.CtRuleReduxType (NOLOCK))x7550 ON b128.ReduxEventId = x7550.RuleReduxTypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RuleServiceTypeId,RuleServiceTypeDesc FROM RODesign.dbo.CtRuleServiceType (NOLOCK))x7548 ON b128.ServiceEventId = x7548.RuleServiceTypeId' 
@@ -47106,6 +47304,8 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ButtonTypeId128Text=x1131.ButtonTypeDesc'
 + ', EventId128=x1132.EventId'
 + ', EventId128Text=x1132.EventDesc'
++ ', ForCompanyId128=x7689.CompanyId'
++ ', ForCompanyId128Text=x7689.CompanyDesc'
 + ', WebRuleProg128=b128.WebRuleProg'
 + ', ReactEventId128=x7552.RuleReactTypeId'
 + ', ReactEventId128Text=x7552.RuleReactTypeDesc'
@@ -56338,6 +56538,7 @@ ALTER PROCEDURE GetLisAdmScreenObj10
 ,@Lenders		varchar(1000)
 ,@Key		nvarchar(500)
 ,@FilterTxt		nvarchar(500)
+,@ScreenId1086	Int
 ,@screenFilterId	int
 ,@currCompanyId	int
 ,@currProjectId	int
@@ -56403,6 +56604,7 @@ BEGIN
 		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
 		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
 		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @filterClause=replace(@filterClause,'@Cri10', ISNULL(REPLACE(REPLACE(@ScreenId1086, CHAR(191), ','), '''', ''''''), 'NULL'))
 		    SELECT @wClause=@wClause + ' AND ' + @filterClause
 		END
 		IF @useGlobalFilter='Y'
@@ -56420,6 +56622,10 @@ END
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
 IF @key is not null SELECT @wClause = @wClause + ' AND (b14.ScreenObjId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+ELSE
+BEGIN
+	IF @ScreenId1086 is not null SELECT @wClause = @wClause + ' AND (b14.ScreenId = ' + convert(varchar,@ScreenId1086) + ')'
+END
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
 IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b14.ColumnDesc LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
@@ -65285,7 +65491,7 @@ DECLARE	 @sClause	varchar(8000)
 	,@fClause	varchar(8000)
 	,@wClause	varchar(8000)
 SET NOCOUNT ON
-SELECT @sClause = 'SELECT a.RuleName,a.ScreenObjId,c.ColumnName,d.TableId,e.ButtonTypeName,e.ObjectType,b.EventCode,a.WebRuleProg'
+SELECT @sClause = 'SELECT a.RuleName,a.ScreenObjId,c.ColumnName,d.TableId,e.ButtonTypeName,e.ObjectType,b.EventCode,a.WebRuleProg, a.WebRuleId, ForCompanyId = a.ForCompanyId'
 SELECT @fClause = 'FROM dbo.WebRule a'
 + ' INNER JOIN RODesign.dbo.CtEvent b ON a.EventId = b.EventId'
 + ' LEFT OUTER JOIN dbo.ScreenObj c ON a.ScreenObjId = c.ScreenObjId'
@@ -66990,8 +67196,8 @@ SELECT @ScreenObjId = a.ScreenObjId FROM dbo.ScreenObj a
 SET ROWCOUNT 0
 UPDATE dbo.Screen SET
 	 ScreenDesc = @ScreenTitle
-	,ScreenObj = 'AdmScreenObj.aspx?id=26&key=' + convert(varchar,isnull(@ScreenObjId,0)) + '&typ=N&sys=' + convert(varchar,@DbId)
-	,ScreenFilter = 'AdmScreenFilter.aspx?id=181&cri1=' + convert(varchar,@ScreenId) + '&typ=N&sys=' + convert(varchar,@DbId)
+	,ScreenObj = 'AdmScreenObj.aspx?cri0=' + convert(varchar,isnull(@ScreenId,0)) + '&typ=N&sys=' + convert(varchar,@DbId)
+	,ScreenFilter = 'AdmScreenFilter.aspx?cri0=' + convert(varchar,isnull(@ScreenId,0)) + '&typ=N&sys=' + convert(varchar,@DbId)
 	WHERE ScreenId = @ScreenId
 
 RETURN 0
@@ -68189,7 +68395,8 @@ UPDATE dbo.ScreenFilter
 	SET ScreenFilterDesc = b.ProgramName + ' ' + RIGHT('00'+convert(varchar,FilterOrder),3) + ' ' + a.ScreenFilterName
 	FROM dbo.ScreenFilter a INNER JOIN dbo.Screen b ON a.ScreenId = b.ScreenId
 	WHERE a.ScreenFilterId = @ScreenFilterId
-UPDATE dbo.Screen SET ScreenFilter = 'AdmScreenFilter.aspx?id=181&key=' + convert(varchar,@ScreenFilterId)
+/* update link to screen filter which is popup link(for more than one filter and not the last updated one), cri0 is screenid */
+UPDATE dbo.Screen SET ScreenFilter = 'AdmScreenFilter.aspx?cri0=' + convert(varchar,@ScreenId)
 	WHERE ScreenId = @screenId
 RETURN 0
 GO
@@ -68920,6 +69127,12 @@ BEGIN
 	RAISERROR('Please do not impersonate yourself and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
+IF @ImprUsrId = 1
+BEGIN
+	RAISERROR('Please do not impersonate anonymous login and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+
 SELECT @ULoginName = LoginName, @UUsrName = UsrName FROM dbo.Usr WHERE UsrId = @UsrId
 SELECT @ILoginName = LoginName, @IUsrName = UsrName FROM dbo.Usr WHERE UsrId = @ImprUsrId
 UPDATE dbo.UsrImpr SET
@@ -69616,13 +69829,20 @@ ALTER PROCEDURE [dbo].[LinkUsrLogin]
 /* WITH ENCRYPTION */
 AS
 IF NOT EXISTS (SELECT 1 FROM dbo.UsrProvider WHERE UsrId = @UsrId AND ProviderCd = @ProviderCd 
-				AND (@ProviderCd <> 'Fido2'OR LoginName = @LoginName)
+				AND (
+					(@ProviderCd <> 'Fido2' AND @ProviderCd <> 'Eth1')
+					OR 
+					LoginName = @LoginName)
 				)
 	INSERT INTO dbo.UsrProvider (UsrId, Providercd, LoginName, LoginMeta) SELECT @UsrId, @ProviderCd, @LoginName, @LoginMeta
 ELSE
 	UPDATE dbo.UsrProvider SET LoginName = @LoginName 
 		WHERE UsrId = @UsrId AND ProviderCd = @ProviderCd
-			AND (@ProviderCd <> 'Fido2'OR LoginName = @LoginName)
+			AND (
+				(@ProviderCd <> 'Fido2' AND @ProviderCd <> 'Eth1')
+				OR 
+				LoginName = @LoginName
+				)
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -73904,24 +74124,18 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-ALTER PROCEDURE [dbo].[UpdAdmScreenObj10In]
+ALTER PROCEDURE UpdAdmScreenObj10In
  @screenId int
 ,@usrId int
 ,@isCriVisible char(1)
-,@ScreenId12 Int
-,@TabFolderId47 Int
-,@GroupColId46 SmallInt
+,@ScreenId1086 Int
 /* WITH ENCRYPTION */
 AS
 DECLARE @cri nvarchar(900)
 SET NOCOUNT ON
 EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 0, @isCriVisible
-SELECT @cri = convert(nvarchar,@ScreenId12)
-EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 12, @cri
-SELECT @cri = convert(nvarchar,@TabFolderId47)
-EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 47, @cri
-SELECT @cri = convert(nvarchar,@GroupColId46)
-EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 46, @cri
+SELECT @cri = convert(nvarchar,@ScreenId1086)
+EXEC RODesign.dbo.UpdScreenLstCri @usrId, @screenId, 1086, @cri
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -76749,6 +76963,9 @@ GO
 SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE [dbo].[WrGetIndex]
+@TableName	varchar(256)=NULL
+,@Cluster	varchar(20)=NULL
+,@Unique	varchar(20)=NULL	
 /* WITH ENCRYPTION */
 AS
 /* retrieve all index definition */
@@ -76760,54 +76977,17 @@ AS
 SET NOCOUNT ON
 
 SELECT
-TableName = t.name, 
-IndexName = i.name,
-'CREATE' 
-+
-CASE WHEN is_unique=0 THEN '' 
-ELSE ' UNIQUE'
-END   
-+ 
-CASE WHEN is_primary_key=1 THEN ' CLUSTERED' 
-WHEN is_primary_key=0 THEN ' NONCLUSTERED'
-END  
-
-+ ' INDEX ' +
-QUOTENAME(i.name) + ' ON ' +
-QUOTENAME(t.name) + ' ( '  + 
-STUFF(REPLACE(REPLACE((
-        SELECT QUOTENAME(c.name) + CASE WHEN ic.is_descending_key = 1 THEN ' DESC' ELSE '' END AS [data()]
-        FROM sys.index_columns AS ic
-        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
-        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 0
-        ORDER BY ic.key_ordinal
-        FOR XML PATH
-    ), '<row>', ', '), '</row>', ''), 1, 2, '') + ' ) '  -- keycols
-+ COALESCE(' INCLUDE ( ' +
-    STUFF(REPLACE(REPLACE((
-        SELECT QUOTENAME(c.name) AS [data()]
-        FROM sys.index_columns AS ic
-        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
-        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 1
-        ORDER BY ic.index_column_id
-        FOR XML PATH
-    ), '<row>', ', '), '</row>', ''), 1, 2, '') + ' ) ',    -- included cols
-    '')
-+ ISNULL('WHERE ' + i.filter_definition,'') as [Create],
-[Drop] =
-CASE WHEN is_primary_key = 1 THEN
-	'ALTER TABLE ' + QUOTENAME(t.name) + ' DROP CONSTRAINT ' + QUOTENAME(i.name)
-ELSE 
-	'DROP INDEX ' + QUOTENAME(i.name) + ' ON ' + QUOTENAME(t.name)
-END 
-, 'ALTER INDEX ' + QUOTENAME(i.name)  + ' ON ' +QUOTENAME(t.name) + ' REBUILD ' as [Rebuild]
-FROM sys.tables AS t
-INNER JOIN sys.indexes AS i ON t.object_id = i.object_id
---LEFT JOIN sys.dm_db_index_usage_stats AS u ON i.object_id = u.object_id AND i.index_id = u.index_id
-WHERE t.is_ms_shipped = 0
-AND i.type <> 0
-order by QUOTENAME(t.name), is_primary_key desc, QUOTENAME(i.name)
-
+*
+FROM
+dbo.fGetIndex()
+WHERE
+(TableName = @TableName OR @TableName IS NULL)
+AND
+(Cluster = @Cluster OR @Cluster IS NULL)
+AND
+([Unique] = @Unique OR @Unique IS NULL)
+ORDER BY
+QUOTENAME(TableName), Cluster, QUOTENAME(IndexName)
 
 RETURN 0
 GO
@@ -79045,6 +79225,71 @@ SELECT @a1 = 'DECLARE @des varchar(50), @c1Clause nvarchar(max), @s1Clause nvarc
 + ' ,@drFkey varchar(4000) ,@crFkey varchar(4000), @FKeyName varchar(50), @FKeyTbl varchar(50), @FKeyCol varchar(50)'
 + ' ,@FRefTbl varchar(50), @FRefCol varchar(50), @cColumnName varchar(100), @cPrevColName varchar(100)'
 + ' CREATE TABLE #sync (ColumnName varchar(50) not null, DataType varchar(50) not null, NumericData char(1) not null, ColumnLength smallint not null, AllowNulls char(1) not null)'
++ ' CREATE TABLE #idx (TableName varchar(50), IndexName varchar(50), [Cluster] varchar(20), [Unique] varchar(20), [CreateScript] varchar(max), [DropScript] varchar(max), [RebulidScript] varchar(max))'
++ '
+ 
+INSERT INTO #idx
+SELECT
+TableName = t.name, 
+IndexName = i.name,
+Cluster = CASE WHEN is_primary_key=1 THEN ''''CLUSTERED'''' 
+			WHEN is_primary_key=0 THEN ''''NONCLUSTERED''''
+			END ,
+[Unique] = CASE WHEN is_unique=1 THEN ''''UNIQUE'''' 
+			WHEN is_unique=0 THEN ''''NONCLUSTERED''''
+			END,
+[Create] = ''''CREATE'''' 
++
+CASE WHEN is_unique=0 THEN '''''''' 
+ELSE '''' UNIQUE''''
+END   
++ 
+CASE WHEN is_primary_key=1 THEN '''' CLUSTERED'''' 
+WHEN is_primary_key=0 THEN '''' NONCLUSTERED''''
+END  
+
++ '''' INDEX '''' +
+QUOTENAME(i.name) + '''' ON '''' +
+QUOTENAME(t.name) + '''' ( ''''  + 
+STUFF(REPLACE(REPLACE((
+        SELECT QUOTENAME(c.name) + CASE WHEN ic.is_descending_key = 1 THEN '''' DESC'''' ELSE '''''''' END AS [data()]
+        FROM sys.index_columns AS ic
+        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 0
+        ORDER BY ic.key_ordinal
+        FOR XML PATH
+    ), ''''<row>'''', '''', ''''), ''''</row>'''', ''''''''), 1, 2, '''''''') + '''' ) ''''  -- keycols
++ COALESCE('''' INCLUDE ( '''' +
+    STUFF(REPLACE(REPLACE((
+        SELECT QUOTENAME(c.name) AS [data()]
+        FROM sys.index_columns AS ic
+        INNER JOIN sys.columns AS c ON ic.object_id = c.object_id AND ic.column_id = c.column_id
+        WHERE ic.object_id = i.object_id AND ic.index_id = i.index_id AND ic.is_included_column = 1
+        ORDER BY ic.index_column_id
+        FOR XML PATH
+    ), ''''<row>'''', '''', ''''), ''''</row>'''', ''''''''), 1, 2, '''''''') + '''' ) '''',    -- included cols
+    '''''''')
++ ISNULL(''''WHERE '''' + i.filter_definition,''''''''),
+[Drop] =
+CASE WHEN is_primary_key = 1 THEN
+	''''ALTER TABLE '''' + QUOTENAME(t.name) + '''' DROP CONSTRAINT '''' + QUOTENAME(i.name)
+ELSE 
+	''''DROP INDEX '''' + QUOTENAME(i.name) + '''' ON '''' + QUOTENAME(t.name)
+END 
+,
+[Rebuild] = ''''ALTER INDEX '''' + QUOTENAME(i.name)  + '''' ON '''' +QUOTENAME(t.name) + '''' REBUILD ''''
+FROM sys.tables AS t
+INNER JOIN sys.indexes AS i ON t.object_id = i.object_id
+--LEFT JOIN sys.dm_db_index_usage_stats AS u ON i.object_id = u.object_id AND i.index_id = u.index_id
+WHERE t.is_ms_shipped = 0
+AND i.type <> 0
+AND t.name = ''''' + @TableName + '''''
+AND i.name <> ''''' +'IU_' + @TableName + '''''
+AND i.name <> ''''' +'IX_' + @TableName + '''''
+AND is_primary_key = 0
+--AND is_unique = 0
+
+'
 -- New table (@Oid is null): First rename physical table to Tmp_:
 IF @Oid is not null SELECT @a1 = @a1 + ' INSERT dbo.#sync SELECT sc.NAME, st.name, dt.NumericData'
 + ' ,CASE WHEN dt.DataTypeSqlName = ''''Decimal'''' THEN ColumnProperty(' + @Oid + ',sc.Name,''''Precision'''') WHEN sc.length < 0 THEN 0 WHEN dt.DoubleByte = ''''Y'''' THEN sc.length/2 ELSE sc.length END'
@@ -79228,7 +79473,35 @@ SELECT @a5 = @a5 + ' SELECT @AppItemId = @@IDENTITY'
 + ' + ''''&typ=N&sys=' + convert(varchar,@SystemId) + '","","",""); return false;'''' WHERE AppItemId = @AppItemId'
 + ' UPDATE ' + @DesDb + '.dbo.DbColumn SET PrevColName = null WHERE TableId = ' + convert(varchar,@TableId) + ' END'
 + ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = ' + convert(varchar,@TableId)
++ '
+DECLARE cur5 CURSOR FAST_FORWARD FOR
+SELECT TableName, IndexName, [Cluster], [Unique], [CreateScript], [DropScript] FROM #idx
+DECLARE @TableName varchar(50), @IdxName varchar(50), @Cluster varchar(20), @Unique varchar(20), @Create nvarchar(max), @Drop nvarchar(max),  @Rebuild nvarchar(max)
+OPEN cur5 FETCH NEXT FROM cur5 INTO @TableName, @IdxName, @Cluster, @Unique, @Create, @Drop
+WHILE @@FETCH_STATUS = 0
+BEGIN
+IF NOT EXISTS (SELECT *  FROM sys.indexes  WHERE name= @IdxName 
+    AND object_id = OBJECT_ID(''''dbo.' + @TableName + '''''))
+BEGIN
+BEGIN TRY
+--	PRINT ('''''''' + @Create + '''''''')
+	EXEC ('''''''' + @Create + '''''''')
+END TRY
+BEGIN CATCH
+	DECLARE @ErrMsg nvarchar(max)
+	SELECT @ErrMsg = ERROR_MESSAGE()
+	RAISERROR(''''%s %s'''', 18, 2, @ErrMsg, @Create) WITH SETERROR
+END CATCH
+END
+FETCH NEXT FROM cur5 INTO @TableName, @IdxName, @Cluster, @Unique, @Create, @Drop
+END
+CLOSE cur5
+DEALLOCATE cur5
+'
++ ' DROP TABLE #idx'
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @a1 + ''', ''' + @a2 + ''', ''' + @a3 + ''', ''' + @a4 + ''', ''' + @a5 + '''')
+
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF

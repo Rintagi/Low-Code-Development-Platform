@@ -44,7 +44,7 @@ namespace RO.Common3.Data
 			columns.Add("UsrName270", typeof(string));
 			columns.Add("LoginName270", typeof(string));
 			columns.Add("UsrEmail270", typeof(string));
-			columns.Add("UsrPassword270", typeof(string));
+			columns.Add("UsrPassword270", typeof(object));
 			columns.Add("DummyWhiteSpace2", typeof(string));
 			columns.Add("DummyWhiteSpace3", typeof(string));
 			columns.Add("TokenMsg", typeof(string));

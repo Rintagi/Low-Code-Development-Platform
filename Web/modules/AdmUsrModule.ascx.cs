@@ -45,6 +45,7 @@ namespace RO.Common3.Data
 			columns.Add("UsrEmail1", typeof(string));
 			columns.Add("UsrMobile1", typeof(string));
 			columns.Add("UsrGroupLs1", typeof(string));
+			columns.Add("PicMed1", typeof(object));
 			columns.Add("IPAlert1", typeof(string));
 			columns.Add("PwdNoRepeat1", typeof(string));
 			columns.Add("PwdDuration1", typeof(string));
@@ -59,6 +60,7 @@ namespace RO.Common3.Data
 			columns.Add("LastFailedDt1", typeof(string));
 			columns.Add("CompanyLs1", typeof(string));
 			columns.Add("ProjectLs1", typeof(string));
+			columns.Add("ModifiedOn1", typeof(string));
 			columns.Add("HintQuestionId1", typeof(string));
 			columns.Add("HintAnswer1", typeof(string));
 			columns.Add("InvestorId1", typeof(string));
@@ -222,6 +224,31 @@ namespace RO.Web
                 cNotificationContent.Attributes["OnChange"] = null;
                 // suppress dirty flag check on post back
                 if (cSendNotificationBtn.Attributes["OnClick"] == null || cSendNotificationBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSendNotificationBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+
+				//WebRule: Customized Cache Policy
+                // hackish helper to flush all prior settings
+                // must do this to 'clear' all prior call settings(say in global.asax.cs Begin_Request)
+                // there is no 'incremental', must be full override by resetting to default
+                ResetCachePolicy();
+
+                // this is absolutely no caching, effectively same as 'form post', even back/forward button in chrome
+                // Response.Cache.SetNoStore();
+
+                // Set the cache response expiration to 300 seconds (use your own value here).
+                Response.Cache.SetExpires(DateTime.UtcNow.AddSeconds(300));
+
+                // Set both server and browser caching.
+                Response.Cache.SetCacheability(HttpCacheability.ServerAndPrivate);
+
+                // Prevent browser's default max-age=0 header on first request
+                // from invalidating the server cache on each request.
+                Response.Cache.SetValidUntilExpires(true);
+
+                // Set an HTTP ETag header on the page using a random GUID.
+                Response.Cache.SetETag(System.Guid.NewGuid().ToString().Replace("-", ""));
+
+                // Set last modified time.
+                Response.Cache.SetLastModified(DateTime.UtcNow);
 
 				// *** WebRule End *** //
 			}

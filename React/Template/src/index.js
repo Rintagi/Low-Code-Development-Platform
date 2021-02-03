@@ -3,6 +3,7 @@ import App from './app/App';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import store from './app/store';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import ScrollToTop from './app/ScrollToTop';
 import { getUserConfirmation } from './helpers/navigation'
 // import { createBrowserHistory, useBasename } from "history";
@@ -73,12 +74,14 @@ window.addEventListener('hashchange', (e) => {
 const baseName = process.env.NODE_ENV === "development" ? appProxyBasename : appBasename;
 
 render(
-  <Provider store={store}>
-    <Router basename={baseName} getUserConfirmation={getUserConfirmation}>
-      <ScrollToTop>
-        <App />
-      </ScrollToTop>
-    </Router>
-  </Provider>,
-  document.getElementById('root')
+  <HelmetProvider>
+    <Provider store={store}>
+      <Router basename={baseName} getUserConfirmation={getUserConfirmation}>
+        <ScrollToTop>
+          <App />
+        </ScrollToTop>
+      </Router>
+    </Provider>
+  </HelmetProvider>
+  , document.getElementById('root')
 );

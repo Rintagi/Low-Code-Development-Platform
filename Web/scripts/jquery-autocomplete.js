@@ -292,24 +292,56 @@
                 .blur(function(e) { if(IsMobile()){$body.removeClass('mobilekeyPop');}});
             input.attr("title", $(self.element).attr('title')); input.attr("disabled", $(self.element).attr('disabled'));
             var inputWidth = $(input).width();
-            var autoComleteWidget = autoComleteWidget = input.data("autocomplete")||input.data('ui-autocomplete');
+            var autoComleteWidget = autoComleteWidget = input.data("autocomplete") || input.data('ui-autocomplete');
+            var sanitizeHtml = function (s) {
+                if (!s) return s;
+                return s.replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')
+                  .replace(/'/g, '&#39;')
+                  .replace(/"/g, '&#34;');
+            };
+
             autoComleteWidget._renderItem = function (ul, item) {
-                if (Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack()) return "";
-                var autoCompleteItem = $((item.key == null ? "<li>" : "<li>") + "</li>").data("item.autocomplete", item) || $((item.key == null ? "<li>" : "<li>") + "</li>").data('ui-autocomplete-item', item);
+                var _item = {
+                    key: item.key,
+                    label : sanitizeHtml(item.label),
+                    value : sanitizeHtml(item.value),
+                    detail : sanitizeHtml(item.detail),
+                    tips : sanitizeHtml(item.tips),
+                    iconUrl : sanitizeHtml(item.iconUrl),
+                    img: sanitizeHtml(item.img),
+                    
+                };
+
+                if (Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack()) return "";                
+                var autoCompleteItem = $((_item.key == null ? "<li>" : "<li>") + "</li>").data("item.autocomplete", _item) || $((_item.key == null ? "<li>" : "<li>") + "</li>").data('ui-autocomplete-item', _item);
                 //var anchor = $((item.key == null ? "<a style='color:#FF5C00'>" : "<a>") + item.label + "</a>")
                 //    .append(!item.tooltips ? "" : "<p style='color:red'>" + item.tooltips + "</p>")
                 //    .append(!item.iconUrl ? "" : "<img style='color:blue' src='" + item.iconUrl + "' alt=''/>")
                 //    .append(!item.img ? "" : "<img style='color:yellow' src='" + item.img + "' alt=''/>")
-                var imageSectionWidth = item.img == null ? 0 : 45;
-                var iconSectionWidth = item.iconUrl == null ? 0 : 45;
-                var rowHeight = item.detail == null && item.img == null && item.iconUrl == null ? 20 : 40;
-                var anchor = $((!item.key ? "<a style='color:#FF5C00;height:20px;'" + (item.detail == null && item.img == null && item.iconUrl == null ? "" : " class='seperator' ") + ">" : "<a style='height:" + rowHeight + "px'" + (item.detail == null && item.img == null && item.iconUrl == null ? "" : "class='seperator'") + ">") +
-                               "<div class='r-table' ><div class='r-tr'><div class='r-td'><b>" + item.label +"</b>" +
-                               (!item.detail ? "" : "<span class='autoCompDesc' style='max-width:" + (inputWidth - imageSectionWidth - iconSectionWidth) + "px' title='" + item.detail + "'>" + item.detail + "</span>") +
-                               "</div><div class='r-td iconArea' style='width:" + (imageSectionWidth + iconSectionWidth -4) + "px'>" +
-                               (!item.iconUrl ? "" : "<img class='autoCompIcon' src='" + item.iconUrl + "' alt=''/>") +
-                               (!item.img ? "" : "<img class='autoCompIcon' src='" + item.img + "' alt=''/>") +
-                               "</div></div></div></a>");
+                var imageSectionWidth = _item.img == null ? 0 : 45;
+                var iconSectionWidth = _item.iconUrl == null ? 0 : 45;
+                var rowHeight = _item.detail == null && _item.img == null && _item.iconUrl == null ? 20 : 40;
+                var anchor = $((!_item.key ? "<a style='color:#FF5C00;height:20px;'"
+                                                + (_item.detail == null && _item.img == null && _item.iconUrl == null ? "" : " class='seperator' ")
+                                                + ">"
+                                           : "<a style='height:" + rowHeight + "px'" + (_item.detail == null && _item.img == null && _item.iconUrl == null ? "" : "class='seperator'") + ">")
+                                           +
+                                           "<div class='r-table' ><div class='r-tr'>"
+                                                + "<div class='r-td'><b>" + _item.label + "</b>" +
+                                                    (!_item.detail ? "" : "<span class='autoCompDesc' style='max-width:"
+                                                                    + (inputWidth - imageSectionWidth - iconSectionWidth)
+                                                                    + "px' title='" + _item.detail + "'>" + _item.detail + "</span>")
+                                                + "</div>"
+                                                + "<div class='r-td iconArea' style='width:"
+                                                    + (imageSectionWidth + iconSectionWidth - 4) + "px'>"
+                                                    + (!_item.iconUrl ? "" : "<img class='autoCompIcon' src='" + _item.iconUrl + "' alt=''/>")
+                                                    + (!_item.img ? "" : "<img class='autoCompIcon' src='" + _item.img + "' alt=''/>")
+                                                + "</div>"
+                                           + "</div></div>"
+                                           + "</a>"
+                                           );
                 var x =
                 autoCompleteItem
                     .append(anchor)

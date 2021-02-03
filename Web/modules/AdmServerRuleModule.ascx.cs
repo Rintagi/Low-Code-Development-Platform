@@ -57,6 +57,7 @@ namespace RO.Common3.Data
 			columns.Add("SyncByDb", typeof(string));
 			columns.Add("SyncToDb", typeof(string));
 			columns.Add("ModifiedBy24", typeof(string));
+			columns.Add("ModifiedOn24", typeof(string));
 			columns.Add("LastGenDt24", typeof(string));
 			return dt;
 		}

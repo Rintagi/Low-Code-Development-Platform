@@ -57,6 +57,11 @@ namespace RO.Web
         private const String KEY_CacheLImpr = "Cache:LImpr";
         private const String KEY_CacheLCurr = "Cache:LCurr";
 
+        static private string SanitizeHtml(string src)
+        {
+            return src;
+//            return HttpUtility.HtmlEncode(src);
+        }
         static private UsrCurr GetUsrCurr(byte csy, string ssd)
         {
             /* this function mimic LoginModule equivalent to provide the proper LCurr context
@@ -538,10 +543,10 @@ namespace RO.Web
                         Choices[drv[keyF].ToString()] = drv[valF].ToString();
                         results.Add(new Dictionary<string, string> { 
                             {"key",drv[keyF].ToString()}, // internal key 
-                            {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
-                            {"value",drv[valF].ToString()}, // visible value shown in jquery's autocomplete box
+                            {"label",SanitizeHtml(drv[valF].ToString())}, // visible dropdown list as used in jquery's autocomplete
+                            {"value",SanitizeHtml(drv[valF].ToString())}, // visible value shown in jquery's autocomplete box
                             {"img", imgF !="" ? drv[imgF].ToString() : null}, // optional image
-                            {"tooltips",tipF !="" ? drv[tipF].ToString() : ""} // optional alternative tooltips(say expanded description)
+                            {"tooltips",tipF !="" ? SanitizeHtml(drv[tipF].ToString()) : ""} // optional alternative tooltips(say expanded description)
                             /* more can be added in the future for say multi-column list */
                             });
                     }
@@ -658,10 +663,10 @@ namespace RO.Web
                         Choices[drv[keyF].ToString()] = drv[valF].ToString();
                         results.Add(new Dictionary<string, string> { 
                             {"key",drv[keyF].ToString()}, // internal key 
-                            {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
-                            {"value",drv[valF].ToString()}, // visible value shown in jquery's autocomplete box
+                            {"label",SanitizeHtml(drv[valF].ToString())}, // visible dropdown list as used in jquery's autocomplete
+                            {"value",SanitizeHtml(drv[valF].ToString())}, // visible value shown in jquery's autocomplete box
                             {"img", imgF !="" ? drv[imgF].ToString() : null}, // optional icon url
-                            {"tooltips",tipF !="" ? drv[tipF].ToString() : ""} // optional alternative tooltips(say expanded description)
+                            {"tooltips",tipF !="" ? SanitizeHtml(drv[tipF].ToString()) : ""} // optional alternative tooltips(say expanded description)
                             /* more can be added in the future for say multi-column list */
                             });
                     }
@@ -790,10 +795,10 @@ namespace RO.Web
                         Choices[drv[keyF].ToString()] = drv[valF].ToString();
                         results.Add(new Dictionary<string, string> { 
                             {"key",drv[keyF].ToString()}, // internal key 
-                            {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
-                            {"value",drv[valF].ToString()}, // visible value shown in jquery's autocomplete box
+                            {"label",SanitizeHtml(drv[valF].ToString())}, // visible dropdown list as used in jquery's autocomplete
+                            {"value",SanitizeHtml(drv[valF].ToString())}, // visible value shown in jquery's autocomplete box
                             {"img", imgF !="" ? drv[imgF].ToString() : null}, // optional icon url
-                            {"tooltips",tipF !="" ? drv[tipF].ToString() : ""} // optional alternative tooltips(say expanded description)
+                            {"tooltips",tipF !="" ? SanitizeHtml(drv[tipF].ToString()) : ""} // optional alternative tooltips(say expanded description)
                             /* more can be added in the future for say multi-column list */
                             });
                     }
@@ -1023,12 +1028,12 @@ namespace RO.Web
                         Choices[drv[keyF].ToString()] = drv[valF].ToString();
                         results.Add(new Dictionary<string, string> { 
                             {"key",drv[keyF].ToString()}, // internal key 
-                            {"label",drv[valF].ToString()}, // visible dropdown list as used in jquery's autocomplete
-                            {"value",drv[valF].ToString()}, // visible value shown in jquery's autocomplete box
+                            {"label",SanitizeHtml(drv[valF].ToString())}, // visible dropdown list as used in jquery's autocomplete
+                            {"value",SanitizeHtml(drv[valF].ToString())}, // visible value shown in jquery's autocomplete box
                             {"iconUrl",iconUrlF !="" ? drv[iconUrlF].ToString() == "" ? "" : SResolveUrl(GetUrlWithQSHash(drv[iconUrlF].ToString())) : null}, // optional icon url
                             {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "":  RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[],true))  : null}, // optional embedded image
-                            {"tooltips",tipF !="" ? drv[tipF].ToString() : ""},// optional alternative tooltips(say expanded description)
-                            {"detail",dtlF !="" ? drv[dtlF].ToString() : null} // optional alternative tooltips(say expanded description)
+                            {"tooltips",tipF !="" ? SanitizeHtml(drv[tipF].ToString()) : ""},// optional alternative tooltips(say expanded description)
+                            {"detail",dtlF !="" ? SanitizeHtml(drv[dtlF].ToString()) : null} // optional alternative tooltips(say expanded description)
                             /* more can be added in the future for say multi-column list */
                             });
                     }
@@ -1098,12 +1103,12 @@ namespace RO.Web
                     {
                         Choices[drv[valF].ToString()] = drv[keyF].ToString();
                         results.Add(new Dictionary<string, string> { 
-                            {"label",drv[valF].ToString()},
-                            {"value",drv[keyF].ToString()},
+                            {"label",SanitizeHtml(drv[valF].ToString())},
+                            {"value",SanitizeHtml(drv[keyF].ToString())},
                             {"iconUrl",iconUrlF !="" ? drv[iconUrlF].ToString() : ""}, // optional icon url
                             {"img", imgF !="" ? (drv[imgF].ToString() == "" ? "": RO.Common3.Utils.BlobPlaceHolder(drv[imgF] as byte[],true))  : ""}, // optional embedded image
-                            {"tooltips",tipF !="" ? drv[tipF].ToString() : ""}, // optional alternative tooltips(say expanded description)
-                            {"detail",tipF !="" ? drv[dtlF].ToString() : ""} // optional alternative tooltips(say expanded description)
+                            {"tooltips",tipF !="" ? SanitizeHtml(drv[tipF].ToString()) : ""}, // optional alternative tooltips(say expanded description)
+                            {"detail",tipF !="" ? SanitizeHtml(drv[dtlF].ToString()) : ""} // optional alternative tooltips(say expanded description)
                             });
                     }
 

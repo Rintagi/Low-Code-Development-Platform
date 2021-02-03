@@ -26,3 +26,5 @@
 41~@~9~@~NoSP~@~AdmScreen 030 NoSP~@~GenerateSr = 'N'~@~30~@~Y
 42~@~9~@~GenAudit~@~AdmScreen 040 GenAudit~@~GenAudit = 'Y'~@~40~@~Y
 43~@~9~@~NeedReGen~@~AdmScreen 050 NeedReGen~@~NeedReGen= 'Y'~@~50~@~Y
+44~@~82~@~HasPrerequisite~@~AdmAppInfo 020 HasPrerequisite~@~LEN(Prerequisite) > 0~@~20~@~Y
+45~@~82~@~All~@~AdmAppInfo 010 All~@~1=1~@~10~@~Y

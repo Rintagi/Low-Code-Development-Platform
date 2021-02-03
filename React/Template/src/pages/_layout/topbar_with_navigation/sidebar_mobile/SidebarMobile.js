@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import Scrollbar from 'react-smooth-scrollbar';
+import Scrollbar from '../../../../components/custom/ScrollBar';
 import {withRouter} from 'react-router';
 import classNames from 'classnames';
 import SidebarContent from './SidebarContent';

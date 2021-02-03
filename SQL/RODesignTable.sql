@@ -4,6 +4,9 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwAppItem') AND type='V')
 DROP VIEW dbo.VwAppItem
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwCheckBox') AND type='V')
+DROP VIEW dbo.VwCheckBox
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwClnAppItem') AND type='V')
 DROP VIEW dbo.VwClnAppItem
 GO
@@ -3820,6 +3823,7 @@ ServiceEventId tinyint NULL ,
 ServiceRuleProg nvarchar (max) NULL ,
 AsmxEventId tinyint NULL ,
 AsmxRuleProg nvarchar (max) NULL ,
+ForCompanyId int NULL ,
 CONSTRAINT PK_WebRule PRIMARY KEY CLUSTERED (
 WebRuleId
 )

@@ -584,6 +584,28 @@ class RintagiScreen extends Component {
     }
   }
 
+  //new added
+  SignatureChange(setFieldValue, setFieldTouched, forName, formikCurValues, dependents = []) {
+    const _this = this;
+    return function (name, value) {
+      _this.FieldInFocus = name || forName;
+      const val = value;
+      log.debug('Signature Change', val, name, forName)
+      setFieldTouched(name || forName, true);
+      setFieldValue(name || forName, val);
+      dependents.filter(f => typeof f === "function")
+        .reduce((values, f) => {
+          const ret = f(val, name || forName, values, { setFieldValue, setFieldTouched, forName, _this });
+          if (typeof ret == "object" && ret.then === "function") {
+            return values; // can't handle promise, just pass formik values down the pipe
+          }
+          else
+            return ret;
+        }
+          , formikCurValues);
+    }
+  }
+
   TextFocus(event) {
     // log.debug(event);
     // event.target.select();
@@ -1178,7 +1200,12 @@ class RintagiScreen extends Component {
     return revisedList;
   }
   BindFileObject = (serverList, currentList) => {
-    if (!currentList) return serverList || [];
+    if (!currentList) {
+      if (serverList) {
+          return (Array.isArray(serverList) ? serverList : [serverList]);
+      }
+      return [];
+    }
     if (!serverList || (Array.isArray(serverList) && serverList.length === 0)) {
       return currentList || [];
     }

@@ -342,7 +342,7 @@ namespace RO.Web
                     {
                         Array.Resize(ref streamHeader, 256 + contentHeader.Length);
                         Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), streamHeader, compactHeaderLength);
-                        Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(compactHeader), 0, streamHeader, 256, headerLength);
+                        Array.Copy(System.Text.UTF8Encoding.UTF8.GetBytes(contentHeader), 0, streamHeader, 256, headerLength);
                     }
                     if (content.Length == 0 || dummyImage)
                     {

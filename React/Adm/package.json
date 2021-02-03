@@ -1,73 +1,54 @@
 {
-  "name": "templatev3",
+  "name": "rintagi",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
   "dependencies": {
-    "@babel/core": "7.9.0",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.5.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "4.0.1",
+    "web-vitals": "^0.2.4",
+    "workbox-background-sync": "^5.1.4",
+    "workbox-broadcast-update": "^5.1.4",
+    "workbox-cacheable-response": "^5.1.4",
+    "workbox-core": "^5.1.4",
+    "workbox-expiration": "^5.1.4",
+    "workbox-google-analytics": "^5.1.4",
+    "workbox-navigation-preload": "^5.1.4",
+    "workbox-precaching": "^5.1.4",
+    "workbox-range-requests": "^5.1.4",
+    "workbox-routing": "^5.1.4",
+    "workbox-strategies": "^5.1.4",
+    "workbox-streams": "^5.1.4",
+    "@ericblade/quagga2": "^1.2.6",
     "@loadable/component": "^5.13.1",
     "@material-ui/core": "^4.11.0",
     "@mdi/font": "^5.3.45",
-    "@svgr/webpack": "4.3.3",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@typescript-eslint/eslint-plugin": "^2.10.0",
-    "@typescript-eslint/parser": "^2.10.0",
-    "babel-eslint": "10.1.0",
-    "babel-jest": "^24.9.0",
-    "babel-loader": "8.1.0",
-    "babel-plugin-named-asset-import": "^0.3.6",
+    "@walletconnect/web3-provider": "^1.3.4",
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-polyfill": "^6.26.0",
-    "babel-preset-react-app": "^9.1.2",
     "bootstrap": "^4.5.0",
-    "camelcase": "^5.3.1",
-    "case-sensitive-paths-webpack-plugin": "2.3.0",
-    "classlist.js": "^1.1.20150312",
     "comlink": "^4.3.0",
-    "css-loader": "3.4.2",
-    "dotenv": "8.2.0",
-    "dotenv-expand": "5.1.0",
-    "eslint": "^6.6.0",
-    "eslint-config-react-app": "^5.2.1",
-    "eslint-loader": "3.0.3",
-    "eslint-plugin-flowtype": "4.6.0",
-    "eslint-plugin-import": "2.20.1",
-    "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-react": "7.19.0",
-    "eslint-plugin-react-hooks": "^1.6.1",
-    "file-loader": "4.3.0",
+    "date-fns": "^2.16.1",
     "fingerprintjs2": "2.0.6",
     "fix-orientation": "^1.1.0",
     "font-awesome": "~4.7.0",
     "formik": "~1.5.8",
     "firebase": "8.1.1",
-    "fs-extra": "^8.1.0",
-    "html-webpack-plugin": "4.0.0-beta.11",
-    "identity-obj-proxy": "3.0.0",
-    "jest": "24.9.0",
-    "jest-environment-jsdom-fourteen": "1.0.1",
-    "jest-resolve": "24.9.0",
-    "jest-watch-typeahead": "0.4.2",
     "loglevel": "^1.6.8",
+    "jsqr": "^1.3.1",
     "material-ui": "^0.20.2",
     "mdi-react": "^7.3.0",
-    "mini-css-extract-plugin": "0.9.0",
     "moment": "^2.27.0",
-    "optimize-css-assets-webpack-plugin": "5.0.3",
     "pbkdf2": "^3.1.1",
-    "pnp-webpack-plugin": "1.6.4",
-    "postcss-flexbugs-fixes": "4.1.0",
-    "postcss-loader": "3.0.0",
-    "postcss-normalize": "8.0.1",
-    "postcss-preset-env": "6.7.0",
-    "postcss-safe-parser": "4.0.1",
+    "qrcode.react": "^1.0.1",
     "query-string": "^6.13.1",
     "rc-slider": "^9.3.1",
     "rc-time-picker": "^3.7.3",
-    "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-awesome-slider": "^4.1.0",
     "react-big-calendar": "^0.26.0",
@@ -75,18 +56,17 @@
     "react-chartjs-2": "^2.9.0",
     "react-color": "^2.18.1",
     "react-data-grid": "^7.0.0-canary.17",
-    "react-datepicker": "^3.1.3",
-    "react-dev-utils": "^10.2.1",
+    "react-datepicker": "1.8.0",
     "react-dnd": "^11.1.3",
     "react-dnd-html5-backend": "^11.1.3",
     "react-document-title": "^2.0.3",
-    "react-dom": "^16.13.1",
     "react-dotdotdot": "^1.3.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-dropdown": "^1.7.0",
     "react-dropzone": "^11.0.2",
     "react-google-maps": "^9.4.5",
     "react-google-recaptcha": "^2.1.0",
+    "react-helmet-async": "^1.0.7",
     "react-highlight": "^0.12.0",
     "react-images": "^1.1.7",
     "react-input-mask": "^2.0.4",
@@ -99,6 +79,7 @@
     "react-scroll-to-component": "^1.0.2",
     "react-select": "~1.2.0",
     "react-skeleton-loader": "^1.0.4",
+    "react-signature-canvas": "^1.0.3",
     "react-slick": "^0.26.1",
     "react-smooth-scrollbar": "^8.0.6",
     "react-sticky": "^6.0.3",
@@ -114,23 +95,16 @@
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
-    "resolve": "1.15.0",
-    "resolve-url-loader": "3.1.1",
-    "semver": "6.3.0",
     "sjcl": "^1.0.8",
     "slick-carousel": "^1.8.1",
     "smooth-scrollbar": "^8.5.2",
-    "style-loader": "^0.23.1",
-    "terser-webpack-plugin": "2.3.5",
     "text-mask-addons": "^3.8.0",
-    "ts-pnp": "1.1.6",
-    "url-loader": "2.3.0",
-    "webpack": "4.42.0",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-manifest-plugin": "2.2.0",
-    "workbox-webpack-plugin": "~5.1.2"
+    "uuid": "^8.3.0",
+    "web3": "^1.3.1",
+    "web3modal": "^1.9.3"
   },
   "devDependencies": {
+    "@craco/craco": "^6.0.0",
     "chokidar": "3.4.0",
     "cpx": "1.5.0",
     "node-sass": "4.12.0",
@@ -139,13 +113,17 @@
   },
   "scripts": {
     "prestart": "echo 'calling presetart' && node scripts/prestart.js",
-    "start": "node scripts/start.js",
     "prebuild": "echo 'calling prebuild' && node scripts/prebuild.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -159,61 +137,6 @@
       "last 1 firefox version",
       "last 1 safari version",
       "ie 11"
-    ]
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.js"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
     ]
   }
 }

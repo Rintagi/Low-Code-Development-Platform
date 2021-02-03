@@ -1,6 +1,6 @@
 <%@ Control Language="c#" Inherits="RO.Web.DefaultModule" CodeFile="DefaultModule.ascx.cs" CodeFileBaseClass="RO.Web.ModuleBase" %>
 <script>
-    $(window).load(function () { $('.flexslider').flexslider({ animation:'fade', pauseOnHover:true, slideshowSpeed:7000 }); });
+    $(window).load(function () { $('.flexslider').flexslider({ animation: 'fade', pauseOnHover: true, slideshowSpeed: 7000 }); });
 </script>
 <div class="HideBgImgOnMobile PageObj33">
 <div class="r-table rg-1-12 SctGrpRow1"><div class="r-tr">

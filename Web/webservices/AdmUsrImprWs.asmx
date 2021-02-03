@@ -46,6 +46,7 @@ namespace RO.Web
             columns.Add("InputOn95", typeof(string));
             columns.Add("ModifiedBy95", typeof(string));
             columns.Add("TestCulture95", typeof(string));
+            columns.Add("TestCurrency95", typeof(string));
             columns.Add("SignOff95", typeof(string));
             return dt;
         }
@@ -139,6 +140,8 @@ namespace RO.Web
             drType["ModifiedBy95"] = "Numeric"; drDisp["ModifiedBy95"] = "DropDownList";
             try { dr["TestCulture95"] = mst["TestCulture95"]; } catch { }
             drType["TestCulture95"] = "VarChar"; drDisp["TestCulture95"] = "AutoComplete";
+            try { dr["TestCurrency95"] = Decimal.Parse((mst["TestCurrency95"] ?? "").Trim(), System.Globalization.NumberStyles.Currency, new System.Globalization.CultureInfo(base.LUser.Culture)).ToString(); } catch { }
+            drType["TestCurrency95"] = "Currency"; drDisp["TestCurrency95"] = "Currency";
             try { dr["SignOff95"] = mst["SignOff95"]; } catch { }
             drType["SignOff95"] = "VarBinary"; drDisp["SignOff95"] = "Signature";
 
@@ -190,6 +193,7 @@ namespace RO.Web
                 {"InputOn95",""},
                 {"ModifiedBy95",base.LUser.UsrId.ToString()},
                 {"TestCulture95",""},
+                {"TestCurrency95",""},
                 {"SignOff95",""},
 
             };

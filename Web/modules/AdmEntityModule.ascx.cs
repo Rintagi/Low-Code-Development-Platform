@@ -39,7 +39,7 @@ namespace RO.Common3.Data
 		{
 			DataColumnCollection columns = dt.Columns;
 			columns.Add("EntityId199", typeof(string));
-			columns.Add("EntityImg199", typeof(string));
+			columns.Add("EntityImg199", typeof(object));
 			columns.Add("EntityName199", typeof(string));
 			columns.Add("EntityCode199", typeof(string));
 			columns.Add("DeployPath199", typeof(string));

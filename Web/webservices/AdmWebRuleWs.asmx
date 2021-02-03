@@ -47,6 +47,7 @@ namespace RO.Web
             columns.Add("ScreenObjId128", typeof(string));
             columns.Add("ButtonTypeId128", typeof(string));
             columns.Add("EventId128", typeof(string));
+            columns.Add("ForCompanyId128", typeof(string));
             columns.Add("WebRuleProg128", typeof(string));
             columns.Add("ReactEventId128", typeof(string));
             columns.Add("ReactRuleProg128", typeof(string));
@@ -92,6 +93,7 @@ namespace RO.Web
             {"ScreenObjId128", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlScreenObjId3S1287"},{"mKey","ScreenObjId128"},{"mVal","ScreenObjId128Text"}, {"refCol","ScreenId"},{"refColDataType","Int"},{"refColSrc","Mst"},{"refColSrcName","ScreenId128"}}},
             {"ButtonTypeId128", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlButtonTypeId3S1288"},{"mKey","ButtonTypeId128"},{"mVal","ButtonTypeId128Text"}, }},
             {"EventId128", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlEventId3S1289"},{"mKey","EventId128"},{"mVal","EventId128Text"}, }},
+            {"ForCompanyId128", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlForCompanyId3S4427"},{"mKey","ForCompanyId128"},{"mVal","ForCompanyId128Text"}, }},
             {"ReactEventId128", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReactEventId3S4207"},{"mKey","ReactEventId128"},{"mVal","ReactEventId128Text"}, }},
             {"ReduxEventId128", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlReduxEventId3S4210"},{"mKey","ReduxEventId128"},{"mVal","ReduxEventId128Text"}, }},
             {"ServiceEventId128", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlServiceEventId3S4212"},{"mKey","ServiceEventId128"},{"mVal","ServiceEventId128Text"}, }},
@@ -150,6 +152,8 @@ namespace RO.Web
             drType["ButtonTypeId128"] = "Numeric"; drDisp["ButtonTypeId128"] = "DropDownList";
             try { dr["EventId128"] = mst["EventId128"]; } catch { }
             drType["EventId128"] = "Numeric"; drDisp["EventId128"] = "DropDownList";
+            try { dr["ForCompanyId128"] = mst["ForCompanyId128"]; } catch { }
+            drType["ForCompanyId128"] = "Numeric"; drDisp["ForCompanyId128"] = "AutoComplete";
             try { dr["WebRuleProg128"] = mst["WebRuleProg128"]; } catch { }
             drType["WebRuleProg128"] = "VarWChar"; drDisp["WebRuleProg128"] = "MultiLine";
             try { dr["ReactEventId128"] = mst["ReactEventId128"]; } catch { }
@@ -216,6 +220,7 @@ namespace RO.Web
                 {"ScreenObjId128",""},
                 {"ButtonTypeId128",""},
                 {"EventId128",""},
+                {"ForCompanyId128",""},
                 {"WebRuleProg128",""},
                 {"Snippet1","~/images/code_popup.png"},
                 {"Snippet4","~/images/code_popup.png"},
@@ -660,6 +665,36 @@ namespace RO.Web
                 return DataTableToApiResponse(dt, "", 0);
             };
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "EventId128", emptyAutoCompleteResponse));
+            return ret;
+        }
+                        
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetForCompanyId128List(string query, int topN, string filterBy)
+        {
+        Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+        {
+            SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+            System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+            context["method"] = "GetDdlForCompanyId3S4427";
+            context["addnew"] = "Y";
+            context["mKey"] = "ForCompanyId128";
+            context["mVal"] = "ForCompanyId128Text";
+            context["mTip"] = "ForCompanyId128Text";
+            context["mImg"] = "ForCompanyId128Text";
+            context["ssd"] = "";
+            context["scr"] = screenId.ToString();
+            context["csy"] = systemId.ToString();
+            context["filter"] = "0";
+            context["isSys"] = "N";
+            context["conn"] = string.Empty;
+
+            ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+            mr.status = "success";
+            mr.errorMsg = "";
+            mr.data = ddlSuggests(query, context, topN);
+            return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "ForCompanyId128", emptyAutoCompleteResponse));
             return ret;
         }
                         

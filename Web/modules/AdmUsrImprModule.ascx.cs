@@ -41,9 +41,10 @@ namespace RO.Common3.Data
 			columns.Add("InputBy95", typeof(string));
 			columns.Add("InputOn95", typeof(string));
 			columns.Add("ModifiedBy95", typeof(string));
+			columns.Add("ModifiedOn95", typeof(string));
 			columns.Add("TestCulture95", typeof(string));
 			columns.Add("TestCurrency95", typeof(string));
-			columns.Add("SignOff95", typeof(string));
+			columns.Add("SignOff95", typeof(object));
 			return dt;
 		}
 	}

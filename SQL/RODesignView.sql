@@ -19,6 +19,15 @@ ALTER VIEW [dbo].[VwAppItem] AS
 	WHERE a.VersionDt is not null AND b.ObjectTypeCd = 'D'
 	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
 GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCheckBox') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwCheckBox AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwCheckBox] AS
+select CultureId = CultureTypeId, CheckBoxCd = ISNULL(y.CheckboxCd, z.CheckBoxCd), CheckBoxName = ISNULL(y.CheckBoxName, z.CheckBoxName)
+from dbo.ctCulture x
+left outer join dbo.CtCheckBox y on x.CultureTypeId = y.CultureId
+left outer join dbo.CtCheckBox z on y.CultureId is null and z.CultureId = 1
+GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwClnAppItem') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwClnAppItem AS SELECT DUMMY=1')
 GO
