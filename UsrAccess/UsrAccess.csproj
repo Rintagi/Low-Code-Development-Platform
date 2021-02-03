@@ -27,7 +27,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <GenerateResourceNeverLockTypeAssemblies>true</GenerateResourceNeverLockTypeAssemblies>
     <ProjectGuid>{CEE68C9E-87C5-44C0-8578-7FEDFDF07EF2}</ProjectGuid>
     <TargetFrameworkProfile />
