@@ -12,7 +12,7 @@ class AdmFlowchartRedux extends RintagiScreenRedux {
       'GET_DTL_LIST': 'GetAdmFlowchart1027DtlById',
     }
     this.ScreenDdlDef = [
-
+      { columnName: 'CompanyId1325', payloadDdlName: 'CompanyId1325List', keyName: 'CompanyId1325', labelName: 'CompanyId1325Text', forMst: true, isAutoComplete: true, apiServiceName: 'GetCompanyId1325List', actionTypeName: 'GET_DDL_CompanyId1325' },
     ]
     this.ScreenOnDemandDef = [
 

@@ -93,6 +93,7 @@ class MstRecord extends RintagiScreen {
     }
   }
 
+  CompanyId1325InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchCompanyId1325(v, filterBy); } }
   launch({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
     return function (evt) {
       this.OnClickColumeName = 'launch';
@@ -151,6 +152,7 @@ class MstRecord extends RintagiScreen {
           ChartId1325: values.cChartId1325 || '',
           ChartName1325: values.cChartName1325 || '',
           ChartDesc1325: values.cChartDesc1325 || '',
+          CompanyId1325: (values.cCompanyId1325 || {}).value || '',
           ChartData1325: values.cChartData1325 || '',
         },
         [],
@@ -350,6 +352,8 @@ class MstRecord extends RintagiScreen {
     const ChartId1325 = currMst.ChartId1325;
     const ChartName1325 = currMst.ChartName1325;
     const ChartDesc1325 = currMst.ChartDesc1325;
+    const CompanyId1325List = AdmFlowchartReduxObj.ScreenDdlSelectors.CompanyId1325(AdmFlowchartState);
+    const CompanyId1325 = currMst.CompanyId1325;
     const ChartData1325 = currMst.ChartData1325;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -394,6 +398,7 @@ class MstRecord extends RintagiScreen {
                     cChartId1325: formatContent(ChartId1325 || '', 'TextBox'),
                     cChartName1325: formatContent(ChartName1325 || '', 'TextBox'),
                     cChartDesc1325: formatContent(ChartDesc1325 || '', 'MultiLine'),
+                    cCompanyId1325: CompanyId1325List.filter(obj => { return obj.key === CompanyId1325 })[0],
                     cChartData1325: formatContent(ChartData1325 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
@@ -551,6 +556,33 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
+                              {(authCol.CompanyId1325 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmFlowchartState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.CompanyId1325 || {}).ColumnHeader} {(columnLabel.CompanyId1325 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.CompanyId1325 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CompanyId1325 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmFlowchartState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <AutoCompleteField
+                                          name='cCompanyId1325'
+                                          onChange={this.FieldChange(setFieldValue, setFieldTouched, 'cCompanyId1325', false, values)}
+                                          onBlur={this.FieldChange(setFieldValue, setFieldTouched, 'cCompanyId1325', true)}
+                                          onInputChange={this.CompanyId1325InputChange()}
+                                          value={values.cCompanyId1325}
+                                          defaultSelected={CompanyId1325List.filter(obj => { return obj.key === CompanyId1325 })}
+                                          options={CompanyId1325List}
+                                          filterBy={this.AutoCompleteFilterBy}
+                                          disabled={(authCol.CompanyId1325 || {}).readonly ? true : false} />
+                                      </div>
+                                    }
+                                    {errors.cCompanyId1325 && touched.cCompanyId1325 && <span className='form__form-group-error'>{errors.cCompanyId1325}</span>}
+                                  </div>
+                                </Col>
+                              }
                               {(authCol.ChartData1325 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>
@@ -670,7 +702,7 @@ const mapDispatchToProps = (dispatch) => (
     { SavePage: AdmFlowchartReduxObj.SavePage.bind(AdmFlowchartReduxObj) },
     { DelMst: AdmFlowchartReduxObj.DelMst.bind(AdmFlowchartReduxObj) },
     { AddMst: AdmFlowchartReduxObj.AddMst.bind(AdmFlowchartReduxObj) },
-
+    { SearchCompanyId1325: AdmFlowchartReduxObj.SearchActions.SearchCompanyId1325.bind(AdmFlowchartReduxObj) },
     { showNotification: showNotification },
     { setTitle: setTitle },
     { setSpinner: setSpinner },

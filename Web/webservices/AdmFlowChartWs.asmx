@@ -42,6 +42,7 @@ namespace RO.Web
             columns.Add("ChartId1325", typeof(string));
             columns.Add("ChartName1325", typeof(string));
             columns.Add("ChartDesc1325", typeof(string));
+            columns.Add("CompanyId1325", typeof(string));
             columns.Add("ChartData1325", typeof(string));
             return dt;
         }
@@ -74,7 +75,7 @@ namespace RO.Web
         protected override string GetDtlKeyColumnName(bool underlying = false) { return underlying ? "" : ""; }
             
         Dictionary<string, SerializableDictionary<string, string>> ddlContext = new Dictionary<string, SerializableDictionary<string, string>>() {
-
+            {"CompanyId1325", new SerializableDictionary<string,string>() {{"scr",screenId.ToString()},{"csy",systemId.ToString()},{"conn",""},{"addnew","N"},{"isSys","N"}, {"method","GetDdlCompanyId3S4428"},{"mKey","CompanyId1325"},{"mVal","CompanyId1325Text"}, }},
         };
 
         private DataRow MakeTypRow(DataRow dr)
@@ -119,6 +120,8 @@ namespace RO.Web
             drType["ChartName1325"] = "VarWChar"; drDisp["ChartName1325"] = "TextBox";
             try { dr["ChartDesc1325"] = mst["ChartDesc1325"]; } catch { }
             drType["ChartDesc1325"] = "VarWChar"; drDisp["ChartDesc1325"] = "MultiLine";
+            try { dr["CompanyId1325"] = mst["CompanyId1325"]; } catch { }
+            drType["CompanyId1325"] = "Numeric"; drDisp["CompanyId1325"] = "AutoComplete";
             try { dr["ChartData1325"] = mst["ChartData1325"]; } catch { }
             drType["ChartData1325"] = "VarWChar"; drDisp["ChartData1325"] = "MultiLine";
 
@@ -164,6 +167,7 @@ namespace RO.Web
                 {"ChartId1325",""},
                 {"ChartName1325",""},
                 {"ChartDesc1325",""},
+                {"CompanyId1325",""},
                 {"ChartData1325",""},
                 {"launch",""},
                 {"View",""},
@@ -491,7 +495,36 @@ namespace RO.Web
             return ret;
         }
             
+                        
+        [WebMethod(EnableSession = false)]
+        public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetCompanyId1325List(string query, int topN, string filterBy)
+        {
+        Func<ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
+        {
+            SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
+            System.Collections.Generic.Dictionary<string, string> context = new System.Collections.Generic.Dictionary<string, string>();
+            context["method"] = "GetDdlCompanyId3S4428";
+            context["addnew"] = "Y";
+            context["mKey"] = "CompanyId1325";
+            context["mVal"] = "CompanyId1325Text";
+            context["mTip"] = "CompanyId1325Text";
+            context["mImg"] = "CompanyId1325Text";
+            context["ssd"] = "";
+            context["scr"] = screenId.ToString();
+            context["csy"] = systemId.ToString();
+            context["filter"] = "0";
+            context["isSys"] = "N";
+            context["conn"] = string.Empty;
 
+            ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+            mr.status = "success";
+            mr.errorMsg = "";
+            mr.data = ddlSuggests(query, context, topN);
+            return mr;
+            };
+            var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", "CompanyId1325", emptyAutoCompleteResponse));
+            return ret;
+        }
 
         /* AsmxRule: Custom Function */
 

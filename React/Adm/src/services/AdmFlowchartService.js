@@ -294,6 +294,22 @@ export function GetRefColumnContent(mstId, dtlId, refKeyId, isMaster, refScreenC
 
 /*screen criteria dll and screen dropdownlist/autocomplete*/
 
+export function GetCompanyId1325List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmFlowchartWs.asmx/GetCompanyId1325List'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
 /* ReactRule: Service Custom Function */
 
 
