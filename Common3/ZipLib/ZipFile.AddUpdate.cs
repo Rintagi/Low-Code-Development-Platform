@@ -2136,7 +2136,7 @@ namespace Ionic.Zip
                         List<System.Text.RegularExpressions.Regex> exemptRules =
                             (from o in (ExcludeDir ?? new List<string>())
                              where !string.IsNullOrEmpty(o.Trim())
-                             select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.") + (fNoEndingSlash(o).Contains(".") && !fNoEndingSlash(o).Contains("\\") ? ".*" : "") + (fNoEndingSlash(o).StartsWith("\\") ? @"(\\)?" : @"\\") + fNoEndingSlash(o).Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", fNoEndingSlash(o).Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
+                             select new System.Text.RegularExpressions.Regex("^" + zipFrNoSlash.Replace("\\", "\\\\").Replace(".", "\\.").Replace("$", "\\$") + (fNoEndingSlash(o).Contains(".") && !fNoEndingSlash(o).Contains("\\") ? ".*" : "") + (fNoEndingSlash(o).StartsWith("\\") ? @"(\\)?" : @"\\") + fNoEndingSlash(o).Trim().ToLower().Replace("\\", "\\\\").Replace("*.*", "*").Replace(".", "\\.").Replace("*", fNoEndingSlash(o).Contains("\\*.*") ? ".*" : "[^\\\\]*") + "$", System.Text.RegularExpressions.RegexOptions.IgnoreCase)).ToList();
                         Func<string, string, bool> fIsExempted = (f, p) => { foreach (var re in exemptRules) { if (re.IsMatch(p)) return true; } return false; };
                         Func<string, string, bool> fIsIncluded = (f, p) => true;
 
