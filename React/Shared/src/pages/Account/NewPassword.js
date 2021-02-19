@@ -17,10 +17,12 @@ import { Link } from 'react-router-dom';
 import log from '../../helpers/logger';
 import DocumentTitle from '../../components/custom/DocumentTitle';
 import { setTitle } from '../../redux/Global';
+import { makeEIP712Types } from '../../helpers/utils';
 import { parsedUrl, base64UrlEncode, base64UrlDecode, base64Codec, coerceToArrayBuffer, IsMobile } from '../../helpers/domutils';
 import { getRintagiConfig } from '../../helpers/config';
 import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+//import * as sigUtil from 'eth-sig-util';
 
 function trackWeb3(provider) {
   provider.on("accountsChanged", (accounts) => {
@@ -276,55 +278,184 @@ class NewPassword extends Component {
     }
   }
 
+  async signEIP712Msg(web3, from, msgParams, chainId) {
+    const provider = web3.currentProvider || {};
+    const _chainId = chainId || await web3.eth.getChainId();
+    var method = provider.isMetaMask ? 'eth_signTypedData_v4' : 'eth_signTypedData';
+    var params = [from, msgParams];
+    return web3.currentProvider
+      .request({
+        method: method,
+        params: params,
+      })
+      .then((result) => {
+        log.debug(result);
+        return result;
+      })
+      .catch((error) => {
+        log.debug(error);
+        return Promise.reject(error);
+      });
+  }
+  async testSimpleToken(web3Wallet, from, chainId) {
+    const _this = this;
+    const rintagi = getRintagiConfig() || {};
+    const web3rpc = rintagi.web3rpc || {};
+    const simpleTokenAbi = '[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"anonymous":false,"name":"Approval","type":"event"},{"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"anonymous":false,"name":"OwnershipTransferred","type":"event"},{"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"anonymous":false,"name":"Paused","type":"event"},{"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"}],"anonymous":false,"name":"PauserAdded","type":"event"},{"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"}],"anonymous":false,"name":"PauserRemoved","type":"event"},{"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"anonymous":false,"name":"Transfer","type":"event"},{"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"anonymous":false,"name":"Unpaused","type":"event"},{"inputs":[],"name":"INITIAL_SUPPLY","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MAX_INT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"addPauser","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"holder","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"authorize","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"authorize_type","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"authorize_type_hash","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"holder","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"bytes","name":"signature","type":"bytes"}],"name":"authorize_verified","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"domain_seperator_hash","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"domain_seperator_type","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"eip712_domain","outputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"version","type":"string"},{"internalType":"uint256","name":"chainId","type":"uint256"},{"internalType":"address","name":"verifyingContract","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getChainId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getEIP712Domain","outputs":[{"components":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"version","type":"string"},{"internalType":"uint256","name":"chainId","type":"uint256"},{"internalType":"address","name":"verifyingContract","type":"address"}],"internalType":"struct EIP712Domain","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"isOwner","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"addr","type":"address"}],"name":"isPOAAddress","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"addr","type":"address"}],"name":"isPOADisabled","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"isPauser","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_addr","type":"address"}],"name":"isValidContractAddress","outputs":[{"internalType":"bool","name":"hasCode","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nonces","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"packSignature","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"pure","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"holder","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"},{"internalType":"bool","name":"allowed","type":"bool"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"permit","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"permit_type","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"permit_type_hash","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"holder","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"},{"internalType":"bool","name":"allowed","type":"bool"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"permit_verified","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renouncePauser","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes","name":"sig","type":"bytes"}],"name":"splitSignature","outputs":[{"internalType":"uint8","name":"","type":"uint8"},{"internalType":"bytes32","name":"","type":"bytes32"},{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"pure","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"version","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}]';
+    const simpleTokenNetworkId = 5;
+    const simpleTokenAddress = "0xc2296464fb0d0974955c1c4fb01d71b4ad46367b"; // this is on goerli(chain id 5)
+    const private9999Url = web3rpc[simpleTokenNetworkId+''];
+    const web3Private = new Web3(private9999Url);
+    const simpleToken = new web3Private.eth.Contract(JSON.parse(simpleTokenAbi), simpleTokenAddress);
+    log.debug(simpleToken, private9999Url);
+    const holder = from;
+    const spender = web3Private.utils.toChecksumAddress("0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826");
+    const nonce = 1;
+    const expiry = Date.now()*1000;
+    const allowedValue = web3Private.utils.toWei(10+'','ether');
+    let msgParams;
+    simpleToken.methods.getEIP712Domain().call()
+        .then(result=>{
+          log.debug(result);
+          return result;
+        })
+        .then(eip712domain=>{
+          const eip712Domain = "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";
+          const authorizeFunc = "authorize(address holder,address spender,uint256 nonce,uint256 expiry,uint256 value)";
+          const permitFunc = "permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)";
+          log.debug(web3Wallet.utils.keccak256(eip712Domain));
+          log.debug(web3Wallet.utils.keccak256(authorizeFunc));
+          const authorizeTypes = makeEIP712Types(eip712Domain, [authorizeFunc]);
+          msgParams = JSON.stringify({
+            types: authorizeTypes,
+            primaryType: "authorize",
+            domain: {
+              name: eip712domain[0]
+              , version: eip712domain[1]
+              , chainId: eip712domain[2]
+              , verifyingContract: eip712domain[3]
+            },
+            message: {
+              holder: holder,
+              spender: spender,
+              nonce: nonce,
+              expiry: expiry,
+              value: allowedValue,
+            }
+          });
+          return _this.signEIP712Msg(web3Wallet, from, msgParams, chainId);          
+        })
+        .then(result=>{
+          log.debug(result);
+          // const recovered = sigUtil.recoverTypedSignature_v4({ data: JSON.parse(msgParams), sig: result });
+          // log.debug(recovered);
+          const verified = simpleToken.methods.authorize_verified(holder, spender, nonce, expiry, allowedValue, result).call()
+                            .then(result=>{
+                              log.debug(result);
+                            })
+        })
+        .catch(err=>{
+          log.debug(err);
+        })
+  }
+  async signEIP712Sample(web3, from) {
+
+    const provider = web3.currentProvider || {};
+    const _chainId = await web3.eth.getChainId();
+    const eip712Domain = "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";
+    const mailStruct = "Mail(Person from,Person to,string contents)";
+    const personStruct = "Person(string name,address wallet)";
+    const mailTypes = makeEIP712Types(eip712Domain, [personStruct, mailStruct]);
+    const msgParams = JSON.stringify({
+      types: mailTypes,
+      primaryType: "Mail",
+      domain: {
+        name: "Ether Mail"
+        , version: "1"
+        , chainId: _chainId
+        , verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"
+      },
+      message: {
+        from: { name: "Cow", wallet: "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826" },
+        to: { name: "Bob", wallet: "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB" },
+        contents: "Hello, Bob!"
+      }
+    })
+    var params = [from, msgParams];
+    log.debug(params);
+    var method = provider.isMetaMask ? 'eth_signTypedData_v4' : 'eth_signTypedData';
+
+    web3.currentProvider
+      .request({
+        method: method,
+        params: params,
+      })
+      .then((result) => {
+        log.debug(result);
+      })
+      .catch((error) => {
+        log.debug(error);
+      });
+
+  }
   connectWeb3(metamask, values, { setSubmitting, setErrors, resetForm, setValues /* setValues and other goodies */ }) {
     const _this = this;
     const rintagi = getRintagiConfig() || {};
     const web3rpc = rintagi.web3rpc || {};
     const web3NetworkId = rintagi.web3Networkid || 1;
     const infuraId = rintagi.infuraId
-    const web3rpcUrl = web3rpc[web3NetworkId];
+    const web3rpcUrl = web3rpc[web3NetworkId+''];
+    const ethereumProvider = typeof window.ethereum != 'undefined' && window.ethereum;
 
+    log.debug(web3rpc,web3rpcUrl);
     return function (evt) {
       // Create WalletConnect Provider
-      const provider = metamask && window.ethereum
-      ? ethereum
-      : new WalletConnectProvider({
-        infuraId: infuraId, // required
-        pollingInterval: 60 * 60 * 1000, // in ms must do this to stop the frequent polling(default 1s, too much for infura)
-        rpc: {
-          100: "https://rpc.xdaichain.com/", // required for any non-ethereum networkId(returned from remote wallet)
-          ...web3rpc,
-        }
-      });
+      const provider = metamask && ethereumProvider
+        ? ethereumProvider
+        : new WalletConnectProvider({
+          infuraId: infuraId, // required
+          pollingInterval: 60 * 60 * 1000, // in ms must do this to stop the frequent polling(default 1s, too much for infura)
+          rpc: {
+            100: "https://rpc.xdaichain.com/", // required for any non-ethereum networkId(returned from remote wallet)
+            ...web3rpc,
+          }
+        });
+
       // Enable session (triggers QR Code modal)
       trackWeb3(provider);
       try {
         const signingRequest = _this.state.web3SigningRequest;
-        const web3Wallet= new Web3(provider);
+        const web3Wallet = new Web3(provider);
+        web3Wallet.eth.getChainId().then(chainId => {
+          window.chainId = chainId;
+          log.debug(chainId);
+        })
         const wallet = provider.enable()
           .then(
             (accounts) => {
-              log.debug(accounts);
+              log.debug(accounts, provider.walletMeta);
               if ((accounts || []).length > 0) {
-                return web3Wallet.eth.personal.sign(signingRequest, accounts[0]);    
+                //_this.testSimpleToken(web3Wallet, accounts[0], window.chainId);
+                //_this.signEIP712Sample(web3Wallet, accounts[0], 100);
+                return web3Wallet.eth.personal.sign(signingRequest, accounts[0]);
               }
             }
           )
           .then((sig) => {
             log.debug(sig);
-            _this.props.web3Registration(signingRequest, sig)
-            .then(result => {
-              log.debug(result);
-              if (((result || {}).data || {}).walletAddress) {
-                if (result.data.message) {
-                  alert(result.data.message);
+            sig && _this.props.web3Registration(signingRequest, sig)
+              .then(result => {
+                log.debug(result);
+                if (((result || {}).data || {}).walletAddress) {
+                  if (result.data.message) {
+                    alert(result.data.message);
+                  }
                 }
-              }
-            })
-            .catch(error => {
-              log.debug(error);
-              alert("registration failed");
-            });
+              })
+              .catch(error => {
+                log.debug(error);
+                alert("registration failed");
+              });
           })
           .catch(error => {
             log.debug(error);
@@ -333,7 +464,7 @@ class NewPassword extends Component {
             setTimeout(() => {
               // must delay the disconnect or else the signing request would trigger another wallet connect modal popup
               log.debug("disconnect");
-              provider.disconnect && provider.disconnect();              
+              provider.disconnect && provider.disconnect();
             }, 30000);
           })
           ;

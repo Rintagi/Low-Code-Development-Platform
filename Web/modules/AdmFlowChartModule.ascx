@@ -190,6 +190,10 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cChartDesc1325P1" class="r-td r-labelR" runat="server"><asp:Label id="cChartDesc1325Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cChartDesc1325P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cChartDesc1325" CssClass="inp-txt" runat="server" /><asp:Image id="cChartDesc1325E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cCompanyId1325P1" class="r-td r-labelR" runat="server"><asp:Label id="cCompanyId1325Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cCompanyId1325P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cCompanyId1325" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbCompanyId1325" DataValueField="CompanyId1325" DataTextField="CompanyId1325Text" runat="server" /></div>
+    	</div>
     </div></div></div>
     <div class="r-td rc-5-10"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">

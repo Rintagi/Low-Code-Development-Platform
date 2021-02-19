@@ -1565,3 +1565,4 @@
 7687~@~1328~@~30~@~~@~MimeTypeDesc~@~VwMIMEType - MimeTypeDesc~@~15~@~200~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7688~@~1328~@~10~@~~@~MimeTypeId~@~VwMIMEType - MimeTypeId~@~3~@~4~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 7689~@~128~@~190~@~~@~ForCompanyId~@~WebRule - ForCompanyId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7690~@~1325~@~70~@~~@~CompanyId~@~Flowchart - CompanyId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~

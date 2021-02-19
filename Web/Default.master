@@ -73,6 +73,39 @@
         }) (window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'); ga('create', 'UA-43961560-1', 'dentrader.com'); ga('send', 'pageview');
     </script>
     -->
+    <!--
+      Use unpkg CDN to load all NPM packages to vanilla Javascript - read more at http://unpkg.com
+      On your deployment, you properly either want to use a preprocessing tool like webpack
+      to include these files, or extract NPM archives and manually host the files inside.
+      TODO: Pin down all versions.
+    <script type="text/javascript" src="https://unpkg.com/web3@1.2.11/dist/web3.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.3.4/dist/umd/index.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/@walletconnect/qrcode-modal@1.3.4/dist/umd/index.min.js"></script>
+    -->
+<script type="text/javascript">
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent))
+    {; }
+    else
+    {
+        document.write(
+            '<script type="text/javascript" src="js/web3.min.js"><\/script>'
+            + '<script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"><\/script>'
+            + '<script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js"><\/script>'
+            + '<script type="text/javascript" src="js/walletconnect_web3provider.min.js"><\/script>'
+            + '<script type="text/javascript" src="js/walletconnect_qrcode_modal.min.js"><\/script>'
+            );
+    }
+</script>
+<%--    <script type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script type="text/javascript" src="scripts/polyfill.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js"></script>
+    <script type="text/javascript" src="js/web3.min.js"></script>
+    <script type="text/javascript" src="js/walletconnect_web3provider.min.js"></script>
+    <script type="text/javascript" src="js/walletconnect_qrcode_modal.min.js"></script>--%>
+    <script type="text/javascript" src="runtime/firebaseConfig.js"></script>
+    <script type="text/javascript" src="scripts/register_fcm.js"></script>
 </head>
 <body class="PageBackground HideBgImgOnMobile">
 <div id="sb-site" class="sb-slide">
@@ -147,27 +180,5 @@
         }
     );      
 </script>
-    <!--
-      Use unpkg CDN to load all NPM packages to vanilla Javascript - read more at http://unpkg.com
-      On your deployment, you properly either want to use a preprocessing tool like webpack
-      to include these files, or extract NPM archives and manually host the files inside.
-      TODO: Pin down all versions.
-    <script type="text/javascript" src="https://unpkg.com/web3@1.2.11/dist/web3.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.3.4/dist/umd/index.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/@walletconnect/qrcode-modal@1.3.4/dist/umd/index.min.js"></script>
-    -->
-
-    <script type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-    <script type="text/javascript" src="scripts/polyfill.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js"></script>
-    <script type="text/javascript" src="runtime/firebaseConfig.js"></script>
-    <script type="text/javascript" src="scripts/register_fcm.js"></script>
-    <script type="text/javascript" src="js/web3.min.js"></script>
-    <script type="text/javascript" src="js/walletconnect_web3provider.min.js"></script>
-    <script type="text/javascript" src="js/walletconnect_qrcode_modal.min.js"></script>
-
-
 </body>
 </html>

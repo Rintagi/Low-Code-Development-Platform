@@ -2791,4 +2791,42 @@ may need to add the following to web.config for assembly redirection
 6. add culture sensitive checkbox(yes/no) dropdown choice
 7. fix report criteria dropdown cascade filtering issue
 ~@~~@~en-US~@~
-12668~@~  11. 231~@~11~@~231~@~~@~~@~~@~~@~~@~~@~
+12668~@~  11. 231.10208~@~11~@~231~@~2021-02-08 00:00:00.000~@~~@~~@~1. improve installer command line(console mode) usage for better logging and db connection probing(re: 8/19/2020 commit), installer version revised to 4.9.14.0~@~~@~en-US~@~
+12669~@~  11. 232.10218~@~11~@~232~@~2021-02-18 00:00:00.000~@~~@~1. add the following to default.master(or other master file) to support advanced feature like web3 or FCM in asp.net. IE browser would not load these libraries
+<script type="text/javascript">
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent))
+    {; }
+    else
+    {
+        document.write(
+            '<script type="text/javascript" src="js/web3.min.js"><\/script>'
+            + '<script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"><\/script>'
+            + '<script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js"><\/script>'
+            + '<script type="text/javascript" src="js/walletconnect_web3provider.min.js"><\/script>'
+            + '<script type="text/javascript" src="js/walletconnect_qrcode_modal.min.js"><\/script>'
+            );
+    }
+</script>
+<%--    <script type="text/javascript" src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <script type="text/javascript" src="scripts/polyfill.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/8.1.1/firebase-messaging.js"></script>
+    <script type="text/javascript" src="js/web3.min.js"></script>
+    <script type="text/javascript" src="js/walletconnect_web3provider.min.js"></script>
+    <script type="text/javascript" src="js/walletconnect_qrcode_modal.min.js"></script>--%>
+    <script type="text/javascript" src="runtime/firebaseConfig.js"></script>
+    <script type="text/javascript" src="scripts/register_fcm.js"></script>
+~@~1. add company id to flowchart for ACL
+2. improve ethereum helper library to support solc 0.8+(change in compiler output and complex abi support i.e. abiencoderv2)
+3. add EIP712 sample usage in react module
+4. include simple ERC20 token contract with EIP712 support and deployed to goerli testnet
+5. include openzepplin helper smart contracts(using solc pragma 0.8.0)
+6. improve Default.master conditional loading of FCM/web3 etc. advanced feature only in modern browser(i.e. not IE)~@~~@~en-US~@~
+12670~@~  11. 233.10219~@~11~@~233~@~2021-02-19 00:00:00.000~@~~@~
+2. add below to web.config for assembly redirection
+      <dependentAssembly>
+        <assemblyIdentity name="BouncyCastle.Crypto" publicKeyToken="0e99375e54769942" culture="neutral"/>
+        <bindingRedirect oldVersion="0.0.0.0-1.8.9.0" newVersion="1.8.9.0"/>
+      </dependentAssembly>~@~1. minor console message change to installer, latest is 4.9.15.0
+2. add assembly redirect requirement to sampleweb.config~@~~@~en-US~@~
+12671~@~  11. 234~@~11~@~234~@~~@~~@~~@~~@~~@~~@~

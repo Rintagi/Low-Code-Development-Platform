@@ -753,6 +753,65 @@ export function getListDisplayContent(obj, column){
       }
   }
 }
+/**
+ * Create types object for ethereum EIP712 signing calls
+ * all def string must comform to solidity's function abi style
+ * @param {string} domainType - domain def in the form of EIP712Domain(string name,string version,...)
+ * @param {Array.<string>} otherTypes - other types in the form of AnyTypeOrFunctionName(address from,address to,uint256 foo,bytes bar,...)
+ * @return {Object} - object in the form of {typeName1: [ {memberName1: memberType1,...}],...}
+ */
+export function makeEIP712Types(domainType, otherTypes)
+{
+  const regex = /([^\()]+)\(([^\(\)]+)*/i; // for the form of xyz(type1 name1[,type2 name2,type3 name3...])
+  const paramsToArray = (paramString)=>{
+    return paramString.split(',').map(s=>{
+      const x = s.split(' ');
+      return { name: x[1], type: x[0]}
+    })     
+  }
+  const domain = domainType.match(regex);
+  const others = otherTypes.map(t=>{
+    const x = t.match(regex);
+    return {
+      [x[1]]: paramsToArray(x[2])
+    }
+  });
+  const types = others.reduce((a, t)=>{
+    return {
+      ...a,
+      ...t,
+    };
+  },{
+    [domain[1]]: paramsToArray(domain[2])
+  });
+  return types;
+}
+
+/**
+ * pack ETH1 ECDSA signature from v, r, s to 65 bytes array
+ * @param {string} v - 2 char hex string(0x prefix)
+ * @param {string} r - 64 char hex string(0x prefix)
+ * @param {string} s - 64 char hex string(0x prefix)
+ * @return {string} - 130 char hex string(0x prefix)
+ */
+export function packECDSASignature(v, r, s) {
+  return "0x" + r.substr(2) + s.substr(2) + v.substr(2);
+}
+
+/**
+ * split ETH1 ECDSA signature into v, r, s 
+ * @param {string} signature - 130 char hex string(0x prefix)
+ * @return {Object} - {r, s, v} all in hex string format
+ */
+export function splitECDSASignature(signature) {
+  signature = signature.substr(2); //remove 0x
+  const sig = {
+    r: '0x' + signature.slice(0, 64),
+    s: '0x' + signature.slice(64, 128),
+    v: '0x' + signature.slice(128, 130),
+  }
+  return sig;
+}
 
 export function GetCardType(number) {
   log.debug(number);

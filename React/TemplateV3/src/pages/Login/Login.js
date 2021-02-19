@@ -215,11 +215,12 @@ class Login extends Component {
     const web3NetworkId = rintagi.web3Networkid || 1;
     const infuraId = rintagi.infuraId
     const web3rpcUrl = web3rpc[web3NetworkId];
+    const ethereumProvider = typeof window.ethereum != 'undefined' && window.ethereum;
 
     return function (evt) {
       // Create WalletConnect Provider
-      const provider = metamask && window.ethereum
-      ? ethereum
+      const provider = metamask && ethereumProvider
+      ? ethereumProvider
       : new WalletConnectProvider({
         infuraId: infuraId, // required
         pollingInterval: 60 * 60 * 1000, // in ms must do this to stop the frequent polling(default 1s, too much for infura)

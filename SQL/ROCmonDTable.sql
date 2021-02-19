@@ -403,6 +403,7 @@ ChartId int IDENTITY(1,1) NOT NULL ,
 ChartName nvarchar (500) NOT NULL ,
 ChartDesc nvarchar (max) NULL ,
 ChartData nvarchar (max) NULL ,
+CompanyId int NULL ,
 CONSTRAINT PK_Flowchart PRIMARY KEY CLUSTERED (
 ChartId
 )

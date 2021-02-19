@@ -8877,6 +8877,7 @@ SELECT @fClause = 'FROM dbo.Flowchart b1325'
 SELECT @sClause = 'SELECT ChartId1325=b1325.ChartId'
 + ', ChartName1325=b1325.ChartName'
 + ', ChartDesc1325=b1325.ChartDesc'
++ ', CompanyId1325=b1325.CompanyId'
 + ', ChartData1325=b1325.ChartData'
 SELECT @wClause = 'WHERE b1325.ChartId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
@@ -16649,6 +16650,63 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT CompanyId215=null, CompanyId215Text=null, Active=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlCompanyId3S4428') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlCompanyId3S4428 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlCompanyId3S4428
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='ROCmon')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' CompanyId1325=a132.CompanyId, CompanyId1325Text=a132.CompanyDesc, a132.Active'
+SELECT @fClause = 'FROM ROCmon.dbo.Company a132'
+SELECT @oClause = 'ORDER BY a132.CompanyDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a132.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a132.CompanyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a132.CompanyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','a132.','Y','N',null,'N','CompanyId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','a132.','N',null,'CompanyId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT CompanyId1325=null, CompanyId1325Text=null, Active=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -40782,11 +40840,15 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
-SELECT @fClause='FROM dbo.Flowchart b1325 (NOLOCK)'
+	,@CompanyId		Int
+SELECT @fClause='FROM dbo.Flowchart b1325 (NOLOCK)' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CompanyId,CompanyDesc FROM ROCmon.dbo.Company (NOLOCK))x7690 ON b1325.CompanyId = x7690.CompanyId'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ChartId1325Text=b1325.ChartId'
 + ', ChartId1325=b1325.ChartId'
 + ', ChartName1325=b1325.ChartName'
 + ', ChartDesc1325=b1325.ChartDesc'
++ ', CompanyId1325=x7690.CompanyId'
++ ', CompanyId1325Text=x7690.CompanyDesc'
 + ', ChartData1325=b1325.ChartData'
 SELECT @oClause='ORDER BY b1325.ChartId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -40832,8 +40894,10 @@ BEGIN
 		END
 	END
 END
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','b1325.','Y','N',null,'Y','ChartId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b1325.','N',null,'ChartId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1325.ChartId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
@@ -52262,6 +52326,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelGuarantor		char(1)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
+	,@CompanyId		Int
 SELECT @fClause='FROM dbo.Flowchart b1325 (NOLOCK)'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ChartId1325=b1325.ChartId, ChartId1325Text=b1325.ChartName, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1325.ChartName'
@@ -52308,8 +52373,10 @@ BEGIN
 		END
 	END
 END
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','b1325.','Y','N',null,'Y','ChartId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b1325.','N',null,'ChartId',@wClause OUTPUT
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1325.ChartId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
