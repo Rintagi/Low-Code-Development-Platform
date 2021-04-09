@@ -39,6 +39,7 @@ namespace RO.Common3.Data
 			columns.Add("ChartName1325", typeof(string));
 			columns.Add("ChartDesc1325", typeof(string));
 			columns.Add("CompanyId1325", typeof(string));
+			columns.Add("CompanyDefault1325", typeof(string));
 			columns.Add("ChartData1325", typeof(string));
 			columns.Add("launch", typeof(string));
 			columns.Add("View", typeof(string));
@@ -421,27 +422,6 @@ if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "S
 		{
 			Session[KEY_sysConnectionString] = LcSysConnString;
 			Session[KEY_sysConnectionString + "Pwd"] = LcAppPw;
-			DataTable dtSystems = base.SystemsList;
-			if (dtSystems != null)
-			{
-				Session[KEY_dtSystems] = dtSystems;
-				cSystemId.DataSource = dtSystems;
-				cSystemId.DataBind();
-				if (cSystemId.Items.Count > 1)
-				{
-					if (Request.QueryString["sys"] != null) {cSystemId.Items.FindByValue(Request.QueryString["sys"]).Selected = true;}
-					else
-					{
-						try { cSystemId.Items.FindByValue(base.LCurr.DbId.ToString()).Selected = true; }
-						catch {cSystemId.Items[0].Selected = true;}
-					}
-					base.LCurr.DbId = byte.Parse(cSystemId.SelectedValue);
-					Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
-					Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
-					cSystemLabel.Text = (new AdminSystem()).GetLabel(base.LUser.CultureId, "cSystem", "Label", null, null, null);
-					cSystem.Visible = true;
-				}
-			}
 		}
 
 		protected string ColumnWatermark(int idx)
@@ -519,8 +499,8 @@ if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "S
 				int filterId = 0; if (Utils.IsInt(cFilterId.SelectedValue)) { filterId = int.Parse(cFilterId.SelectedValue); }
 				try
 				{
-					try {dv = new DataView((new AdminSystem()).GetExp(1027,"GetExpAdmFlowchart1027","Y",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
-					catch {dv = new DataView((new AdminSystem()).GetExp(1027,"GetExpAdmFlowchart1027","N",(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
+					try {dv = new DataView((new AdminSystem()).GetExp(1027,"GetExpAdmFlowchart1027","Y",null,null,filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
+					catch {dv = new DataView((new AdminSystem()).GetExp(1027,"GetExpAdmFlowchart1027","N",null,null,filterId,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false)));}
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				if (eExport == "TXT")
@@ -534,6 +514,7 @@ if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "S
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[3]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -542,7 +523,8 @@ if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "S
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ChartName1325"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ChartDesc1325"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyId1325"].ToString() + (char)9 + drv["CompanyId1325Text"].ToString() + (char)9);}
-						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ChartData1325"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CompanyDefault1325"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ChartData1325"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmFlowchart.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
@@ -596,6 +578,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -610,6 +593,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -636,7 +620,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["ChartName1325"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["ChartDesc1325"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyId1325Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["ChartData1325"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyDefault1325"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["ChartData1325"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1279,7 +1264,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			context["csy"] = "3";
 			context["filter"] = Utils.IsInt(cFilterId.SelectedValue)? cFilterId.SelectedValue : "0";
 			context["isSys"] = "N";
-			context["conn"] = KEY_sysConnectionString;
+			context["conn"] = string.Empty;
 			ddl.AutoCompleteUrl = "AutoComplete.aspx/DdlSuggests";
 			ddl.DataContext = context;
 			if (ddl != null)
@@ -1288,7 +1273,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if (keyId == string.Empty && ddl.SearchText.StartsWith("**")) {keyId = ddl.SearchText.Substring(2);}
 				try
 				{
-					dv = new DataView((new AdminSystem()).GetDdl(1027,"GetDdlCompanyId3S4428",true,false,0,keyId,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),string.Empty,base.LImpr,base.LCurr));
+					dv = new DataView((new AdminSystem()).GetDdl(1027,"GetDdlCompanyId3S4428",true,false,0,keyId,LcAppConnString,LcAppPw,string.Empty,base.LImpr,base.LCurr));
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 				if (dv != null)
@@ -1319,8 +1304,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				else if (Utils.IsInt(cFilterId.SelectedValue)) { filterId = int.Parse(cFilterId.SelectedValue); }
 				try
 				{
-					try {dt = (new AdminSystem()).GetLis(1027,"GetLisAdmFlowchart1027",true,"Y",0,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
-					catch {dt = (new AdminSystem()).GetLis(1027,"GetLisAdmFlowchart1027",true,"N",0,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
+					try {dt = (new AdminSystem()).GetLis(1027,"GetLisAdmFlowchart1027",true,"Y",0,null,null,filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
+					catch {dt = (new AdminSystem()).GetLis(1027,"GetLisAdmFlowchart1027",true,"N",0,null,null,filterId,key,string.Empty,GetScrCriteria(),base.LImpr,base.LCurr,UpdCriteria(false));}
 				}
 				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return new DataView(); }
 				dt = SetFunctionality(dt);
@@ -1341,8 +1326,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			context["scr"] = "1027";
 			context["csy"] = "3";
 			context["filter"] = Utils.IsInt(cFilterId.SelectedValue) && cFilter.Visible ? cFilterId.SelectedValue : "0";
-			context["isSys"] = "N";
-			context["conn"] = KEY_sysConnectionString;
+			context["isSys"] = "Y";
+			context["conn"] = string.Empty;
 			cAdmFlowchart1027List.AutoCompleteUrl = "AutoComplete.aspx/LisSuggests";
 			cAdmFlowchart1027List.DataContext = context;
 			if (dv.Table == null) return;
@@ -1381,15 +1366,17 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				cChartDesc1325E.Attributes["label_id"] = cChartDesc1325Label.ClientID; cChartDesc1325E.Attributes["target_id"] = cChartDesc1325.ClientID;
 				base.SetFoldBehavior(cCompanyId1325, dtAuth.Rows[3], cCompanyId1325P1, cCompanyId1325Label, cCompanyId1325P2, null, dtLabel.Rows[3], null, null, null);
 				SetCompanyId1325(cCompanyId1325,string.Empty);
-				base.SetFoldBehavior(cChartData1325, dtAuth.Rows[4], cChartData1325P1, cChartData1325Label, cChartData1325P2, cChartData1325E, null, dtLabel.Rows[4], null, null, null);
+				base.SetFoldBehavior(cCompanyDefault1325, dtAuth.Rows[4], cCompanyDefault1325P1, cCompanyDefault1325Label, cCompanyDefault1325P2, null, dtLabel.Rows[4], null, null, null);
+				base.SetFoldBehavior(cChartData1325, dtAuth.Rows[5], cChartData1325P1, cChartData1325Label, cChartData1325P2, cChartData1325E, null, dtLabel.Rows[5], null, null, null);
 				cChartData1325E.Attributes["label_id"] = cChartData1325Label.ClientID; cChartData1325E.Attributes["target_id"] = cChartData1325.ClientID;
-				base.SetFoldBehavior(claunch, dtAuth.Rows[5], null, null, null, dtLabel.Rows[5], null, null, null);
-				base.SetFoldBehavior(cView, dtAuth.Rows[6], null, null, null, dtLabel.Rows[6], null, null, null);
-				base.SetFoldBehavior(cDisplay, dtAuth.Rows[7], null, null, null, dtLabel.Rows[7], null, null, null);
+				base.SetFoldBehavior(claunch, dtAuth.Rows[6], null, null, null, dtLabel.Rows[6], null, null, null);
+				base.SetFoldBehavior(cView, dtAuth.Rows[7], null, null, null, dtLabel.Rows[7], null, null, null);
+				base.SetFoldBehavior(cDisplay, dtAuth.Rows[8], null, null, null, dtLabel.Rows[8], null, null, null);
 			}
 			if ((cChartName1325.Attributes["OnChange"] == null || cChartName1325.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cChartName1325.Visible && !cChartName1325.ReadOnly) {cChartName1325.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cChartDesc1325.Attributes["OnChange"] == null || cChartDesc1325.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cChartDesc1325.Visible && !cChartDesc1325.ReadOnly) {cChartDesc1325.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cCompanyId1325.Attributes["OnChange"] == null || cCompanyId1325.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCompanyId1325.Visible && cCompanyId1325.Enabled) {cCompanyId1325.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cCompanyDefault1325.Attributes["OnClick"] == null || cCompanyDefault1325.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cCompanyDefault1325.Visible && cCompanyDefault1325.Enabled) {cCompanyDefault1325.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cChartData1325.Attributes["OnChange"] == null || cChartData1325.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cChartData1325.Visible && !cChartData1325.ReadOnly) {cChartData1325.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
@@ -1451,7 +1438,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[1]["ColVisible"].ToString() == "Y" && dt.Rows[1]["ColReadOnly"].ToString() != "Y") {cChartName1325.Text = string.Empty;}
 			if (dt.Rows[2]["ColVisible"].ToString() == "Y" && dt.Rows[2]["ColReadOnly"].ToString() != "Y") {cChartDesc1325.Text = string.Empty;}
 			if (dt.Rows[3]["ColVisible"].ToString() == "Y" && dt.Rows[3]["ColReadOnly"].ToString() != "Y") {cCompanyId1325.ClearSearch();}
-			if (dt.Rows[4]["ColVisible"].ToString() == "Y" && dt.Rows[4]["ColReadOnly"].ToString() != "Y") {cChartData1325.Text = string.Empty;}
+			if (dt.Rows[4]["ColVisible"].ToString() == "Y" && dt.Rows[4]["ColReadOnly"].ToString() != "Y") {cCompanyDefault1325.Checked = base.GetBool("N");}
+			if (dt.Rows[5]["ColVisible"].ToString() == "Y" && dt.Rows[5]["ColReadOnly"].ToString() != "Y") {cChartData1325.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -1461,6 +1449,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cChartName1325.Text = string.Empty;
 			cChartDesc1325.Text = string.Empty;
 			cCompanyId1325.ClearSearch();
+			cCompanyDefault1325.Checked = base.GetBool("N");
 			cChartData1325.Text = string.Empty;
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
@@ -1480,7 +1469,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			DataTable dt = null;
 			try
 			{
-				dt = (new AdminSystem()).GetMstById("GetAdmFlowchart1027ById",cAdmFlowchart1027List.SelectedValue,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId));
+				dt = (new AdminSystem()).GetMstById("GetAdmFlowchart1027ById",cAdmFlowchart1027List.SelectedValue,null,null);
 			}
 			catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
 			if (dt != null)
@@ -1494,6 +1483,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cChartName1325.Text = dr["ChartName1325"].ToString();} catch {cChartName1325.Text = string.Empty;}
 					try {cChartDesc1325.Text = dr["ChartDesc1325"].ToString();} catch {cChartDesc1325.Text = string.Empty;}
 					SetCompanyId1325(cCompanyId1325,dr["CompanyId1325"].ToString());
+					try {cCompanyDefault1325.Checked = base.GetBool(dr["CompanyDefault1325"].ToString());} catch {cCompanyDefault1325.Checked = false;}
 					try {cChartData1325.Text = dr["ChartData1325"].ToString();} catch {cChartData1325.Text = string.Empty;}
 				}
 			}
@@ -1503,7 +1493,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			//WebRule: Hide and show view button and add logic
 if (!string.IsNullOrEmpty(cChartId1325.Text))
             {
-                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue + "'); return false;";
+                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "'); return false;";
             }
 
  if (string.IsNullOrEmpty(cAdmFlowchart1027List.SelectedValue))
@@ -1537,7 +1527,8 @@ if (!string.IsNullOrEmpty(cChartId1325.Text))
 string projectRootPath = Config.RuleTierPath;
             var lines = File.ReadAllLines(projectRootPath + "/Web/modules/DefaultModule.ascx");
             string firstLine = lines[0];
-            string flowchartLink = "viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue;
+            //string flowchartLink = "viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue;
+            string flowchartLink = "viewchart.aspx";
             string flowchartIframe = "<iframe id='myiFrame' src='" + flowchartLink + "' style='width: 100%; height: 70vh; visibility:visible;'></iframe>";
 
             StringBuilder sb = new StringBuilder();
@@ -1658,7 +1649,7 @@ string projectRootPath = Config.RuleTierPath;
 				{
 					if (ds != null)
 					{
-						pid = (new AdminSystem()).AddData(1027,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut);
+						pid = (new AdminSystem()).AddData(1027,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc,noTrans,commandTimeOut);
 					}
 					if (!string.IsNullOrEmpty(pid))
 					{
@@ -1669,7 +1660,7 @@ string projectRootPath = Config.RuleTierPath;
 				}
 				else {
 					bool bValid7 = false;
-					if (ds != null && (new AdminSystem()).UpdData(1027,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
+					if (ds != null && (new AdminSystem()).UpdData(1027,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc,noTrans,commandTimeOut)) {bValid7 = true;}
 					if (bValid7)
 					{
 						cAdmFlowchart1027List.ClearSearch(); Session.Remove(KEY_dtAdmFlowchart1027List);
@@ -1699,7 +1690,7 @@ string projectRootPath = Config.RuleTierPath;
 				AdmFlowchart1027 ds = PrepAdmFlowchartData(null,false);
 				try
 				{
-					if (ds != null && (new AdminSystem()).DelData(1027,false,base.LUser,base.LImpr,base.LCurr,ds,(string)Session[KEY_sysConnectionString],base.AppPwd(base.LCurr.DbId),base.CPrj,base.CSrc))
+					if (ds != null && (new AdminSystem()).DelData(1027,false,base.LUser,base.LImpr,base.LCurr,ds,null,null,base.CPrj,base.CSrc))
 					{
 						cAdmFlowchart1027List.ClearSearch(); Session.Remove(KEY_dtAdmFlowchart1027List);
 						ShowDirty(false); PopAdmFlowchart1027List(sender, e, false, null);
@@ -1725,6 +1716,8 @@ string projectRootPath = Config.RuleTierPath;
 			drType["ChartDesc1325"] = "VarWChar"; drDisp["ChartDesc1325"] = "MultiLine";
 			try {dr["CompanyId1325"] = cCompanyId1325.SelectedValue;} catch {}
 			drType["CompanyId1325"] = "Numeric"; drDisp["CompanyId1325"] = "AutoComplete";
+			try {dr["CompanyDefault1325"] = base.SetBool(cCompanyDefault1325.Checked);} catch {}
+			drType["CompanyDefault1325"] = "Char"; drDisp["CompanyDefault1325"] = "CheckBox";
 			try {dr["ChartData1325"] = cChartData1325.Text;} catch {}
 			drType["ChartData1325"] = "VarWChar"; drDisp["ChartData1325"] = "MultiLine";
 			if (bAdd)

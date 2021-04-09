@@ -294,6 +294,23 @@ export function GetRefColumnContent(mstId, dtlId, refKeyId, isMaster, refScreenC
 
 /*screen criteria dll and screen dropdownlist/autocomplete*/
 
+export function GetScreenCriCompanyId10List(query, topN, filterBy, accessScope) {
+    return fetchData(baseUrl + '/AdmFlowchartWs.asmx/GetScreenCriteriaDdlList'
+        , {
+            requestOptions: {
+                body: JSON.stringify({
+                    screenCriId: 1087,
+                    query: query || '',
+                    topN: topN || 0,
+                    filterBy: filterBy || null
+                }),
+            },
+            ...(getAccessControlInfo()),
+            ...(accessScope)
+        }
+    )
+}
+
 export function GetCompanyId1325List(query, topN, filterBy, accessScope) {
     return fetchData(baseUrl + '/AdmFlowchartWs.asmx/GetCompanyId1325List'
         , {

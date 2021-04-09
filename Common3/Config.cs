@@ -122,6 +122,7 @@ namespace RO.Common3
         private static int? wPageCacheControl;
         private static string wEnableFido2;
         private static string wEnableCryptoWallet;
+        private static string wEnforceGitCommit;
 
         static Config()
 		{
@@ -281,6 +282,7 @@ namespace RO.Common3
             catch { }
             wEnableFido2 = System.Configuration.ConfigurationManager.AppSettings["EnableFido2"];
             wEnableCryptoWallet = System.Configuration.ConfigurationManager.AppSettings["EnableCryptoWallet"];
+            wEnforceGitCommit = System.Configuration.ConfigurationManager.AppSettings["EnforceGitCommit"];
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -469,6 +471,7 @@ namespace RO.Common3
         public static int? PageCacheControl { get { return wPageCacheControl; } }
         public static bool EnableFido2 { get { return (wEnableFido2 ?? "N").ToUpper() == "Y"; } }
         public static bool EnableCryptoWallet { get { return (wEnableCryptoWallet ?? "N").ToUpper() == "Y"; } }
+        public static bool EnforceGitCommit { get { return (wEnforceGitCommit ?? "N").ToUpper() == "Y"; } }
         public static string RintagiLicense
         { 
             get { return wLicense; } 

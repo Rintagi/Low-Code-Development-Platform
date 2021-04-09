@@ -551,3 +551,4 @@
 1730~@~AdmScreenObj    10: Screen (de-DE)~@~1086~@~68~@~Bildschirm
 1731~@~AdmScreenObj    10: Screen (ko-KR)~@~1086~@~28~@~화면
 1732~@~AdmScreenObj    10: Screen (fr-CA)~@~1086~@~114~@~Écran
+1733~@~AdmFlowchart    10: Company (en-US)~@~1087~@~1~@~Company

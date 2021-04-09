@@ -57,6 +57,8 @@ namespace RO.Web
             columns.Add("Active1", typeof(string));
             columns.Add("InternalUsr1", typeof(string));
             columns.Add("TechnicalUsr1", typeof(string));
+            columns.Add("EmailLink1", typeof(string));
+            columns.Add("MobileLink1", typeof(string));
             columns.Add("FailedAttempt1", typeof(string));
             columns.Add("LastSuccessDt1", typeof(string));
             columns.Add("LastFailedDt1", typeof(string));
@@ -198,6 +200,10 @@ namespace RO.Web
             drType["InternalUsr1"] = "Char"; drDisp["InternalUsr1"] = "CheckBox";
             try { dr["TechnicalUsr1"] = (mst["TechnicalUsr1"] ?? "").Trim().Left(1); } catch { }
             drType["TechnicalUsr1"] = "Char"; drDisp["TechnicalUsr1"] = "CheckBox";
+            try { dr["EmailLink1"] = mst["EmailLink1"]; } catch { }
+            drType["EmailLink1"] = "VarWChar"; drDisp["EmailLink1"] = "HyperLink";
+            try { dr["MobileLink1"] = mst["MobileLink1"]; } catch { }
+            drType["MobileLink1"] = "VarChar"; drDisp["MobileLink1"] = "HyperLink";
             try { dr["FailedAttempt1"] = mst["FailedAttempt1"]; } catch { }
             drType["FailedAttempt1"] = "Numeric"; drDisp["FailedAttempt1"] = "StarRating";
             try { dr["LastSuccessDt1"] = mst["LastSuccessDt1"]; } catch { }

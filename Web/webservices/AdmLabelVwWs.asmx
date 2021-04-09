@@ -46,6 +46,7 @@ namespace RO.Web
         {
             DataColumnCollection columns = dt.Columns;
             columns.Add("LabelId265", typeof(string));
+            columns.Add("LabelLink265", typeof(string));
             columns.Add("CultureId265", typeof(string));
             columns.Add("LabelCat265", typeof(string));
             columns.Add("LabelKey265", typeof(string));
@@ -80,6 +81,7 @@ namespace RO.Web
         private DataRow MakeTypRow(DataRow dr)
         {
             dr["LabelId265"] = System.Data.OleDb.OleDbType.Numeric.ToString();
+            dr["LabelLink265"] = System.Data.OleDb.OleDbType.VarChar.ToString();
             dr["CultureId265"] = System.Data.OleDb.OleDbType.Numeric.ToString();
             dr["LabelCat265"] = System.Data.OleDb.OleDbType.VarChar.ToString();
             dr["LabelKey265"] = System.Data.OleDb.OleDbType.VarChar.ToString();
@@ -92,6 +94,7 @@ namespace RO.Web
         private DataRow MakeDisRow(DataRow dr)
         {
             dr["LabelId265"] = "TextBox";
+            dr["LabelLink265"] = "ImagePopUp";
             dr["CultureId265"] = "TextBox";
             dr["LabelCat265"] = "TextBox";
             dr["LabelKey265"] = "TextBox";
@@ -108,6 +111,7 @@ namespace RO.Web
             if (dtAuth != null)
             {
                 dr["LabelId265"] = (drv["LabelId265"] ?? "").ToString().Trim().Left(9999999);
+                dr["LabelLink265"] = drv["LabelLink265"];
                 dr["CultureId265"] = (drv["CultureId265"] ?? "").ToString().Trim().Left(9999999);
                 dr["LabelCat265"] = (drv["LabelCat265"] ?? "").ToString().Trim().Left(50);
                 dr["LabelKey265"] = (drv["LabelKey265"] ?? "").ToString().Trim().Left(50);

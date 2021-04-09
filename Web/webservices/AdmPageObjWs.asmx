@@ -45,6 +45,8 @@ namespace RO.Web
             columns.Add("GroupColId1277", typeof(string));
             columns.Add("LinkTypeCd1277", typeof(string));
             columns.Add("PageObjOrd1277", typeof(string));
+            columns.Add("SctGrpRow1277", typeof(string));
+            columns.Add("SctGrpCol1277", typeof(string));
             columns.Add("PageObjCss1277", typeof(string));
             columns.Add("PageObjSrp1277", typeof(string));
             return dt;
@@ -160,6 +162,10 @@ namespace RO.Web
             drType["LinkTypeCd1277"] = "Char"; drDisp["LinkTypeCd1277"] = "AutoComplete";
             try { dr["PageObjOrd1277"] = (mst["PageObjOrd1277"] ?? "").Trim().Left(9999999); } catch { }
             drType["PageObjOrd1277"] = "Numeric"; drDisp["PageObjOrd1277"] = "TextBox";
+            try { dr["SctGrpRow1277"] = mst["SctGrpRow1277"]; } catch { }
+            drType["SctGrpRow1277"] = "VarChar"; drDisp["SctGrpRow1277"] = "ImagePopUp";
+            try { dr["SctGrpCol1277"] = mst["SctGrpCol1277"]; } catch { }
+            drType["SctGrpCol1277"] = "VarChar"; drDisp["SctGrpCol1277"] = "ImagePopUp";
             try { dr["PageObjCss1277"] = mst["PageObjCss1277"]; } catch { }
             drType["PageObjCss1277"] = "VarChar"; drDisp["PageObjCss1277"] = "MultiLine";
             try { dr["PageObjSrp1277"] = mst["PageObjSrp1277"]; } catch { }

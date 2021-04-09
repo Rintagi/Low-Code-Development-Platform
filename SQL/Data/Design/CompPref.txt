@@ -1,0 +1,2 @@
+1~@~1~@~~/home/AdmCompPref_3/logo_robocodercorporation.png~@~robocoder~@~(3,5)
+3~@~2~@~~@~test~@~(3)

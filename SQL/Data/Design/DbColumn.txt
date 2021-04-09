@@ -1566,3 +1566,9 @@
 7688~@~1328~@~10~@~~@~MimeTypeId~@~VwMIMEType - MimeTypeId~@~3~@~4~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 7689~@~128~@~190~@~~@~ForCompanyId~@~WebRule - ForCompanyId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 7690~@~1325~@~70~@~~@~CompanyId~@~Flowchart - CompanyId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7692~@~1325~@~80~@~~@~CompanyDefault~@~Flowchart - CompanyDefault~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This is the default flowchart for the selected company.~@~
+7693~@~1329~@~30~@~~@~CompanyLogo~@~CompPref - CompanyLogo~@~15~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7694~@~1329~@~20~@~~@~CompanyId~@~CompPref - CompanyId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7695~@~1329~@~10~@~~@~CompPrefId~@~CompPref - CompPrefId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7696~@~1329~@~40~@~~@~CompPrefDesc~@~CompPref - CompPrefDesc~@~11~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is company preference description.~@~
+7697~@~1329~@~50~@~~@~SystemLs~@~CompPref - SystemLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~

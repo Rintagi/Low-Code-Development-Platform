@@ -716,15 +716,16 @@ namespace RO.Rule3
 			StringBuilder sb = new StringBuilder();
             sb.Append("<%@ Page language=\"c#\" MasterPageFile=\"Default.master\" EnableEventValidation=\"false\"");
             if (dw["ValidateReq"].ToString() == "N") { sb.Append(" ValidateRequest=\"false\""); }  // In .Net4 add "<httpRuntime requestValidationMode="2.0"/>" to Web.config?
-			sb.Append(" Inherits=\"" + CPrj.EntityCode + ".Web." + dw["ProgramName"].ToString() + "\" CodeFile=\"" + dw["ProgramName"].ToString() + ".aspx.cs\" Title=\"" + Config.WebTitle + " - " + screenTitle + "\" %>" + Environment.NewLine);
-			sb.Append("<%@ Register TagPrefix=\"Module\" TagName=\"" + dw["ProgramName"].ToString() + "\" Src=\"modules/" + dw["ProgramName"].ToString() + "Module.ascx\" %>" + Environment.NewLine);
+            //sb.Append(" Inherits=\"" + CPrj.EntityCode + ".Web." + dw["ProgramName"].ToString() + "\" CodeFile=\"" + dw["ProgramName"].ToString() + ".aspx.cs\" Title=\"" + Config.WebTitle + " - " + screenTitle + "\" %>" + Environment.NewLine);
+            sb.Append(" Inherits=\"" + CPrj.EntityCode + ".Web." + dw["ProgramName"].ToString() + "\" CodeFile=\"" + dw["ProgramName"].ToString() + ".aspx.cs\" %>" + Environment.NewLine);
+            sb.Append("<%@ Register TagPrefix=\"Module\" TagName=\"" + dw["ProgramName"].ToString() + "\" Src=\"modules/" + dw["ProgramName"].ToString() + "Module.ascx\" %>" + Environment.NewLine);
             sb.Append("<asp:Content ContentPlaceHolderID=\"MHR\" Runat=\"Server\"><Module:" + dw["ProgramName"].ToString() + " id=\"M" + screenId.ToString() + "\" runat=\"server\" /></asp:Content>" + Environment.NewLine);
 			return sb;
 		}
 
 		private StringBuilder MakeAspxCs(DataRow dw, string screenTitle, CurrPrj CPrj, string clientFrwork)
 		{
-			StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 			sb.Append("using System;" + Environment.NewLine);
 			sb.Append("using System.Collections;" + Environment.NewLine);
 			sb.Append("using System.ComponentModel;" + Environment.NewLine);
@@ -735,7 +736,8 @@ namespace RO.Rule3
 			sb.Append("using System.Web.UI;" + Environment.NewLine);
 			sb.Append("using System.Web.UI.WebControls;" + Environment.NewLine);
 			sb.Append("using System.Web.UI.HtmlControls;" + Environment.NewLine);
-			sb.Append(Environment.NewLine);
+            sb.Append("using RO.Common3;" + Environment.NewLine);
+            sb.Append(Environment.NewLine);
 			sb.Append("namespace " + CPrj.EntityCode + ".Web" + Environment.NewLine);
 			sb.Append("{" + Environment.NewLine);
 			sb.Append("	public partial class " + dw["ProgramName"].ToString() + " : RO.Web.PageBase" + Environment.NewLine);
@@ -745,7 +747,8 @@ namespace RO.Rule3
 			sb.Append("		{" + Environment.NewLine);
             sb.Append("			Page.PreInit += new System.EventHandler(Page_PreInit);" + Environment.NewLine);
             sb.Append("			Page.Init += new System.EventHandler(Page_Init);" + Environment.NewLine);
-			sb.Append("		}" + Environment.NewLine);
+            sb.Append("			Page.Title = Config.WebTitle + \" - " + screenTitle + "\";" + Environment.NewLine);
+            sb.Append("		}" + Environment.NewLine);
 			sb.Append(Environment.NewLine);
 			sb.Append("		protected void Page_Load(object sender, System.EventArgs e)" + Environment.NewLine);
 			sb.Append("		{" + Environment.NewLine);
@@ -9391,7 +9394,7 @@ namespace RO.Rule3
                 foreach (DataRowView drv in dv)
                 {
                     if ((drv["TableId"].ToString() != string.Empty
-                        && ",Button,DataGrid,PlaceHolder,Label,HyperLink,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0
+                        && ",Button,DataGrid,PlaceHolder,Label,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0
                         && 
                         (",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
                         || drv["DdlRefColumnId"].ToString() == string.Empty 
@@ -9420,8 +9423,8 @@ namespace RO.Rule3
                         (
                         // regardless of table backed or not, it is controlled in data type above
                         (drv["TableId"].ToString() != string.Empty || string.IsNullOrEmpty(drv["TableId"].ToString()))
-                            // not input
-                            && ",Button,DataGrid,PlaceHolder,HyperLink,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0
+                            // below are not input, skip in passing to db backend
+                            && ",Button,DataGrid,PlaceHolder,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0
                             && (",ComboBox,DropDownList,ListBox,RadioButtonList,HyperLink,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
                                 || drv["DdlRefColumnId"].ToString() == string.Empty 
                                 || drv["DisplayMode"].ToString().ToLower() == "currency") 
@@ -9450,7 +9453,8 @@ namespace RO.Rule3
                         (
                         // regardless of table backed or not, controlled by type
                         (drv["TableId"].ToString() != string.Empty || string.IsNullOrEmpty(drv["TableId"].ToString()))
-                        && ",Button,DataGrid,PlaceHolder,HyperLink,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0
+                        // below are not input, skip in passing to db backend
+                        && ",Button,DataGrid,PlaceHolder,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0
                         && 
                         (",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0 
                             || drv["DdlRefColumnId"].ToString() == string.Empty 

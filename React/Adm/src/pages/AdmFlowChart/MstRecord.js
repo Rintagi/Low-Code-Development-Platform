@@ -153,6 +153,7 @@ class MstRecord extends RintagiScreen {
           ChartName1325: values.cChartName1325 || '',
           ChartDesc1325: values.cChartDesc1325 || '',
           CompanyId1325: (values.cCompanyId1325 || {}).value || '',
+          CompanyDefault1325: values.cCompanyDefault1325 ? 'Y' : 'N',
           ChartData1325: values.cChartData1325 || '',
         },
         [],
@@ -354,6 +355,7 @@ class MstRecord extends RintagiScreen {
     const ChartDesc1325 = currMst.ChartDesc1325;
     const CompanyId1325List = AdmFlowchartReduxObj.ScreenDdlSelectors.CompanyId1325(AdmFlowchartState);
     const CompanyId1325 = currMst.CompanyId1325;
+    const CompanyDefault1325 = currMst.CompanyDefault1325;
     const ChartData1325 = currMst.ChartData1325;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
@@ -399,6 +401,7 @@ class MstRecord extends RintagiScreen {
                     cChartName1325: formatContent(ChartName1325 || '', 'TextBox'),
                     cChartDesc1325: formatContent(ChartDesc1325 || '', 'MultiLine'),
                     cCompanyId1325: CompanyId1325List.filter(obj => { return obj.key === CompanyId1325 })[0],
+                    cCompanyDefault1325: CompanyDefault1325 === 'Y',
                     cChartData1325: formatContent(ChartData1325 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
@@ -580,6 +583,27 @@ class MstRecord extends RintagiScreen {
                                       </div>
                                     }
                                     {errors.cCompanyId1325 && touched.cCompanyId1325 && <span className='form__form-group-error'>{errors.cCompanyId1325}</span>}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.CompanyDefault1325 || {}).visible &&
+                                <Col lg={12} xl={12}>
+                                  <div className='form__form-group'>
+                                    <label className='checkbox-btn checkbox-btn--colored-click'>
+                                      <Field
+                                        className='checkbox-btn__checkbox'
+                                        type='checkbox'
+                                        name='cCompanyDefault1325'
+                                        onChange={handleChange}
+                                        defaultChecked={values.cCompanyDefault1325}
+                                        disabled={(authCol.CompanyDefault1325 || {}).readonly || !(authCol.CompanyDefault1325 || {}).visible}
+                                      />
+                                      <span className='checkbox-btn__checkbox-custom'><CheckIcon /></span>
+                                      <span className='checkbox-btn__label'>{(columnLabel.CompanyDefault1325 || {}).ColumnHeader}</span>
+                                    </label>
+                                    {(columnLabel.CompanyDefault1325 || {}).ToolTip &&
+                                      (<ControlledPopover id={(columnLabel.CompanyDefault1325 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.CompanyDefault1325 || {}).ToolTip} />
+                                      )}
                                   </div>
                                 </Col>
                               }

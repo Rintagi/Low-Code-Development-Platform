@@ -21,7 +21,7 @@ class AdmFlowchartRedux extends RintagiScreenRedux {
 
     ]
     this.ScreenCriDdlDef = [
-
+      { columnName: 'CompanyId10', payloadDdlName: 'CompanyId10List', isAutoComplete: true, apiServiceName: 'GetScreenCriCompanyId10List', actionTypeName: 'GET_DDL_CRICompanyId10' },
     ]
     this.SearchActions = {
       ...[...this.ScreenDdlDef].reduce((a, v) => { a['Search' + v.columnName] = this.MakeSearchAction(v); return a; }, {}),
@@ -101,7 +101,7 @@ class AdmFlowchartRedux extends RintagiScreenRedux {
 export function ShowMstFilterApplied(state) {
   return !state
     || !state.ScreenCriteria
-
+    || (state.ScreenCriteria.CompanyId10 || {}).LastCriteria
     || state.ScreenCriteria.SearchStr;
 }
 

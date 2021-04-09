@@ -1527,6 +1527,9 @@ namespace RO.Access3
                 }
                 else
                 {
+                    // this bypass the hyperlink skip below if it is on primary key, sigh !
+                    // IOW, we must allow hyperlink or other other 'non-edit' control passed in for the sake of primary key
+                    // they will be ignore below but kept here !!!!
                     cmd.Parameters.Add("@" + pMKeyCol, GetOleDbType(pMKeyOle)).Value = pMKeyVal;
                 }
             }
@@ -1536,6 +1539,9 @@ namespace RO.Access3
             }
             else
             {
+                // this bypass the hyperlink skip below if it is on primary key, sigh !
+                // IOW, we must allow hyperlink or other other 'non-edit' control passed in for the sake of primary key
+                // they will be ignore below but kept here !!!!
                 cmd.Parameters.Add("@" + pKeyCol, GetOleDbType(pKeyOle)).Value = row[pKeyCol].ToString().Trim();
             }
             foreach (DataColumn dc in cols)
@@ -1582,6 +1588,9 @@ namespace RO.Access3
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
+            // this bypass the hyperlink skip below if it is on primary key, sigh !
+            // IOW, we must allow hyperlink or other other 'non-edit' control passed in for the sake of primary key
+            // they will be ignore below but kept here !!!!
             cmd.Parameters.Add("@" + pKeyCol, GetOleDbType(pKeyOle)).Value = row[pKeyCol].ToString().Trim();
             foreach (DataColumn dc in cols)
             {
@@ -1688,6 +1697,9 @@ namespace RO.Access3
             }
             else
             {
+                // this bypass the hyperlink skip below if it is on primary key, sigh !
+                // IOW, we must allow hyperlink or other other 'non-edit' control passed in for the sake of primary key
+                // they will be ignore below but kept here !!!!
                 cmd.Parameters.Add("@" + pMKeyCol, GetOleDbType(pMKeyOle)).Value = row[pMKeyCol].ToString().Trim(); ;
             }
             foreach (DataColumn dc in ds.Tables[0].Columns)
@@ -1863,6 +1875,9 @@ namespace RO.Access3
                     }
                 }
                 dvCol.RowFilter = "";
+                // this bypass the hyperlink skip below if it is on primary key, sigh !
+                // IOW, we must allow hyperlink or other other 'non-edit' control passed in for the sake of primary key
+                // they will be ignore below but kept here !!!!
                 pMKeyVal = row[pMKeyCol].ToString().Trim();
                 cmd.Parameters.Add("@" + pMKeyCol, GetOleDbType(pMKeyOle)).Value = row[pMKeyCol].ToString().Trim();
                 foreach (DataColumn dc in ds.Tables[0].Columns)

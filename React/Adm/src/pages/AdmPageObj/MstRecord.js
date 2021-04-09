@@ -166,6 +166,8 @@ class MstRecord extends RintagiScreen {
           GroupColId1277: (values.cGroupColId1277 || {}).value || '',
           LinkTypeCd1277: (values.cLinkTypeCd1277 || {}).value || '',
           PageObjOrd1277: values.cPageObjOrd1277 || '',
+          SctGrpRow1277: values.cSctGrpRow1277 || '',
+          SctGrpCol1277: values.cSctGrpCol1277 || '',
           PageObjCss1277: values.cPageObjCss1277 || '',
           PageObjSrp1277: values.cPageObjSrp1277 || '',
         },

@@ -136,6 +136,7 @@ class MstRecord extends RintagiScreen {
           MasterPgFile259: values.cMasterPgFile259 || '',
           StaticCsId259: (values.cStaticCsId259 || {}).value || '',
           StaticJsId259: (values.cStaticJsId259 || {}).value || '',
+          StaticPgUrl259: values.cStaticPgUrl259 || '',
           StaticMeta259: values.cStaticMeta259 || '',
           StaticPgHtm259: values.cStaticPgHtm259 || '',
           StaticPgCss259: values.cStaticPgCss259 || '',

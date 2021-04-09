@@ -43,6 +43,7 @@ namespace RO.Web
             columns.Add("ChartName1325", typeof(string));
             columns.Add("ChartDesc1325", typeof(string));
             columns.Add("CompanyId1325", typeof(string));
+            columns.Add("CompanyDefault1325", typeof(string));
             columns.Add("ChartData1325", typeof(string));
             return dt;
         }
@@ -122,6 +123,8 @@ namespace RO.Web
             drType["ChartDesc1325"] = "VarWChar"; drDisp["ChartDesc1325"] = "MultiLine";
             try { dr["CompanyId1325"] = mst["CompanyId1325"]; } catch { }
             drType["CompanyId1325"] = "Numeric"; drDisp["CompanyId1325"] = "AutoComplete";
+            try { dr["CompanyDefault1325"] = (mst["CompanyDefault1325"] ?? "").Trim().Left(1); } catch { }
+            drType["CompanyDefault1325"] = "Char"; drDisp["CompanyDefault1325"] = "CheckBox";
             try { dr["ChartData1325"] = mst["ChartData1325"]; } catch { }
             drType["ChartData1325"] = "VarWChar"; drDisp["ChartData1325"] = "MultiLine";
 
@@ -168,6 +171,7 @@ namespace RO.Web
                 {"ChartName1325",""},
                 {"ChartDesc1325",""},
                 {"CompanyId1325",""},
+                {"CompanyDefault1325",""},
                 {"ChartData1325",""},
                 {"launch",""},
                 {"View",""},

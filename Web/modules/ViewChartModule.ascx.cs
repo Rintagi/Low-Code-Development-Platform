@@ -32,13 +32,57 @@ namespace RO.Web
         {
             if (!IsPostBack)
             {
-                string keyId = Request.QueryString["key"];
+                string compId = GetCompany();
 
-                if (!string.IsNullOrEmpty(keyId))
+                DataTable dtChartList = null;
+                int filterId = 0;
+                string key = string.Empty;
+                try
                 {
-                    byte sid = 3;
-                    byte.TryParse(Request.QueryString["csy"], out sid);
+                    try { 
+                        dtChartList = (new AdminSystem()).GetLis(1027, "GetLisAdmFlowchart1027", true, "Y", 0, null, null, filterId, key, string.Empty, GetScrCriteria(), base.LImpr, base.LCurr, UpdCriteria(false)); 
+                    }
+                    catch { 
+                        dtChartList = (new AdminSystem()).GetLis(1027, "GetLisAdmFlowchart1027", true, "N", 0, null, null, filterId, key, string.Empty, GetScrCriteria(), base.LImpr, base.LCurr, UpdCriteria(false)); 
+                    }
+                }
+                catch (Exception err) { 
+                    Common3.Utils.NeverThrow(err); 
+                }
 
+                if (dtChartList != null && dtChartList.Rows.Count > 0)
+                {
+                    string companyId = compId;
+                    //string keyId = dtChartList.Rows[1][0].ToString(); // by default using the first one if no key passed in from querysting and no default
+                    string keyId = "";
+
+                    foreach (DataRow dr in dtChartList.Rows)
+                    {
+                        if (string.IsNullOrEmpty(companyId) || companyId == "0")
+                        {
+                            if (dr[2].ToString() == "Y" && string.IsNullOrEmpty(dr[3].ToString()))
+                            {
+                                keyId = dr[0].ToString();
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (dr[2].ToString() == "Y")
+                            {
+                                keyId = dr[0].ToString();
+                                break;
+                            }
+                        }
+                        
+                    }
+
+                    if (!string.IsNullOrEmpty(Request.QueryString["key"]))
+                    {
+                        keyId = Request.QueryString["key"];
+                    }
+
+                    byte sid = 3;
                     string dbConnectionString = base.SysConnectStr(sid);
 
                     DataTable dt = null;
@@ -73,8 +117,102 @@ namespace RO.Web
                         hfChartData.Value = JsonConvert.SerializeObject(x);
                     }
                 }
+                else
+                {
+                    return;
+                }
+
             }
         }
+
+        private DataView GetScrCriteria()
+        {
+            DataTable dtScrCri = new DataTable();
+            try
+            {
+                byte sid = 3;
+                string dbConnectionString = base.SysConnectStr(sid);
+                dtScrCri = (new AdminSystem()).GetScrCriteria("1027", dbConnectionString, base.AppPwd(base.LCurr.DbId));
+            }
+            catch{}
+
+            return dtScrCri.DefaultView;
+        }
+
+        private DataSet UpdCriteria(bool bUpdate)
+        {
+            string companyId = LCurr.CompanyId.ToString();
+
+            DataSet ds = new DataSet();
+            ds.Tables.Add(MakeColumns(new DataTable("DtScreenIn")));
+            DataRow dr = ds.Tables["DtScreenIn"].NewRow();
+            DataView dvCri = GetScrCriteria();
+            foreach (DataRowView drv in dvCri)
+            {
+                if (drv["DisplayName"].ToString() == "ComboBox")
+                {
+                    if (companyId != null && companyId != string.Empty && companyId != "0")
+                    {
+                        dr[drv["ColumnName"].ToString()] = companyId;
+                    }
+                }
+            }
+            ds.Tables["DtScreenIn"].Rows.Add(dr);
+            
+            return ds;
+        }
+
+        private string GetCompany()
+        {
+            
+            string curCompanyId = LCurr.CompanyId.ToString();
+            string companyId = curCompanyId;
+            
+            DataTable dt = (DataTable)Session["CompanyList"];
+            if (dt == null)
+            {
+                dt = (new LoginSystem()).GetCompanyList(base.LImpr.Usrs, base.LImpr.RowAuthoritys, base.LImpr.Companys);
+            }
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                string xCompanyId = dr["CompanyId"].ToString();
+
+                if ((string.IsNullOrEmpty(curCompanyId) || curCompanyId == "0") && xCompanyId != "")
+                {
+                    companyId = xCompanyId;
+                    break;
+                }
+                else if ((string.IsNullOrEmpty(xCompanyId) && curCompanyId == "0"))
+                {
+                    companyId = "";
+                    break;
+                }
+            }
+
+            return companyId;
+        }
+
+        private DataTable MakeColumns(DataTable dt)
+        {
+            DataColumnCollection columns = dt.Columns;
+            DataView dvCri = GetScrCriteria();
+            foreach (DataRowView drv in dvCri)
+            {
+                if (drv["DataTypeSysName"].ToString() == "DateTime") { columns.Add(drv["ColumnName"].ToString(), typeof(DateTime)); }
+                else if (drv["DataTypeSysName"].ToString() == "Byte") { columns.Add(drv["ColumnName"].ToString(), typeof(Byte)); }
+                else if (drv["DataTypeSysName"].ToString() == "Int16") { columns.Add(drv["ColumnName"].ToString(), typeof(Int16)); }
+                else if (drv["DataTypeSysName"].ToString() == "Int32") { columns.Add(drv["ColumnName"].ToString(), typeof(Int32)); }
+                else if (drv["DataTypeSysName"].ToString() == "Int64") { columns.Add(drv["ColumnName"].ToString(), typeof(Int64)); }
+                else if (drv["DataTypeSysName"].ToString() == "Single") { columns.Add(drv["ColumnName"].ToString(), typeof(Single)); }
+                else if (drv["DataTypeSysName"].ToString() == "Double") { columns.Add(drv["ColumnName"].ToString(), typeof(Double)); }
+                else if (drv["DataTypeSysName"].ToString() == "Byte[]") { columns.Add(drv["ColumnName"].ToString(), typeof(Byte[])); }
+                else if (drv["DataTypeSysName"].ToString() == "Object") { columns.Add(drv["ColumnName"].ToString(), typeof(Object)); }
+                else { columns.Add(drv["ColumnName"].ToString(), typeof(String)); }
+            }
+            return dt;
+        }
+
 
         private void CheckAuthentication(bool pageLoad)
         {

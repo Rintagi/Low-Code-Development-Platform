@@ -2336,15 +2336,66 @@ RETURN 0~@~2~@~2020-04-23 16:07:04.257~@~2012-01-20 11:28:02.000~@~48655239-2BD2
 3732~@~1026~@~1~@~Y~@~Ir_DelServerRuleOvrd~@~Server Rule Override   10 [Master: Before CRUD] Ir_DelServerRuleOvrd~@~Pre Delete process of server rule override~@~10~@~Ir_DelServerRuleOvrd~@~AtServerRuleOvrdId~@~int,int~@~AtServerRuleOvrdId1322, LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~2~@~2020-04-30 15:03:26.653~@~~@~3D44D1F1-92BB-4D7C-97A8-FC22B24F65AF~@~~@~RO
 3733~@~1026~@~1~@~N~@~Ir_DelServerRuleOvrdPrm~@~Server Rule Override   20 [Detail: Before CRUD] Ir_DelServerRuleOvrdPrm~@~Pre Delete process of server rule override permission~@~20~@~Ir_DelServerRuleOvrdPrm~@~AtServerRuleOvrdId~@~int,int~@~ServerRuledOvrdPrmId1321, LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~2~@~2020-04-30 15:05:18.410~@~~@~2DB80CFF-8C05-470E-A697-4EF0F17B7EC2~@~~@~RO
 3734~@~1026~@~1~@~Y~@~Ir_UpdServerRuleOvrdCOW~@~Server Rule Override   50 [Master: Last Rule] Ir_UpdServerRuleOvrdCOW~@~Post saving process of server rule override for copy on write(if local)~@~50~@~Ir_UpdServerruleOvrdCOW~@~AtServerRuleOvrdId~@~int,int~@~AtServerRuleOvrdId1322, LUser.UsrId~@~Y~@~Y~@~N~@~C~@~~@~2~@~2020-04-30 15:21:05.970~@~~@~B036915A-85BE-4E1E-B2DA-CA7D4433F891~@~~@~RO
-4089~@~76~@~4~@~Y~@~Automated audit trail - Del~@~Button Override [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del76M~@~ButtonHlpId,UsrId~@~Int,Int~@~ButtonHlpId116,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~FB9D618C-82B3-420B-A666-DA483E01B4E7~@~~@~
-4090~@~76~@~4~@~Y~@~Automated audit trail - Add~@~Button Override [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add76M~@~ButtonHlpId,UsrId~@~Int,Int~@~ButtonHlpId116,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~84AC3BF7-E4AD-4A88-853B-4C450D811442~@~~@~
-4091~@~76~@~4~@~Y~@~Automated audit trail - Upd~@~Button Override [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd76M~@~ButtonHlpId,ScreenId,CultureId,ButtonTypeId,ButtonName,ButtonToolTip,ButtonVisible,ReportId,WizardId,ButtonLongNm,RowVisible,TopVisible,BotVisible,UsrId~@~Int,Int,SmallInt,TinyInt,NVarChar,NVarChar,Char,Int,Int,NVarChar,Char,Char,Char,Int~@~ButtonHlpId116,ScreenId116,CultureId116,ButtonTypeId116,ButtonName116,ButtonToolTip116,ButtonVisible116,ReportId116,WizardId116,ButtonLongNm116,RowVisible116,TopVisible116,BotVisible116,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~8B1BA013-5DF6-4582-90D4-8B0DCAD47661~@~~@~
-4092~@~5~@~4~@~Y~@~Automated audit trail - Del~@~User Group [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del5M~@~UsrGroupId,UsrId~@~SmallInt,Int~@~UsrGroupId7,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~17202632-BFEC-416C-A16B-ED1EAC32CC66~@~~@~
-4093~@~5~@~4~@~Y~@~Automated audit trail - Add~@~User Group [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add5M~@~UsrGroupId,UsrId~@~SmallInt,Int~@~UsrGroupId7,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~8941E8E3-9CED-4E17-84E9-490464EA2D60~@~~@~
-4094~@~5~@~4~@~Y~@~Automated audit trail - Upd~@~User Group [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd5M~@~UsrGroupId,UsrGroupName,RowAuthorityId,CompanyId,UsrId~@~SmallInt,NVarChar,SmallInt,Int,Int~@~UsrGroupId7,UsrGroupName7,RowAuthorityId7,CompanyId7,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~C09F82BE-3DB2-4ACA-B6F2-A8B6DB325586~@~~@~
-4095~@~5~@~4~@~N~@~Automated audit trail - Del~@~User Group [Detail: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del5D~@~UsrGroupAuthId,UsrId~@~Int,Int~@~UsrGroupAuthId58,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~26283F80-D0D6-4A3F-93C6-C7D5537D0E7C~@~~@~
-4096~@~5~@~4~@~N~@~Automated audit trail - Add~@~User Group [Detail: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add5D~@~UsrGroupAuthId,UsrId~@~Int,Int~@~UsrGroupAuthId58,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~59D70F14-B092-44CD-9877-B7D26CCCA9D4~@~~@~
-4097~@~5~@~4~@~N~@~Automated audit trail - Upd~@~User Group [Detail: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd5D~@~UsrGroupAuthId,SystemId,SysRowAuthorityId,CompanyId,ProjectId,UsrId~@~Int,TinyInt,SmallInt,Int,Int,Int~@~UsrGroupAuthId58,SystemId58,SysRowAuthorityId58,CompanyId58,ProjectId58,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~62EC2FB3-6AE7-41B9-B540-7B18E64C8428~@~~@~
-4098~@~1~@~4~@~Y~@~Automated audit trail - Del~@~User Manager [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del1M~@~UsrId,UsrId~@~Int,Int~@~UsrId1,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~2ADDA8DA-1BEF-49C1-9077-D62F054CD745~@~~@~
-4099~@~1~@~4~@~Y~@~Automated audit trail - Add~@~User Manager [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add1M~@~UsrId,UsrId~@~Int,Int~@~UsrId1,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~65E6FD3C-B9DE-40A2-ABC4-674C4FD83B6C~@~~@~
-4100~@~1~@~4~@~Y~@~Automated audit trail - Upd~@~User Manager [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd1M~@~UsrId,UsrEmail,UsrName,CustomerId,VendorId,MemberId,Active,InvestorId,DefSystemId,AgentId,BrokerId,LoginName,FailedAttempt,LastSuccessDt,LastFailedDt,HintQuestionId,HintAnswer,DefCompanyId,DefProjectId,UsrGroupLs,CompanyLs,ProjectLs,CultureId,InternalUsr,TechnicalUsr,PwdDuration,PwdWarn,PwdNoRepeat,IPAlert,UsrMobile,LenderId,BorrowerId,GuarantorId,UsrId~@~Int,NVarChar,NVarChar,Int,Int,Int,Char,Int,TinyInt,Int,Int,NVarChar,TinyInt,DateTime,DateTime,TinyInt,NVarChar,Int,Int,VarChar,VarChar,VarChar,SmallInt,Char,Char,SmallInt,SmallInt,SmallInt,Char,VarChar,Int,Int,Int,Int~@~UsrId1,UsrEmail1,UsrName1,CustomerId1,VendorId1,MemberId1,Active1,InvestorId1,DefSystemId1,AgentId1,BrokerId1,LoginName1,FailedAttempt1,LastSuccessDt1,LastFailedDt1,HintQuestionId1,HintAnswer1,DefCompanyId1,DefProjectId1,UsrGroupLs1,CompanyLs1,ProjectLs1,CultureId1,InternalUsr1,TechnicalUsr1,PwdDuration1,PwdWarn1,PwdNoRepeat1,IPAlert1,UsrMobile1,LenderId1,BorrowerId1,GuarantorId1,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~DC76D0DE-150B-45D1-8590-7E31DC1A8C84~@~~@~
+4101~@~1027~@~2~@~Y~@~One Default for each Company~@~Flowchart IDE   10 [Master: After CRUD] One Default for each Company~@~Do not allow more than one default per company~@~10~@~CrOneCompDefaultOnly~@~CompanyId~@~Int~@~CompanyId1325~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[CrOneCompDefaultOnly]
+ @CompanyId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.Flowchart WHERE CompanyId = @CompanyId AND CompanyDefault = 'Y') > 1
+BEGIN
+	RAISERROR('CrOneCompDefaultOnly: Please choose only one flowchart Default for this company and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+IF (SELECT count('true') FROM dbo.Flowchart WHERE @CompanyId is null AND CompanyId is null AND CompanyDefault = 'Y') > 1
+BEGIN
+	RAISERROR('CrOneCompDefaultOnly: Please choose only one flowchart Default for the public and try again.',18,2) WITH SETERROR
+	RETURN 1
+END~@~2~@~2021-02-25 22:55:49.563~@~2007-02-10 17:12:24.000~@~28FBBACB-64A3-4CE3-9232-A06AB72247BF~@~~@~RO
+4102~@~1029~@~2~@~Y~@~One preference for each company~@~Company Preference   10 [Master: After CRUD] One preference for each company~@~Do not allow more than one preference per company~@~10~@~CrOneCompPrefOnly~@~CompanyId~@~Int~@~CompanyId1329~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE CrOneCompPrefOnly
+ @CompanyId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.CompPref WHERE CompanyId = @CompanyId) > 1
+BEGIN
+	RAISERROR('CrOneCompPrefOnly: Please add only one preference for this company and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+RETURN 0
+~@~2~@~2021-02-25 22:21:32.330~@~2007-02-10 17:12:24.000~@~52F84AC7-5EFF-4883-AE1E-72B447964D0B~@~~@~RO
+4103~@~1027~@~1~@~Y~@~Update Flowchart Search Description~@~Flowchart IDE   20 [Master: After CRUD] Update Flowchart Search Description~@~Update Flowchart Search Description~@~20~@~Ir_UpdFlowchartDesc~@~ChartId~@~Int~@~ChartId1325~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Ir_UpdFlowchartDesc]
+ @ChartId			int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.Flowchart
+	SET ChartDesc = ChartName + ISNULL(' - ' + c.CompanyDesc, '')
+	FROM dbo.Flowchart f
+	LEFT JOIN ROCmon.dbo.Company c ON c.CompanyId = f.CompanyId
+	WHERE f.ChartId = @ChartId
+~@~2~@~2021-03-03 23:01:53.273~@~2007-02-10 17:10:47.000~@~15A95407-4B02-41D6-898B-15542E1B80BC~@~~@~RO
+4128~@~1029~@~1~@~Y~@~Update Company Preference Description~@~Company Preference   20 [Master: After CRUD] Update Company Preference Description~@~Update Company Preference Description~@~20~@~Ir_UpdCompPrefDesc~@~CompPrefId~@~Int~@~CompPrefId1329~@~Y~@~Y~@~N~@~N~@~CREATE PROCEDURE [dbo].[Ir_UpdCompPrefDesc]
+ @CompPrefId			int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+UPDATE dbo.CompPref
+	SET CompPrefDesc = p.CompPrefDesc
+	FROM dbo.CompPref p
+	INNER JOIN ROCmon.dbo.Company c ON c.CompanyId = p.CompanyId
+	WHERE p.CompPrefId = @CompPrefId
+~@~2~@~2021-03-06 00:07:06.033~@~2007-02-10 17:10:47.000~@~56811188-2DD1-4603-8F33-94A1471474B3~@~~@~RO
+4141~@~76~@~4~@~Y~@~Automated audit trail - Del~@~Button Override [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del76M~@~ButtonHlpId,UsrId~@~Int,Int~@~ButtonHlpId116,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~89694EB7-7730-4DF3-A1B9-CE7334038056~@~~@~
+4142~@~76~@~4~@~Y~@~Automated audit trail - Add~@~Button Override [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add76M~@~ButtonHlpId,UsrId~@~Int,Int~@~ButtonHlpId116,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~95A401D3-1EAF-40EE-AAE0-62904F6AD6B8~@~~@~
+4143~@~76~@~4~@~Y~@~Automated audit trail - Upd~@~Button Override [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd76M~@~ButtonHlpId,ScreenId,CultureId,ButtonTypeId,ButtonName,ButtonToolTip,ButtonVisible,ReportId,WizardId,ButtonLongNm,RowVisible,TopVisible,BotVisible,UsrId~@~Int,Int,SmallInt,TinyInt,NVarChar,NVarChar,Char,Int,Int,NVarChar,Char,Char,Char,Int~@~ButtonHlpId116,ScreenId116,CultureId116,ButtonTypeId116,ButtonName116,ButtonToolTip116,ButtonVisible116,ReportId116,WizardId116,ButtonLongNm116,RowVisible116,TopVisible116,BotVisible116,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~7EE5A3C9-33B8-4810-9B1A-1C18435D0971~@~~@~
+4144~@~5~@~4~@~Y~@~Automated audit trail - Del~@~User Group [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del5M~@~UsrGroupId,UsrId~@~SmallInt,Int~@~UsrGroupId7,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~9D0EED78-A7FA-433B-996E-E251007BA791~@~~@~
+4145~@~5~@~4~@~Y~@~Automated audit trail - Add~@~User Group [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add5M~@~UsrGroupId,UsrId~@~SmallInt,Int~@~UsrGroupId7,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~FD8EC425-E24A-4990-B56C-05AE21D1AB5C~@~~@~
+4146~@~5~@~4~@~Y~@~Automated audit trail - Upd~@~User Group [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd5M~@~UsrGroupId,UsrGroupName,RowAuthorityId,CompanyId,UsrId~@~SmallInt,NVarChar,SmallInt,Int,Int~@~UsrGroupId7,UsrGroupName7,RowAuthorityId7,CompanyId7,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~66F40D92-9B30-4C20-AC9D-0E522E29434F~@~~@~
+4147~@~5~@~4~@~N~@~Automated audit trail - Del~@~User Group [Detail: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del5D~@~UsrGroupAuthId,UsrId~@~Int,Int~@~UsrGroupAuthId58,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~BF1AB7DD-0D2D-406F-A4CE-14F027D02066~@~~@~
+4148~@~5~@~4~@~N~@~Automated audit trail - Add~@~User Group [Detail: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add5D~@~UsrGroupAuthId,UsrId~@~Int,Int~@~UsrGroupAuthId58,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~43AC8F47-9A9E-491C-8522-8530582A2090~@~~@~
+4149~@~5~@~4~@~N~@~Automated audit trail - Upd~@~User Group [Detail: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd5D~@~UsrGroupAuthId,SystemId,SysRowAuthorityId,CompanyId,ProjectId,UsrId~@~Int,TinyInt,SmallInt,Int,Int,Int~@~UsrGroupAuthId58,SystemId58,SysRowAuthorityId58,CompanyId58,ProjectId58,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~B836CFB9-8F03-4B9F-ADDB-1553BA1669FE~@~~@~
+4150~@~1~@~4~@~Y~@~Automated audit trail - Del~@~User Manager [Master: Before CRUD] Automated audit trail - Del~@~~@~0~@~Audit_Del1M~@~UsrId,UsrId~@~Int,Int~@~UsrId1,LUser.UsrId~@~N~@~N~@~Y~@~Y~@~~@~~@~~@~~@~E6980027-964D-4B2F-B5A7-FC227E5375E3~@~~@~
+4151~@~1~@~4~@~Y~@~Automated audit trail - Add~@~User Manager [Master: After CRUD] Automated audit trail - Add~@~~@~0~@~Audit_Add1M~@~UsrId,UsrId~@~Int,Int~@~UsrId1,LUser.UsrId~@~Y~@~N~@~N~@~N~@~~@~~@~~@~~@~A9E63232-A238-480A-A96D-1040BFF8A998~@~~@~
+4152~@~1~@~4~@~Y~@~Automated audit trail - Upd~@~User Manager [Master: Before CRUD] Automated audit trail - Upd~@~~@~0~@~Audit_Upd1M~@~UsrId,UsrEmail,UsrName,CustomerId,VendorId,MemberId,Active,InvestorId,DefSystemId,AgentId,BrokerId,LoginName,FailedAttempt,LastSuccessDt,LastFailedDt,HintQuestionId,HintAnswer,DefCompanyId,DefProjectId,UsrGroupLs,CompanyLs,ProjectLs,CultureId,InternalUsr,TechnicalUsr,PwdDuration,PwdWarn,PwdNoRepeat,IPAlert,UsrMobile,LenderId,BorrowerId,GuarantorId,UsrId~@~Int,NVarChar,NVarChar,Int,Int,Int,Char,Int,TinyInt,Int,Int,NVarChar,TinyInt,DateTime,DateTime,TinyInt,NVarChar,Int,Int,VarChar,VarChar,VarChar,SmallInt,Char,Char,SmallInt,SmallInt,SmallInt,Char,VarChar,Int,Int,Int,Int~@~UsrId1,UsrEmail1,UsrName1,CustomerId1,VendorId1,MemberId1,Active1,InvestorId1,DefSystemId1,AgentId1,BrokerId1,LoginName1,FailedAttempt1,LastSuccessDt1,LastFailedDt1,HintQuestionId1,HintAnswer1,DefCompanyId1,DefProjectId1,UsrGroupLs1,CompanyLs1,ProjectLs1,CultureId1,InternalUsr1,TechnicalUsr1,PwdDuration1,PwdWarn1,PwdNoRepeat1,IPAlert1,UsrMobile1,LenderId1,BorrowerId1,GuarantorId1,LUser.UsrId~@~N~@~Y~@~N~@~Y~@~~@~~@~~@~~@~C91CD156-FB76-49F8-A9F5-8AB5164064F3~@~~@~

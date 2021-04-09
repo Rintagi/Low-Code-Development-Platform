@@ -208,3 +208,6 @@
 1288~@~AdmPostman [   20] Main: SystemName   100 [Default]~@~4390~@~1028~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 1289~@~AdmPostman [   80] Main: Submit   100 [Default]~@~4420~@~1028~@~N~@~N~@~N~@~~@~~@~~@~~@~~@~100~@~
 1290~@~AdmPostman [   80] Main: Submit    10 [UsrGroup5]~@~4420~@~1028~@~Y~@~N~@~N~@~~@~~@~~@~8~@~5~@~10~@~800000005
+1291~@~AdmCompPref [   10] Main: CompPrefId   100 [Default]~@~4430~@~1029~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1292~@~AdmCompPref [   40] Main: CompPrefDesc   100 [Default]~@~4433~@~1029~@~N~@~N~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1293~@~AdmFlowchart [   30] Main: ChartDesc   100 [Default]~@~4380~@~1027~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~

@@ -3139,6 +3139,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			dr["CompanyId58"] = "DropDownList";
 			dr["ProjectId58"] = "DropDownList";
 			dr["Filler"] = "TextBox";
+			dr["MoreInfo"] = "HyperPopUp";
 			dr["SystemId58"] = "DropDownList";
 			dr["SysRowAuthorityId58"] = "DropDownList";
 			return dr;
@@ -3156,6 +3157,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				dr["ProjectId58"] = drv["ProjectId58"];
 				if (bAdd && dtAuth.Rows[6]["ColReadOnly"].ToString() == "Y" && dr["ProjectId58"].ToString() == string.Empty) {dr["ProjectId58"] = System.DBNull.Value;}
 				dr["Filler"] = drv["Filler"].ToString().Trim();
+				dr["MoreInfo"] = drv["MoreInfo"];
 				dr["SystemId58"] = drv["SystemId58"];
 				if (bAdd && dtAuth.Rows[10]["ColReadOnly"].ToString() == "Y" && dr["SystemId58"].ToString() == string.Empty) {dr["SystemId58"] = System.DBNull.Value;}
 				dr["SysRowAuthorityId58"] = drv["SysRowAuthorityId58"];

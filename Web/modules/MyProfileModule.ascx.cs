@@ -91,7 +91,23 @@ namespace RO.Web
                     UserLabel.Text = LUser != null ? LUser.UsrName : Context.User.Identity.Name;
                     if (LUser.HasPic) { UsrPic.ImageUrl = base.GetUrlWithQSHash("~/DnLoad.aspx?key=" + LUser.UsrId.ToString() + "&tbl=dbo.Usr&knm=UsrId&col=PicMed&sys=3"); UsrPic.Visible = true; }
 
-                    SystemsList.DataSource = GetSystemsList(); 
+
+                    SystemsList.DataSource = GetSystemsList();
+                    if (LCurr != null && LUser != null)
+                    {
+                        DataTable dtSystem = GetCompanyProf();
+                        if (dtSystem != null && dtSystem.Rows.Count > 0)
+                        {
+                            string logo = dtSystem.Rows[0]["CompanyLogo"].ToString();
+                            string systemLs = dtSystem.Rows[0]["SystemLs"].ToString();
+                            DataView dv = GetSystemsList();
+                            if (!string.IsNullOrEmpty(systemLs) && systemLs != "()")
+                            {
+                                dv.RowFilter = "Active='Y' AND SystemId IN " + systemLs;
+                                SystemsList.DataSource = dv;
+                            }
+                        }
+                    }
                     CompanyList.DataSource = GetCompanyList();
                     ProjectList.DataSource = GetProjectList();
                     TimeZoneList.DataSource = GetTimeZoneList();
@@ -165,6 +181,24 @@ namespace RO.Web
                 if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
                 this.Redirect(loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "typ=" + Request.QueryString["typ"].ToString().ToUpper());
             }
+        }
+        private DataTable GetCompanyProf()
+        {
+            string companyId = LCurr.CompanyId.ToString();
+            DataTable dt = (DataTable)Session["CompanyProf_" + companyId];
+            if (dt == null)
+            {
+                string dbConnectionString = base.SysConnectStr(3);
+                string pwd = base.AppPwd(3);
+                SerializableDictionary<string, string> callParams = new SerializableDictionary<string, string>() { { "companyId", companyId } };
+                dt = new AdminSystem().RunWrRule(0, "WrGetCompLogo", dbConnectionString, pwd
+                                          , ToXMLParams(callParams)
+                                          //, string.Format("<Params><CompanyId>{0}</CompanyId></Params>", LCurr.CompanyId)
+                                        , LImpr, LCurr);
+
+                Session["CompanyProf_" + companyId] = dt;
+            }
+            return dt;
         }
         private DataView GetCompanyList()
         {
@@ -253,6 +287,7 @@ namespace RO.Web
             }
             DataView dv = dt.DefaultView;
             dv.RowFilter = "Active='Y'";    // Only display active systems.
+
             return dv;
         }
 

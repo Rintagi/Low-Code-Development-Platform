@@ -592,7 +592,7 @@
 
         var web3 = null;
         var provider = null;
-        connectWeb3(walletconnect)
+        connectWeb3(undefined, walletconnect)
             .then(function (_web3) {
                 web3 = _web3.web3;
                 provider = _web3.provider;
@@ -649,12 +649,12 @@
             var registrationRequest = $("#<%= cEth1RegistrationRequest.ClientID %>").val();
             var assertionRequest = $("#<%= cEth1AssertionRequest.ClientID %>").val();
             if (registrationRequest) {
-                if (hasEthereum) $("#<%= cLinkEth1WalletBtn.ClientID %>").show();
+                if (hasEthereum) $("#<%= cLinkMetaMaskBtn.ClientID %>").show();
                 if (hasWalletConnect) $("#<%= cLinkEth1WalletBtn.ClientID %>").show();
             }
             if (assertionRequest) {
-                if (hasEthereum) $("#<%= cEth1WalletLoginBtn.ClientID %>").show();
-                if (hasWalletConnect) $("#<%= cMetaMaskLoginBtn.ClientID %>").show();
+                if (hasEthereum) $("#<%= cMetaMaskLoginBtn.ClientID %>").show();
+                if (hasWalletConnect) $("#<%= cEth1WalletLoginBtn.ClientID %>").show();
             }
         }
     });

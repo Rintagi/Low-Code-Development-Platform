@@ -172,6 +172,8 @@ class MstRecord extends RintagiScreen {
           Active1: values.cActive1 ? 'Y' : 'N',
           InternalUsr1: values.cInternalUsr1 ? 'Y' : 'N',
           TechnicalUsr1: values.cTechnicalUsr1 ? 'Y' : 'N',
+          EmailLink1: values.cEmailLink1 || '',
+          MobileLink1: values.cMobileLink1 || '',
           FailedAttempt1: values.cFailedAttempt1 || '',
           LastSuccessDt1: values.cLastSuccessDt1 || '',
           LastFailedDt1: values.cLastFailedDt1 || '',

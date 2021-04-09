@@ -10,7 +10,6 @@ namespace RO.Rule3
     using RO.Common3.Data;
     using RO.SystemFramewk;
     using RO.Access3;
-    using RO.WebRules;
     using System.Collections.Generic;
 
     public class GenReactRules
@@ -47,6 +46,17 @@ namespace RO.Rule3
             }
         }
 
+        private WebAccessBase GetWebAccess(int CommandTimeout = 1800)
+        {
+            if ((Config.DesProvider ?? "").ToLower() != "odbc")
+            {
+                return new WebAccess();
+            }
+            else
+            {
+                return new RO.Access3.Odbc.WebAccess();
+            }
+        }
         public bool DirectSaveToDb(DataRow dr)
         {
             string DisplayMode = dr["DisplayMode"].ToString();
@@ -72,6 +82,7 @@ namespace RO.Rule3
             || DisplayName == "ListBox"
             || DisplayName == "RadioButtonList"
             || DisplayMode == "Document"
+            || DisplayName == "HyperLink" 
             ;
         }
 
@@ -141,12 +152,12 @@ namespace RO.Rule3
                 string screenId = ScreenId;
                 string screenName = ScreenName;
 
-                DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+                DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
                 string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
 
                 if ("I1,I2,I3".IndexOf(screenTypeName) >= 0)
                 {
-                    DataView dvReactRule = new DataView((new WebRule()).WrGetWebRule(screenId, dbConnectionString, dbPassword));
+                    DataView dvReactRule = new DataView(WrGetWebRule(screenId, dbConnectionString, dbPassword));
 
                     StringBuilder sbReactJsRoute = MakeReactJsRoute(screenId);
                     StringBuilder sbReactJsReduxIndex = MakeReactJsReduxIndex();
@@ -218,7 +229,7 @@ namespace RO.Rule3
 
         private StringBuilder MakeReactJsRoute(string screenId)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string SystemId = DbId.ToString();
             foreach (DataRowView drv in dvItms)
             {
@@ -365,7 +376,7 @@ let redux = {
         //React Page Generation
         private StringBuilder MakeReactJsIndex(string screenId, string screenName)
         {
-            DataTable dtItms = (new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword);
+            DataTable dtItms = WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword);
             DataView dvItms = new DataView(dtItms);
             string screenTypeName = dvItms[0]["ScreenTypeName"].ToString();
             bool gridOnly = screenTypeName == "I3";
@@ -527,7 +538,7 @@ export function getNaviBar(type, mst, dtl, label) {
 
         private StringBuilder MakeReactJsMstList(string screenId, string screenName)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenPrimaryKey = "";
             foreach (DataRowView drv in dvItms)
             {
@@ -1232,7 +1243,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
 
         private StringBuilder MakeReactJsMstRecord(string screenId, string screenName, DataView dvReactRule)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenPrimaryKey = "";
             string screenMstTableId = "";
             foreach (DataRowView drv in dvItms)
@@ -2830,7 +2841,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(MstRecord);
 
         private StringBuilder MakeReactJsDtlList(string screenId, string screenName)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenPrimaryKey = "";
             foreach (DataRowView drv in dvItms)
             {
@@ -3420,7 +3431,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
 
         private StringBuilder MakeReactJsDtlRecord(string screenId, string screenName, DataView dvReactRule)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenPrimaryKey = "";
             string screenMstTableId = "";
             string screenDtlTableId = "";
@@ -4863,7 +4874,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlRecord);
         //Redux Generation
         private StringBuilder MakeReactJsRedux(string screenId, string screenName, DataView dvReactRule)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenDef = screenName + screenId;
 
             string screenPrimaryKey = "";
@@ -5200,7 +5211,7 @@ export default new [[---ScreenName---]]Redux()
         //React Service Generation
         private StringBuilder MakeReactJsService(string screenId, string screenName, DataView dvReactRule)
         {
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
             string screenDef = screenName + screenId;
             List<string> GetCriteriaResults = new List<string>();
             List<string> GetDdlListResults = new List<string>();
@@ -5780,9 +5791,9 @@ export function GetDocZipDownload(keyId, options, accessScope) {
             List<string> AsmxCustomFunctionResults = new List<string>();
             Func<string, int, string> addIndent = (s, c) => new String(' ', c) + s;
 
-            DataView dvAsmxRule = new DataView((new WebRule()).WrGetWebRule(screenId, dbConnectionString, dbPassword));
+            DataView dvAsmxRule = new DataView(WrGetWebRule(screenId, dbConnectionString, dbPassword));
 
-            DataView dvItms = new DataView((new WebRule()).WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
+            DataView dvItms = new DataView(WrGetScreenObj(screenId, CultureId, null, dbConnectionString, dbPassword));
 
             string screenPrimaryKey = "";
             string screenPrimaryKeyName = "";
@@ -7261,5 +7272,19 @@ export function GetDocZipDownload(keyId, options, accessScope) {
         }
         //End Asmx Generation
 
+        public DataTable WrGetScreenObj(string ScreenId, Int16 CultureId, string ScreenObjId, string dbConnectionString, string dbPassword)
+        {
+            using (WebAccessBase dac = GetWebAccess())
+            {
+                return dac.WrGetScreenObj(ScreenId, CultureId, ScreenObjId, dbConnectionString, dbPassword);
+            }
+        }
+        public DataTable WrGetWebRule(string ScreenId, string dbConnectionString, string dbPassword)
+        {
+            using (WebAccessBase dac = GetWebAccess())
+            {
+                return dac.WrGetWebRule(ScreenId, dbConnectionString, dbPassword);
+            }
+        }
     }
 }

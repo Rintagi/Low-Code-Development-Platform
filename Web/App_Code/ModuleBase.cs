@@ -2532,15 +2532,15 @@ namespace RO.Web
                 cols = z.cols.Select(r => r.Select((c, i) => i == 0 ? "GetDdl" + c : c).ToList()).ToList()
             }).ToList();
         }
-        protected virtual void ReturnAsAttachment(byte[] content, string fileName, string mimeType = "application/octet-stream", bool inline = true)
+        protected virtual void ReturnAsAttachment(byte[] content, string fileName, string mimeType = "application/octet-stream", bool notInline = true)
         {
             Response.Buffer = true;
             Response.ClearHeaders();
             Response.ClearContent();
             Response.ContentType = mimeType;
-            string contentDisposition = inline ? "attachment" : "inline";
+            string contentDisposition = notInline ? "attachment" : "inline";
             Response.AppendHeader("Content-Disposition", contentDisposition + "; Filename=" + fileName);
-            Response.BinaryWrite(content);
+            Response.BinaryWrite(content ?? new byte[0]);
             Response.End();
         }
 
@@ -3031,7 +3031,14 @@ namespace RO.Web
                 // save to web.config on production, but silently failed. this would remove comments in appsettings 
                 if (Config.DeployType == "PRD")
                 {
-                    config.Save(ConfigurationSaveMode.Modified);
+                    try
+                    {
+                        config.Save(ConfigurationSaveMode.Modified);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorTrace(ex, "critcal");
+                    }
                 }
                 else
                 {
@@ -3482,7 +3489,16 @@ namespace RO.Web
             }
             return msg;
         }
-
+        public static string ToXMLParams(Dictionary<string, string> WrSPCallParams, string xlmRootName = "Params", List<string> onlyInclude = null)
+        {
+            List<string> x = WrSPCallParams
+                    .Where(kvp => onlyInclude == null || onlyInclude.Contains(kvp.Key))
+                    .Aggregate(new List<string>(), (a, kvp) => { a.Add(string.Format("<{0}>{1}</{0}>", kvp.Key, kvp.Value)); return a; });
+            string xmlParams = string.Format("<{0}>{1}</{0}>",
+                    xlmRootName,
+                    string.Join("", x.ToArray()));
+            return xmlParams;
+        }
 
         #region embedded doc(ImageButton) content helpers
         protected byte[] ResizeImage(byte[] image, int maxHeight = 360)
@@ -4329,7 +4345,7 @@ namespace RO.Web
                         return false;
                     };
                     var publishRet =
-                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/v:n {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
+                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/t:rebuild /v:n {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
 
                 }
                 else
@@ -4879,6 +4895,8 @@ document.Rintagi = {{
                     bool gitCommitSQL = (releaseTypeAbbr.ToUpper().Contains("PDT") 
                                          ||
                                          gitCommit
+                                         ||
+                                         Config.EnforceGitCommit
                                          )
                                         && System.IO.Directory.Exists(appRoot + "/SQL")
                                         && System.IO.Directory.Exists(appRoot + "/.git")

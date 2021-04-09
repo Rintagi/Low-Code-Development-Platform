@@ -2537,6 +2537,35 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CrOneCompDefaultOnly') AND type='P')
+EXEC('CREATE PROCEDURE dbo.CrOneCompDefaultOnly AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[CrOneCompDefaultOnly]
+ @CompanyId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+IF (SELECT count('true') FROM dbo.Flowchart WHERE CompanyId = @CompanyId AND CompanyDefault = 'Y') > 1
+BEGIN
+	RAISERROR('CrOneCompDefaultOnly: Please choose only one flowchart Default for this company and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+IF (SELECT count('true') FROM dbo.Flowchart WHERE @CompanyId is null AND CompanyId is null AND CompanyDefault = 'Y') > 1
+BEGIN
+	RAISERROR('CrOneCompDefaultOnly: Please choose only one flowchart Default for the public and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.DelAdmRptWiz95Dt') AND type='P')
 EXEC('CREATE PROCEDURE dbo.DelAdmRptWiz95Dt AS SELECT 1')
 GO
@@ -3611,6 +3640,7 @@ SELECT @sClause = 'SELECT ChartId1325=b1325.ChartId'
 + ', ChartName1325=b1325.ChartName'
 + ', ChartDesc1325=b1325.ChartDesc'
 + ', CompanyId1325=b1325.CompanyId'
++ ', CompanyDefault1325=b1325.CompanyDefault'
 + ', ChartData1325=b1325.ChartData'
 SELECT @wClause = 'WHERE b1325.ChartId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
@@ -26648,6 +26678,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', ChartDesc1325=b1325.ChartDesc'
 + ', CompanyId1325=x7690.CompanyId'
 + ', CompanyId1325Text=x7690.CompanyDesc'
++ ', CompanyDefault1325=b1325.CompanyDefault'
 + ', ChartData1325=b1325.ChartData'
 SELECT @oClause='ORDER BY b1325.ChartId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
@@ -32771,7 +32802,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 	,@CompanyId		Int
 SELECT @fClause='FROM dbo.Flowchart b1325 (NOLOCK)'
-SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ChartId1325=b1325.ChartId, ChartId1325Text=b1325.ChartName, MatchCount=COUNT(1) OVER ()'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ChartId1325=b1325.ChartId, ChartId1325Text=b1325.ChartName, ChartId1325TextR=b1325.CompanyDefault, ChartId1325DtlR=b1325.CompanyId, MatchCount=COUNT(1) OVER ()'
 SELECT @oClause='ORDER BY b1325.ChartName'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -32823,7 +32854,7 @@ EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyId','Company','b1325.','N
 IF @key is not null SELECT @wClause = @wClause + ' AND (b1325.ChartId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
 
 SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
-IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1325.ChartName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
+IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b1325.ChartName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b1325.CompanyDefault LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'' OR b1325.CompanyId LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
 GO

@@ -162,6 +162,9 @@ class MstRecord extends RintagiScreen {
           DeferError15: values.cDeferError15 ? 'Y' : 'N',
           AuthRequired15: values.cAuthRequired15 ? 'Y' : 'N',
           GenAudit15: values.cGenAudit15 ? 'Y' : 'N',
+          ScreenObj15: values.cScreenObj15 || '',
+          ScreenFilter: values.cScreenFilter || '',
+          MoreInfo: values.cMoreInfo || '',
         },
         [],
         {

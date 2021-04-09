@@ -45,6 +45,7 @@ namespace RO.Web
             columns.Add("MasterPgFile259", typeof(string));
             columns.Add("StaticCsId259", typeof(string));
             columns.Add("StaticJsId259", typeof(string));
+            columns.Add("StaticPgUrl259", typeof(string));
             columns.Add("StaticMeta259", typeof(string));
             columns.Add("StaticPgHtm259", typeof(string));
             columns.Add("StaticPgCss259", typeof(string));
@@ -132,6 +133,8 @@ namespace RO.Web
             drType["StaticCsId259"] = "Numeric"; drDisp["StaticCsId259"] = "DropDownList";
             try { dr["StaticJsId259"] = mst["StaticJsId259"]; } catch { }
             drType["StaticJsId259"] = "Numeric"; drDisp["StaticJsId259"] = "DropDownList";
+            try { dr["StaticPgUrl259"] = mst["StaticPgUrl259"]; } catch { }
+            drType["StaticPgUrl259"] = "VarChar"; drDisp["StaticPgUrl259"] = "HyperPopUp";
             try { dr["StaticMeta259"] = mst["StaticMeta259"]; } catch { }
             drType["StaticMeta259"] = "VarWChar"; drDisp["StaticMeta259"] = "MultiLine";
             try { dr["StaticPgHtm259"] = mst["StaticPgHtm259"]; } catch { }

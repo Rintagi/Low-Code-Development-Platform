@@ -74,7 +74,11 @@ class MstList extends RintagiScreen {
     this.props.setSpinner(true);
   }
 
-
+  CriCompanyId10InputChange() {
+    return function (name, v) {
+      this.props.SearchCriCompanyId10(v);
+    }.bind(this);
+  }
 
   /* standard screen button actions for each screen, must implement if button defined */
   Print({ mst, mstId }) {
@@ -158,7 +162,7 @@ class MstList extends RintagiScreen {
     const refreshFn = (() => {
       this.props.SetScreenCriteria(values.search,
         {
-
+          CompanyId10: (values.cCriCompanyId10) ? values.cCriCompanyId10.value : '',
         },
         (values.cFilterId) ? values.cFilterId.value : 0);
     }).bind(this);
@@ -277,7 +281,8 @@ class MstList extends RintagiScreen {
     let filterBtnStyle = classNames({ 'filter-button-clicked': screenCriteria.ShowFilter });
     let filterActive = classNames({ 'filter-icon-active': screenCriteria.ShowFilter });
 
-
+    const CriCompanyId10List = screenCriDdlSelectors.CompanyId10(AdmFlowchartState);
+    const CriCompanyId10Selected = CriCompanyId10List.filter(obj => { return obj.key === screenCriteria.CompanyId10.LastCriteria });
 
     const hasScreenFilter = screenFilterList.length > 0;
     const activeSelectionVisible = selectList.filter(v => v.isSelected).length > 0;
@@ -358,7 +363,7 @@ class MstList extends RintagiScreen {
                     </div>
                     <Formik
                       initialValues={{
-
+                        cCriCompanyId10: CriCompanyId10Selected[0],
                         search: screenCriteria.SearchStr || '',
                         cFilterId: (screenFilterSelected.length > 0 ? screenFilterSelected[0] : screenFilterList[0])
                       }}
@@ -378,7 +383,19 @@ class MstList extends RintagiScreen {
                               <div className='form__form-group'>
                                 <div className={`form__form-group filter-padding ${filterVisibility}`} key={screenCriteria.key}>
                                   <Row className='mb-5'>
-
+                                    <Col xs={12} md={12}>
+                                      <label className='form__form-group-label filter-label'>{(screenCriteria.CompanyId10 || {}).ColumnHeader}</label>
+                                      <div className='form__form-group-field filter-form-border'>
+                                        <AutoCompleteField
+                                          name='cCriCompanyId10'
+                                          onChange={this.SearchFilterValueChange(handleSubmit, setFieldValue, 'autocomplete', 'cCriCompanyId10')}
+                                          onInputChange={this.CriCompanyId10InputChange()}
+                                          value={values.cCriCompanyId10}
+                                          defaultSelected={CriCompanyId10Selected}
+                                          options={CriCompanyId10List}
+                                        />
+                                      </div>
+                                    </Col>
                                   </Row>
                                   <Row>
                                     {hasScreenFilter && <Col xs={12} md={12}>
@@ -545,7 +562,7 @@ const mapDispatchToProps = (dispatch) => (
     { AddDtl: AdmFlowchartReduxObj.AddDtl.bind(AdmFlowchartReduxObj) },
     { changeMstListFilterVisibility: AdmFlowchartReduxObj.ChangeMstListFilterVisibility.bind(AdmFlowchartReduxObj) },
     { SetScreenCriteria: AdmFlowchartReduxObj.SetScreenCriteria.bind(AdmFlowchartReduxObj) },
-
+    { SearchCriCompanyId10: AdmFlowchartReduxObj.SearchActions.SearchCriCompanyId10.bind(AdmFlowchartReduxObj) },
     { checkBundleUpdate: checkBundleUpdate },
     { setTitle: setTitle },
     { setSpinner: setSpinner },

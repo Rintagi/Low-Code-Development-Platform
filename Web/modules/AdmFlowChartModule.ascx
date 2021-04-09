@@ -194,6 +194,10 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     		<div id="cCompanyId1325P1" class="r-td r-labelR" runat="server"><asp:Label id="cCompanyId1325Label" CssClass="inp-lbl" runat="server" /></div>
     		<div id="cCompanyId1325P2" class="r-td r-content" runat="server"><rcasp:ComboBox autocomplete="off" id="cCompanyId1325" CssClass="inp-ddl" Mode="A" OnPostBack="cbPostBack" OnSearch="cbCompanyId1325" DataValueField="CompanyId1325" DataTextField="CompanyId1325Text" runat="server" /></div>
     	</div>
+    	<div class="r-tr">
+    		<div id="cCompanyDefault1325P1" class="r-td r-labelR" runat="server"><asp:Label id="cCompanyDefault1325Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cCompanyDefault1325P2" class="r-td r-content" runat="server"><asp:CheckBox id="cCompanyDefault1325" CssClass="inp-chk" runat="server" /></div>
+    	</div>
     </div></div></div>
     <div class="r-td rc-5-10"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">

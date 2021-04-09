@@ -130,6 +130,7 @@ class MstRecord extends RintagiScreen {
         this.props.AdmLabelVw,
         {
           LabelId265: values.cLabelId265 || '',
+          LabelLink265: values.cLabelLink265 || '',
           CultureId265: values.cCultureId265 || '',
           LabelCat265: values.cLabelCat265 || '',
           LabelKey265: values.cLabelKey265 || '',

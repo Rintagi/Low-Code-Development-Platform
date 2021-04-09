@@ -1985,7 +1985,7 @@ namespace RO.Web
                 string signerAddress = signer.EcRecover(message, sig);
                 LinkUserLogin(LUser.UsrId, "Eth1", signerAddress);
                 PreMsgPopup(
-                    string.Format("WebAuthn(Fido2) registration successful with id {0}"
+                    string.Format("Eth1 Mobile Wallet/MetaMask registration successful with id {0}"
                         , signerAddress
                         )
                     );

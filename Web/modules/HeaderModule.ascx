@@ -28,7 +28,7 @@
     <div class="r-td rc-1-4 SctGrpCol19 HideOnMobile">
         <div ID="cLogoHolder" class="SctGrpDiv19" runat="server">
         <div class="PageObj1">
-            <asp:HyperLink NavigateUrl="~/Default.aspx" runat="server"><asp:Image CssClass="PageLnk35" ImageUrl="~/images/special/YourLogo.gif" runat="server" /></asp:HyperLink>
+            <asp:HyperLink NavigateUrl="~/Default.aspx" runat="server"><asp:Image ID="headerLogo" CssClass="PageLnk35" ImageUrl="~/images/special/YourLogo.gif" runat="server" /></asp:HyperLink>
         </div>
         </div>
     </div>

@@ -8,6 +8,7 @@ using System.Web.SessionState;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
+using RO.Common3;
 
 namespace RO.Web
 {
@@ -18,6 +19,7 @@ namespace RO.Web
 		{
 			Page.PreInit += new System.EventHandler(Page_PreInit);
 			Page.Init += new System.EventHandler(Page_Init);
+			Page.Title = Config.WebTitle + " - Client Rule";
 		}
 
 		protected void Page_Load(object sender, System.EventArgs e)

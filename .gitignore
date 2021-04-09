@@ -23,6 +23,7 @@ Import/*
 Web/data/tmp/*
 Web/data/*
 Web/react/*
+Web/bin/*.xml
 *.webinfo
 *.vsdisco
 *.exclude

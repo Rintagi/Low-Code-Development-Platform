@@ -134,7 +134,7 @@ WHERE ObjectType = 'S'
 221~@~3~@~CtFormat~@~Adm - Format Type~@~N~@~N~@~~@~This is the available format types, culture dependent.~@~~@~55~@~2008-06-14 09:10:56.420~@~2008-06-14 09:11:28.310
 225~@~3~@~CtLinkType~@~Adm - Link Type~@~N~@~N~@~~@~This is a code table capturing the widgets (home logo, social icons, links, etc.) available for Header, Footer, and Side Panels.~@~~@~55~@~2014-06-11 18:16:01.990~@~2014-06-10 21:06:40.000
 227~@~3~@~CtMatch~@~Adm - Match Type~@~N~@~N~@~~@~This is a code table capturing the match types for grid import~@~~@~55~@~2008-08-22 11:47:19.193~@~2008-08-22 11:47:41.783
-228~@~3~@~CtAccess~@~Adm - Access Type~@~N~@~N~@~~@~This is a code table stating 'P' when public, 'V' when private.~@~~@~2~@~2020-06-09 22:57:51.247~@~2012-06-13 14:37:35.000
+228~@~3~@~CtAccess~@~Adm - Access Type~@~N~@~N~@~~@~This is a code table stating 'P' when public, 'V' when private.~@~~@~2~@~2021-03-16 16:20:11.290~@~2012-06-13 14:37:35.000
 229~@~3~@~CtEveryone~@~Adm - Everyone Code Table~@~N~@~N~@~~@~This is a code table with three rows for Menu Permission purpose: Y for All, G for Grant and D for Deny.~@~~@~55~@~2009-06-06 21:09:04.660~@~2009-06-15 13:38:57.803
 230~@~3~@~VwPermKey~@~Adm - Permission Keys View~@~N~@~Y~@~CREATE VIEW [dbo].[VwPermKey]
 AS
@@ -345,7 +345,8 @@ FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1322~@~3~@~AtServerRuleOvrd~@~Adm - Server Rule Override~@~Y~@~N~@~~@~Server Rule override(enable/disable)~@~~@~2~@~2020-04-30 14:54:54.903~@~2020-04-30 07:55:07.210
 1323~@~3~@~utServerRuleOvrd~@~Adm - Server Rule Override (local COW)~@~Y~@~N~@~~@~Server Rule override(enable/disable), local setup copy on write~@~~@~2~@~2020-04-30 14:56:26.497~@~2020-04-30 07:56:45.640
 1324~@~3~@~utServerRuleOvrdPrm~@~Adm - Server Rule Override Permission(COW)~@~Y~@~N~@~~@~Server Rule suppression configuration(local copy on write, for merging)~@~~@~2~@~2020-04-30 15:26:55.353~@~2020-04-30 07:58:01.000
-1325~@~3~@~Flowchart~@~Adm - Flowchart~@~Y~@~N~@~~@~This captures the flowchart information.~@~~@~2~@~2021-02-17 23:10:43.690~@~2021-02-17 15:10:47.580
+1325~@~3~@~Flowchart~@~Adm - Flowchart~@~N~@~N~@~~@~This captures the flowchart information.~@~~@~2~@~2021-03-03 20:12:08.990~@~2021-03-03 12:12:55.070
 1326~@~3~@~UsrProvider~@~Adm - User login provider(SSO)~@~N~@~N~@~~@~~@~~@~2~@~2021-01-31 11:49:41.593~@~2021-01-31 03:59:38.413
 1327~@~3~@~UsrDevice~@~Adm - User Device~@~N~@~N~@~~@~table to track user login devices(for push notification etc.)~@~~@~2~@~2020-11-23 05:25:07.330~@~2020-11-22 21:25:14.447
 1328~@~3~@~VwMIMEType~@~Adm - MIME Type~@~N~@~N~@~~@~~@~~@~2~@~2020-12-11 12:54:19.130~@~2020-12-11 04:53:44.000
+1329~@~3~@~CompPref~@~Adm - Company Preference~@~N~@~N~@~~@~This captures all company preferences information.~@~~@~2~@~2021-02-24 14:11:05.760~@~2021-02-24 06:11:12.463

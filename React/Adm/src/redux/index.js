@@ -18,6 +18,7 @@ import AdmClientRuleReduxObj from './AdmClientRule';
 import AdmClnTierReduxObj from './AdmClnTier';
 import AdmColDrgReduxObj from './AdmColDrg';
 import AdmColHlpReduxObj from './AdmColHlp';
+import AdmCompPrefReduxObj from './AdmCompPref';
 import AdmCronJobReduxObj from './AdmCronJob';
 import AdmCtButtonHlpReduxObj from './AdmCtButtonHlp';
 import AdmCtCultureReduxObj from './AdmCtCulture';
@@ -102,6 +103,7 @@ let redux = {
     AdmClnTier: AdmClnTierReduxObj.ReduxReducer(),
     AdmColDrg: AdmColDrgReduxObj.ReduxReducer(),
     AdmColHlp: AdmColHlpReduxObj.ReduxReducer(),
+    AdmCompPref: AdmCompPrefReduxObj.ReduxReducer(),
     AdmCronJob: AdmCronJobReduxObj.ReduxReducer(),
     AdmCtButtonHlp: AdmCtButtonHlpReduxObj.ReduxReducer(),
     AdmCtCulture: AdmCtCultureReduxObj.ReduxReducer(),

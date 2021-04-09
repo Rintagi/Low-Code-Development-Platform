@@ -2705,6 +2705,7 @@ function connectWeb3(urlEndpoint, walletconnect) {
             var provider = new WalletConnectProvider.default({
                 infuraId: "", // required
                 pollingInterval: 60 * 60 * 1000, // in ms must do this to stop the frequent polling(default 1s, too much for infura)
+                bridge: "https://bridge.walletconnect.org", // should use private one for performance
                 rpc: {
                     100: "https://rpc.xdaichain.com/", // required for any non-ethereum networkId(returned from remote wallet)
                 }

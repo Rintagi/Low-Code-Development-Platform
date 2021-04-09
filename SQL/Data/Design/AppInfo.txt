@@ -2829,4 +2829,21 @@ may need to add the following to web.config for assembly redirection
         <bindingRedirect oldVersion="0.0.0.0-1.8.9.0" newVersion="1.8.9.0"/>
       </dependentAssembly>~@~1. minor console message change to installer, latest is 4.9.15.0
 2. add assembly redirect requirement to sampleweb.config~@~~@~en-US~@~
-12671~@~  11. 234~@~11~@~234~@~~@~~@~~@~~@~~@~~@~
+12671~@~  11. 234.10219~@~11~@~234~@~2021-02-19 00:00:00.000~@~~@~~@~1. improve installer to exclude more temp files during backup and handle C$ form path that breaks exclusion logic~@~~@~en-US~@~
+12672~@~  11. 235.10220~@~11~@~235~@~2021-02-20 00:00:00.000~@~~@~~@~1. make new installation to use AES-256 as the encryption method(via web.config configuration)
+2. add missing '$' escape to installer zip library, installer version bump to 4.9.18
+3. add EnforceGitCommit for SQL snapshot commit on all webhook installer creation(on top of mandatory PDT)~@~~@~en-US~@~
+12673~@~  11. 236.10225~@~11~@~236~@~2021-02-25 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+12674~@~  11. 237.10226~@~11~@~237~@~2021-02-26 00:00:00.000~@~~@~~@~1. handle exception cases for company profile setup~@~~@~en-US~@~
+12675~@~  11. 238.10304~@~11~@~238~@~2021-03-04 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+12676~@~  11. 239.10305~@~11~@~239~@~2021-03-05 00:00:00.000~@~~@~~@~1. make screen title prefix runtime configuration rather than design time
+2. make flowchart to be in XXDesign only
+3. fix CrDelUsr issue on 'foreign key' checking
+4. revise installer/deployment process to better handle mix case use of create view or xxdesign.dbo.tablename(against the convention of ALL CAP for xx and CREATE)~@~~@~en-US~@~
+12677~@~  11. 240.10310~@~11~@~240~@~2021-03-10 00:00:00.000~@~~@~~@~1. improve installer to handle directory ACL by IIS
+2. improve password encryption handling in new installation~@~~@~en-US~@~
+12678~@~  11. 241.10317~@~11~@~241~@~2021-03-17 00:00:00.000~@~~@~~@~1. re-enable generate save dataset column for hyperlink control(required when used on primary key)
+2. add company profile screen
+3. revise flowchart screen~@~~@~en-US~@~
+12679~@~  11. 242.10408~@~11~@~242~@~2021-04-08 00:00:00.000~@~~@~~@~1. minor improvement to deployment package on db index handling~@~~@~en-US~@~
+12680~@~  11. 243~@~11~@~243~@~~@~~@~~@~~@~~@~~@~

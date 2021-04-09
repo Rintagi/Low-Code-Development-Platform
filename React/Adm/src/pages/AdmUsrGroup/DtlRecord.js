@@ -113,6 +113,7 @@ class DtlRecord extends RintagiScreen {
           CompanyId58: (values.cCompanyId58 || {}).value || '',
           ProjectId58: (values.cProjectId58 || {}).value || '',
           Filler: values.cFiller || '',
+          MoreInfo: values.cMoreInfo || '',
           SystemId58: (values.cSystemId58 || {}).value || '',
           SysRowAuthorityId58: (values.cSysRowAuthorityId58 || {}).value || '',
           _mode: ScreenButton.buttonType === 'DelRow' ? 'delete' : (values.cUsrGroupAuthId58 ? 'upd' : 'add'),

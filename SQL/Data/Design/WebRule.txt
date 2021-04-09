@@ -2807,7 +2807,7 @@ document.Rintagi = {{
 191~@~4~@~Button to launch flowchart editor~@~Flow Chart IDE: Button to launch flowchart editor~@~Button to launch flowchart editor~@~1027~@~~@~~@~9~@~if (claunch.Attributes["OnClick"] == null) { claunch.Attributes["OnClick"] += "SearchLink('flowchart.html','myFlowChart','100%','90vh'); return false;"; }~@~~@~~@~~@~~@~~@~~@~~@~~@~
 193~@~4~@~Hide and show view button and add logic~@~Flowchart IDE: Hide and show view button and add logic~@~Hide and show view button and add logic~@~1027~@~~@~~@~11~@~if (!string.IsNullOrEmpty(cChartId1325.Text))
             {
-                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue + "'); return false;";
+                cView.OnClientClick = "window.open('viewchart.aspx?key=" + cChartId1325.Text + "'); return false;";
             }
 
  if (string.IsNullOrEmpty(cAdmFlowchart1027List.SelectedValue))
@@ -2823,7 +2823,8 @@ document.Rintagi = {{
 194~@~4~@~Display on Default Button~@~Flowchart IDE: Display on Default Button~@~Display on Default Button~@~1027~@~4385~@~~@~1~@~string projectRootPath = Config.RuleTierPath;
             var lines = File.ReadAllLines(projectRootPath + "/Web/modules/DefaultModule.ascx");
             string firstLine = lines[0];
-            string flowchartLink = "viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue;
+            //string flowchartLink = "viewchart.aspx?key=" + cChartId1325.Text + "&csy="+ cSystemId.SelectedValue;
+            string flowchartLink = "viewchart.aspx";
             string flowchartIframe = "<iframe id='myiFrame' src='" + flowchartLink + "' style='width: 100%; height: 70vh; visibility:visible;'></iframe>";
 
             StringBuilder sb = new StringBuilder();

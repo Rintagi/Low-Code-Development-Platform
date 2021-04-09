@@ -147,6 +147,7 @@ class MstRecord extends RintagiScreen {
           InstallID: values.cInstallID || '',
           AppID: values.cAppID || '',
           AppNameSpace: values.cAppNameSpace || '',
+          RegisterInsall: values.cRegisterInsall || '',
           ExpiryDate: values.cExpiryDate || '',
           ModuleIncluded: values.cModuleIncluded || '',
           FeatureIncluded: values.cFeatureIncluded || '',

@@ -1,6 +1,7 @@
 namespace RO.Web
 {
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
     using System.Web;
@@ -13,6 +14,8 @@ namespace RO.Web
     public partial class HeaderModule : RO.Web.ModuleBase
     {
         private const string KEY_HeaderGenerated = "Cache:HeaderGenerated";
+        private string LcAppConnString;
+        private string LcAppPw;
 
         public HeaderModule()
         {
@@ -23,6 +26,10 @@ namespace RO.Web
         {
             if (!IsPostBack)
             {
+                bool isFullyLicensed = RO.Common3.Utils.IsFullyLicense("Design", "Deploy");
+                Tuple<string, bool, string> licenseDetail = RO.Common3.Utils.DecodeLicense(null);
+                Dictionary<string, Dictionary<string, string>> moduleList = RO.Common3.Utils.DecodeLicenseDetail(licenseDetail.Item1);
+                Dictionary<string, string> admLicenseDetail = moduleList.ContainsKey("Design") ? moduleList["Design"] : null;
                 if (Session[KEY_HeaderGenerated] == null) try
                 {
                     if (base.CPrj != null && base.CSrc != null && Config.DeployType == "DEV" && (new AdminSystem()).IsRegenNeeded("Header", 0, 0, 0, string.Empty, string.Empty))
@@ -35,8 +42,8 @@ namespace RO.Web
                 if (!Request.IsAuthenticated || LUser == null || LUser.LoginName.ToLower() == "anonymous")
                 {
                     string loginUrl = System.Web.Security.FormsAuthentication.LoginUrl;
-                    if (string.IsNullOrEmpty(loginUrl)) loginUrl = "~/MyAccount.aspx";
-                    cSignIn.Visible = true; cSignIn.NavigateUrl = loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "logo=N"; cProfileButton.Visible = false;
+                    if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
+                    cSignIn.Visible = true; cSignIn.NavigateUrl = "~/" + loginUrl + (loginUrl.Contains("?") ? "&" : "?") + "logo=N"; cProfileButton.Visible = false;
                 }
                 else
                 {
@@ -45,9 +52,9 @@ namespace RO.Web
                 if (Request.IsAuthenticated && base.LUser != null)
                 {
                     SetCultureId(cLang, LUser.CultureId.ToString());
-                    cWelcomeTime.Text = Utils.fmLongDate(DateTime.Now.ToString(), LUser.Culture ?? "en-us");
+                    cWelcomeTime.Text = Utils.fmLongDate(DateTime.Now.ToString(), LUser.Culture);
                 }
-                if (base.LUser != null && base.LPref != null && Request.QueryString["typ"] != null && Request.QueryString["typ"].ToString().ToUpper() == "N")
+                if (base.LUser != null && base.LPref != null && Request.QueryString["typ"] != null && Request.QueryString["typ"].ToString() == "N")
                 {
                     cLogoHolder.Visible = false;
                     cLinkHolder.Visible = false;
@@ -55,6 +62,18 @@ namespace RO.Web
                 }
                 if (cLinkHolder.Controls.Count <= 0) { cLinkButton.Visible = false; }
                 if (cSociHolder.Controls.Count <= 0) { cSociButton.Visible = false; }
+                try{
+                    string companyId = LCurr.CompanyId.ToString();
+                    DataTable dtCompanyLogo = new AdminSystem().RunWrRule(0, "WrGetCompLogo", LcAppConnString, LcAppPw, string.Format("<Params><companyId>{0}</companyId></Params>", companyId), LImpr, LCurr);
+                    if (dtCompanyLogo.Rows.Count > 0)
+                    {
+                        string logoUrl = dtCompanyLogo.Rows[0]["CompanyLogo"].ToString();
+                        if (!string.IsNullOrEmpty(logoUrl))
+                        {
+                            headerLogo.ImageUrl = dtCompanyLogo.Rows[0]["CompanyLogo"].ToString();
+                        }
+                    }
+                }catch { }
             }
         }
 

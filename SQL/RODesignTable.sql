@@ -359,6 +359,23 @@ ColOvrdId
 )
 
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CompPref') and type='U')
+BEGIN
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CompPref') AND type='U')
+DROP TABLE dbo.CompPref
+CREATE TABLE CompPref ( 
+CompPrefId int IDENTITY(1,1) NOT NULL ,
+CompanyId int NOT NULL ,
+CompanyLogo varchar (200) NULL ,
+CompPrefDesc nvarchar (200) NULL ,
+SystemLs varchar (1000) NULL ,
+CONSTRAINT PK_CompPref PRIMARY KEY CLUSTERED (
+CompPrefId
+)
+)
+END
+
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CronJob') and type='U')
 BEGIN
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.CronJob') AND type='U')
@@ -1462,6 +1479,7 @@ ChartName nvarchar (500) NOT NULL ,
 ChartDesc nvarchar (max) NULL ,
 ChartData nvarchar (max) NULL ,
 CompanyId int NULL ,
+CompanyDefault char (1) NOT NULL CONSTRAINT DF_Flowchart_CompanyDefault DEFAULT ('N'),
 CONSTRAINT PK_Flowchart PRIMARY KEY CLUSTERED (
 ChartId
 )

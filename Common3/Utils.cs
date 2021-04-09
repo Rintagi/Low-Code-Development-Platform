@@ -1989,6 +1989,50 @@
                 return false;
             }
         }
+        public static object JContainerToSystemObject(Newtonsoft.Json.Linq.JContainer c)
+        {
+            Func<Newtonsoft.Json.Linq.JObject, object> jObjToSys = null;
+            Func<Newtonsoft.Json.Linq.JArray, object> jArrayToSys = null;
+            Func<Newtonsoft.Json.Linq.JToken, object> jtToSys = (jt) =>
+            {
+                var t = jt.Type.ToString();
+                if (t == "String") return jt.ToObject<String>();
+                else if (t == "Integer") return jt.ToObject<System.Numerics.BigInteger>();
+                else if (t == "Boolean") return jt.ToObject<bool>();
+                else if (t == "Float") return jt.ToObject<double>();
+                else if (jt is Newtonsoft.Json.Linq.JArray) return jArrayToSys(jt as Newtonsoft.Json.Linq.JArray);
+                else if (jt is Newtonsoft.Json.Linq.JObject) return jObjToSys(jt as Newtonsoft.Json.Linq.JObject);
+                else return jt.ToObject<string>();
+            };
+
+            jArrayToSys = (a =>
+            {
+                return a.Select(jtToSys).ToList();
+            });
+
+            jObjToSys = (o =>
+            {
+                Dictionary<string, object> d = new System.Collections.Generic.Dictionary<string, object>();
+                foreach (var zzx in o as Newtonsoft.Json.Linq.JObject)
+                {
+                    d.Add(zzx.Key, jtToSys(zzx.Value));
+                };
+                return d;
+            });
+
+            if (c is Newtonsoft.Json.Linq.JArray)
+            {
+                return jArrayToSys(c as Newtonsoft.Json.Linq.JArray);
+            }
+            else if (c is Newtonsoft.Json.Linq.JArray)
+            {
+                return jObjToSys(c as Newtonsoft.Json.Linq.JObject);
+            }
+            else
+            {
+                throw new Exception(string.Format("{0} is not Array or Object byt {1}, not valid json source", c, c.GetType()));
+            }
+        }
 
         // Should only execute this on the client tier:
         //public static System.Collections.ArrayList GetSheetNames(string fileFullName)

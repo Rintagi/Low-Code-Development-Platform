@@ -145,10 +145,6 @@
       <Project>{4F199649-19B5-4BEF-846F-FE5D4CBB0ACA}</Project>
       <Name>SystemFramewk</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebRules\WebRules.csproj">
-      <Project>{e04af3f0-f94e-4149-b038-2403010ca914}</Project>
-      <Name>WebRules</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

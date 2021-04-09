@@ -14,6 +14,7 @@ import {pagesRoutes as AdmClientRuleRoute} from '../pages/AdmClientRule/index'
 import {pagesRoutes as AdmClnTierRoute} from '../pages/AdmClnTier/index'
 import {pagesRoutes as AdmColDrgRoute} from '../pages/AdmColDrg/index'
 import {pagesRoutes as AdmColHlpRoute} from '../pages/AdmColHlp/index'
+import {pagesRoutes as AdmCompPrefRoute} from '../pages/AdmCompPref/index'
 import {pagesRoutes as AdmCronJobRoute} from '../pages/AdmCronJob/index'
 import {pagesRoutes as AdmCtButtonHlpRoute} from '../pages/AdmCtButtonHlp/index'
 import {pagesRoutes as AdmCtCultureRoute} from '../pages/AdmCtCulture/index'
@@ -100,6 +101,7 @@ SuppressGenRoute ? [] : [
 ...AdmClnTierRoute,
 ...AdmColDrgRoute,
 ...AdmColHlpRoute,
+...AdmCompPrefRoute,
 ...AdmCronJobRoute,
 ...AdmCtButtonHlpRoute,
 ...AdmCtCultureRoute,

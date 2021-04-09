@@ -505,9 +505,21 @@ ORDER BY so1.name"
                         }
                         hasContent = true;
                         sbDrop.Append("IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = '" + drIx[0].ToString() + "' AND o.name = '" + dr2["tbName"].ToString() + "')\r\n");
-						sbDrop.Append("    DROP INDEX " + dr2["tbName"].ToString() + "." + drIx[0].ToString() + " \r\n\r\n");
+                        if (drIx[1].ToString().LastIndexOf("unique") > 0 && 1 != 1)
+                        {
+                            // some unique key was created as constraint and not index which should be drop as contstrain
+                            // though no way to tell from development thus disabled
+                            // can only be done manually and re-run to re-create as unique index !!!
+                            sbDrop.Append("    ALTER TABLE dbo." + dr2["tbName"].ToString() + " DROP CONSTRAINT " + drIx[0].ToString() + " \r\n\r\n");
+                        }
+                        else
+                        {
+                            sbDrop.Append("    DROP INDEX " + dr2["tbName"].ToString() + "." + drIx[0].ToString() + " \r\n\r\n");
+                        }
 						strIx = "CREATE ";
 						if (drIx[1].ToString().LastIndexOf("unique") > 0) {strIx += " UNIQUE ";}
+                        // there are case where non-primary index is clustered !
+                        if (drIx[1].ToString().LastIndexOf("nonclustered") < 0) { strIx += " CLUSTERED "; }
 						strIx += "INDEX " + drIx[0].ToString() + " ON " + dr2["tbName"].ToString() + "(";
 						strIx += drIx[2].ToString() + ")" 
                                     /* add covering columns */
@@ -594,7 +606,7 @@ ORDER BY so1.name"
 				foreach (DataRow dr2 in dtVw.Rows) {sbView.Append(dr2[0].ToString());}
 				if (!sbView.ToString().Equals(""))
 				{
-                    Regex rx = new Regex("(CREATE VIEW)(\\s+.*)((\\[)?" + dr[0].ToString() + "(\\])?)(.*\\s+AS)");
+                    Regex rx = new Regex("(CREATE VIEW)(\\s+.*)((\\[)?" + dr[0].ToString() + "(\\])?)(.*\\s+AS)",RegexOptions.IgnoreCase);
                     //sbCrea.Append("if exists (select * from dbo.sysobjects where id = object_id(N'dbo." + dr[0].ToString() + "') and OBJECTPROPERTY(id, N'IsView') = 1)\r\n");
                     //sbCrea.Append("drop view dbo." + dr[0].ToString() + "\r\n");
                     //sbCrea.Append("GO\r\n");
@@ -629,6 +641,7 @@ ORDER BY so1.name"
 				{
                     // we use the [name] form to distinguish between hand coded string from sp_helptext
                     Regex rx = new Regex("(CREATE\\s+PROCEDURE)(\\s+[^+]*)((\\[)?" + dr[0].ToString() + "(\\])?)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                    Regex rxView = new Regex("(CREATE\\s+VIEW)(\\s+[^+]*)((\\[)?" + dr[0].ToString() + "(\\])?)", RegexOptions.Multiline | RegexOptions.IgnoreCase);
                     sb.Append(ScriptDropSp(dr[0].ToString(), dr[1].ToString().Trim()));
 					sb.Append("GO\r\n");
 					sb.Append("SET QUOTED_IDENTIFIER ON\r\n");
@@ -636,6 +649,14 @@ ORDER BY so1.name"
 					if (SrcDbProviderCd == "S") {sb.Append("SET ANSINULL ON\r\n");} else {sb.Append("SET ANSI_NULLS ON\r\n");}
 					sb.Append("GO\r\n");
                     ss = ss.Trim(new char[] { ' ', '\r', '\n' }).Replace("\r\n","\r").Replace("\n","\r").Replace("\r",Environment.NewLine);
+                    ss = rx.Replace(ss, (m) =>
+                    {
+                        return "ALTER PROCEDURE" + m.Groups[2].Value + m.Groups[3].Value;
+                    });
+                    ss = rx.Replace(ss, (m) =>
+                    {
+                        return "ALTER FUNCTION" + m.Groups[2].Value + m.Groups[3].Value;
+                    });
                     ss = rx.Replace(ss, (m) =>
                     {
                         return "ALTER PROCEDURE" + m.Groups[2].Value + m.Groups[3].Value;
