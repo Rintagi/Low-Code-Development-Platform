@@ -63,6 +63,7 @@ namespace RO.Common3.Data
 			columns.Add("ModifiedOn1", typeof(string));
 			columns.Add("HintQuestionId1", typeof(string));
 			columns.Add("HintAnswer1", typeof(string));
+			columns.Add("PeekBtn", typeof(string));
 			columns.Add("InvestorId1", typeof(string));
 			columns.Add("CustomerId1", typeof(string));
 			columns.Add("VendorId1", typeof(string));
@@ -224,6 +225,8 @@ namespace RO.Web
                 cNotificationContent.Attributes["OnChange"] = null;
                 // suppress dirty flag check on post back
                 if (cSendNotificationBtn.Attributes["OnClick"] == null || cSendNotificationBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSendNotificationBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+                if (cPeekBtn.Attributes["OnClick"] == null || cPeekBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cPeekBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+
 
 				//WebRule: Customized Cache Policy
                 // hackish helper to flush all prior settings
@@ -666,7 +669,6 @@ namespace RO.Web
 						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[26]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[27]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[27]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[28]["ColumnHeader"].ToString() + (char)9);}
-						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[29]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[29]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[30]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[30]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[31]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[31]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[32]["ColumnHeader"].ToString() + " Text" + (char)9);}
@@ -675,6 +677,7 @@ namespace RO.Web
 						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[35]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[36]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[36]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[37]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[37]["ColumnHeader"].ToString() + " Text" + (char)9);}
+						if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[38]["ColumnHeader"].ToString() + (char)9 + dtAu.Rows[38]["ColumnHeader"].ToString() + " Text" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -707,15 +710,15 @@ namespace RO.Web
 						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
 						if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["HintQuestionId1"].ToString() + (char)9 + drv["HintQuestionId1Text"].ToString() + (char)9);}
 						if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["HintAnswer1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1"].ToString() + (char)9 + drv["InvestorId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1"].ToString() + (char)9 + drv["CustomerId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1"].ToString() + (char)9 + drv["VendorId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1"].ToString() + (char)9 + drv["AgentId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1"].ToString() + (char)9 + drv["BrokerId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1"].ToString() + (char)9 + drv["MemberId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId1"].ToString() + (char)9 + drv["LenderId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId1"].ToString() + (char)9 + drv["BorrowerId1Text"].ToString() + (char)9);}
-						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId1"].ToString() + (char)9 + drv["GuarantorId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1"].ToString() + (char)9 + drv["InvestorId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1"].ToString() + (char)9 + drv["CustomerId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1"].ToString() + (char)9 + drv["VendorId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1"].ToString() + (char)9 + drv["AgentId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1"].ToString() + (char)9 + drv["BrokerId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1"].ToString() + (char)9 + drv["MemberId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId1"].ToString() + (char)9 + drv["LenderId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId1"].ToString() + (char)9 + drv["BorrowerId1Text"].ToString() + (char)9);}
+						if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId1"].ToString() + (char)9 + drv["GuarantorId1Text"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmUsr.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
@@ -792,7 +795,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
-					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
@@ -801,6 +803,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -838,7 +841,6 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[26]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[27]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[28]["ColumnHeader"].ToString() + @"\cell ");}
-					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[29]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[30]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[31]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + @"\cell ");}
@@ -847,6 +849,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[35]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[36]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[37]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[38]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -897,15 +900,15 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
 					if (dtAu.Rows[27]["ColExport"].ToString() == "Y") {sb.Append(drv["HintQuestionId1Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[28]["ColExport"].ToString() == "Y") {sb.Append(drv["HintAnswer1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[29]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId1Text"].ToString() + @"\cell ");}
-					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[30]["ColExport"].ToString() == "Y") {sb.Append(drv["InvestorId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[31]["ColExport"].ToString() == "Y") {sb.Append(drv["CustomerId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["VendorId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[33]["ColExport"].ToString() == "Y") {sb.Append(drv["AgentId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[34]["ColExport"].ToString() == "Y") {sb.Append(drv["BrokerId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[35]["ColExport"].ToString() == "Y") {sb.Append(drv["MemberId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[36]["ColExport"].ToString() == "Y") {sb.Append(drv["LenderId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[37]["ColExport"].ToString() == "Y") {sb.Append(drv["BorrowerId1Text"].ToString() + @"\cell ");}
+					if (dtAu.Rows[38]["ColExport"].ToString() == "Y") {sb.Append(drv["GuarantorId1Text"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1313,7 +1316,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					dtScrCri = (new AdminSystem()).GetScrCriteria("1", LcSysConnString, LcAppPw);
 				}
-				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+				catch (Exception err) { ErrorTrace(err, "critical"); bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
 		        Session[KEY_dtScrCri] = dtScrCri;
 		    }
 		    return dtScrCri.DefaultView;
@@ -2625,29 +2628,30 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cModifiedOn1, dtAuth.Rows[26], cModifiedOn1P1, cModifiedOn1Label, cModifiedOn1P2, null, dtLabel.Rows[26], null, null, null);
 				base.SetFoldBehavior(cHintQuestionId1, dtAuth.Rows[27], cHintQuestionId1P1, cHintQuestionId1Label, cHintQuestionId1P2, null, dtLabel.Rows[27], null, null, null);
 				base.SetFoldBehavior(cHintAnswer1, dtAuth.Rows[28], cHintAnswer1P1, cHintAnswer1Label, cHintAnswer1P2, null, dtLabel.Rows[28], null, null, null);
-				base.SetFoldBehavior(cInvestorId1, dtAuth.Rows[29], cInvestorId1P1, cInvestorId1Label, cInvestorId1P2, null, dtLabel.Rows[29], null, null, null);
+				base.SetFoldBehavior(cPeekBtn, dtAuth.Rows[29], cPeekBtnP1, cPeekBtnLabel, cPeekBtnP2, null, dtLabel.Rows[29], null, null, null);
+				base.SetFoldBehavior(cInvestorId1, dtAuth.Rows[30], cInvestorId1P1, cInvestorId1Label, cInvestorId1P2, null, dtLabel.Rows[30], null, null, null);
 				SetInvestorId1(cInvestorId1,string.Empty);
-				base.SetFoldBehavior(cCustomerId1, dtAuth.Rows[30], cCustomerId1P1, cCustomerId1Label, cCustomerId1P2, null, dtLabel.Rows[30], null, null, null);
+				base.SetFoldBehavior(cCustomerId1, dtAuth.Rows[31], cCustomerId1P1, cCustomerId1Label, cCustomerId1P2, null, dtLabel.Rows[31], null, null, null);
 				SetCustomerId1(cCustomerId1,string.Empty);
-				base.SetFoldBehavior(cVendorId1, dtAuth.Rows[31], cVendorId1P1, cVendorId1Label, cVendorId1P2, null, dtLabel.Rows[31], null, null, null);
+				base.SetFoldBehavior(cVendorId1, dtAuth.Rows[32], cVendorId1P1, cVendorId1Label, cVendorId1P2, null, dtLabel.Rows[32], null, null, null);
 				SetVendorId1(cVendorId1,string.Empty);
-				base.SetFoldBehavior(cAgentId1, dtAuth.Rows[32], cAgentId1P1, cAgentId1Label, cAgentId1P2, null, dtLabel.Rows[32], null, null, null);
+				base.SetFoldBehavior(cAgentId1, dtAuth.Rows[33], cAgentId1P1, cAgentId1Label, cAgentId1P2, null, dtLabel.Rows[33], null, null, null);
 				SetAgentId1(cAgentId1,string.Empty);
-				base.SetFoldBehavior(cBrokerId1, dtAuth.Rows[33], cBrokerId1P1, cBrokerId1Label, cBrokerId1P2, null, dtLabel.Rows[33], null, null, null);
+				base.SetFoldBehavior(cBrokerId1, dtAuth.Rows[34], cBrokerId1P1, cBrokerId1Label, cBrokerId1P2, null, dtLabel.Rows[34], null, null, null);
 				SetBrokerId1(cBrokerId1,string.Empty);
-				base.SetFoldBehavior(cMemberId1, dtAuth.Rows[34], cMemberId1P1, cMemberId1Label, cMemberId1P2, null, dtLabel.Rows[34], null, null, null);
+				base.SetFoldBehavior(cMemberId1, dtAuth.Rows[35], cMemberId1P1, cMemberId1Label, cMemberId1P2, null, dtLabel.Rows[35], null, null, null);
 				SetMemberId1(cMemberId1,string.Empty);
-				base.SetFoldBehavior(cLenderId1, dtAuth.Rows[35], cLenderId1P1, cLenderId1Label, cLenderId1P2, null, dtLabel.Rows[35], null, null, null);
+				base.SetFoldBehavior(cLenderId1, dtAuth.Rows[36], cLenderId1P1, cLenderId1Label, cLenderId1P2, null, dtLabel.Rows[36], null, null, null);
 				SetLenderId1(cLenderId1,string.Empty);
-				base.SetFoldBehavior(cBorrowerId1, dtAuth.Rows[36], cBorrowerId1P1, cBorrowerId1Label, cBorrowerId1P2, null, dtLabel.Rows[36], null, null, null);
+				base.SetFoldBehavior(cBorrowerId1, dtAuth.Rows[37], cBorrowerId1P1, cBorrowerId1Label, cBorrowerId1P2, null, dtLabel.Rows[37], null, null, null);
 				SetBorrowerId1(cBorrowerId1,string.Empty);
-				base.SetFoldBehavior(cGuarantorId1, dtAuth.Rows[37], cGuarantorId1P1, cGuarantorId1Label, cGuarantorId1P2, null, dtLabel.Rows[37], null, null, null);
+				base.SetFoldBehavior(cGuarantorId1, dtAuth.Rows[38], cGuarantorId1P1, cGuarantorId1Label, cGuarantorId1P2, null, dtLabel.Rows[38], null, null, null);
 				SetGuarantorId1(cGuarantorId1,string.Empty);
-				base.SetFoldBehavior(cUsageStat, dtAuth.Rows[38], null, null, null, dtLabel.Rows[38], null, null, null);
-				base.SetFoldBehavior(cNotificationTitle, dtAuth.Rows[39], cNotificationTitleP1, cNotificationTitleLabel, cNotificationTitleP2, null, dtLabel.Rows[39], null, null, null);
-				base.SetFoldBehavior(cNotificationContent, dtAuth.Rows[40], cNotificationContentP1, cNotificationContentLabel, cNotificationContentP2, cNotificationContentE, null, dtLabel.Rows[40], null, null, null);
+				base.SetFoldBehavior(cUsageStat, dtAuth.Rows[39], null, null, null, dtLabel.Rows[39], null, null, null);
+				base.SetFoldBehavior(cNotificationTitle, dtAuth.Rows[40], cNotificationTitleP1, cNotificationTitleLabel, cNotificationTitleP2, null, dtLabel.Rows[40], null, null, null);
+				base.SetFoldBehavior(cNotificationContent, dtAuth.Rows[41], cNotificationContentP1, cNotificationContentLabel, cNotificationContentP2, cNotificationContentE, null, dtLabel.Rows[41], null, null, null);
 				cNotificationContentE.Attributes["label_id"] = cNotificationContentLabel.ClientID; cNotificationContentE.Attributes["target_id"] = cNotificationContent.ClientID;
-				base.SetFoldBehavior(cSendNotificationBtn, dtAuth.Rows[41], null, null, null, dtLabel.Rows[41], null, null, null);
+				base.SetFoldBehavior(cSendNotificationBtn, dtAuth.Rows[42], null, null, null, dtLabel.Rows[42], null, null, null);
 			}
 			if ((cLoginName1.Attributes["OnChange"] == null || cLoginName1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cLoginName1.Visible && !cLoginName1.ReadOnly) {cLoginName1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cUsrName1.Attributes["OnChange"] == null || cUsrName1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cUsrName1.Visible && !cUsrName1.ReadOnly) {cUsrName1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2680,6 +2684,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cModifiedOn1.Attributes["OnChange"] == null || cModifiedOn1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cModifiedOn1.Visible && !cModifiedOn1.ReadOnly) {cModifiedOn1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cHintQuestionId1.Attributes["OnChange"] == null || cHintQuestionId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cHintQuestionId1.Visible && cHintQuestionId1.Enabled) {cHintQuestionId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cHintAnswer1.Attributes["OnChange"] == null || cHintAnswer1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cHintAnswer1.Visible && !cHintAnswer1.ReadOnly) {cHintAnswer1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+			if ((cPeekBtn.Attributes["OnChange"] == null || cPeekBtn.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cPeekBtn.Visible && cPeekBtn.Enabled) {cPeekBtn.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();document.getElementById('" + bConfirm.ClientID + "').value='N';";}
 			if ((cInvestorId1.Attributes["OnChange"] == null || cInvestorId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cInvestorId1.Visible && cInvestorId1.Enabled) {cInvestorId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cCustomerId1.Attributes["OnChange"] == null || cCustomerId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cCustomerId1.Visible && cCustomerId1.Enabled) {cCustomerId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cVendorId1.Attributes["OnChange"] == null || cVendorId1.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cVendorId1.Visible && cVendorId1.Enabled) {cVendorId1.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -2796,17 +2801,18 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[26]["ColVisible"].ToString() == "Y" && dt.Rows[26]["ColReadOnly"].ToString() != "Y") {cModifiedOn1.Text = string.Empty;}
 			if (dt.Rows[27]["ColVisible"].ToString() == "Y" && dt.Rows[27]["ColReadOnly"].ToString() != "Y") {SetHintQuestionId1(cHintQuestionId1,string.Empty);}
 			if (dt.Rows[28]["ColVisible"].ToString() == "Y" && dt.Rows[28]["ColReadOnly"].ToString() != "Y") {cHintAnswer1.Text = string.Empty;}
-			if (dt.Rows[29]["ColVisible"].ToString() == "Y" && dt.Rows[29]["ColReadOnly"].ToString() != "Y") {cInvestorId1.ClearSearch();}
-			if (dt.Rows[30]["ColVisible"].ToString() == "Y" && dt.Rows[30]["ColReadOnly"].ToString() != "Y") {cCustomerId1.ClearSearch();}
-			if (dt.Rows[31]["ColVisible"].ToString() == "Y" && dt.Rows[31]["ColReadOnly"].ToString() != "Y") {cVendorId1.ClearSearch();}
-			if (dt.Rows[32]["ColVisible"].ToString() == "Y" && dt.Rows[32]["ColReadOnly"].ToString() != "Y") {cAgentId1.ClearSearch();}
-			if (dt.Rows[33]["ColVisible"].ToString() == "Y" && dt.Rows[33]["ColReadOnly"].ToString() != "Y") {cBrokerId1.ClearSearch();}
-			if (dt.Rows[34]["ColVisible"].ToString() == "Y" && dt.Rows[34]["ColReadOnly"].ToString() != "Y") {cMemberId1.ClearSearch();}
-			if (dt.Rows[35]["ColVisible"].ToString() == "Y" && dt.Rows[35]["ColReadOnly"].ToString() != "Y") {cLenderId1.ClearSearch();}
-			if (dt.Rows[36]["ColVisible"].ToString() == "Y" && dt.Rows[36]["ColReadOnly"].ToString() != "Y") {cBorrowerId1.ClearSearch();}
-			if (dt.Rows[37]["ColVisible"].ToString() == "Y" && dt.Rows[37]["ColReadOnly"].ToString() != "Y") {cGuarantorId1.ClearSearch();}
-			if (dt.Rows[39]["ColVisible"].ToString() == "Y" && dt.Rows[39]["ColReadOnly"].ToString() != "Y") {cNotificationTitle.Text = string.Empty;}
-			if (dt.Rows[40]["ColVisible"].ToString() == "Y" && dt.Rows[40]["ColReadOnly"].ToString() != "Y") {cNotificationContent.Text = string.Empty;}
+			if (dt.Rows[29]["ColVisible"].ToString() == "Y" && dt.Rows[29]["ColReadOnly"].ToString() != "Y") {cPeekBtn.ImageUrl = "~/images/lock.png"; }
+			if (dt.Rows[30]["ColVisible"].ToString() == "Y" && dt.Rows[30]["ColReadOnly"].ToString() != "Y") {cInvestorId1.ClearSearch();}
+			if (dt.Rows[31]["ColVisible"].ToString() == "Y" && dt.Rows[31]["ColReadOnly"].ToString() != "Y") {cCustomerId1.ClearSearch();}
+			if (dt.Rows[32]["ColVisible"].ToString() == "Y" && dt.Rows[32]["ColReadOnly"].ToString() != "Y") {cVendorId1.ClearSearch();}
+			if (dt.Rows[33]["ColVisible"].ToString() == "Y" && dt.Rows[33]["ColReadOnly"].ToString() != "Y") {cAgentId1.ClearSearch();}
+			if (dt.Rows[34]["ColVisible"].ToString() == "Y" && dt.Rows[34]["ColReadOnly"].ToString() != "Y") {cBrokerId1.ClearSearch();}
+			if (dt.Rows[35]["ColVisible"].ToString() == "Y" && dt.Rows[35]["ColReadOnly"].ToString() != "Y") {cMemberId1.ClearSearch();}
+			if (dt.Rows[36]["ColVisible"].ToString() == "Y" && dt.Rows[36]["ColReadOnly"].ToString() != "Y") {cLenderId1.ClearSearch();}
+			if (dt.Rows[37]["ColVisible"].ToString() == "Y" && dt.Rows[37]["ColReadOnly"].ToString() != "Y") {cBorrowerId1.ClearSearch();}
+			if (dt.Rows[38]["ColVisible"].ToString() == "Y" && dt.Rows[38]["ColReadOnly"].ToString() != "Y") {cGuarantorId1.ClearSearch();}
+			if (dt.Rows[40]["ColVisible"].ToString() == "Y" && dt.Rows[40]["ColReadOnly"].ToString() != "Y") {cNotificationTitle.Text = string.Empty;}
+			if (dt.Rows[41]["ColVisible"].ToString() == "Y" && dt.Rows[41]["ColReadOnly"].ToString() != "Y") {cNotificationContent.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -2841,6 +2847,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cModifiedOn1.Text = string.Empty;
 			SetHintQuestionId1(cHintQuestionId1,string.Empty);
 			cHintAnswer1.Text = string.Empty;
+			cPeekBtn.ImageUrl = "~/images/lock.png";
 			cInvestorId1.ClearSearch();
 			cCustomerId1.ClearSearch();
 			cVendorId1.ClearSearch();
@@ -2929,6 +2936,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cModifiedOn1.Text = RO.Common3.Utils.fmShortDateTimeUTC(dr["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cModifiedOn1.Text = string.Empty;}
 					SetHintQuestionId1(cHintQuestionId1,dr["HintQuestionId1"].ToString());
 					try {cHintAnswer1.Text = dr["HintAnswer1"].ToString();} catch {cHintAnswer1.Text = string.Empty;}
+					cPeekBtn.ImageUrl = "~/images/lock.png";
 					SetInvestorId1(cInvestorId1,dr["InvestorId1"].ToString());
 					SetCustomerId1(cCustomerId1,dr["CustomerId1"].ToString());
 					SetVendorId1(cVendorId1,dr["VendorId1"].ToString());
@@ -3034,6 +3042,30 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cPicMed1_Click(object sender, System.Web.UI.ImageClickEventArgs e)
 		{
 			// *** On Change/ On Click Web Rule starts here *** //
+			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
+		}
+
+		protected void cPeekBtn_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+		{
+			//WebRule: Peek Encrypted Columns
+            try
+            {
+                if (!string.IsNullOrEmpty(cHintAnswer1.Text))
+                {
+                    string text = cHintAnswer1.EncryptedText;
+                    int visiblePart = text.IndexOf('-');
+                    string encryptedValue = visiblePart > 0 ? text.Substring(0, visiblePart) : text;
+
+                    string x = new RO.Common3.EncryptedColumn().RODecryptString(encryptedValue, Config.SecuredColumnKey);
+                    PreMsgPopup(string.Format("{0}", x));
+                }
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(string.Format("can't decrypt content {0}", ex.Message));
+            }
+
+			// *** WebRule End *** //
 			EnableValidators(true); // Do not remove; Need to reenable after postback, especially in the grid.
 		}
 
@@ -3344,8 +3376,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["ProjectLs1"] = "VarChar"; drDisp["ProjectLs1"] = "ListBox";
 			try {dr["HintQuestionId1"] = cHintQuestionId1.SelectedValue;} catch {}
 			drType["HintQuestionId1"] = "Numeric"; drDisp["HintQuestionId1"] = "DropDownList";
-			try {dr["HintAnswer1"] = cHintAnswer1.Text.Trim();} catch {}
-			drType["HintAnswer1"] = "VarWChar"; drDisp["HintAnswer1"] = "TextBox";
+			try {dr["HintAnswer1"] = cHintAnswer1.EncryptedText;} catch {}
+			drType["HintAnswer1"] = "VarWChar"; drDisp["HintAnswer1"] = "EncryptedTextBox";
 			try {dr["InvestorId1"] = cInvestorId1.SelectedValue;} catch {}
 			drType["InvestorId1"] = "Numeric"; drDisp["InvestorId1"] = "AutoComplete";
 			try {dr["CustomerId1"] = cCustomerId1.SelectedValue;} catch {}

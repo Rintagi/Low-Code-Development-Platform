@@ -326,6 +326,49 @@ END
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fGetForeignKey') AND type='IF')
+DROP FUNCTION dbo.fGetForeignKey
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+CREATE FUNCTION [dbo].[fGetForeignKey]
+(
+)
+RETURNS TABLE
+/* WITH ENCRYPTION */  
+AS
+RETURN 
+(
+/* retrieve all foreign definition of the current database */
+
+/* WARNING ! 
+   THIS IS Rintagi supplied function, any local change would be overwritten when upgrade DEV package is applied
+ */  
+SELECT  obj.name AS FK_NAME,
+    sch.name AS [schema_name],
+    tab1.name AS [table],
+    col1.name AS [column],
+    tab2.name AS [referenced_table],
+    col2.name AS [referenced_column]
+FROM sys.foreign_key_columns fkc
+INNER JOIN sys.objects obj
+    ON obj.object_id = fkc.constraint_object_id
+INNER JOIN sys.tables tab1
+    ON tab1.object_id = fkc.parent_object_id
+INNER JOIN sys.schemas sch
+    ON tab1.schema_id = sch.schema_id
+INNER JOIN sys.columns col1
+    ON col1.column_id = parent_column_id AND col1.object_id = tab1.object_id
+INNER JOIN sys.tables tab2
+    ON tab2.object_id = fkc.referenced_object_id
+INNER JOIN sys.columns col2
+    ON col2.column_id = referenced_column_id AND col2.object_id = tab2.object_id
+)
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fGetIndex') AND type='IF')
 DROP FUNCTION dbo.fGetIndex
 GO
@@ -59845,10 +59888,10 @@ SET ANSI_NULLS ON
 GO
 -- This exists only in ??Design.
 ALTER PROCEDURE [dbo].[GetLoginSecure]
- @LoginName			nvarchar(200)
+ @LoginName			nvarchar(400)
 ,@UsrPassword		varbinary(32)
 ,@ProviderCd		varchar(5)=null
-,@SelectedLoginName nvarchar(32) = null
+,@SelectedLoginName nvarchar(400) = null
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -59905,7 +59948,14 @@ BEGIN
 		(
 		(EXISTS(
 			SELECT 1 FROM dbo.UsrProvider p
-			WHERE UsrId = r.UsrId AND LoginName = @LoginName AND ProviderCd = @ProviderCd 
+			WHERE UsrId = r.UsrId 
+			AND 
+			(
+			(LoginName = @LoginName AND ProviderCd = @ProviderCd)
+			OR 
+			-- for Microsoft 365, it is in the form of username;oid and @LoginName passed in is only oid 2021.4.28 gary
+			(@ProviderCd IN ('O','M') AND LoginName LIKE '%' + @LoginName)
+			)
 			AND p.Active = 'Y' -- only if it is still valid 2020.8.12 gary
 			) 
 			AND (ISNULL(@SelectedLoginName,'') = '' OR LoginName = @SelectedLoginName)
@@ -66564,6 +66614,24 @@ BEGIN
 		IF NOT EXISTS (SELECT 1 FROM dbo.ReportCri WHERE ReportId = @ReportId AND ReportGrpId <> @PReportGrpId)
 			UPDATE dbo.ReportCri SET ReportGrpId = @ReportGrpId WHERE ReportId = @ReportId
 	END
+END
+IF @ReportCriId IS NOT NULL AND @ReportId IS NOT NULL
+BEGIN
+	IF EXISTS
+	(
+	SELECT 1
+	FROM
+	dbo.ReportLstCri l
+	WHERE l.ReportCriId = @ReportCriId
+	AND l.ReportId <> @ReportId
+	AND l.ReportId IS NOT NULL
+	) 
+	BEGIN
+		RAISERROR('Criteria already used for another report, make a copy.',18,2) WITH SETERROR
+		RETURN 1
+	END
+
+
 END
 RETURN 0
 GO
@@ -73695,6 +73763,8 @@ ALTER PROCEDURE [dbo].[UnlinkUsrLogin]
  @UsrId         int
 ,@ProviderCd    varchar(5)
 ,@LoginName		nvarchar(200)
+,@LoginMeta		nvarchar(max)=null
+
 /* WITH ENCRYPTION */
 AS
 DELETE FROM dbo.UsrProvider WHERE UsrId = @UsrId AND ProviderCd = @ProviderCd AND LoginName = @LoginName

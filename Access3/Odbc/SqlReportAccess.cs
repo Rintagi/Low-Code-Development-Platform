@@ -125,7 +125,7 @@ namespace RO.Access3.Odbc
 					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Timestamp).Value = System.DBNull.Value; }
+                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = System.DBNull.Value; }
@@ -141,7 +141,7 @@ namespace RO.Access3.Odbc
 					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Timestamp).Value = dr[drv["ColumnName"].ToString()]; }
+                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = dr[drv["ColumnName"].ToString()]; }
@@ -181,7 +181,7 @@ namespace RO.Access3.Odbc
 					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Timestamp).Value = System.DBNull.Value; }
+                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = System.DBNull.Value; }
@@ -197,7 +197,7 @@ namespace RO.Access3.Odbc
 					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Timestamp).Value = dr[drv["ColumnName"].ToString()]; }
+                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = dr[drv["ColumnName"].ToString()]; }
@@ -288,7 +288,7 @@ namespace RO.Access3.Odbc
 					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Timestamp).Value = System.DBNull.Value; }
+                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = System.DBNull.Value; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = System.DBNull.Value; }
@@ -304,7 +304,7 @@ namespace RO.Access3.Odbc
 					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Timestamp).Value = dr[drv["ColumnName"].ToString()]; }
+                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = dr[drv["ColumnName"].ToString()]; }
 					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = dr[drv["ColumnName"].ToString()]; }

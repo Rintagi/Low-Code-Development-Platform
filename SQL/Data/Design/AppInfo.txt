@@ -2846,4 +2846,19 @@ may need to add the following to web.config for assembly redirection
 2. add company profile screen
 3. revise flowchart screen~@~~@~en-US~@~
 12679~@~  11. 242.10408~@~11~@~242~@~2021-04-08 00:00:00.000~@~~@~~@~1. minor improvement to deployment package on db index handling~@~~@~en-US~@~
-12680~@~  11. 243~@~11~@~243~@~~@~~@~~@~~@~~@~~@~
+12680~@~  11. 243.10414~@~11~@~243~@~2021-04-14 00:00:00.000~@~~@~~@~1. improve deployment to handle foreign key constraint on table upgrade~@~~@~en-US~@~
+12681~@~  11. 244.10423~@~11~@~244~@~2021-04-23 00:00:00.000~@~~@~~@~1. minor SSO login failure and unlink fix
+2. add generic server side login impersonation
+3. fix choco install script for iis-arr package~@~~@~en-US~@~
+12682~@~  11. 245.10426~@~11~@~245~@~2021-04-26 00:00:00.000~@~~@~~@~1. revise Azure SSO logic for API level change(v1.0 -> v2.0 endpoint)
+2. handle blocked page access for Azure SSO flow~@~~@~en-US~@~
+12683~@~  11. 246.10428~@~11~@~246~@~2021-04-28 00:00:00.000~@~~@~~@~1. revise Azure SSO to match Microsoft v2.0 api changes(for external tenant, i.e. cross tenant id)~@~~@~en-US~@~
+12684~@~  11. 247.10429~@~11~@~247~@~2021-04-29 00:00:00.000~@~~@~~@~1. better support for Azure SSO handling when behind proxy and error tracing for mis-configured settings~@~~@~en-US~@~
+12685~@~  11. 248.10503~@~11~@~248~@~2021-05-03 00:00:00.000~@~~@~~@~1. add EncryptedTextBox sample in User manager
+2. add peek function showing encrypted text box~@~~@~en-US~@~
+12686~@~  11. 249.10505~@~11~@~249~@~2021-05-05 00:00:00.000~@~~@~~@~1. enhanced encrypted textbox to support secret key cycling(re-encrypt)~@~~@~en-US~@~
+12687~@~  11. 250.10517~@~11~@~250~@~2021-05-17 00:00:00.000~@~~@~~@~1. change deployment helper PS script to install .NET 4.8 runtime/dev pack
+2. change deployment helper PS script to install crystal report for vs _25(.2000.3500) as that is the only available package in choco
+3. better IIS ARR proxy support
+4. fix dbtimestamp data mapping for ODBC driver~@~~@~en-US~@~
+12688~@~  11. 251~@~11~@~251~@~~@~~@~~@~~@~~@~~@~

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Web;
 using System.Web.SessionState;
 using System.Net;
@@ -231,6 +232,11 @@ namespace RO
                         && !Request.Url.GetLeftPart(UriPartial.Path).Contains("WebResource.axd") 
                         && !Request.Url.GetLeftPart(UriPartial.Path).Contains("ScriptResource.axd")
                          */ 
+                        /* skip these drive by php/wordpress etc. attack */
+                        && !Request.Url.GetLeftPart(UriPartial.Path).Contains(".php")
+                        && !Request.Url.GetLeftPart(UriPartial.Path).Contains("popper.js")
+                        && !Request.Url.GetLeftPart(UriPartial.Path).Contains("wp-includes")
+                        && !(objErr is ThreadAbortException)
                         )
                         )
                     {
@@ -458,7 +464,7 @@ namespace RO
             try
             {
                 string webtitle = Config.WebTitle ?? "";
-                string to = Config.TechSuppEmail ?? "cs@robocoder.com";
+                string to = (Config.TechSuppEmail ?? "cs@robocoder.com").Replace(",",";");
                 string from = "cs@robocoder.com";
                 string fromTitle = "";
                 string replyTo = "";

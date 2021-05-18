@@ -417,8 +417,27 @@ ORDER BY so1.name"
 					}
 					else
 					{
-                        if (direction == " in ") str += "\"" + bcpPath + "sqlcmd\" -Q \"TRUNCATE TABLE " + db + ".dbo." + dr2["tbName"].ToString() + "\"" + " " + " -S %1 -U %2 -P %3 " + " >> " + logpath + "..\\Install.log\r\n";
+                        // disable constraint check,truncate(delete all then reseed as foreign key constaint can still block delete even with check disabled
+                        if (direction == " in ")
+                        {
+                            string tableName = db + ".dbo." + dr2["tbName"].ToString();
+                            str += "\"" + bcpPath + "sqlcmd\""
+//                                + " -Q \"TRUNCATE TABLE " + db + ".dbo." + dr2["tbName"].ToString() + "\""
+                                + " -Q \"ALTER TABLE " + tableName + " NOCHECK CONSTRAINT ALL ; DELETE tbl FROM " + tableName + " tbl ; DBCC CHECKIDENT ( '" + tableName + "', RESEED, 0)\""
+                                + " " + " -S %1 -U %2 -P %3 " + " >> " + logpath + "..\\Install.log\r\n";
+                        }
+
                         str += "\"" + bcpPath + "bcp\" \"" + db + ".dbo." + dr2["tbName"].ToString() + "\"" + direction + "\"" + outputPath + dr2["tbName"].ToString() + ".txt\" " + hasIdentity + " -e \"" + logpath + "..\\Error.txt\" -S %1 -U %2 -P %3 -q " + unicd + " -CRAW -t\"" + separator + "\" -r\"~#~\" >> " + logpath + "..\\Install.log\r\n";
+
+                        // reneable constraints(this is assuming it was enabled)
+                        if (direction == " in ")
+                        {
+                            string tableName = db + ".dbo." + dr2["tbName"].ToString();
+                            str += "\"" + bcpPath + "sqlcmd\""
+                                + " -Q \"ALTER TABLE " + tableName + "  WITH CHECK CHECK CONSTRAINT all \""
+                                + " " + " -S %1 -U %2 -P %3 " + " >> " + logpath + "..\\Install.log\r\n";
+
+                        }
                         if (bIntegratedSecurity && bOut) str = str.Replace("-U %2 -P %3", " -T ");
                     }
 					str += "IF ERRORLEVEL 1 GOTO ThereIsError\r\n";
@@ -430,6 +449,7 @@ ORDER BY so1.name"
 
 		public string ScriptIndexFK(string SrcDbProviderCd, string TarDbProviderCd, bool IsFrSource, bool allBut,  CurrSrc CSrc, CurrTar CTar)
 		{
+            // not really foreign key but ALL index definitions of a table
 			StringBuilder sbDrop = new StringBuilder("");
 			StringBuilder sbCrea = new StringBuilder("");
 			string strIx;

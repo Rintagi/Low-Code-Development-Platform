@@ -1744,18 +1744,18 @@ namespace RO.Web
             return r;
         }
 
-        protected void AnonymousLogin()
+        protected void LoginAs(string loginName, string password)
         {
             if (!Request.IsAuthenticated || this.LUser == null)
             {
-                Credential cr = new Credential("Anonymous", "Anonymous");
+                Credential cr = new Credential(loginName, password);
                 LoginUsr usr = (new LoginSystem()).GetLoginSecure(cr);
                 if (usr != null && usr.UsrId > 0)
                 {
                     LUser = usr;
-                    (new LoginSystem()).SetLoginStatus("Anonymous", true, "", "", "");
-                    System.Web.Security.FormsAuthenticationTicket Ticket = new System.Web.Security.FormsAuthenticationTicket("Anonymous", false, 3600);
-                    System.Web.Security.FormsAuthentication.SetAuthCookie("Anonymous", false);
+                    (new LoginSystem()).SetLoginStatus(loginName, true, "", "", "");
+                    System.Web.Security.FormsAuthenticationTicket Ticket = new System.Web.Security.FormsAuthenticationTicket(loginName, false, 3600);
+                    System.Web.Security.FormsAuthentication.SetAuthCookie(loginName, false);
                     Context.User = new System.Security.Principal.GenericPrincipal(new System.Web.Security.FormsIdentity(Ticket), null);
                     byte csy = LUser.DefSystemId;
                     byte.TryParse(Request.QueryString["csy"], out csy);
@@ -1766,7 +1766,15 @@ namespace RO.Web
                     try { if (Session["Cache:currLang"] != null) LUser.CultureId = short.Parse(Session["Cache:currLang"].ToString()); }
                     catch { }
                 }
+                else
+                {
+                    ErrorTrace(new Exception(string.Format("{0} login failed", loginName)), "error");
+                }
             }
+        }
+        protected void AnonymousLogin()
+        {
+            LoginAs("Anonymous", "Anonymous");
         }
         
         protected void CheckAuthentication(bool pageLoad, bool AuthRequired)
@@ -1874,6 +1882,7 @@ namespace RO.Web
                         Request.Headers["X-Forwarded-Https"] != "on" // iis urlrewrite can't handle same domain redirect from http => https, endless loop
                         //Request.Headers["Front-End-Https"] == "off"
                         )
+                        && Config.BrokenARRProxy
                         )
                     {
                         ErrorTrace(new Exception(string.Format("Proxy configuration issue for IIS UrlRewrite(https:{0}) vs {1}, must enforce https:// before proxying", Request.Headers["X-Forwarded-Https"] ?? "null", Config.ExtBaseUrl))
@@ -1888,8 +1897,9 @@ namespace RO.Web
                             Response.Cookies[sessionCookieName].Expires = new DateTime(1900, 1, 1);
                         }
                         this.Redirect(
-                        //    ResolveUrlCustom(Request.Url.AbsoluteUri, false, true)
-                            Request.Url.AbsoluteUri.Replace("http://", "https://")
+                            /* require proper ExtBaseUrl/IntBaseUrl setting in web.config */
+                            ResolveUrlCustom(Request.Url.AbsoluteUri, false, true)
+                        //    Request.Url.AbsoluteUri.Replace("http://", "https://")
                         );
                     }
                 }
@@ -2644,13 +2654,13 @@ namespace RO.Web
             return pkcs1.VerifySignature(hash, sig);
         }
 
-        protected string GetAzureLoginID(string code, string id_token)
+        protected string GetAzureLoginID(string code, string id_token, string scope)
         {
             Func<string, byte[]> base64UrlDecode = s => Convert.FromBase64String(s.Replace('-', '+').Replace('_', '/') + (s.Length % 4 > 1 ? new string('=', 4 - s.Length % 4) : ""));
             Dictionary<string, Dictionary<string, X509Certificate2>> signers = GetMicrosoftOnLineSigners();
-            if (!string.IsNullOrEmpty(id_token))
+            Func<string, string> getAzureLoginId = (token) =>
             {
-                string[] jwt_segments = id_token.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] jwt_segments = token.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                 Dictionary<string, object> header = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(System.Text.UTF8Encoding.UTF8.GetString(base64UrlDecode(jwt_segments[0])));
                 Dictionary<string, object> payload = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(System.Text.UTF8Encoding.UTF8.GetString(base64UrlDecode(jwt_segments[1])));
                 byte[] sig = jwt_segments.Length > 2 ? base64UrlDecode(jwt_segments[2]) : null;
@@ -2663,17 +2673,27 @@ namespace RO.Web
                 bool validSig = VerifyRS256JWT(jwt_segments[0], jwt_segments[1], sig, cert);
                 if (validSig)
                 {
-                    return payload["unique_name"].ToString();
+                    // https://docs.microsoft.com/en-us/azure/active-directory/develop/id-tokens
+                    string subject = payload["sub"].ToString();
+                    string tenant = payload["tid"].ToString();
+                    string uid = payload["oid"].ToString();
+                    string username = payload["preferred_username"].ToString();
+                    string email = payload["email"].ToString();
+                    string name = payload["name"].ToString();
+                    return string.Format("{0};{1}", username, uid);
                 }
                 else return "";
+            };
+            if (!string.IsNullOrEmpty(id_token))
+            {
+                return getAzureLoginId(id_token);
             }
             else
             {
                 string clientID = Config.AzureAPIClientId;
                 string secret = Config.AzureAPIScret;
-                string resource_uri = "https://graph.windows.net";
                 string replyUrl = Config.AzureAPIRedirectUrl;
-                var uri = new Uri("https://login.microsoftonline.com/common/oauth2/token");
+                var uri = new Uri("https://login.microsoftonline.com/common/oauth2/v2.0/token");
                 HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(uri);
                 webRequest.Accept = "application/json";
                 webRequest.Method = "POST";
@@ -2682,9 +2702,9 @@ namespace RO.Web
                     "code=" + code
                     + "&grant_type=" + System.Web.HttpUtility.UrlEncode("authorization_code")
                     + "&client_id=" + System.Web.HttpUtility.UrlEncode(clientID)
+                    + "&scope=" + System.Web.HttpUtility.UrlEncode(scope).Replace("+", "%20")
                     + "&client_secret=" + System.Web.HttpUtility.UrlEncode(secret)
                     + "&redirect_uri=" + System.Web.HttpUtility.UrlEncode(replyUrl)
-                    + "&resource=" + System.Web.HttpUtility.UrlEncode(resource_uri)
                     );
                 webRequest.ContentLength = data.Length;
                 Stream dataStream = webRequest.GetRequestStream();
@@ -2698,10 +2718,7 @@ namespace RO.Web
                     var sr = new StreamReader(responseStream, Encoding.Default);
                     var json = sr.ReadToEnd();
                     Dictionary<string, object> ret = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(json);
-                    string[] id_tokens = ret["id_token"].ToString().Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Select(s => System.Text.UTF8Encoding.UTF8.GetString(base64UrlDecode(s))).ToArray();
-                    string[] access_tokens = ret["access_token"].ToString().Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Select(s => System.Text.UTF8Encoding.UTF8.GetString(base64UrlDecode(s))).ToArray();
-                    Dictionary<string, object> credential = new JavaScriptSerializer().Deserialize<Dictionary<string, object>>(id_tokens[1]);
-                    return credential["unique_name"].ToString();
+                    return getAzureLoginId(ret["id_token"].ToString());
                 }
                 catch (WebException e)
                 {
@@ -2726,7 +2743,6 @@ namespace RO.Web
                 }
             }
         }
-
         protected bool IsEditableControl(Control c)
         {
             return ((c is TextBox || c is ListBox || c is CheckBox || c is DropDownList || c is RoboCoder.WebControls.ComboBox || c is RadioButtonList) && (((WebControl)c).Enabled) && (c.Visible) && !string.IsNullOrEmpty(c.ID));
@@ -3269,6 +3285,45 @@ namespace RO.Web
         {
             return (LImpr != null && LImpr.Companys != null && ("," + LImpr.Companys + ",").Contains("," + forCompanyId + ","));
         }
+        protected string XHost()
+        {
+            if (!string.IsNullOrEmpty(Config.ExtDomain)) return Config.ExtDomain; 
+            else {
+                string[] xForwardedHost = ((Request != null ? Request["X-Forwarded-Host"] : "")??"")
+                                            .Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries)
+                                            .Select(s=>s.Trim())
+                                            .ToArray()
+                                            ;
+                string[] forwarded = ((Request != null ? Request["Forwarded"] : "") ?? "").Split(new char[] { ','}, StringSplitOptions.RemoveEmptyEntries);
+                string xEdgeHost = xForwardedHost.LastOrDefault() 
+                                    ?? (forwarded.LastOrDefault() ?? "")
+                                            .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                            .Where(s => s.ToLower().Contains("host="))
+                                            .Select(s => s.ToLower().Replace("host=","").Trim())
+                                            .LastOrDefault();
+                if (!string.IsNullOrEmpty(xEdgeHost)) return xEdgeHost;
+                else if (Request != null) return Request.Url.Host;
+                else return null;
+            }
+        }
+        protected string XClientIp()
+        {
+            string[] xForwardedFor = ((Request != null ? Request["X-Forwarded-For"] : "") ?? "")
+                                        .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Select(s => s.Trim())
+                                        .ToArray();
+            string[] forwarded = ((Request != null ? Request["Forwarded"] : "") ?? "").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string xEdgeClientIp = xForwardedFor.LastOrDefault()
+                                ?? (forwarded.LastOrDefault() ?? "")
+                                        .Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Where(s => s.ToLower().Contains("for="))
+                                        .Select(s => s.ToLower().Replace("for=", "").Trim())
+                                        .LastOrDefault();
+            if (!string.IsNullOrEmpty(xEdgeClientIp)) return xEdgeClientIp;
+            else if (Request != null) return Request.UserHostAddress;
+            else return null;
+        }
+
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)
         {
             var Request = Context.Request;
@@ -3376,7 +3431,7 @@ namespace RO.Web
                  ||
                  (appPath=="/" && url.StartsWith("/"))
                  ||
-                 !url.StartsWith("/")
+                 (!url.StartsWith("/") && !url.ToLower().StartsWith("http"))
                  )
                 )
             {
@@ -3872,16 +3927,50 @@ namespace RO.Web
 
         #endregion
 
+        private void LogToFile(HttpRequest request, Exception objErr, string url, string title, string message, Exception ex)
+        {
+            bool started = true;
+            string applicationPath = request != null ? request.ApplicationPath : "unknown";
+            try
+            {
+                string fileName = DateTime.UtcNow.ToString("yyyyMMdd") + "_" + "ErrorLog.txt";
+                if (!Directory.Exists(Config.PathTmpImport)) Directory.CreateDirectory(Config.PathTmpImport);
+                using (var ws = new StreamWriter(Config.PathTmpImport + "/" + fileName, true))
+                {
+                    string log =
+                        (started ? "" : "====================================================")
+                        + Environment.NewLine + DateTime.UtcNow.ToString("o") + Environment.NewLine
+                        + title + Environment.NewLine
+                        + (ex != null ? ex.Message : "") + Environment.NewLine
+                        + (ex != null ? "Stack Trace: " + Environment.NewLine + ex.Message : "")
+                        + (objErr != null ? "Original Error: " + Environment.NewLine + (objErr != null ? objErr.Message : message) + Environment.NewLine : message + Environment.NewLine)
+                        + (objErr != null ? "Original Stack Trace: " + (objErr != null && objErr.StackTrace != null ? objErr.StackTrace : "no stack trace") + Environment.NewLine : "")
+                        + "Machine: " + Environment.MachineName + Environment.NewLine
+                        + "AppPath: " + applicationPath + Environment.NewLine
+                        + (objErr != null ? "url: " + (request != null ? request.Url.AbsolutePath : url) + Environment.NewLine : url + Environment.NewLine)
+                        + (objErr != null ? "From: " + (request != null ? request.UserHostAddress : "uknown source") + Environment.NewLine : "")
+                        + "Incoming via Host: " + (request != null ? request.Url.Host : "unknown host") + Environment.NewLine;
+
+                    ws.Write(log);
+                    ws.Close();
+                }
+            }
+            catch
+            {
+            }
+        }
+
         protected void ErrorTrace(Exception e, string severity, Dictionary<string,string> requestInfo, HttpRequest request = null) 
         {
             string supportEmail = Config.TechSuppEmail;
             string subjectServerity = string.IsNullOrEmpty(severity) ? "Error" : severity.Substring(0, 1).ToUpper() + (severity.Length > 1 ? severity.Substring(1) : "");
+            System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
             if (supportEmail != "none" && supportEmail != string.Empty)
             {
                 try
                 {
                     string webtitle = Config.WebTitle ?? "";
-                    string to = Config.TechSuppEmail ?? "cs@robocoder.com";
+                    string to = (Config.TechSuppEmail ?? "cs@robocoder.com").Replace(",",";");
                     string from = "cs@robocoder.com";
                     string fromTitle = "";
                     string replyTo = "";
@@ -3893,7 +3982,6 @@ namespace RO.Web
                     string username = smtpConfig.Length > 3 ? smtpConfig[3].Trim() : null;
                     string password = smtpConfig.Length > 4 ? smtpConfig[4].Trim() : null;
                     string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
-                    System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
                     string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     string xForwardedFor = request != null ? request.Headers["X-Forwarded-For"] 
                                             : requestInfo != null && requestInfo.ContainsKey("X-Forwarded-For") ? requestInfo["X-Forwarded-For"] : null;
@@ -3944,6 +4032,14 @@ namespace RO.Web
                 {
                     // never happen, i.e. do nothing just to get around unnecessary compilation warning
                     if (ex == null) throw;
+                    try
+                    {
+                        LogToFile(request, e, requestInfo != null ? requestInfo["Url"] : "unknown", mm.Subject, mm.Body, ex);
+                    }
+                    catch
+                    {
+                    }
+
                 }
             }
         }
@@ -4863,6 +4959,9 @@ document.Rintagi = {{
                     }
                     catch { }
 
+                    ErrorTrace(new Exception(string.Format("Creating Installer {0}"
+                                                , deployName))
+                              , "info", requestInfo);
                     if (newReleaseId > 0)
                     {
                         var newPackage = createPackage(newReleaseId);
@@ -4876,9 +4975,6 @@ document.Rintagi = {{
                     }
                     else if (upgradeReleaseId > 0)
                         createPackageTasks.Add(createPackage(upgradeReleaseId));
-                    ErrorTrace(new Exception(string.Format("Creating Installer {0}"
-                                                , deployName))
-                              , "info", requestInfo);
                     aggregationTask = Task.WhenAll(createPackageTasks.ToArray());
                     Tuple<bool, string>[] x = await aggregationTask;
                     bool hasError = false;

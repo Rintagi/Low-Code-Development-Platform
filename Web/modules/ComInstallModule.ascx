@@ -148,7 +148,7 @@ Do not add the following unless the special scripts above has been investigated:
 			    <asp:Button id="cOkButton" CssClass="small blue button" onClick="cOkButton_Click" runat="server" text="Compile" tooltip="Click here to compile the installer for the selected project." />
 			    <asp:Button id="cLoadButton" CssClass="small blue button" onClick="cLoadButton_Click" runat="server" text="Download" tooltip="Click here to download the compiled installer for the selected project." />
             </span>
-            <hr/><asp:Button id="cQuickGenerate" CssClass="small blue button" runat="server" text="Create Installer & Copy to Git" onClick="cQuickGenerate_Click" ToolTip="Click here to create the installer and drop it to Git deploy directory (e.g.,rcgit) and it would take a snapshot of the DB changes." />
+            <hr/><asp:Button id="cQuickGenerate" CssClass="small blue button" runat="server" text="Create Installer & Copy to Git" onClick="cQuickGenerate_Click" ToolTip="Click here to create the installer on Git deploy directory (e.g.,rcgit) and it would take a snapshot of the DB changes. No need to run prepare/compile/download above." />
         </div>
     </div>
 </div>

@@ -3972,7 +3972,7 @@ namespace RO.Rule3
             sb.Append("					dtScrCri = (new AdminSystem()).GetScrCriteria(\"" + screenId.ToString() + "\", LcSysConnString, LcAppPw);" + Environment.NewLine);
             //sb.Append("					}" + Environment.NewLine);
 			sb.Append("				}" + Environment.NewLine);
-            sb.Append("				catch (Exception err) { bErrNow.Value = \"Y\"; PreMsgPopup(err.Message); }" + Environment.NewLine);
+            sb.Append("				catch (Exception err) { ErrorTrace(err, \"critical\"); bErrNow.Value = \"Y\"; PreMsgPopup(err.Message); }" + Environment.NewLine);
 			sb.Append("		        Session[KEY_dtScrCri] = dtScrCri;" + Environment.NewLine);
             sb.Append("		    }" + Environment.NewLine);
 			sb.Append("		    return dtScrCri.DefaultView;" + Environment.NewLine);

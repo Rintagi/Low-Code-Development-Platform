@@ -217,11 +217,13 @@ namespace RO.Web
             if (!IsPostBack)
             {
                 TwoFactorAuthenticationPanel.Visible = Config.EnableTwoFactorAuth == "Y" || Config.EnableTwoFactorAuth == "M";
-                
-                string extAppDomainUrl = 
+
+                string extAppDomainUrl =
                     !string.IsNullOrWhiteSpace(Config.ExtBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
-                        ? Config.ExtBaseUrl 
-                        : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                        ? Config.ExtBaseUrl
+                        : string.IsNullOrEmpty(Request.Url.Query)
+                            ? Request.Url.AbsoluteUri
+                            : Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
                 // for client side login sync between React and asp.net(only when served under the same app tree 
                 cAppDomainUrl.Text = extAppDomainUrl.EndsWith("/") ? extAppDomainUrl.Substring(0,extAppDomainUrl.Length - 1) : extAppDomainUrl ;
                 if (base.SystemsList == null) { base.SystemsDict = (new LoginSystem()).GetSystemsList(string.Empty, string.Empty); }    // Instantiate base.SystemsList.
@@ -464,6 +466,9 @@ namespace RO.Web
                 }
                 catch { }
             }
+            var azureScope = "openid profile email";
+            //var azureScope = "https://graph.microsoft.com/.default";
+
             // microsoft online login
             if (!IsPostBack &&
                 (((!string.IsNullOrEmpty(Request.Form["code"]) || !string.IsNullOrEmpty(Request.Form["id_token"])) &&
@@ -481,7 +486,7 @@ namespace RO.Web
                     try
                     {
                         Session.Remove(form["state"]);
-                        string office365LoginName = GetAzureLoginID(form["code"], form["id_token"]);
+                        string office365LoginName = GetAzureLoginID(form["code"], form["id_token"], azureScope);
                         if (!string.IsNullOrEmpty(office365LoginName))
                         {
                             if (LUser == null || LUser.LoginName == "Anonymous")
@@ -491,10 +496,45 @@ namespace RO.Web
                             else
                             {
                                 LinkUserLogin(LUser.UsrId, office365LoginName.Contains("#") ? "M" : "O", office365LoginName);
+                                this.Redirect("~/MyAccount.aspx");
                             }
                         }
                     }
-                    catch { }
+                    catch (Exception err) {
+                        ErrorTrace(err, "critical");
+                    }
+                }
+            }
+
+            // Azure OAuth v2.0, access code in query, use state nounce to associate
+            if (!IsPostBack
+                && !string.IsNullOrEmpty(Request.QueryString["code"])
+                && !string.IsNullOrEmpty(Request.QueryString["state"])
+                && (Session[Request.QueryString["state"]] as Dictionary<string, string>) != null
+                )
+            {
+                try
+                {
+                    Dictionary<string, string> oauth2Ticket = Session[Request.QueryString["state"]] as Dictionary<string, string>;
+                    Session.Remove(Request.QueryString["state"]);
+                    string returnUrl = oauth2Ticket.ContainsKey("ReturnUrl") ? oauth2Ticket["ReturnUrl"] : "";
+                    string office365LoginName = GetAzureLoginID(Request.QueryString["code"], null, azureScope);
+                    if (!string.IsNullOrEmpty(office365LoginName))
+                    {
+                        if (LUser == null || LUser.LoginName == "Anonymous")
+                        {
+                            SSOLogin("", office365LoginName, office365LoginName.Contains("#") ? "M" : "O", returnUrl);
+                        }
+                        else
+                        {
+                            LinkUserLogin(LUser.UsrId, office365LoginName.Contains("#") ? "M" : "O", office365LoginName);
+                            this.Redirect("~/MyAccount.aspx");
+                        }
+                    }
+                }
+                catch (Exception err)
+                {
+                    ErrorTrace(err, "critical");
                 }
             }
 
@@ -523,7 +563,7 @@ namespace RO.Web
                 cGoogleLoginBtn.Visible = true;
                 LoadGoogleClient(Config.GoogleClientId);
                 cGoogleSignInBtn.OnClientClick = "GoogleSignIn('" + Config.GoogleClientId + "','" + cGoogleAccessToken.ClientID + "','" + cGoogleLoginBtn.ClientID + "');return false;";
-                if ((from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() == 0) cLinkGoogleBtn.OnClientClick = "GoogleSignIn('" + Config.GoogleClientId + "','" + cGoogleAccessToken.ClientID + "','" + cGoogleLoginBtn.ClientID + "');return false;";
+                if ((from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).Count() == 0) cLinkGoogleBtn.OnClientClick = "GoogleSignIn('" + Config.GoogleClientId + "','" + cGoogleAccessToken.ClientID + "','" + cGoogleLoginBtn.ClientID + "');return false;";
             }
             if (!string.IsNullOrEmpty(Config.FacebookAppId))
             {
@@ -533,7 +573,7 @@ namespace RO.Web
                 cFacebookLoginBtn.Visible = true;
                 LoadFacebookClient(Config.FacebookAppId, "en-us", "");
                 cFacebookSignInBtn.OnClientClick = "FacebookSignIn('" + Config.FacebookAppId + "','" + cFacebookAccessToken.ClientID + "','" + cFacebookLoginBtn.ClientID + "');return false;";
-                if ((from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() == 0) cLinkFacebookBtn.OnClientClick = "FacebookSignIn('" + Config.FacebookAppId + "','" + cFacebookAccessToken.ClientID + "','" + cFacebookLoginBtn.ClientID + "');return false;";
+                if ((from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).Count() == 0) cLinkFacebookBtn.OnClientClick = "FacebookSignIn('" + Config.FacebookAppId + "','" + cFacebookAccessToken.ClientID + "','" + cFacebookLoginBtn.ClientID + "');return false;";
             }
             if (GoogleLoginPanel.Visible == true || FacebookLoginPanel.Visible == true)
             {
@@ -826,7 +866,7 @@ namespace RO.Web
                 PreMsgPopup(err.Message); return;
             }
         }
-        private bool SetLoginUser(LoginUsr usr, bool redirect, Action locked, Action failed, Credential cr, string Provider, string ProviderLoginName)
+        private bool SetLoginUser(LoginUsr usr, bool redirect, Action locked, Action failed, Credential cr, string Provider, string ProviderLoginName, string returnUrl)
         {
             if (usr != null && usr.UsrId > 0)
             {
@@ -878,16 +918,16 @@ namespace RO.Web
                     }
                     if (redirect)
                     {
-                        if (this.Page.User.Identity.GetType() == typeof(System.Security.Principal.WindowsIdentity))
+                        if (this.Page.User.Identity.GetType() == typeof(System.Security.Principal.WindowsIdentity) || !string.IsNullOrEmpty(returnUrl))
                         {
                             // different browser handle this windows authentication thing differently
                             // so we 'simulate' a form login here as if it is just third party like google
                             FormsAuthenticationTicket Ticket = new FormsAuthenticationTicket(usr.LoginName, false, 3600);
                             FormsAuthentication.SetAuthCookie(usr.LoginName, false);
                             HttpContext.Current.User = new GenericPrincipal(new FormsIdentity(Ticket), null);
-                            string returnURL = Request["ReturnUrl"];
+                            string returnURL = !string.IsNullOrEmpty(returnUrl) ? returnUrl : Request.QueryString["ReturnUrl"];
 
-                            if (!string.IsNullOrEmpty(returnURL) && !returnURL.StartsWith(FormsAuthentication.LoginUrl)) this.Redirect(Request["ReturnUrl"]);
+                            if (!string.IsNullOrEmpty(returnURL) && !returnURL.StartsWith(FormsAuthentication.LoginUrl)) this.Redirect(returnURL);
                             else this.Redirect("Default.aspx");
                         }
                         else
@@ -926,13 +966,16 @@ namespace RO.Web
                     usr = (new LoginSystem()).GetLoginLegacy(LoginName, Password);
                 }
             }
-            return SetLoginUser(usr, redirect, locked, failed, cr,"","");
+            return SetLoginUser(usr, redirect, locked, failed, cr,"","", null);
         }
 
-        public void SSOLogin(string SelectedLoginName, string ProviderLoginName, string Provider)
+        public void SSOLogin(string SelectedLoginName, string ProviderLoginName, string Provider, string returnUrl = null)
         {
             LoginUsr intendedUser = Provider == "SJ" ? LoginByJWTToken(cJWTToken.Text) : null;
-            Credential cr = new Credential(SelectedLoginName, intendedUser != null ? intendedUser.UsrId.ToString() : ProviderLoginName, new byte[32], Provider.Left(5));
+            string providerLoginName = (Provider ?? "").Trim() == "O" || (Provider ?? "").Trim() == "M"
+                                ? ProviderLoginName.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Last()
+                                : ProviderLoginName;
+            Credential cr = new Credential(SelectedLoginName, intendedUser != null ? intendedUser.UsrId.ToString() : providerLoginName, new byte[32], Provider.Left(5));
             LoginUsr usr = (new LoginSystem()).GetLoginSecure(cr);
 
             if (usr != null)
@@ -949,7 +992,7 @@ namespace RO.Web
                 cJWTLogin.Visible = false;
 
             }
-            bool bBlocked = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]);
+            bool bBlocked = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) || !string.IsNullOrEmpty(returnUrl);
             bool success = SetLoginUser(usr, bBlocked || string.IsNullOrEmpty(Request.QueryString["typ"]),
                 () => { PreMsgPopup(TranslateItem(GetLabels().Rows, "AccountLockedMsg")); },
                 () =>
@@ -959,8 +1002,8 @@ namespace RO.Web
                         PreMsgPopup(TranslateItem(GetLabels().Rows, "LoginFailedMsg"));
                     }
                     ShowLoginPanel();
-                }, cr, Provider, ProviderLoginName);
-            if (!bBlocked && !string.IsNullOrEmpty(Request.QueryString["typ"]))
+                }, cr, Provider, ProviderLoginName, returnUrl);
+            if (!bBlocked && !string.IsNullOrEmpty(Request.QueryString["typ"]) && usr != null)
             {
                 string guid = Guid.NewGuid().ToString();
                 string appPath = HttpContext.Current.Request.ApplicationPath;
@@ -1012,8 +1055,8 @@ namespace RO.Web
                 var x = cWebAuthnResult.Text;
                 Fido2Configuration fido2Config = new Fido2Configuration
                 {
-                    Origin = "https://" + Request.Url.Host,
-                    ServerDomain = Request.Url.Host,
+                    Origin = "https://" + XHost(),
+                    ServerDomain = XHost(),
                     ServerName = "site name",
                     ServerIcon = "https://www.rintagi.com/images/a.gif",
                     Timeout = 60 * 1000,
@@ -1269,20 +1312,28 @@ namespace RO.Web
             string secret = Config.AzureAPIScret;
             string state = Guid.NewGuid().ToString().Replace("-", "");
             string replyUrl = Config.AzureAPIRedirectUrl;
-            string loginUrl = "https://login.microsoftonline.com/common/oauth2/authorize"
+            //string scope = "https://graph.microsoft.com/user.read https://graph.microsoft.com/.default";
+            string azureScope = "openid profile email";
+            //string azureScope = "openid profile email https://graph.microsoft.com/.default";
+            string loginUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
                     + "?response_type=code"
-                    + "+id_token"
-                //    + "&response_mode=query"
-                    + "&response_mode=form_post"
+                //   + "?response_type=id_token"
+                //                                    + "%20id_token"
+                    + "&response_mode=query" // only allow code
+                //                    + "&response_mode=form_post" // no cookie sent
                 /* use this to get the id_token directly
                  */
                     + "&redirect_uri=" + System.Web.HttpUtility.UrlEncode(replyUrl)
                     + "&client_id=" + clientID
                     + "&nonce=" + state
-                    + "&prompt=consent"
+                    + "&scope=" + System.Web.HttpUtility.UrlEncode(azureScope).Replace("+", "%20")
+                    + (LUser == null || LUser.LoginName == "Anonymous" ? "" : "&prompt=consent")
                     + "&state=" + System.Web.HttpUtility.UrlEncode(state);
-            Session[state] = new Dictionary<string, string>();
-            this.Redirect(loginUrl);
+            Session[state] = new Dictionary<string, string>() {
+                {"Provider","Azure" },
+                {"ReturnUrl",Request.QueryString["ReturnUrl"]}
+            };
+            Response.Redirect(loginUrl);
         }
 
         public void CancelLoginBtn_Click(object sender, System.EventArgs e)
@@ -1361,7 +1412,7 @@ namespace RO.Web
                     sb.Append("<br /><strong><a href=\"").Append(reset_url.Value).Append("\">").Append(reset_url.Value).Append("</a></strong><br /><br />");
                     sb.Append("<strong>").Append(loginName).Append("</strong>&nbsp;");
                     sb.Append(TranslateItem(dtLabel.Rows, "ResetPwdEmailMsg2"));
-                    string host = Request.Headers["X-Forwarded-Host"] ?? Request.Url.Host;
+                    string host = XHost();
                     try
                     {
                         string from = base.SysCustServEmail(3);
@@ -1896,11 +1947,11 @@ namespace RO.Web
             string windowsLogin = "";
             foreach (var dr in LinkedUserLogin)
             {
-                if (dr["ProviderCd"].ToString() == "F") facebookLogin = dr["LoginName"].ToString();
-                else if (dr["ProviderCd"].ToString() == "G") googleLogin = dr["LoginName"].ToString();
-                else if (dr["ProviderCd"].ToString() == "O") microsoftLogin = dr["LoginName"].ToString();
-                else if (dr["ProviderCd"].ToString() == "M") microsoftLogin = dr["LoginName"].ToString();
-                else if (dr["ProviderCd"].ToString() == "W") windowsLogin = dr["LoginName"].ToString();
+                if (dr["ProviderCd"].ToString().Trim() == "F") facebookLogin = dr["LoginName"].ToString();
+                else if (dr["ProviderCd"].ToString().Trim() == "G") googleLogin = dr["LoginName"].ToString();
+                else if (dr["ProviderCd"].ToString().Trim() == "O") microsoftLogin = dr["LoginName"].ToString().Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                else if (dr["ProviderCd"].ToString().Trim() == "M") microsoftLogin = dr["LoginName"].ToString().Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                else if (dr["ProviderCd"].ToString().Trim() == "W") windowsLogin = dr["LoginName"].ToString();
             }
             if (string.IsNullOrEmpty(facebookLogin)) TranslateItem(cLinkFacebookBtn, dtLabel.Rows, "cLinkFacebookBtn");
             else TranslateItem(cLinkFacebookBtn, dtLabel.Rows, "cUnlinkFacebookBtn",new object[]{facebookLogin});
@@ -1926,8 +1977,8 @@ namespace RO.Web
                 };
             new LoginSystem().LinkUserLogin(UsrId, ProviderCd, LoginName, LoginMeta);
             LinkedUserLogin = new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable().ToList();
-            if ((from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() > 0) cLinkFacebookBtn.OnClientClick = "";
-            if ((from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() > 0) cLinkGoogleBtn.OnClientClick = "";
+            if ((from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).Count() > 0) cLinkFacebookBtn.OnClientClick = "";
+            if ((from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).Count() > 0) cLinkGoogleBtn.OnClientClick = "";
 
             TranslateLoginLinkBtns(GetLabels());
             cRemoveLinkedLogin.Visible = LinkedUserLogin.Count > 0;
@@ -1957,8 +2008,8 @@ namespace RO.Web
                 };
             new LoginSystem().UnlinkUserLogin(UsrId, ProviderCd, LoginName);
             LinkedUserLogin = new LoginSystem().GetLinkedUserLogin(LUser.UsrId).AsEnumerable().ToList();
-            if ((from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() == 0) cLinkFacebookBtn.OnClientClick = "FacebookSignIn('" + Config.FacebookAppId + "','" + cFacebookAccessToken.ClientID + "','" + cFacebookLoginBtn.ClientID + "');return false;";
-            if ((from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).Count() == 0) cLinkGoogleBtn.OnClientClick = "GoogleSignIn('" + Config.GoogleClientId + "','" + cGoogleAccessToken.ClientID + "','" + cGoogleLoginBtn.ClientID + "');return false;";
+            if ((from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).Count() == 0) cLinkFacebookBtn.OnClientClick = "FacebookSignIn('" + Config.FacebookAppId + "','" + cFacebookAccessToken.ClientID + "','" + cFacebookLoginBtn.ClientID + "');return false;";
+            if ((from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).Count() == 0) cLinkGoogleBtn.OnClientClick = "GoogleSignIn('" + Config.GoogleClientId + "','" + cGoogleAccessToken.ClientID + "','" + cGoogleLoginBtn.ClientID + "');return false;";
             TranslateLoginLinkBtns(GetLabels());
             cRemoveLinkedLogin.Visible = LinkedUserLogin.Count > 0;
 
@@ -2018,8 +2069,8 @@ namespace RO.Web
                     var x = cWebAuthnResult.Text;
                     Fido2Configuration fido2Config = new Fido2Configuration
                     {
-                        Origin = "https://" + Request.Url.Host,
-                        ServerDomain = Request.Url.Host,
+                        Origin = "https://" + XHost(),
+                        ServerDomain = XHost(),
                         ServerName = "site name",
                         ServerIcon = "https://www.rintagi.com/images/a.gif",
                         Timeout = 60 * 1000,
@@ -2102,7 +2153,7 @@ namespace RO.Web
         {
             if (LUser != null && LUser.LoginName != "Anonymous")
             {
-                var LinkedAccount = (from dr in LinkedUserLogin where "W".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).ToList();
+                var LinkedAccount = (from dr in LinkedUserLogin where "W".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).ToList();
                 if (LinkedAccount.Count > 0)
                 {
                     UnlinkUserLogin((int)LinkedAccount[0]["UsrId"], LinkedAccount[0]["ProviderCd"].ToString(), LinkedAccount[0]["LoginName"].ToString());
@@ -2127,7 +2178,7 @@ namespace RO.Web
         {
             if (LUser != null && LUser.LoginName != "Anonymous")
             {
-                var LinkedAccount = (from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).ToList();
+                var LinkedAccount = (from dr in LinkedUserLogin where "G".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).ToList();
                 if (LinkedAccount.Count > 0)
                 {
                     UnlinkUserLogin((int)LinkedAccount[0]["UsrId"], LinkedAccount[0]["ProviderCd"].ToString(), LinkedAccount[0]["LoginName"].ToString());
@@ -2138,7 +2189,7 @@ namespace RO.Web
         {
             if (LUser != null && LUser.LoginName != "Anonymous")
             {
-                var LinkedAccount = (from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).ToList();
+                var LinkedAccount = (from dr in LinkedUserLogin where "F".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).ToList();
                 if (LinkedAccount.Count > 0)
                 {
                     UnlinkUserLogin((int)LinkedAccount[0]["UsrId"], LinkedAccount[0]["ProviderCd"].ToString(), LinkedAccount[0]["LoginName"].ToString());
@@ -2149,7 +2200,7 @@ namespace RO.Web
         {
             if (LUser != null && LUser.LoginName != "Anonymous")
             {
-                var LinkedAccount = (from dr in LinkedUserLogin where "M,O".IndexOf(dr["ProviderCd"].ToString()) >= 0 select dr).ToList();
+                var LinkedAccount = (from dr in LinkedUserLogin where "M,O".IndexOf(dr["ProviderCd"].ToString().Trim()) >= 0 select dr).ToList();
                 if (LinkedAccount.Count > 0)
                 {
                     UnlinkUserLogin((int) LinkedAccount[0]["UsrId"],LinkedAccount[0]["ProviderCd"].ToString(), LinkedAccount[0]["LoginName"].ToString());

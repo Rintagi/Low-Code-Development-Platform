@@ -338,7 +338,11 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cHintAnswer1P1" class="r-td r-labelR" runat="server"><asp:Label id="cHintAnswer1Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cHintAnswer1P2" class="r-td r-content" runat="server"><asp:TextBox id="cHintAnswer1" CssClass="inp-txt" MaxLength="50" runat="server" /></div>
+    		<div id="cHintAnswer1P2" class="r-td r-content" runat="server"><rcasp:EncryptedTextBox id="cHintAnswer1" CssClass="inp-txt" MaxLength="50" runat="server" /></div>
+    	</div>
+    	<div class="r-tr">
+    		<div id="cPeekBtnP1" class="r-td r-labelR" runat="server"><asp:Label id="cPeekBtnLabel" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cPeekBtnP2" class="r-td r-content" runat="server"><asp:ImageButton id="cPeekBtn" OnClientClick='NoConfirm()' OnClick="cPeekBtn_Click" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cInvestorId1P1" class="r-td r-labelR" runat="server"><asp:Label id="cInvestorId1Label" CssClass="inp-lbl" runat="server" /></div>

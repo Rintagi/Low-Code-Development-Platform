@@ -51,6 +51,7 @@ namespace RO.Web
                                                 : !licenseDetail.Item2 || admLicenseDetail == null ? " Trial license"
                                                 : string.Format(" Licensed till {0}", admLicenseDetail["Expiry"])
                                                 )
+                                            + " " + Environment.MachineName
                                                 ;
                     } catch { cVersionTxt.Text = "&#169;1999-" + DateTime.Now.Year.ToString() + " Robocoder Corporation. All rights reserved."; }
                 }

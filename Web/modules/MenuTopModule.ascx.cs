@@ -56,13 +56,17 @@ namespace RO.Web
 		{
             if (!IsPostBack && Request.IsAuthenticated && base.LUser != null && base.LImpr != null && base.LPref != null)
 			{
-				if (base.VMenu == null)
+				if (base.VMenu == null && !IsCronInvoked() && !IsSelfInvoked())
 				{
                     try
                     {
                         base.VMenu = new DataView((new MenuSystem()).GetMenu(base.LUser.CultureId, base.LCurr.SystemId, base.LImpr, base.SysConnectStr(base.LCurr.SystemId), base.AppPwd(base.LCurr.SystemId), null, null, null));
                     }
-                    catch { base.VMenu = null; }
+                    catch (Exception ex) 
+                    { 
+                        base.VMenu = null;
+                        ErrorTrace(ex, "critical");
+                    }
                 }
                 if (base.VMenu != null && base.VMenu.Count > 0)
 				{

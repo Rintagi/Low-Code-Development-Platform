@@ -2894,6 +2894,8 @@ document.Rintagi = {{
                 cNotificationContent.Attributes["OnChange"] = null;
                 // suppress dirty flag check on post back
                 if (cSendNotificationBtn.Attributes["OnClick"] == null || cSendNotificationBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSendNotificationBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+                if (cPeekBtn.Attributes["OnClick"] == null || cPeekBtn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cPeekBtn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+
 ~@~~@~~@~~@~~@~~@~~@~~@~~@~
 198~@~1~@~Suppress dirty flag handling~@~Rintagi Postman: Suppress dirty flag handling~@~Suppress dirty flag handling for non-db fields/button postback~@~1028~@~~@~~@~9~@~                cSaveButton.Visible = false;                
                 // suppress dirty flag signaling
@@ -3021,4 +3023,21 @@ document.Rintagi = {{
 
                 // Set last modified time.
                 Response.Cache.SetLastModified(DateTime.UtcNow);
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
+203~@~4~@~Peek Encrypted Columns~@~User Manager: Peek Encrypted Columns~@~Peek encrypted column contents~@~1~@~4435~@~~@~1~@~            try
+            {
+                if (!string.IsNullOrEmpty(cHintAnswer1.Text))
+                {
+                    string text = cHintAnswer1.EncryptedText;
+                    int visiblePart = text.IndexOf('-');
+                    string encryptedValue = visiblePart > 0 ? text.Substring(0, visiblePart) : text;
+
+                    string x = new RO.Common3.EncryptedColumn().RODecryptString(encryptedValue, Config.SecuredColumnKey);
+                    PreMsgPopup(string.Format("{0}", x));
+                }
+            }
+            catch (Exception ex)
+            {
+                PreMsgPopup(string.Format("can't decrypt content {0}", ex.Message));
+            }
 ~@~~@~~@~~@~~@~~@~~@~~@~~@~

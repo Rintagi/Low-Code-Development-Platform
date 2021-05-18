@@ -2441,10 +2441,10 @@ namespace RO.Common3.Ethereum
         {
             if (!web3url.StartsWith("http:") && !web3url.StartsWith("https:") && !web3url.StartsWith("ws:") && !web3url.StartsWith("wss:"))
             {
-                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient(web3url);
+                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient((web3url??"").Trim());
                 try
                 {
-                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream(web3url);
+                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream((web3url ?? "").Trim());
                     _pipeClient.Connect(5000);
                 }
                 catch (TimeoutException)
@@ -2461,7 +2461,7 @@ namespace RO.Common3.Ethereum
             else
             {
                 // should use our own rpcClient(i.e. httpClient) if we need to control the HTTP request say additional headers(bear token, infura origin etc.)
-                Nethereum.JsonRpc.Client.RpcClient rpcClient = new Nethereum.JsonRpc.Client.RpcClient(new Uri(web3url));
+                Nethereum.JsonRpc.Client.RpcClient rpcClient = new Nethereum.JsonRpc.Client.RpcClient(new Uri((web3url ?? "").Trim()));
                 var web3 = new Nethereum.Web3.Web3(rpcClient);
                 return web3;
             }
@@ -2471,10 +2471,10 @@ namespace RO.Common3.Ethereum
         {
             if (!web3url.StartsWith("http:") && !web3url.StartsWith("https:") && !web3url.StartsWith("ws:") && !web3url.StartsWith("wss:"))
             {
-                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient(web3url);
+                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient((web3url ?? "").Trim());
                 try
                 {
-                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream(web3url);
+                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream((web3url ?? "").Trim());
                     _pipeClient.Connect(5000);
                 }
                 catch (TimeoutException)
@@ -2490,7 +2490,7 @@ namespace RO.Common3.Ethereum
             }
             else
             {
-                var web3 = new Nethereum.Geth.Web3Geth(web3url);
+                var web3 = new Nethereum.Geth.Web3Geth((web3url ?? "").Trim());
                 return web3;
             }
         }

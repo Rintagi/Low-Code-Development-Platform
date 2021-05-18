@@ -113,6 +113,14 @@ namespace RoboCoder.WebControls
             get { return (ViewState["WasEncrypted"] as string ?? "N") == "Y"; }
             set { ViewState["WasEncrypted"] = value ? "Y" : "N"; }
         }
+        private string GetCurrentEncryptKey(string keys)
+        {
+            return ((keys ?? "")
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Where(s => !string.IsNullOrEmpty(s.Trim()))
+                    .Select(s => s.Trim())
+                    .FirstOrDefault() ?? "");
+        }
         private bool IsROEncryptedString(string text)
         {
             int visiblePart = text.IndexOf('-');
@@ -120,7 +128,7 @@ namespace RoboCoder.WebControls
             try
             {
                 byte[] x = Convert.FromBase64String(encryptedValue);
-                return x[0] > 0 && x[0] <= 1;
+                return x[0] > 0 && x[0] <= 2;
             }
             catch { return false; }
         }
@@ -161,21 +169,28 @@ namespace RoboCoder.WebControls
 
                 SymmetricAlgorithm cipher = ver == 1 ? (SymmetricAlgorithm)new TripleDESCryptoServiceProvider() : (SymmetricAlgorithm)new AesCryptoServiceProvider();
 
-                try
+                foreach (string key in (inKey ?? "")
+                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => !string.IsNullOrEmpty(s.Trim()))
+                .Select(s => s.Trim())
+                )
                 {
-                    cipher.IV = encryptedData.Skip(1).Take(ivSize).ToArray();
-                    cipher.Mode = CipherMode.CBC;
-                    cipher.Key = hasher.ComputeHash(UTF8Encoding.UTF8.GetBytes(inKey)).Take(DesMD5 ? 16 : 32).ToArray();
-                    string outStr = UTF8Encoding.UTF8.GetString(cipher.CreateDecryptor().TransformFinalBlock(encryptedData.Skip(1 + ivSize).ToArray(), 0, encryptedData.Length - (1 + ivSize)));
-                    return outStr;
+                    try
+                    {
+                        cipher.IV = encryptedData.Skip(1).Take(ivSize).ToArray();
+                        cipher.Mode = CipherMode.CBC;
+                        cipher.Key = hasher.ComputeHash(UTF8Encoding.UTF8.GetBytes(key)).Take(DesMD5 ? 16 : 32).ToArray();
+                        string outStr = UTF8Encoding.UTF8.GetString(cipher.CreateDecryptor().TransformFinalBlock(encryptedData.Skip(1 + ivSize).ToArray(), 0, encryptedData.Length - (1 + ivSize)));
+                        return outStr;
+                    }
+                    catch
+                    {
+                    }
                 }
-                catch
-                {
-                    return null;
-                }
+                throw new Exception("no suitable secret column keys");
             }
             catch {
-                return null;
+                throw;
             }
         }
 
@@ -246,7 +261,12 @@ namespace RoboCoder.WebControls
                 string value = ViewState["ActualValue"] as string ?? string.Empty;
                 try
                 {
-                    return (value.Length == 0 || string.IsNullOrEmpty(EncryptionKey) || value.Length <= VisibleCount) ? value : ROEncryptString(value, EncryptionKey) + "-" + value.Substring(value.Length - VisibleCount, VisibleCount);
+                    return (value.Length == 0
+                        || string.IsNullOrEmpty(GetCurrentEncryptKey(EncryptionKey)) 
+                        || IsROEncryptedString(value) // we do not do enc(enc(enc(val)))) to preserve old value
+                        || value.Length <= VisibleCount) 
+                            ? value
+                            : ROEncryptString(value, GetCurrentEncryptKey(EncryptionKey)) + "-" + value.Substring(value.Length - VisibleCount, VisibleCount);
                 }
                 catch
                 {

@@ -123,7 +123,7 @@ namespace RO.Common3
         private static string wEnableFido2;
         private static string wEnableCryptoWallet;
         private static string wEnforceGitCommit;
-
+        private static string wBrokenARRProxy;
         static Config()
 		{
             wConverterUrl = ConfigurationManager.AppSettings["WsConverterUrl"];
@@ -283,6 +283,7 @@ namespace RO.Common3
             wEnableFido2 = System.Configuration.ConfigurationManager.AppSettings["EnableFido2"];
             wEnableCryptoWallet = System.Configuration.ConfigurationManager.AppSettings["EnableCryptoWallet"];
             wEnforceGitCommit = System.Configuration.ConfigurationManager.AppSettings["EnforceGitCommit"];
+            wBrokenARRProxy = System.Configuration.ConfigurationManager.AppSettings["BrokenARRProxy"];
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -472,6 +473,7 @@ namespace RO.Common3
         public static bool EnableFido2 { get { return (wEnableFido2 ?? "N").ToUpper() == "Y"; } }
         public static bool EnableCryptoWallet { get { return (wEnableCryptoWallet ?? "N").ToUpper() == "Y"; } }
         public static bool EnforceGitCommit { get { return (wEnforceGitCommit ?? "N").ToUpper() == "Y"; } }
+        public static bool BrokenARRProxy { get { return (wBrokenARRProxy ?? "N").ToUpper() == "Y"; } }
         public static string RintagiLicense
         { 
             get { return wLicense; } 

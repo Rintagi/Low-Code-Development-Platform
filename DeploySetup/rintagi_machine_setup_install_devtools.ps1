@@ -6,12 +6,12 @@ choco install vscode -y
 # .NET 4.6.2 devpack
 # required for installer compilation(can either be here or prerequisite)
 # https://www.microsoft.com/en-us/download/details.aspx?id=53321
-Write-Output "choco install netfx-4.6.2-devpack -y"
-choco install netfx-4.6.2-devpack -y
+# Write-Output "choco install netfx-4.6.2-devpack -y"
+# choco install netfx-4.6.2-devpack -y
 
 # .NET 4.8 devpack
 # required (can either be here or prerequisite)
-# https://www.microsoft.com/en-us/download/details.aspx?id=53321
+# https://dotnet.microsoft.com/download/dotnet-framework/net48
 Write-Output "choco install netfx-4.8-devpack -y"
 choco install netfx-4.8-devpack -y
 

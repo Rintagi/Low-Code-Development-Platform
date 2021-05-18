@@ -134,11 +134,11 @@ choco install SQL2012.ClrTypes --ignore-checksums -y
 Write-Output "choco install reportviewer2012 -y"
 choco install reportviewer2012 --ignore-checksums -y
 
-# crystal report viewer runtime
+# crystal report viewer runtime(this take a long time as it is a full VS package for both 32/64 bit)
 # source url
 # https://wiki.scn.sap.com/wiki/display/BOBJ/Crystal+Reports%2C+Developer+for+Visual+Studio+Downloads
-Write-Output "choco install crystalreports2010runtime -y"
-choco install crystalreports2010runtime -y --install-arguments="'UPGRADE=1'"
+Write-Output "choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'""
+choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'"
 
 # IIS urlrewrite module
 # source url
@@ -150,11 +150,11 @@ choco install urlrewrite -y
 # IIS Application Request Routing(proxying) 3.0
 # source url
 # https://www.microsoft.com/en-us/download/details.aspx?id=47333
-Write-Output "choco install iis-arr -y"
-choco install iis-arr -y
+Write-Output "choco install iis-arr  --ignore-checksums -y"
+choco install iis-arr  --ignore-checksums -y
 
-# .NET 4.6.2 devpack
-# required for installer compilation(can either be here or in devtools)
-# https://www.microsoft.com/en-us/download/details.aspx?id=53321
-# Write-Output "choco install netfx-4.6.2-devpack -y"
-# choco install netfx-4.6.2-devpack -y
+# .NET 4.8 devpack
+# required (can either be here or prerequisite)
+# https://dotnet.microsoft.com/download/dotnet-framework/net48
+Write-Output "choco install netfx-4.8-devpack -y"
+choco install netfx-4.8-devpack -y
