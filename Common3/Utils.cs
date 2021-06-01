@@ -2024,7 +2024,7 @@
             {
                 return jArrayToSys(c as Newtonsoft.Json.Linq.JArray);
             }
-            else if (c is Newtonsoft.Json.Linq.JArray)
+            else if (c is Newtonsoft.Json.Linq.JObject)
             {
                 return jObjToSys(c as Newtonsoft.Json.Linq.JObject);
             }

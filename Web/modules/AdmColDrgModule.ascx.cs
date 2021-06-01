@@ -1093,7 +1093,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					dtScrCri = (new AdminSystem()).GetScrCriteria("1007", LcSysConnString, LcAppPw);
 				}
-				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+				catch (Exception err) { ErrorTrace(err, "critical"); bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
 		        Session[KEY_dtScrCri] = dtScrCri;
 		    }
 		    return dtScrCri.DefaultView;

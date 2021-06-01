@@ -2861,4 +2861,12 @@ may need to add the following to web.config for assembly redirection
 2. change deployment helper PS script to install crystal report for vs _25(.2000.3500) as that is the only available package in choco
 3. better IIS ARR proxy support
 4. fix dbtimestamp data mapping for ODBC driver~@~~@~en-US~@~
-12688~@~  11. 251~@~11~@~251~@~~@~~@~~@~~@~~@~~@~
+12688~@~  11. 251.10518~@~11~@~251~@~2021-05-18 00:00:00.000~@~~@~~@~1. minor change to installer for new PTY installation about solution file - now 4.10.3.0
+2. minor change to dynamic json deserialization to c# built-in objects~@~~@~en-US~@~
+12689~@~  11. 252.10527~@~11~@~252~@~2021-05-27 00:00:00.000~@~~@~~@~1. revise React related function to support nodejs 14.x, React 17.x and package dependencies~@~~@~en-US~@~
+12690~@~  11. 253.10531~@~11~@~253~@~2021-05-31 00:00:00.000~@~~@~~@~1. minor change to React template
+2. add installation script for ssrs 2015 viewer
+3. default new application to use 'odbc' driver instead of 'sqloledb'
+4. add a new VwCompanyPref for server side ssrs logo url
+5. auto downgrade ssrs 2016 .rdlc to ssrs 2015(need 2015 viewer, i.e. 12.0.0.0)~@~~@~en-US~@~
+12691~@~  11. 254~@~11~@~254~@~~@~~@~~@~~@~~@~~@~

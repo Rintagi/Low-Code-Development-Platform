@@ -1015,7 +1015,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					dtScrCri = (new AdminSystem()).GetScrCriteria("107", LcSysConnString, LcAppPw);
 				}
-				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+				catch (Exception err) { ErrorTrace(err, "critical"); bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
 		        Session[KEY_dtScrCri] = dtScrCri;
 		    }
 		    return dtScrCri.DefaultView;
@@ -1740,6 +1740,22 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			bool noTrans = Config.NoTrans;
 			int commandTimeOut = Config.CommandTimeOut;
 			// *** System Button Click (Before) Web Rule starts here *** //
+            if(!cPortBinPath195.Text.EndsWith("\\")){
+                bErrNow.Value = "Y"; PreMsgPopup("Porting Bin Path needs to end with \"\\\" "); return rtn;
+            }
+            if (!cInstBinPath195.Text.EndsWith("\\"))
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("Install Bin Path needs to end with \"\\\" "); return rtn;
+            }
+            if (!cScriptPath195.Text.EndsWith("\\"))
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("Script Path needs to end with \"\\\" "); return rtn;
+            }
+            if (!cDbDataPath195.Text.EndsWith("\\"))
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("DB Data Path needs to end with \"\\\" "); return rtn;
+            }
+
 			string pid = string.Empty;
 			if (ValidPage())
 			{

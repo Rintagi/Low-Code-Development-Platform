@@ -41,12 +41,6 @@ async function initBar() {
 initFoo();
 initBar();
 
-window.addEventListener('unhandledrejection', function(event) {
-  // the event object has two special properties:
-  console.log(event.promise); // [object Promise] - the promise that generated the error
-  console.log(event.reason); // Error: Whoops! - the unhandled error object
-});
-
 /* Rintagi runtime configuration(rintagi.js under public/runtime) is loaded in index.html so must be accessed via document namespace
  * this is for post-deployment override
  */

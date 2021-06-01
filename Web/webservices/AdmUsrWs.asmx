@@ -216,8 +216,8 @@ namespace RO.Web
             drType["ProjectLs1"] = "VarChar"; drDisp["ProjectLs1"] = "ListBox";
             try { dr["HintQuestionId1"] = mst["HintQuestionId1"]; } catch { }
             drType["HintQuestionId1"] = "Numeric"; drDisp["HintQuestionId1"] = "DropDownList";
-            try { dr["HintAnswer1"] = (mst["HintAnswer1"] ?? "").Trim().Left(50); } catch { }
-            drType["HintAnswer1"] = "VarWChar"; drDisp["HintAnswer1"] = "TextBox";
+            try { dr["HintAnswer1"] = mst["HintAnswer1"]; } catch { }
+            drType["HintAnswer1"] = "VarWChar"; drDisp["HintAnswer1"] = "EncryptedTextBox";
             try { dr["InvestorId1"] = mst["InvestorId1"]; } catch { }
             drType["InvestorId1"] = "Numeric"; drDisp["InvestorId1"] = "AutoComplete";
             try { dr["CustomerId1"] = mst["CustomerId1"]; } catch { }
@@ -310,6 +310,7 @@ namespace RO.Web
                 {"ProjectLs1",""},
                 {"HintQuestionId1",""},
                 {"HintAnswer1",""},
+                {"PeekBtn","~/images/lock.png"},
                 {"InvestorId1",""},
                 {"CustomerId1",""},
                 {"VendorId1",""},

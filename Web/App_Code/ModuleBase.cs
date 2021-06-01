@@ -4594,7 +4594,7 @@ document.Rintagi = {{
                     }
                 }
                 //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
-                var npmInstallRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var npmInstallRet = Utils.WinProc(npmPath, @"install --legacy-peer-deps  --no-optional --no-update-notifier", true, stdInHandler, stdErrHandler, reactModuleDir);
                 var npmRunBuildRet = Utils.WinProc(npmPath, "run build", true, stdInHandler, stdErrHandler, reactModuleDir);
                 var buildDir = reactModuleDir + "/build";
                 var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;

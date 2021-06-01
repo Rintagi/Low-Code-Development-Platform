@@ -94,6 +94,13 @@ class MstRecord extends RintagiScreen {
   }
 
   CultureId1InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchCultureId1(v, filterBy); } }
+  PeekBtn({ submitForm, ScreenButton, naviBar, redirectTo, onSuccess }) {
+    return function (evt) {
+      this.OnClickColumeName = 'PeekBtn';
+      //Enter Custom Code here, eg: submitForm();
+      evt.preventDefault();
+    }.bind(this);
+  }
   InvestorId1InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchInvestorId1(v, filterBy); } }
   CustomerId1InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchCustomerId1(v, filterBy); } }
   VendorId1InputChange() { const _this = this; return function (name, v) { const filterBy = ''; _this.props.SearchVendorId1(v, filterBy); } }
@@ -530,7 +537,7 @@ class MstRecord extends RintagiScreen {
                     cProjectLs1: ProjectLs1,
                     cModifiedOn1: ModifiedOn1 || new Date(),
                     cHintQuestionId1: HintQuestionId1List.filter(obj => { return obj.key === HintQuestionId1 })[0],
-                    cHintAnswer1: formatContent(HintAnswer1 || '', 'TextBox'),
+                    cHintAnswer1: formatContent(HintAnswer1 || '', 'EncryptedTextBox'),
                     cInvestorId1: InvestorId1List.filter(obj => { return obj.key === InvestorId1 })[0],
                     cCustomerId1: CustomerId1List.filter(obj => { return obj.key === CustomerId1 })[0],
                     cVendorId1: VendorId1List.filter(obj => { return obj.key === VendorId1 })[0],
@@ -1298,6 +1305,19 @@ class MstRecord extends RintagiScreen {
                                   </div>
                                 </Col>
                               }
+                                {(authCol.PeekBtn || {}).visible &&
+                                  <Col lg={6} xl={6}>
+                                    <div className='form__form-group'>
+                                      <div className='d-block'>
+                                          <Button color='secondary' size='sm' className='admin-ap-post-btn mb-10'
+                                            disabled={(authCol.PeekBtn || {}).readonly || !(authCol.PeekBtn || {}).visible}
+                                            onClick={this.PeekBtn({ naviBar, submitForm, currMst })} >
+                                            {auxLabels.PeekBtn || (columnLabel.PeekBtn || {}).ColumnHeader || (columnLabel.PeekBtn || {}).ColumnName}
+                                          </Button>
+                                      </div>
+                                    </div>
+                                  </Col>
+                                }
                               {(authCol.InvestorId1 || {}).visible &&
                                 <Col lg={6} xl={6}>
                                   <div className='form__form-group'>

@@ -38,6 +38,19 @@ ALTER VIEW [dbo].[VwClnAppItem] AS
 	WHERE a.VersionDt is not null AND b.ObjectTypeCd = 'C'
 	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
 GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCompanyPref') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwCompanyPref AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwCompanyPref]
+AS
+select 
+c.CompanyId, c.CompanyLogo, c.CompPrefDesc
+, s.WebAddress
+, LogoUrl = REPLACE(c.CompanyLogo, '~/', ISNULL(s.WebAddress + '/',''))
+from
+dbo.CompPref c
+left outer join dbo.Systems s on s.SystemId = 3
+GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCulture') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwCulture AS SELECT DUMMY=1')
 GO

@@ -10,6 +10,9 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwClnAppItem') AND type='V')
 DROP VIEW dbo.VwClnAppItem
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwCompanyPref') AND type='V')
+DROP VIEW dbo.VwCompanyPref
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwCulture') AND type='V')
 DROP VIEW dbo.VwCulture
 GO

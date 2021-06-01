@@ -91,7 +91,7 @@ choco install sqlserver-cmdlineutils
 #MS odbc driver for SQL server(17)
 # source url 
 # https://docs.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server?view=sql-server-ver15
-# pull in by the client so no needed unless there is checksum issue
+# pull in by the client so not needed unless there is checksum issue
 #Write-Output "choco install sqlserver-odbcdriver -y"
 #choco install sqlserver-odbcdriver -y
 
@@ -124,15 +124,21 @@ choco install access2016runtime -y
 Write-Output "choco install SQL2012.ClrTypes --ignore-checksums -y"
 choco install SQL2012.ClrTypes --ignore-checksums -y
 
+Write-Output "choco install SQL2014.ClrTypes --ignore-checksums -y"
+choco install SQL2014.ClrTypes --ignore-checksums -y
+
 #MS SQL Report Viewer
-# source url(2015)
-# https://www.microsoft.com/en-us/download/details.aspx?id=45496
-# or
 # 2012
 # https://www.microsoft.com/en-ca/download/details.aspx?id=35747
 
 Write-Output "choco install reportviewer2012 -y"
 choco install reportviewer2012 --ignore-checksums -y
+
+#MS SQL Report Viewer
+# source url(2015)
+# https://www.microsoft.com/en-us/download/details.aspx?id=45496
+Write-Output "choco install ms-reportviewer2015 -y"
+choco install ms-reportviewer2015 --ignore-checksums -y
 
 # crystal report viewer runtime(this take a long time as it is a full VS package for both 32/64 bit)
 # source url

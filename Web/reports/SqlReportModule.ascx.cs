@@ -1520,13 +1520,34 @@ namespace RO.Web
             {
                 n.Attributes["Name"].Value = LcAppDb;
             }
+            //System.Xml.XmlNode reportParametersLayout = rpt.SelectSingleNode("//x:ReportParametersLayout", ns);
+            //if (reportParametersLayout != null)
+            //{
+            //    reportParametersLayout.RemoveAll();
+            //}
+
+
             using (MemoryStream ms = new MemoryStream())
-			{
-				rpt.Save(ms);
-				ms.Seek(0, SeekOrigin.Begin);
-				cViewer.LocalReport.LoadReportDefinition(ms);
-			}
-			DataRow dr = ds.Tables["DtSqlReportIn"].Rows[0];
+            {
+                // downgrade 2016 version back to 2015(until the newer viewer can be used)
+                rpt.Save(ms);
+                ms.Flush();
+                var rx = new Regex(@"(<ReportParametersLayout>.*</ReportParametersLayout>)", RegexOptions.Singleline);
+                var rptSrc = rx.Replace(System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray()), "")
+                                .Replace("/reporting/2016/01/reportdefinition", "/reporting/2010/01/reportdefinition");
+                using (MemoryStream ms1 = new MemoryStream())
+                {
+                    var b = System.Text.UTF8Encoding.UTF8.GetBytes(rptSrc);
+                    ms1.Write(b, 0, b.Length);
+                    ms1.Flush();
+                    ms1.Seek(0, SeekOrigin.Begin);
+                    cViewer.LocalReport.LoadReportDefinition(ms1);
+                }
+                //ms.Seek(0, SeekOrigin.Begin);
+                //cViewer.LocalReport.LoadReportDefinition(ms);
+            } 
+            
+            DataRow dr = ds.Tables["DtSqlReportIn"].Rows[0];
 			string sNull = null;
 			ReportParameter[] pms = new ReportParameter[ii];
 			pms[0] = new ReportParameter("reportId", QueryStr["rpt"].ToString());

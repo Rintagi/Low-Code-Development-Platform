@@ -1073,7 +1073,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				{
 					dtScrCri = (new AdminSystem()).GetScrCriteria("87", LcSysConnString, LcAppPw);
 				}
-				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
+				catch (Exception err) { ErrorTrace(err, "critical"); bErrNow.Value = "Y"; PreMsgPopup(err.Message); }
 		        Session[KEY_dtScrCri] = dtScrCri;
 		    }
 		    return dtScrCri.DefaultView;
@@ -1893,7 +1893,7 @@ document.Rintagi = {{
                 string npmPath = @"C:\Program Files\nodejs\npm.cmd";
                 //var ret = new Tuple<int,string,string>(0, "", "");
                 //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
-                var installRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, reactModuleDir);
+                var installRet = Utils.WinProc(npmPath, @"install --legacy-peer-deps --no-optional --no-update-notifier", true, reactModuleDir);
                 if (installRet.Item1 != 0 || installRet.Item3.Contains("ERR"))
                 {
                     bErrNow.Value = "Y";
@@ -2116,7 +2116,7 @@ document.Rintagi = {{
                     }
                 }
                 //var ret1 = WinProc(npmPath, "cache clean --force", true, reactModuleDir);
-                var npmInstallRet = Utils.WinProc(npmPath, @"install  --no-optional --no-update-notifier", true, stdInHandler, stdErrHandler, reactModuleDir);
+                var npmInstallRet = Utils.WinProc(npmPath, @"install --legacy-peer-deps  --no-optional --no-update-notifier", true, stdInHandler, stdErrHandler, reactModuleDir);
                 var npmRunBuildRet = Utils.WinProc(npmPath, "run build", true, stdInHandler, stdErrHandler, reactModuleDir);
                 var buildDir = reactModuleDir + "/build";
                 var webSiteTargetDir = webAppRoot + "/React/" + systemAbbr;
