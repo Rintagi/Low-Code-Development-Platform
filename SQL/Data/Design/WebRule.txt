@@ -3061,3 +3061,19 @@ document.Rintagi = {{
                 PreMsgPopup(string.Format("can't decrypt content {0}", ex.Message));
             }
 ~@~~@~~@~~@~~@~~@~~@~~@~~@~
+204~@~2~@~path check~@~Data Tier: path check~@~~@~107~@~~@~11~@~6~@~            if(!cPortBinPath195.Text.EndsWith("\\")){
+                bErrNow.Value = "Y"; PreMsgPopup("Porting Bin Path needs to end with \"\\\" "); return rtn;
+            }
+            if (!cInstBinPath195.Text.EndsWith("\\"))
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("Install Bin Path needs to end with \"\\\" "); return rtn;
+            }
+            if (!cScriptPath195.Text.EndsWith("\\"))
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("Script Path needs to end with \"\\\" "); return rtn;
+            }
+            if (!cDbDataPath195.Text.EndsWith("\\"))
+            {
+                bErrNow.Value = "Y"; PreMsgPopup("DB Data Path needs to end with \"\\\" "); return rtn;
+            }
+~@~~@~~@~~@~~@~~@~~@~~@~~@~

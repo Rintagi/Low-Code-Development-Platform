@@ -1740,7 +1740,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			string rtn = string.Empty;
 			bool noTrans = Config.NoTrans;
 			int commandTimeOut = Config.CommandTimeOut;
-			// *** System Button Click (Before) Web Rule starts here *** //
+			//WebRule: path check
             if(!cPortBinPath195.Text.EndsWith("\\")){
                 bErrNow.Value = "Y"; PreMsgPopup("Porting Bin Path needs to end with \"\\\" "); return rtn;
             }
@@ -1757,6 +1757,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                 bErrNow.Value = "Y"; PreMsgPopup("DB Data Path needs to end with \"\\\" "); return rtn;
             }
 
+			// *** WebRule End *** //
 			string pid = string.Empty;
 			if (ValidPage())
 			{
