@@ -196,7 +196,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cRuleDescription24P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleDescription24Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cRuleDescription24P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRuleDescription24" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleDescription24" display="none" ErrorMessage="RuleDescription <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cRuleDescription24E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRuleDescription24P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRuleDescription24" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleDescription24" display="none" ErrorMessage="RuleDescription <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cRuleDescription24E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cRuleTypeId24P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleTypeId24Label" CssClass="inp-lbl" runat="server" /></div>
@@ -274,7 +274,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-10"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cRuleCode24P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleCode24Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cRuleCode24P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRuleCode24" CssClass="inp-txt" runat="server" /><asp:Image id="cRuleCode24E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRuleCode24P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRuleCode24" CssClass="inp-txt" runat="server" /><asp:Image id="cRuleCode24E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-11-12"><div class="screen-tabfolder" runat="server"><div class="r-table">

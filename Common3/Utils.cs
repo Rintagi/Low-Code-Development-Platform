@@ -26,7 +26,11 @@
         {
             return s.Length == 0 ? "" : s.Substring(0, s.Length < left ? s.Length : left);
         }
-
+        public static string Right(this string s, int right)
+        {
+            int remain = s.Length > right ? right : s.Length;
+            return s.Length == 0 ? "" : s.Substring(s.Length - right >= 0 ? s.Length - right : 0, remain);
+        }
         public static string StartFrom(this string s, int idx)
         {
             return s.Length <= idx ? "" : s.Substring(idx);

@@ -221,7 +221,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cStaticMeta259P1" class="r-td r-labelR" runat="server"><asp:Label id="cStaticMeta259Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cStaticMeta259P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cStaticMeta259" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cStaticMeta259" display="none" ErrorMessage="StaticMeta <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cStaticMeta259E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cStaticMeta259P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cStaticMeta259" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cStaticMeta259" display="none" ErrorMessage="StaticMeta <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cStaticMeta259E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -245,7 +245,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cStaticPgCss259P1" class="r-td r-labelR" runat="server"><asp:Label id="cStaticPgCss259Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cStaticPgCss259P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cStaticPgCss259" CssClass="inp-txt" runat="server" /></div>
+    		<div id="cStaticPgCss259P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cStaticPgCss259" CssClass="inp-txt" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -257,7 +257,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cStaticPgJs259P1" class="r-td r-labelR" runat="server"><asp:Label id="cStaticPgJs259Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cStaticPgJs259P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cStaticPgJs259" CssClass="inp-txt" runat="server" /></div>
+    		<div id="cStaticPgJs259P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cStaticPgJs259" CssClass="inp-txt" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

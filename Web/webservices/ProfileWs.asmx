@@ -392,27 +392,6 @@ public partial class ProfileWs : AsmxBase
         return mr;
     }
 
-    protected KeyValuePair<string, string> GetResetLoginUrl(string UsrId, string LoginName, string Email, string keyAs, string userState, string signUpURL, string returnUrl)
-    {
-        DataRow dr = ((new LoginSystem()).GetSaltedUserInfo(int.Parse(UsrId), LoginName, Email)).Rows[0];
-        string emailOnFile = dr["UsrEmail"].ToString();
-        byte[] resetTime = System.Text.Encoding.ASCII.GetBytes(DateTime.Now.ToFileTimeUtc().ToString());
-        string resetTimeEnc = Convert.ToBase64String(Encrypt(resetTime, dr["UsrPassword"] as byte[], dr["UsrPassword"] as byte[]));
-        //string loginUrl = (System.Web.Security.FormsAuthentication.LoginUrl ?? "").Replace("/" + Config.AppNameSpace + "/", "");
-        //if (string.IsNullOrEmpty(loginUrl)) loginUrl = "MyAccount.aspx";
-        //string reset_url = string.Format("{0}" + (Request.Url.ToString().Contains("?") && !string.IsNullOrEmpty(signUpURL) ? "&" : "?") + "{3}={1}&p={2}{4}",
-        //    ((Config.EnableSsl ? Config.SslUrl : Config.OrdUrl).StartsWith("http") ? (new Uri(Config.EnableSsl ? Config.SslUrl : Config.OrdUrl)) : Request.Url).GetLeftPart(UriPartial.Scheme) + Request.Url.Host + Request.Url.AbsolutePath.ToLower().Replace((signUpURL ?? loginUrl).ToLower(), loginUrl),
-        //    HttpUtility.UrlEncode(dr["UsrId"].ToString()),
-        //    HttpUtility.UrlEncode(resetTimeEnc),
-        //    string.IsNullOrEmpty(keyAs) ? "j" : keyAs,
-        //    userState
-        //    );
-
-        // for now
-        string reset_url = string.Format("http://localhost:3000/#/newpassword?j={0}&p={1}", HttpUtility.UrlEncode(dr["UsrId"].ToString()), HttpUtility.UrlEncode(resetTimeEnc));
-        return new KeyValuePair<string, string>(emailOnFile, reset_url + (string.IsNullOrEmpty(returnUrl) ? "" : "&ReturnUrl=" + Server.UrlEncode(returnUrl)));
-    }
-
     protected void NotifyUser(string subject, string body, string email, string from)
     {
         string site = GetSiteUrl(true);

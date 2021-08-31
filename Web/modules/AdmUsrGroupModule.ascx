@@ -182,7 +182,7 @@
     <div class="r-td rc-7-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cRowAuthorityId7P1" class="r-td r-labelR" runat="server"><asp:Label id="cRowAuthorityId7Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cRowAuthorityId7P2" class="r-td r-content" runat="server"><asp:DropDownList id="cRowAuthorityId7" CssClass="inp-ddl" DataValueField="RowAuthorityId7" DataTextField="RowAuthorityId7Text" AutoPostBack="true" OnSelectedIndexChanged="cRowAuthorityId7_SelectedIndexChanged" runat="server" /><asp:RequiredFieldValidator id="cRFVRowAuthorityId7" ControlToValidate="cRowAuthorityId7" display="none" runat="server" /><asp:TextBox TextMode="Password" id="cRowAuthorityId7Pwd" CssClass="PwdBox" MaxLength="32" ToolTip="Please enter a supervisory override password to proceed!" AutoPostBack="true" OnTextChanged="cRowAuthorityId7Pwd_TextChanged" runat="server" visible="false" /><asp:Label id="cRowAuthorityId7Pwl" CssClass="inp-lbl" text="Invalid" runat="server" visible="false" /></div>
+    		<div id="cRowAuthorityId7P2" class="r-td r-content" runat="server"><asp:DropDownList id="cRowAuthorityId7" CssClass="inp-ddl" DataValueField="RowAuthorityId7" DataTextField="RowAuthorityId7Text" AutoPostBack="true" OnSelectedIndexChanged="cRowAuthorityId7_SelectedIndexChanged" runat="server" /><asp:RequiredFieldValidator id="cRFVRowAuthorityId7" ControlToValidate="cRowAuthorityId7" display="none" runat="server" /><asp:TextBox TextMode="Password" autocomplete="new-password" id="cRowAuthorityId7Pwd" CssClass="PwdBox" MaxLength="32" ToolTip="Please enter a supervisory override password to proceed!" AutoPostBack="true" OnTextChanged="cRowAuthorityId7Pwd_TextChanged" runat="server" visible="false" /><asp:Label id="cRowAuthorityId7Pwl" CssClass="inp-lbl" text="Invalid" runat="server" visible="false" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cCompanyId7P1" class="r-td r-labelR" runat="server"><asp:Label id="cCompanyId7Label" CssClass="inp-lbl" runat="server" /></div>
@@ -226,7 +226,7 @@
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -429,7 +429,7 @@
     </td>
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:260px;text-align:left;' visible="<%# GridColumnVisible(11) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cSysRowAuthorityId58ml" runat="server" /></div>
-		    <asp:DropDownList id="cSysRowAuthorityId58" CssClass="GrdDdl" AutoPostBack="true" OnSelectedIndexChanged="cSysRowAuthorityId58_SelectedIndexChanged" DataValueField="SysRowAuthorityId58" DataTextField="SysRowAuthorityId58Text" runat="server" /><asp:RequiredFieldValidator id="cRFVSysRowAuthorityId58" ControlToValidate="cSysRowAuthorityId58" display="none" runat="server" /><asp:TextBox TextMode="Password" id="cSysRowAuthorityId58Pwd" CssClass="PwdBox" MaxLength="32" ToolTip="Please enter a supervisory override password to proceed!" AutoPostBack="true" OnTextChanged="cSysRowAuthorityId58Pwd_TextChanged" runat="server" visible="false" /><div><asp:Label id="cSysRowAuthorityId58Pwl" CssClass="inp-lbl" text="Invalid" runat="server" visible="false" /></div>
+		    <asp:DropDownList id="cSysRowAuthorityId58" CssClass="GrdDdl" AutoPostBack="true" OnSelectedIndexChanged="cSysRowAuthorityId58_SelectedIndexChanged" DataValueField="SysRowAuthorityId58" DataTextField="SysRowAuthorityId58Text" runat="server" /><asp:RequiredFieldValidator id="cRFVSysRowAuthorityId58" ControlToValidate="cSysRowAuthorityId58" display="none" runat="server" /><asp:TextBox TextMode="Password" autocomplete="new-password" id="cSysRowAuthorityId58Pwd" CssClass="PwdBox" MaxLength="32" ToolTip="Please enter a supervisory override password to proceed!" AutoPostBack="true" OnTextChanged="cSysRowAuthorityId58Pwd_TextChanged" runat="server" visible="false" /><div><asp:Label id="cSysRowAuthorityId58Pwl" CssClass="inp-lbl" text="Invalid" runat="server" visible="false" /></div>
 		</div></div>
     </td>
 	<td>

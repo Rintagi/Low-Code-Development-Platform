@@ -1243,6 +1243,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    if (drv["DisplayName"].ToString() == "ListBox")
 			    {
 					cListBox = (ListBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
+					bool isRequired = drv["RequiredValid"].ToString() == "Y";
 					if (cListBox != null)
 					{
 						int CriCnt = (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId));
@@ -1253,7 +1254,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					    if (noneSelected && CriCnt+1 > TotalChoiceCnt) dr[drv["ColumnName"].ToString()] = dr[drv["ColumnName"].ToString()].ToString() + "'-1'";
 					    foreach (ListItem li in cListBox.Items)
 					    {
-					        if (li.Selected)
+					        if (li.Selected || (noneSelected && !isRequired && !string.IsNullOrEmpty(li.Value)))
 					        {
 					            if (dr[drv["ColumnName"].ToString()].ToString() != "(")
 					            {

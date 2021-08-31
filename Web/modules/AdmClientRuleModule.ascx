@@ -188,7 +188,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cRuleMethodDesc1295P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleMethodDesc1295Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cRuleMethodDesc1295P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRuleMethodDesc1295" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleMethodDesc1295" display="none" ErrorMessage="RuleMethodDesc <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cRuleMethodDesc1295E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRuleMethodDesc1295P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRuleMethodDesc1295" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleMethodDesc1295" display="none" ErrorMessage="RuleMethodDesc <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cRuleMethodDesc1295E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cRuleName127P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleName127Label" CssClass="inp-lbl" runat="server" /></div>
@@ -196,7 +196,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cRuleDescription127P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleDescription127Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cRuleDescription127P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRuleDescription127" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleDescription127" display="none" ErrorMessage="RuleDescription <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cRuleDescription127E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRuleDescription127P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRuleDescription127" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleDescription127" display="none" ErrorMessage="RuleDescription <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cRuleDescription127E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cRuleTypeId127P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleTypeId127Label" CssClass="inp-lbl" runat="server" /></div>
@@ -250,7 +250,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cClientRuleProg127P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cClientRuleProg127" CssClass="inp-txt" runat="server" /><asp:Image id="cClientRuleProg127E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cClientRuleProg127P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cClientRuleProg127" CssClass="inp-txt" runat="server" /><asp:Image id="cClientRuleProg127E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
@@ -266,7 +266,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cClientScriptHelp126P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cClientScriptHelp126" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cClientScriptHelp126" display="none" ErrorMessage="ClientScriptHelp <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cClientScriptHelp126E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cClientScriptHelp126P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cClientScriptHelp126" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cClientScriptHelp126" display="none" ErrorMessage="ClientScriptHelp <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cClientScriptHelp126E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
@@ -282,7 +282,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cUserScriptName127P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cUserScriptName127" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cUserScriptName127" display="none" ErrorMessage="UserScriptName <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cUserScriptName127E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cUserScriptName127P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cUserScriptName127" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cUserScriptName127" display="none" ErrorMessage="UserScriptName <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cUserScriptName127E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>

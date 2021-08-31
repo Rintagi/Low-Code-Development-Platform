@@ -1416,7 +1416,7 @@
             if (!myflow.config.editable)
                 return;
 			if (arg.keyCode == 46) {
-            // if (arg.keyCode == 46 || (arg.originalEvent && arg.originalEvent.code == 'Backspace')) {
+			    // if (arg.keyCode == 46 || (arg.originalEvent && arg.originalEvent.code == 'Backspace')) {
                 var c = $(_r).data('currNode');
                 if (c) {
                     if (c.getId().substring(0, 4) == 'rect') {
@@ -1652,25 +1652,59 @@
             // $('#myflow_publish').click(function () {
                 // myflow.config.tools.publish(getJson())
             // });
-            $('#myflow_revoke').click(function(){
-                var temp=myflow.config.historys.pop();
-                if(temp){
-                    switch(temp.state){
-                        case "addpath":
-                            $(_r).trigger('removepath', temp.object);
-                            break;
-                        case "addrect":
-                            $(_r).trigger('removerect', temp.object);
-                            break;
-                        case "removepath":
-							restore(JSON.parse(temp.data));
-                            break;
-                        case "removerect":
-							restore(JSON.parse(temp.data));
-                            break;
+            //$('#myflow_revoke').click(function(){
+            //    var temp=myflow.config.historys.pop();
+            //    if(temp){
+            //        switch(temp.state){
+            //            case "addpath":
+            //                $(_r).trigger('removepath', temp.object);
+            //                break;
+            //            case "addrect":
+            //                $(_r).trigger('removerect', temp.object);
+            //                break;
+            //            case "removepath":
+			//				restore(JSON.parse(temp.data));
+            //                break;
+            //            case "removerect":
+			//				restore(JSON.parse(temp.data));
+            //                break;
+            //        }
+            //    }else{
+            //        alert("Nothing to undo");
+            //    }
+            //});
+
+            $('#myflow_delete').click(function () {
+                var c = $(_r).data('currNode');
+                if (c) {
+                    if (c.getId().substring(0, 4) == 'rect') {
+
+                        myflow.config.historys.push({ state: "removerect", object: c, data: getJson() });
+
+                        myflow.config.tools.deleteRect(c.getId(), c.toJson());
+                        $(_r).trigger('removerect', c);
+
+
+                        myflow.config.moving.temp.map(function (item, index) {
+                            item.remove();
+                        })
+                        myflow.config.moving = {
+                            flag: false,
+                            prepdot: { x: 0, y: 0 },
+                            dots: [],
+                            isNewDot: false,
+                            preRect: null,
+                            temp: []
+                        };
+
+                    } else if (c.getId().substring(0, 4) == 'path') {
+
+                        myflow.config.historys.push({ state: "removepath", object: c, data: getJson() });
+
+                        myflow.config.tools.deletePath(c.getId());
+                        $(_r).trigger('removepath', c);
                     }
-                }else{
-                    alert("Nothing to undo");
+                    $(_r).removeData('currNode');
                 }
             });
 

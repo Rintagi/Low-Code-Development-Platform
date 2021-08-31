@@ -317,7 +317,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -439,11 +439,11 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-9"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cWhereClause97P1" class="r-td r-labelR" runat="server"><asp:Label id="cWhereClause97Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cWhereClause97P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cWhereClause97" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cWhereClause97" display="none" ErrorMessage="WhereClause <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cWhereClause97E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cWhereClause97P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cWhereClause97" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cWhereClause97" display="none" ErrorMessage="WhereClause <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cWhereClause97E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cRegClause97P1" class="r-td r-labelR" runat="server"><asp:Label id="cRegClause97Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cRegClause97P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRegClause97" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRegClause97" display="none" ErrorMessage="RegClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:Image id="cRegClause97E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRegClause97P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRegClause97" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRegClause97" display="none" ErrorMessage="RegClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:Image id="cRegClause97E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

@@ -205,7 +205,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -381,7 +381,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:700px;text-align:left;' visible="<%# GridColumnVisible(5) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cLabelText265ml" runat="server" /></div>
 		<table cellspacing="0" cellpadding="0"><tr><td>
-		    <asp:TextBox TextMode="MultiLine" id="cLabelText265" CssClass="GrdTxt" height="66px" Text='<%# DataBinder.Eval(Container.DataItem,"LabelText265").ToString() %>' runat="server" /><asp:RequiredFieldValidator id="cRFVLabelText265" ControlToValidate="cLabelText265" display="none" runat="server" /></td><td><asp:Image id="cLabelText265E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
+		    <asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cLabelText265" CssClass="GrdTxt" height="66px" Text='<%# DataBinder.Eval(Container.DataItem,"LabelText265").ToString() %>' runat="server" /><asp:RequiredFieldValidator id="cRFVLabelText265" ControlToValidate="cLabelText265" display="none" runat="server" /></td><td><asp:Image id="cLabelText265E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
 		</td></tr></table>
 		</div></div>
     </td>

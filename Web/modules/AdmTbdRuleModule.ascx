@@ -192,7 +192,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cTbdRuleDesc254P1" class="r-td r-labelR" runat="server"><asp:Label id="cTbdRuleDesc254Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cTbdRuleDesc254P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cTbdRuleDesc254" CssClass="inp-txt" runat="server" /><asp:Image id="cTbdRuleDesc254E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cTbdRuleDesc254P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cTbdRuleDesc254" CssClass="inp-txt" runat="server" /><asp:Image id="cTbdRuleDesc254E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

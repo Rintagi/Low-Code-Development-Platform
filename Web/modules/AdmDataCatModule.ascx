@@ -201,7 +201,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cCatDescription181P1" class="r-td r-labelR" runat="server"><asp:Label id="cCatDescription181Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cCatDescription181P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cCatDescription181" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cCatDescription181" display="none" ErrorMessage="CatDescription <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:RequiredFieldValidator id="cRFVCatDescription181" ControlToValidate="cCatDescription181" display="none" runat="server" /><asp:Image id="cCatDescription181E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cCatDescription181P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cCatDescription181" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cCatDescription181" display="none" ErrorMessage="CatDescription <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:RequiredFieldValidator id="cRFVCatDescription181" ControlToValidate="cCatDescription181" display="none" runat="server" /><asp:Image id="cCatDescription181E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cTableId181P1" class="r-td r-labelR" runat="server"><asp:Label id="cTableId181Label" CssClass="inp-lbl" runat="server" /></div>
@@ -259,7 +259,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -461,14 +461,14 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:250px;text-align:left;' visible="<%# GridColumnVisible(13) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cRegClause182ml" runat="server" /></div>
 		<table cellspacing="0" cellpadding="0"><tr><td>
-		    <asp:TextBox TextMode="MultiLine" id="cRegClause182" CssClass="GrdTxt" height="80px" Text='<%# DataBinder.Eval(Container.DataItem,"RegClause182").ToString() %>' runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRegClause182" display="none" ErrorMessage="RegClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /></td><td><asp:Image id="cRegClause182E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
+		    <asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRegClause182" CssClass="GrdTxt" height="80px" Text='<%# DataBinder.Eval(Container.DataItem,"RegClause182").ToString() %>' runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRegClause182" display="none" ErrorMessage="RegClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /></td><td><asp:Image id="cRegClause182E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
 		</td></tr></table>
 		</div></div>
     </td>
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:350px;text-align:left;' visible="<%# GridColumnVisible(14) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cStoredProc182ml" runat="server" /></div>
 		<table cellspacing="0" cellpadding="0"><tr><td>
-		    <asp:TextBox TextMode="MultiLine" id="cStoredProc182" CssClass="GrdTxt" height="80px" Text='<%# DataBinder.Eval(Container.DataItem,"StoredProc182").ToString() %>' runat="server" /></td><td><asp:Image id="cStoredProc182E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
+		    <asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cStoredProc182" CssClass="GrdTxt" height="80px" Text='<%# DataBinder.Eval(Container.DataItem,"StoredProc182").ToString() %>' runat="server" /></td><td><asp:Image id="cStoredProc182E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
 		</td></tr></table>
 		</div></div>
     </td>

@@ -82,70 +82,73 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto">
-      <HintPath>..\Lib\Nethereum3\BouncyCastle.Crypto.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging.Core">
-      <HintPath>..\Lib\Nethereum3\Common.Logging.Core.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="ExifLib">
       <HintPath>..\Lib\ExifLib.dll</HintPath>
     </Reference>
     <Reference Include="NBitcoin">
-      <HintPath>..\Lib\Nethereum3\NBitcoin.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\NBitcoin.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.ABI">
-      <HintPath>..\Lib\Nethereum3\Nethereum.ABI.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.ABI.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Accounts">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Accounts.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Accounts.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.BlockchainProcessing">
-      <HintPath>..\Lib\Nethereum3\Nethereum.BlockchainProcessing.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.BlockchainProcessing.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Contracts">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Contracts.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Contracts.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Geth">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Geth.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Geth.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.HdWallet">
-      <HintPath>..\Lib\Nethereum3\Nethereum.HdWallet.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.HdWallet.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Hex">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Hex.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Hex.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.JsonRpc.Client">
-      <HintPath>..\Lib\Nethereum3\Nethereum.JsonRpc.Client.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.JsonRpc.Client.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.JsonRpc.IpcClient">
-      <HintPath>..\Lib\Nethereum3\Nethereum.JsonRpc.IpcClient.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.JsonRpc.IpcClient.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.JsonRpc.RpcClient">
-      <HintPath>..\Lib\Nethereum3\Nethereum.JsonRpc.RpcClient.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.JsonRpc.RpcClient.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.JsonRpc.WebSocketClient">
-      <HintPath>..\Lib\Nethereum3\Nethereum.JsonRpc.WebSocketClient.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.JsonRpc.WebSocketClient.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.KeyStore">
-      <HintPath>..\Lib\Nethereum3\Nethereum.KeyStore.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.KeyStore.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Model">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Model.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Model.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.RLP">
-      <HintPath>..\Lib\Nethereum3\Nethereum.RLP.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.RLP.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.RPC">
-      <HintPath>..\Lib\Nethereum3\Nethereum.RPC.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.RPC.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.RPC.Reactive">
+      <HintPath>..\Lib\Nethereum4\Nethereum.RPC.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Signer">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Signer.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Signer.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Util">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Util.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Util.dll</HintPath>
     </Reference>
     <Reference Include="Nethereum.Web3">
-      <HintPath>..\Lib\Nethereum3\Nethereum.Web3.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\Nethereum.Web3.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -155,7 +158,7 @@
       <Name>System</Name>
     </Reference>
     <Reference Include="System.Buffers">
-      <HintPath>..\Lib\Nethereum3\System.Buffers.dll</HintPath>
+      <HintPath>..\Lib\Nethereum4\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -169,6 +172,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Reactive">
+      <HintPath>..\Lib\Nethereum4\System.Reactive.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />

@@ -198,7 +198,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cSctGrpColCss1284P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cSctGrpColCss1284" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cSctGrpColCss1284" display="none" ErrorMessage="SctGrpColCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cSctGrpColCss1284E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cSctGrpColCss1284P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cSctGrpColCss1284" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cSctGrpColCss1284" display="none" ErrorMessage="SctGrpColCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cSctGrpColCss1284E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
@@ -206,7 +206,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cSctGrpColDiv1284P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cSctGrpColDiv1284" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cSctGrpColDiv1284" display="none" ErrorMessage="SctGrpColDiv <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cSctGrpColDiv1284E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cSctGrpColDiv1284P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cSctGrpColDiv1284" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cSctGrpColDiv1284" display="none" ErrorMessage="SctGrpColDiv <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cSctGrpColDiv1284E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

@@ -14,6 +14,8 @@ namespace RO.Web
     public partial class DefaultModule : RO.Web.ModuleBase
     {
         private const string KEY_DefaultGenerated = "Cache:DefaultGenerated";
+        private string LcAppConnString;
+        private string LcAppPw;
 
         public DefaultModule()
         {

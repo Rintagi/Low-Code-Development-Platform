@@ -200,7 +200,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cLastStatus264P1" class="r-td r-labelR" runat="server"><asp:Label id="cLastStatus264Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cLastStatus264P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cLastStatus264" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cLastStatus264" display="none" ErrorMessage="LastStatus <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cLastStatus264E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cLastStatus264P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cLastStatus264" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cLastStatus264" display="none" ErrorMessage="LastStatus <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cLastStatus264E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-6-8"><div class="screen-tabfolder" runat="server"><div class="r-table">

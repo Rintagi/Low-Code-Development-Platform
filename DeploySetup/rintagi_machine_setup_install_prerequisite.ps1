@@ -143,11 +143,12 @@ choco install ms-reportviewer2015 --ignore-checksums -y
 # crystal report viewer runtime(this take a long time as it is a full VS package for both 32/64 bit)
 # source url
 # https://wiki.scn.sap.com/wiki/display/BOBJ/Crystal+Reports%2C+Developer+for+Visual+Studio+Downloads
+# as of 2021.5.31, download is no longer possible via choco(or auto means)
+# must go to https://www.crystalreports.com/download/
+# and register(free) to get the runtime
 Write-Output "choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'""
-# below no longer works as of 2021.5.31
-# must go to SAP and manually download it
-# https://www.crystalreports.com/download/
 choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'"
+Write-Output "go to https://www.crystalreports.com/download/ to download manually"
 
 # IIS urlrewrite module
 # source url

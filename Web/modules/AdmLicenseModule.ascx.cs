@@ -330,6 +330,26 @@ namespace RO.Web
                 }
                 else if (qs["CreateInstaller"] != null)
                 {
+                    if (qs["WIP"] == null)
+                    {
+                        System.Collections.Generic.List<string> wipReleaseContent = (new AdminSystem()).HasOutstandReleaseContent(Config.AppNameSpace, LcSysConnString, LcAppPw);
+                        System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> wipRengenList = (new AdminSystem()).HasOutstandRegen(Config.AppNameSpace, LcSysConnString, LcAppPw);
+                        string wip = (wipReleaseContent.Count > 0
+                                ? string.Format("Has WIP release content, must assign version # first\r\n {0}", string.Join("\r\n", wipReleaseContent.ToArray()))
+                                : "")
+                                +
+                                (wipRengenList.Count > 0
+                                ? string.Format("\r\nFollowing screen/report/wizard requires re-gen first\r\n {0}",
+                                string.Join("\r\n", wipRengenList.Select(kvp => string.Format("{0}\r\n{1}", kvp.Key, string.Join("\r\n", kvp.Value.ToArray()))).ToArray()))
+                                : "");
+
+                        if (!string.IsNullOrEmpty(wip))
+                        {
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes(wip));
+                            return;
+                        }
+                    }
+
                     string somethingRunning = Application["BuildRunning"] as string;
                     bool fixedInstallerName = (qs["FixedName"] ?? "").ToUpper() == "Y";
                     if (string.IsNullOrEmpty(somethingRunning))
@@ -1357,6 +1377,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    if (drv["DisplayName"].ToString() == "ListBox")
 			    {
 					cListBox = (ListBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
+					bool isRequired = drv["RequiredValid"].ToString() == "Y";
 					if (cListBox != null)
 					{
 						int CriCnt = (new AdminSystem()).CountScrCri(drv["ScreenCriId"].ToString(), drv["MultiDesignDb"].ToString(), drv["MultiDesignDb"].ToString() == "N" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId));
@@ -1367,7 +1388,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					    if (noneSelected && CriCnt+1 > TotalChoiceCnt) dr[drv["ColumnName"].ToString()] = dr[drv["ColumnName"].ToString()].ToString() + "'-1'";
 					    foreach (ListItem li in cListBox.Items)
 					    {
-					        if (li.Selected)
+					        if (li.Selected || (noneSelected && !isRequired && !string.IsNullOrEmpty(li.Value)))
 					        {
 					            if (dr[drv["ColumnName"].ToString()].ToString() != "(")
 					            {

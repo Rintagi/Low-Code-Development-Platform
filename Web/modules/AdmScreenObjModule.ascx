@@ -270,7 +270,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cDisplayDesc18P1" class="r-td r-labelR" runat="server"><asp:Label id="cDisplayDesc18Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cDisplayDesc18P2" class="r-td r-content" style="font-size:8pt;" runat="server"><asp:TextBox TextMode="MultiLine" id="cDisplayDesc18" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cDisplayDesc18" display="none" ErrorMessage="DisplayDesc <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cDisplayDesc18E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cDisplayDesc18P2" class="r-td r-content" style="font-size:8pt;" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cDisplayDesc18" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cDisplayDesc18" display="none" ErrorMessage="DisplayDesc <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cDisplayDesc18E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cDdlKeyColumnId14P1" class="r-td r-labelR" runat="server"><asp:Label id="cDdlKeyColumnId14Label" CssClass="inp-lbl" runat="server" /></div>

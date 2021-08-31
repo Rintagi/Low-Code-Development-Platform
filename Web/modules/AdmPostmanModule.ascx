@@ -208,7 +208,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cResultP1" class="r-td r-labelR" runat="server"><asp:Label id="cResultLabel" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cResultP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cResult" CssClass="inp-txt" runat="server" /><asp:Image id="cResultE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cResultP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cResult" CssClass="inp-txt" runat="server" /><asp:Image id="cResultE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-11-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
@@ -230,7 +230,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cQueryStringP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cQueryString" CssClass="inp-txt" runat="server" /><asp:Image id="cQueryStringE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cQueryStringP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cQueryString" CssClass="inp-txt" runat="server" /><asp:Image id="cQueryStringE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
@@ -248,7 +248,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cBodyP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cBody" CssClass="inp-txt" runat="server" /><asp:Image id="cBodyE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cBodyP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cBody" CssClass="inp-txt" runat="server" /><asp:Image id="cBodyE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
@@ -278,7 +278,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cHeaderP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cHeader" CssClass="inp-txt" runat="server" /><asp:Image id="cHeaderE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cHeaderP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cHeader" CssClass="inp-txt" runat="server" /><asp:Image id="cHeaderE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-7-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
@@ -288,7 +288,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cCookieP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cCookie" CssClass="inp-txt" runat="server" /><asp:Image id="cCookieE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cCookieP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cCookie" CssClass="inp-txt" runat="server" /><asp:Image id="cCookieE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

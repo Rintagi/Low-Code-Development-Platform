@@ -1,9 +1,9 @@
 1~@~AdmUsr [   10] Main Info: UsrId (en-US)~@~1~@~1~@~User Id~@~This is the internal ID uniquely identify this user.~@~~@~
 2~@~AdmUsr [   80] Main Info: UsrEmail (en-US)~@~2~@~1~@~User Email~@~This is the user's email address, if available.~@~~@~
 3~@~AdmUsr [   30] Main Info: UsrName (en-US)~@~3~@~1~@~User Name~@~This is the user name in full.~@~Please enter the user name in full.~@~User Name
-6~@~AdmUsr [  310] Status: CustomerId (en-US)~@~6~@~1~@~Customer~@~This is the customer this user has access to, empty means all.~@~~@~
-7~@~AdmUsr [  320] Status: VendorId (en-US)~@~7~@~1~@~Vendor~@~This is the vendor this user has access to, empty means all.~@~~@~
-8~@~AdmUsr [  350] Status: MemberId (en-US)~@~8~@~1~@~Member~@~This is the member this user has access to, empty means all.~@~~@~
+6~@~AdmUsr [  320] Status: CustomerId (en-US)~@~6~@~1~@~Customer~@~This is the customer this user has access to, empty means all.~@~~@~
+7~@~AdmUsr [  330] Status: VendorId (en-US)~@~7~@~1~@~Vendor~@~This is the vendor this user has access to, empty means all.~@~~@~
+8~@~AdmUsr [  360] Status: MemberId (en-US)~@~8~@~1~@~Member~@~This is the member this user has access to, empty means all.~@~~@~
 9~@~AdmUsr [  170] Main Info: Active (en-US)~@~9~@~1~@~Active~@~Uncheck this if this user needs to be disabled.~@~~@~
 10~@~AdmUsr [  270] Status: ModifiedOn (en-US)~@~10~@~1~@~Modified On~@~This is the date this user was last modified.~@~~@~
 11~@~AdmDbTable [   10] Main Info: TableId (en-US)~@~11~@~1~@~Table Id~@~This is the internal ID uniquely represents this database table.~@~~@~
@@ -98,7 +98,7 @@
 254~@~AdmAtRowAuth [   50] Main Info: AllowAdd (en-US)~@~310~@~1~@~Allow Add~@~This is checked if this row authority allows insertion.~@~~@~
 255~@~AdmAtRowAuth [   60] Main Info: AllowUpd (en-US)~@~311~@~1~@~Allow Update~@~This is checked if this row authority allows update.~@~~@~
 256~@~AdmAtRowAuth [   70] Main Info: AllowDel (en-US)~@~312~@~1~@~Allow Delete~@~This is checked if this row authority allows update.~@~~@~
-260~@~AdmUsr [  300] Status: InvestorId (en-US)~@~316~@~1~@~Investor~@~This is the investor this user has access to, empty means all.~@~~@~
+260~@~AdmUsr [  310] Status: InvestorId (en-US)~@~316~@~1~@~Investor~@~This is the investor this user has access to, empty means all.~@~~@~
 310~@~AdmCtCulture [   60] Main Info: CultureDefault (en-US)~@~418~@~1~@~Culture Default~@~This is checked if this culture is the one and only default culture.~@~~@~
 311~@~AdmCtDisplayType [   10] Main Info: TypeId (en-US)~@~419~@~1~@~Type ID~@~This is the internal ID uniquely represents this display type, do not change without checking reference.~@~Please enter an internal ID uniquely represents this display type.~@~
 312~@~AdmCtDisplayType [   30] Main Info: TypeDesc (en-US)~@~420~@~1~@~Type Description~@~This is the description of this display.~@~Please enter the description of this display.~@~
@@ -165,8 +165,8 @@
 823~@~AdmScreen [  240] Miscellaneous: ScreenObj (en-US)~@~925~@~1~@~Screen Columns~@~This is a short cut to pop up screen columns for this screen.~@~~@~
 826~@~AdmScreen [  250] Miscellaneous: ScreenFilter (en-US)~@~928~@~1~@~Screen Filters~@~This is a short cut to pop up screen filters for this screen.~@~~@~
 831~@~AdmDbTable [  100] Main Info: MultiDesignDb (en-US)~@~933~@~1~@~Multi-design DB~@~Check this if the same table appears in all application design databases.~@~~@~
-833~@~AdmUsr [  330] Status: AgentId (en-US)~@~934~@~1~@~Agent~@~This is the agent this user has access to, empty means all.~@~~@~
-834~@~AdmUsr [  340] Status: BrokerId (en-US)~@~935~@~1~@~Broker~@~This is the broker this user has access to, empty means all.~@~~@~
+833~@~AdmUsr [  340] Status: AgentId (en-US)~@~934~@~1~@~Agent~@~This is the agent this user has access to, empty means all.~@~~@~
+834~@~AdmUsr [  350] Status: BrokerId (en-US)~@~935~@~1~@~Broker~@~This is the broker this user has access to, empty means all.~@~~@~
 841~@~AdmUsrPref [   10] Main Info: UsrPrefId (en-US)~@~939~@~1~@~UsrPref ID~@~This is the internal ID representing this user preference.~@~~@~
 842~@~AdmUsrPref [  140] Applied: UsrId (en-US)~@~940~@~1~@~User~@~This is the only user to be using this preference, if chosen.~@~~@~
 843~@~AdmUsrPref [  180] Applied: SystemId (en-US)~@~941~@~1~@~System~@~This is the only system to apply this preference, if chosen.~@~~@~
@@ -374,9 +374,9 @@
 1329~@~AdmServerRule [  210] Content: SyncByDb (en-US)~@~1420~@~1~@~~@~Click here to obtain the stored procedure from the physical database.~@~~@~
 1331~@~AdmUsr [   10] Main Info: UsrId (zh-CN)~@~1~@~4~@~登入~@~这是国内独一无二的身分查明这家.~@~~@~
 1333~@~AdmUsr [   30] Main Info: UsrName (zh-CN)~@~3~@~4~@~用户名称~@~这是使用者名称照准.~@~这是使用者名称照准.~@~
-1335~@~AdmUsr [  310] Status: CustomerId (zh-CN)~@~6~@~4~@~客户~@~这是这家客户已经接触,就是空的.~@~~@~
-1336~@~AdmUsr [  320] Status: VendorId (zh-CN)~@~7~@~4~@~卖主~@~这是这家供应商已经进入,就是空的.~@~~@~
-1337~@~AdmUsr [  350] Status: MemberId (zh-CN)~@~8~@~4~@~会员~@~这是这家已经获得会员、空洞的手段.~@~~@~
+1335~@~AdmUsr [  320] Status: CustomerId (zh-CN)~@~6~@~4~@~客户~@~这是这家客户已经接触,就是空的.~@~~@~
+1336~@~AdmUsr [  330] Status: VendorId (zh-CN)~@~7~@~4~@~卖主~@~这是这家供应商已经进入,就是空的.~@~~@~
+1337~@~AdmUsr [  360] Status: MemberId (zh-CN)~@~8~@~4~@~会员~@~这是这家已经获得会员、空洞的手段.~@~~@~
 1338~@~AdmUsr [  170] Main Info: Active (zh-CN)~@~9~@~4~@~活跃~@~如果用户需要这种不受制约是残疾人.~@~~@~
 1339~@~AdmUsr [  270] Status: ModifiedOn (zh-CN)~@~10~@~4~@~改良~@~这是迄今为止这个用户最后修饰.~@~~@~
 1340~@~AdmDbTable [   10] Main Info: TableId (zh-CN)~@~11~@~4~@~表编号~@~这是国内独一无二的身分代表这个数据库表.~@~~@~
@@ -446,7 +446,7 @@
 1439~@~AdmAtRowAuth [   50] Main Info: AllowAdd (zh-CN)~@~310~@~4~@~加上~@~如果这是连续清查管理局允许插入.~@~~@~
 1440~@~AdmAtRowAuth [   60] Main Info: AllowUpd (zh-CN)~@~311~@~4~@~更新~@~如果这是连续清查管理局允许更新.~@~~@~
 1441~@~AdmAtRowAuth [   70] Main Info: AllowDel (zh-CN)~@~312~@~4~@~删除~@~如果这是连续清查管理局允许更新.~@~~@~
-1445~@~AdmUsr [  300] Status: InvestorId (zh-CN)~@~316~@~4~@~投资者~@~这是这家投资者已进入、空洞手段.~@~~@~
+1445~@~AdmUsr [  310] Status: InvestorId (zh-CN)~@~316~@~4~@~投资者~@~这是这家投资者已进入、空洞手段.~@~~@~
 1446~@~AdmCtCulture [   60] Main Info: CultureDefault (zh-CN)~@~418~@~4~@~文化坏帐~@~如果这是文化,这是遏制违约文化.~@~~@~
 1447~@~AdmCtDisplayType [   10] Main Info: TypeId (zh-CN)~@~419~@~4~@~身份证类型~@~这是国内唯一代表的身分展示这类型,不改变先向参考.~@~请进入内部独特代表身分展示这类型.~@~
 1448~@~AdmCtDisplayType [   30] Main Info: TypeDesc (zh-CN)~@~420~@~4~@~描述型~@~这说明这个展览.~@~请进入这一展示说明.~@~
@@ -500,8 +500,8 @@
 1514~@~AdmScreenFilter [   90] Main Info: FilterName (zh-CN)~@~849~@~4~@~过滤头~@~这是这头过滤可挑选的文化展示.~@~请进入这一头过滤可挑选的文化展示.~@~
 1515~@~AdmScreen [  240] Miscellaneous: ScreenObj (zh-CN)~@~925~@~4~@~屏幕栏目~@~这是一种捷径流行起来这个栏目幕幕.~@~~@~
 1516~@~AdmScreen [  250] Miscellaneous: ScreenFilter (zh-CN)~@~928~@~4~@~屏幕过滤器~@~这是一种捷径过滤这幕幕呈现眼前.~@~~@~
-1519~@~AdmUsr [  330] Status: AgentId (zh-CN)~@~934~@~4~@~代理~@~这是这家公司已获得,空手段.~@~~@~
-1520~@~AdmUsr [  340] Status: BrokerId (zh-CN)~@~935~@~4~@~经纪人~@~这是这家经纪已经进入,就是空的.~@~~@~
+1519~@~AdmUsr [  340] Status: AgentId (zh-CN)~@~934~@~4~@~代理~@~这是这家公司已获得,空手段.~@~~@~
+1520~@~AdmUsr [  350] Status: BrokerId (zh-CN)~@~935~@~4~@~经纪人~@~这是这家经纪已经进入,就是空的.~@~~@~
 1523~@~AdmUsrPref [   10] Main Info: UsrPrefId (zh-CN)~@~939~@~4~@~usrpref身份证~@~这是这家国内身分较偏好.~@~~@~
 1524~@~AdmUsrPref [  140] Applied: UsrId (zh-CN)~@~940~@~4~@~用户~@~这是唯一的用户可以使用此偏好,如果选择.~@~~@~
 1525~@~AdmUsrPref [  180] Applied: SystemId (zh-CN)~@~941~@~4~@~系统~@~这是唯一的选择适用这一制度,如果选择.~@~~@~
@@ -673,9 +673,9 @@
 1849~@~AdmUsr [   10] Main Info: UsrId (fr-FR)~@~1~@~2~@~User-id~@~C'est l'identification interne identifient uniquement cet utilisateur.~@~~@~
 1850~@~AdmUsr [   80] Main Info: UsrEmail (fr-FR)~@~2~@~2~@~Email d'utilisateur~@~C'est l'email address de l'utilisateur, si disponible.~@~~@~
 1851~@~AdmUsr [   30] Main Info: UsrName (fr-FR)~@~3~@~2~@~Nom d'utilisateur~@~C'est le nom d'utilisateur entièrement.~@~C'est le nom d'utilisateur entièrement.~@~
-1853~@~AdmUsr [  310] Status: CustomerId (fr-FR)~@~6~@~2~@~Client~@~C'est le client que cet utilisateur a accès à, vident des moyens tous.~@~~@~
-1854~@~AdmUsr [  320] Status: VendorId (fr-FR)~@~7~@~2~@~Fournisseur~@~C'est le fournisseur que cet utilisateur a accès à, vident des moyens tous.~@~~@~
-1855~@~AdmUsr [  350] Status: MemberId (fr-FR)~@~8~@~2~@~Membre~@~C'est le membre que cet utilisateur a accès à, vident des moyens tous.~@~~@~
+1853~@~AdmUsr [  320] Status: CustomerId (fr-FR)~@~6~@~2~@~Client~@~C'est le client que cet utilisateur a accès à, vident des moyens tous.~@~~@~
+1854~@~AdmUsr [  330] Status: VendorId (fr-FR)~@~7~@~2~@~Fournisseur~@~C'est le fournisseur que cet utilisateur a accès à, vident des moyens tous.~@~~@~
+1855~@~AdmUsr [  360] Status: MemberId (fr-FR)~@~8~@~2~@~Membre~@~C'est le membre que cet utilisateur a accès à, vident des moyens tous.~@~~@~
 1856~@~AdmUsr [  170] Main Info: Active (fr-FR)~@~9~@~2~@~Actif~@~Uncheck ceci si cet utilisateur doit être neutralisé.~@~~@~
 1857~@~AdmUsr [  270] Status: ModifiedOn (fr-FR)~@~10~@~2~@~Modifié dessus~@~C'est la date où cet utilisateur était Last modified.~@~~@~
 1858~@~AdmDbTable [   10] Main Info: TableId (fr-FR)~@~11~@~2~@~Identification de Tableau~@~C'est l'identification interne représente uniquement cette table de base de données.~@~~@~
@@ -745,7 +745,7 @@
 1957~@~AdmAtRowAuth [   50] Main Info: AllowAdd (fr-FR)~@~310~@~2~@~Ajouter~@~Ceci est vérifié si cette autorité de rangée permet l'insertion.~@~~@~
 1958~@~AdmAtRowAuth [   60] Main Info: AllowUpd (fr-FR)~@~311~@~2~@~Mise à jour~@~Ceci est vérifié si cette autorité de rangée permet la mise à jour.~@~~@~
 1959~@~AdmAtRowAuth [   70] Main Info: AllowDel (fr-FR)~@~312~@~2~@~Effacement~@~Ceci est vérifié si cette autorité de rangée permet la mise à jour.~@~~@~
-1963~@~AdmUsr [  300] Status: InvestorId (fr-FR)~@~316~@~2~@~Investisseur~@~C'est l'investisseur que cet utilisateur a accès à, vident des moyens tous.~@~~@~
+1963~@~AdmUsr [  310] Status: InvestorId (fr-FR)~@~316~@~2~@~Investisseur~@~C'est l'investisseur que cet utilisateur a accès à, vident des moyens tous.~@~~@~
 1964~@~AdmCtCulture [   60] Main Info: CultureDefault (fr-FR)~@~418~@~2~@~Défaut de culture~@~Ceci est vérifié si cette culture est la culture de défaut.~@~~@~
 1965~@~AdmCtDisplayType [   10] Main Info: TypeId (fr-FR)~@~419~@~2~@~Dactylographier l'identification~@~C'est l'identification interne représente uniquement ce type d'affichage, ne changent pas sans vérifier la référence.~@~Veuillez écrire une identification interne représente uniquement ce type d'affichage.~@~
 1966~@~AdmCtDisplayType [   30] Main Info: TypeDesc (fr-FR)~@~420~@~2~@~Dactylographier la description~@~C'est la description de cet affichage.~@~Veuillez écrire la description de cet affichage.~@~
@@ -799,8 +799,8 @@
 2032~@~AdmScreenFilter [   90] Main Info: FilterName (fr-FR)~@~849~@~2~@~En-tête de filtre~@~C'est l'en-tête pour que ce filtre soit montré dans la culture choisie.~@~Veuillez entrer dans l'en-tête pour que ce filtre soit montré dans la culture choisie.~@~
 2033~@~AdmScreen [  240] Miscellaneous: ScreenObj (fr-FR)~@~925~@~2~@~Colonnes d'écran~@~C'est un raccourci pour sauter vers le haut des colonnes d'écran pour cet écran.~@~~@~
 2034~@~AdmScreen [  250] Miscellaneous: ScreenFilter (fr-FR)~@~928~@~2~@~Filtres d'écran~@~C'est un raccourci pour sauter vers le haut des filtres d'écran pour cet écran.~@~~@~
-2037~@~AdmUsr [  330] Status: AgentId (fr-FR)~@~934~@~2~@~Agent~@~C'est l'agent que cet utilisateur a accès à, vident des moyens tous.~@~~@~
-2038~@~AdmUsr [  340] Status: BrokerId (fr-FR)~@~935~@~2~@~Sponsoriser~@~C'est le sponsoriser que cet utilisateur a accès à, vident des moyens tous.~@~~@~
+2037~@~AdmUsr [  340] Status: AgentId (fr-FR)~@~934~@~2~@~Agent~@~C'est l'agent que cet utilisateur a accès à, vident des moyens tous.~@~~@~
+2038~@~AdmUsr [  350] Status: BrokerId (fr-FR)~@~935~@~2~@~Sponsoriser~@~C'est le sponsoriser que cet utilisateur a accès à, vident des moyens tous.~@~~@~
 2041~@~AdmUsrPref [   10] Main Info: UsrPrefId (fr-FR)~@~939~@~2~@~Identification d'UsrPref~@~C'est l'identification interne représentant cette préférence d'utilisateur.~@~~@~
 2042~@~AdmUsrPref [  140] Applied: UsrId (fr-FR)~@~940~@~2~@~Utilisateur~@~C'est le seul utilisateur pour employer cette préférence, si choisi.~@~~@~
 2043~@~AdmUsrPref [  180] Applied: SystemId (fr-FR)~@~941~@~2~@~Système~@~C'est le seul système pour appliquer cette préférence, si choisi.~@~~@~
@@ -1867,9 +1867,9 @@
 3626~@~AdmUsr [   10] Main Info: UsrId (hi-IN)~@~1~@~8~@~प्रयोक्ता आईडी~@~यह आंतरिक विशिष्ट आईडी इस उपयोगकर्ता की पहचान.~@~~@~
 3627~@~AdmUsr [   80] Main Info: UsrEmail (hi-IN)~@~2~@~8~@~उपयोगकर्ता ईमेल~@~इस उपयोगकर्ता के ईमेल पता है, यदि उपलब्ध है.~@~~@~
 3628~@~AdmUsr [   30] Main Info: UsrName (hi-IN)~@~3~@~8~@~उपयोगकर्ता नाम~@~इस पूरी में उपयोगकर्ता का नाम है.~@~कृपया पूर्ण में उपयोगकर्ता नाम दर्ज करें.~@~
-3629~@~AdmUsr [  310] Status: CustomerId (hi-IN)~@~6~@~8~@~ग्राहक~@~इस ग्राहक इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
-3630~@~AdmUsr [  320] Status: VendorId (hi-IN)~@~7~@~8~@~विक्रेता~@~इस विक्रेता इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
-3631~@~AdmUsr [  350] Status: MemberId (hi-IN)~@~8~@~8~@~सदस्य~@~यह सदस्य इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
+3629~@~AdmUsr [  320] Status: CustomerId (hi-IN)~@~6~@~8~@~ग्राहक~@~इस ग्राहक इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
+3630~@~AdmUsr [  330] Status: VendorId (hi-IN)~@~7~@~8~@~विक्रेता~@~इस विक्रेता इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
+3631~@~AdmUsr [  360] Status: MemberId (hi-IN)~@~8~@~8~@~सदस्य~@~यह सदस्य इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
 3632~@~AdmUsr [  170] Main Info: Active (hi-IN)~@~9~@~8~@~सक्रिय~@~यह सही का निशान हटाएँ अगर इस उपयोगकर्ता की जरूरत को निष्क्रिय कर सकता है.~@~~@~
 3633~@~AdmUsr [  270] Status: ModifiedOn (hi-IN)~@~10~@~8~@~संशोधित पर~@~यह तारीख इस उपयोगकर्ता अंतिम बार संशोधित किया गया है.~@~~@~
 3634~@~AdmDbTable [   10] Main Info: TableId (hi-IN)~@~11~@~8~@~तालिका क्रमांक~@~यह आंतरिक आईडी विशिष्ट इस डाटाबेस टेबल का प्रतिनिधित्व करता है.~@~~@~
@@ -1940,7 +1940,7 @@
 3724~@~AdmAtRowAuth [   50] Main Info: AllowAdd (hi-IN)~@~310~@~8~@~अनुमति जोड़ें~@~इस जाँच की अगर इस पंक्ति प्राधिकारी प्रविष्टि की अनुमति देता है.~@~~@~
 3725~@~AdmAtRowAuth [   60] Main Info: AllowUpd (hi-IN)~@~311~@~8~@~अनुमति अद्यतन~@~इस जाँच की अगर इस पंक्ति का अधिकार अद्यतन की अनुमति देता है.~@~~@~
 3726~@~AdmAtRowAuth [   70] Main Info: AllowDel (hi-IN)~@~312~@~8~@~अनुमति हटाएँ~@~इस जाँच की अगर इस पंक्ति का अधिकार अद्यतन की अनुमति देता है.~@~~@~
-3727~@~AdmUsr [  300] Status: InvestorId (hi-IN)~@~316~@~8~@~निवेशक~@~इस निवेशक इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
+3727~@~AdmUsr [  310] Status: InvestorId (hi-IN)~@~316~@~8~@~निवेशक~@~इस निवेशक इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
 3728~@~AdmCtCulture [   60] Main Info: CultureDefault (hi-IN)~@~418~@~8~@~संस्कृति डिफ़ॉल्ट~@~इस जाँच अगर यह संस्कृति एक और केवल डिफ़ॉल्ट संस्कृति है.~@~~@~
 3729~@~AdmCtDisplayType [   10] Main Info: TypeId (hi-IN)~@~419~@~8~@~प्रकार आईडी~@~यह आंतरिक आईडी विशिष्ट प्रदर्शन इस प्रकार का प्रतिनिधित्व करता है, संदर्भ जाँच के बिना परिवर्तन नहीं है.~@~कृपया एक आंतरिक आईडी दर्ज विशिष्ट इस प्रदर्शन प्रकार का प्रतिनिधित्व करता है.~@~
 3730~@~AdmCtDisplayType [   30] Main Info: TypeDesc (hi-IN)~@~420~@~8~@~प्रकार वर्णन~@~यह इस प्रदर्शन का वर्णन है.~@~कृपया इस प्रदर्शन का विवरण दर्ज करें.~@~
@@ -1997,8 +1997,8 @@
 3791~@~AdmScreenFilter [   90] Main Info: FilterName (hi-IN)~@~849~@~8~@~फ़िल्टर शीर्षक~@~चयनित यह इस फिल्टर के लिए शीर्षक है संस्कृति में प्रदर्शित होगी.~@~चयनित कृपया इस फिल्टर के लिए शीर्षक दर्ज करें संस्कृति में प्रदर्शित होगा.~@~
 3792~@~AdmScreen [  240] Miscellaneous: ScreenObj (hi-IN)~@~925~@~8~@~स्क्रीन कॉलम~@~यह एक छोटा रास्ता इस स्क्रीन के लिए पॉप स्क्रीन कॉलम है.~@~~@~
 3793~@~AdmScreen [  250] Miscellaneous: ScreenFilter (hi-IN)~@~928~@~8~@~स्क्रीन फ़िल्टर~@~यह एक छोटा रास्ता इस स्क्रीन के लिए पॉप स्क्रीन फिल्टर है.~@~~@~
-3795~@~AdmUsr [  330] Status: AgentId (hi-IN)~@~934~@~8~@~एजेंट~@~इस एजेंट इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
-3796~@~AdmUsr [  340] Status: BrokerId (hi-IN)~@~935~@~8~@~दलाल~@~इस दलाल इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
+3795~@~AdmUsr [  340] Status: AgentId (hi-IN)~@~934~@~8~@~एजेंट~@~इस एजेंट इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
+3796~@~AdmUsr [  350] Status: BrokerId (hi-IN)~@~935~@~8~@~दलाल~@~इस दलाल इस उपयोगकर्ता के लिए उपयोग किया है, खाली मतलब सब है.~@~~@~
 3797~@~AdmUsrPref [   10] Main Info: UsrPrefId (hi-IN)~@~939~@~8~@~UsrPref आईडी~@~यह आंतरिक इस उपयोगकर्ता वरीयता का प्रतिनिधित्व आईडी है.~@~~@~
 3798~@~AdmUsrPref [  140] Applied: UsrId (hi-IN)~@~940~@~8~@~उपयोगकर्ता~@~यह केवल उपयोगकर्ता है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
 3799~@~AdmUsrPref [  180] Applied: SystemId (hi-IN)~@~941~@~8~@~प्रणाली~@~यह केवल इस व्यवस्था को लागू पसंद है, अगर चुन लिया जाता है.~@~~@~
@@ -2416,9 +2416,9 @@
 4372~@~AdmUsr [   10] Main Info: UsrId (pt-BR)~@~1~@~9~@~Id de usuário~@~Esta é a identificação interna identificar este usuário.~@~~@~
 4373~@~AdmUsr [   80] Main Info: UsrEmail (pt-BR)~@~2~@~9~@~E-mail do usuário~@~Este é o endereço de e-mail do usuário, se disponível.~@~~@~
 4374~@~AdmUsr [   30] Main Info: UsrName (pt-BR)~@~3~@~9~@~Nome de usuário~@~Este é o nome do usuário na íntegra.~@~Por favor, digite o nome do usuário na íntegra.~@~
-4375~@~AdmUsr [  310] Status: CustomerId (pt-BR)~@~6~@~9~@~Cliente~@~Este é o cliente deste utilizador tem acesso a vazio, todos os meios.~@~~@~
-4376~@~AdmUsr [  320] Status: VendorId (pt-BR)~@~7~@~9~@~Vendedor~@~Este é o fornecedor deste utilizador tem acesso a vazio, todos os meios.~@~~@~
-4377~@~AdmUsr [  350] Status: MemberId (pt-BR)~@~8~@~9~@~Membro~@~Este é o membro deste utilizador tem acesso a vazio, todos os meios.~@~~@~
+4375~@~AdmUsr [  320] Status: CustomerId (pt-BR)~@~6~@~9~@~Cliente~@~Este é o cliente deste utilizador tem acesso a vazio, todos os meios.~@~~@~
+4376~@~AdmUsr [  330] Status: VendorId (pt-BR)~@~7~@~9~@~Vendedor~@~Este é o fornecedor deste utilizador tem acesso a vazio, todos os meios.~@~~@~
+4377~@~AdmUsr [  360] Status: MemberId (pt-BR)~@~8~@~9~@~Membro~@~Este é o membro deste utilizador tem acesso a vazio, todos os meios.~@~~@~
 4378~@~AdmUsr [  170] Main Info: Active (pt-BR)~@~9~@~9~@~Ativo~@~Desmarque esta se este usuário precisa ser desativado.~@~~@~
 4379~@~AdmUsr [  270] Status: ModifiedOn (pt-BR)~@~10~@~9~@~Modificado On~@~Esta é a data deste utilizador foi modificada pela última vez.~@~~@~
 4380~@~AdmDbTable [   10] Main Info: TableId (pt-BR)~@~11~@~9~@~Tabela Id~@~Esta é a identificação interna representa com exclusividade esta tabela de banco de dados.~@~~@~
@@ -2489,7 +2489,7 @@
 4470~@~AdmAtRowAuth [   50] Main Info: AllowAdd (pt-BR)~@~310~@~9~@~Permitir Adicionar~@~Isso é verificado se esta autoridade linha permite a inserção.~@~~@~
 4471~@~AdmAtRowAuth [   60] Main Info: AllowUpd (pt-BR)~@~311~@~9~@~Permitir atualização~@~Isso é verificado se esta autoridade linha permite atualização.~@~~@~
 4472~@~AdmAtRowAuth [   70] Main Info: AllowDel (pt-BR)~@~312~@~9~@~Permitir Excluir~@~Isso é verificado se esta autoridade linha permite atualização.~@~~@~
-4473~@~AdmUsr [  300] Status: InvestorId (pt-BR)~@~316~@~9~@~Investidor~@~Este é o investidor este usuário tem acesso, vazia significa todos.~@~~@~
+4473~@~AdmUsr [  310] Status: InvestorId (pt-BR)~@~316~@~9~@~Investidor~@~Este é o investidor este usuário tem acesso, vazia significa todos.~@~~@~
 4474~@~AdmCtCulture [   60] Main Info: CultureDefault (pt-BR)~@~418~@~9~@~Padrão cultura~@~Isso é verificado se esta cultura é a cultura padrão único.~@~~@~
 4475~@~AdmCtDisplayType [   10] Main Info: TypeId (pt-BR)~@~419~@~9~@~Identificação do tipo de~@~Este é o ID exclusivamente interna representa este tipo de exibição, não mudam sem verificação de referências.~@~Digite um ID único interna representa este tipo de exibição.~@~
 4476~@~AdmCtDisplayType [   30] Main Info: TypeDesc (pt-BR)~@~420~@~9~@~Descrição do tipo~@~Esta é a descrição desta tela.~@~Por favor, digite a descrição desta tela.~@~
@@ -2546,8 +2546,8 @@
 4537~@~AdmScreenFilter [   90] Main Info: FilterName (pt-BR)~@~849~@~9~@~Cabeçalho filtro~@~Este é o cabeçalho para este filtro a ser exibido na cultura selecionada.~@~Por favor digite o cabeçalho para este filtro a ser exibido na cultura selecionada.~@~
 4538~@~AdmScreen [  240] Miscellaneous: ScreenObj (pt-BR)~@~925~@~9~@~Colunas tela~@~Este é um atalho para abrir colunas de tela para tela.~@~~@~
 4539~@~AdmScreen [  250] Miscellaneous: ScreenFilter (pt-BR)~@~928~@~9~@~Filtros de tela~@~Este é um atalho para abrir filtros de tela para tela.~@~~@~
-4541~@~AdmUsr [  330] Status: AgentId (pt-BR)~@~934~@~9~@~Agente~@~Este é o agente deste utilizador tem acesso a vazio, todos os meios.~@~~@~
-4542~@~AdmUsr [  340] Status: BrokerId (pt-BR)~@~935~@~9~@~Corretor~@~Este é o corretor este usuário tem acesso, vazia significa todos.~@~~@~
+4541~@~AdmUsr [  340] Status: AgentId (pt-BR)~@~934~@~9~@~Agente~@~Este é o agente deste utilizador tem acesso a vazio, todos os meios.~@~~@~
+4542~@~AdmUsr [  350] Status: BrokerId (pt-BR)~@~935~@~9~@~Corretor~@~Este é o corretor este usuário tem acesso, vazia significa todos.~@~~@~
 4543~@~AdmUsrPref [   10] Main Info: UsrPrefId (pt-BR)~@~939~@~9~@~UsrPref ID~@~Esta é a identificação interna que representa essa preferência do usuário.~@~~@~
 4544~@~AdmUsrPref [  140] Applied: UsrId (pt-BR)~@~940~@~9~@~Usuário~@~Este é o único usuário estar usando essa preferência, se escolhida.~@~~@~
 4545~@~AdmUsrPref [  180] Applied: SystemId (pt-BR)~@~941~@~9~@~Sistema~@~Este é o único sistema para aplicar esta preferência, se escolhida.~@~~@~
@@ -3171,9 +3171,9 @@
 5403~@~AdmUsr [   10] Main Info: UsrId (tr-TR)~@~1~@~11~@~Kullanıcı Adı~@~Bu iç kimliği benzersiz kullanıcı tanımlamak.~@~~@~
 5404~@~AdmUsr [   80] Main Info: UsrEmail (tr-TR)~@~2~@~11~@~Kullanıcının e-mail~@~Bu kullanıcının e-posta adresi varsa.~@~~@~
 5405~@~AdmUsr [   30] Main Info: UsrName (tr-TR)~@~3~@~11~@~Kullanıcı adı~@~Bu tam olarak bir kullanıcı adı.~@~Kullanıcı adı tam olarak giriniz.~@~
-5406~@~AdmUsr [  310] Status: CustomerId (tr-TR)~@~6~@~11~@~Müşteri~@~Bu, bu kullanıcı erişimi olan, müşteri, boş tüm anlamına gelir.~@~~@~
-5407~@~AdmUsr [  320] Status: VendorId (tr-TR)~@~7~@~11~@~Satıcı~@~Bu, bu kullanıcı erişimi olan, satıcı, boş tüm anlamına gelir.~@~~@~
-5408~@~AdmUsr [  350] Status: MemberId (tr-TR)~@~8~@~11~@~Üye~@~Bu, bu kullanıcıya erişim üyesidir, tüm boş anlamına gelir.~@~~@~
+5406~@~AdmUsr [  320] Status: CustomerId (tr-TR)~@~6~@~11~@~Müşteri~@~Bu, bu kullanıcı erişimi olan, müşteri, boş tüm anlamına gelir.~@~~@~
+5407~@~AdmUsr [  330] Status: VendorId (tr-TR)~@~7~@~11~@~Satıcı~@~Bu, bu kullanıcı erişimi olan, satıcı, boş tüm anlamına gelir.~@~~@~
+5408~@~AdmUsr [  360] Status: MemberId (tr-TR)~@~8~@~11~@~Üye~@~Bu, bu kullanıcıya erişim üyesidir, tüm boş anlamına gelir.~@~~@~
 5409~@~AdmUsr [  170] Main Info: Active (tr-TR)~@~9~@~11~@~Aktif~@~Bu kullanıcının devre dışı bırakılması gerekiyorsa bu işaretini kaldırın.~@~~@~
 5410~@~AdmUsr [  270] Status: ModifiedOn (tr-TR)~@~10~@~11~@~Tarihinde güncellenmiştir~@~Bu kullanıcının en son değiştirildiği tarih.~@~~@~
 5411~@~AdmDbTable [   10] Main Info: TableId (tr-TR)~@~11~@~11~@~Tablo Kimliği~@~Bu iç kimliği benzersiz bu veritabanı tablosu temsil eder.~@~~@~
@@ -3244,7 +3244,7 @@
 5501~@~AdmAtRowAuth [   50] Main Info: AllowAdd (tr-TR)~@~310~@~11~@~Ekle İzin~@~Bu satır yetkilisi ekleme izin verip vermediğini kontrol edilir.~@~~@~
 5502~@~AdmAtRowAuth [   60] Main Info: AllowUpd (tr-TR)~@~311~@~11~@~Güncelleme İzin~@~Bu satır otorite güncelleme izin veriyorsa, bu kontrol edilir.~@~~@~
 5503~@~AdmAtRowAuth [   70] Main Info: AllowDel (tr-TR)~@~312~@~11~@~Silme~@~Bu satır otorite güncelleme izin veriyorsa, bu kontrol edilir.~@~~@~
-5504~@~AdmUsr [  300] Status: InvestorId (tr-TR)~@~316~@~11~@~Yatırımcı~@~Bu kullanıcının erişimi olan yatırımcı, boş tüm anlamına gelir.~@~~@~
+5504~@~AdmUsr [  310] Status: InvestorId (tr-TR)~@~316~@~11~@~Yatırımcı~@~Bu kullanıcının erişimi olan yatırımcı, boş tüm anlamına gelir.~@~~@~
 5505~@~AdmCtCulture [   60] Main Info: CultureDefault (tr-TR)~@~418~@~11~@~Kültür Standart~@~Bu kültür ve tek varsayılan kültür ise bu kontrol edilir.~@~~@~
 5506~@~AdmCtDisplayType [   10] Main Info: TypeId (tr-TR)~@~419~@~11~@~Türü kimliği~@~Bu benzersiz bu ekran türünü temsil eden iç kimlik, referans kontrolü olmadan değişmez.~@~Bu ekran türü benzersiz temsil eden bir iç kimlik giriniz.~@~
 5507~@~AdmCtDisplayType [   30] Main Info: TypeDesc (tr-TR)~@~420~@~11~@~Tür Açıklama~@~Bu ekran açıklamasıdır.~@~Bu ekran açıklama giriniz.~@~
@@ -3301,8 +3301,8 @@
 5568~@~AdmScreenFilter [   90] Main Info: FilterName (tr-TR)~@~849~@~11~@~Filtre Header~@~Bu seçilen kültür görüntülenir Bu filtre için başlık.~@~Seçilen kültür görüntülenir Bu filtre için başlık giriniz.~@~
 5569~@~AdmScreen [  240] Miscellaneous: ScreenObj (tr-TR)~@~925~@~11~@~Ekran Sütunlar~@~Bu, bu ekran için ekran sütunları açılır kısa kesilir.~@~~@~
 5570~@~AdmScreen [  250] Miscellaneous: ScreenFilter (tr-TR)~@~928~@~11~@~Ekran Filtreleri~@~Bu, bu ekran için ekran filtreleri pop-up kısa kesilir.~@~~@~
-5572~@~AdmUsr [  330] Status: AgentId (tr-TR)~@~934~@~11~@~Ajan~@~Bu kullanıcıya erişim aracı, boş tüm anlamına gelir.~@~~@~
-5573~@~AdmUsr [  340] Status: BrokerId (tr-TR)~@~935~@~11~@~Komisyoncu~@~Bu kullanıcıya erişim komisyoncu, boş tüm anlamına gelir.~@~~@~
+5572~@~AdmUsr [  340] Status: AgentId (tr-TR)~@~934~@~11~@~Ajan~@~Bu kullanıcıya erişim aracı, boş tüm anlamına gelir.~@~~@~
+5573~@~AdmUsr [  350] Status: BrokerId (tr-TR)~@~935~@~11~@~Komisyoncu~@~Bu kullanıcıya erişim komisyoncu, boş tüm anlamına gelir.~@~~@~
 5574~@~AdmUsrPref [   10] Main Info: UsrPrefId (tr-TR)~@~939~@~11~@~UsrPref ID~@~Bu kullanıcının tercihi temsil eden iç kimliğidir.~@~~@~
 5575~@~AdmUsrPref [  140] Applied: UsrId (tr-TR)~@~940~@~11~@~Kullanıcı~@~Bu sadece bir kullanıcı seçilmiş ise, bu tercihi kullanarak.~@~~@~
 5576~@~AdmUsrPref [  180] Applied: SystemId (tr-TR)~@~941~@~11~@~Sistem~@~Bu seçilmiş, bu tercihi uygulamak için tek sistemdir.~@~~@~
@@ -3788,9 +3788,9 @@
 6229~@~AdmUsr [   10] Main Info: UsrId (ja-JP)~@~1~@~14~@~ユーザーID~@~これは、一意にこのユーザを識別する内部IDです。~@~~@~
 6230~@~AdmUsr [   80] Main Info: UsrEmail (ja-JP)~@~2~@~14~@~ユーザーの電子メール~@~利用可能な場合、これは、ユーザーの電子メールアドレスです。~@~~@~
 6231~@~AdmUsr [   30] Main Info: UsrName (ja-JP)~@~3~@~14~@~ユーザ名~@~これは完全にユーザーの名前です。~@~完全にユーザー名を入力してください。~@~
-6232~@~AdmUsr [  310] Status: CustomerId (ja-JP)~@~6~@~14~@~お客様~@~これは、このユーザーがアクセス権を持っている顧客である、空はすべてを意味する。~@~~@~
-6233~@~AdmUsr [  320] Status: VendorId (ja-JP)~@~7~@~14~@~ベンダ~@~これは、このユーザーがアクセス権を持っているベンダーである、空はすべてを意味する。~@~~@~
-6234~@~AdmUsr [  350] Status: MemberId (ja-JP)~@~8~@~14~@~メンバー~@~これは、このユーザーがアクセス権を持つメンバーである、空はすべてを意味する。~@~~@~
+6232~@~AdmUsr [  320] Status: CustomerId (ja-JP)~@~6~@~14~@~お客様~@~これは、このユーザーがアクセス権を持っている顧客である、空はすべてを意味する。~@~~@~
+6233~@~AdmUsr [  330] Status: VendorId (ja-JP)~@~7~@~14~@~ベンダ~@~これは、このユーザーがアクセス権を持っているベンダーである、空はすべてを意味する。~@~~@~
+6234~@~AdmUsr [  360] Status: MemberId (ja-JP)~@~8~@~14~@~メンバー~@~これは、このユーザーがアクセス権を持つメンバーである、空はすべてを意味する。~@~~@~
 6235~@~AdmUsr [  170] Main Info: Active (ja-JP)~@~9~@~14~@~アクティブ~@~このユーザーを無効にする必要がある場合は、このチェックを外して。~@~~@~
 6236~@~AdmUsr [  270] Status: ModifiedOn (ja-JP)~@~10~@~14~@~に行わ~@~これは、このユーザーが最後に変更された日付です。~@~~@~
 6237~@~AdmDbTable [   10] Main Info: TableId (ja-JP)~@~11~@~14~@~テーブルID~@~これは、内部​​IDは一意にこのデータベーステーブルを表すです。~@~~@~
@@ -3861,7 +3861,7 @@
 6327~@~AdmAtRowAuth [   50] Main Info: AllowAdd (ja-JP)~@~310~@~14~@~追加を許可~@~この行の権限が挿入できる場合、これはチェックされます。~@~~@~
 6328~@~AdmAtRowAuth [   60] Main Info: AllowUpd (ja-JP)~@~311~@~14~@~更新を許可する~@~この行の権限が更新を許可する場合、これはチェックされます。~@~~@~
 6329~@~AdmAtRowAuth [   70] Main Info: AllowDel (ja-JP)~@~312~@~14~@~削除を許可する~@~この行の権限が更新を許可する場合、これはチェックされます。~@~~@~
-6330~@~AdmUsr [  300] Status: InvestorId (ja-JP)~@~316~@~14~@~投資家~@~これは、このユーザーがアクセス権を持つ投資家であり、空はすべてを意味する。~@~~@~
+6330~@~AdmUsr [  310] Status: InvestorId (ja-JP)~@~316~@~14~@~投資家~@~これは、このユーザーがアクセス権を持つ投資家であり、空はすべてを意味する。~@~~@~
 6331~@~AdmCtCulture [   60] Main Info: CultureDefault (ja-JP)~@~418~@~14~@~文化のデフォルト~@~この文化は唯一無二の既定のカルチャの場合、これがチェックされます。~@~~@~
 6332~@~AdmCtDisplayType [   10] Main Info: TypeId (ja-JP)~@~419~@~14~@~タイプID~@~これは、内部​​IDは一意にこのディスプレイのタイプを表している、参照をチェックせずに変更しないでください。~@~一意にこのディスプレイのタイプを表す内部IDを入力してください。~@~
 6333~@~AdmCtDisplayType [   30] Main Info: TypeDesc (ja-JP)~@~420~@~14~@~タイプ説明~@~これは、この画面の説明です。~@~この表示の説明を入力してください。~@~
@@ -3918,8 +3918,8 @@
 6394~@~AdmScreenFilter [   90] Main Info: FilterName (ja-JP)~@~849~@~14~@~フィルタのヘッダ~@~これは、選択された文化の中で表示されるように、このフィルタのヘッダです。~@~選択された文化の中に表示されるように、このフィルタのヘッダを入力してください。~@~
 6395~@~AdmScreen [  240] Miscellaneous: ScreenObj (ja-JP)~@~925~@~14~@~画面の列~@~これは、この画面の画面の列をポップアップ表示するショートカットです。~@~~@~
 6396~@~AdmScreen [  250] Miscellaneous: ScreenFilter (ja-JP)~@~928~@~14~@~スクリーンフィルタ~@~これは、この画面の画面フィルタをポップアップするショートカットです。~@~~@~
-6398~@~AdmUsr [  330] Status: AgentId (ja-JP)~@~934~@~14~@~エージェント~@~これは、このユーザーがアクセス権を持つエージェントである、空はすべてを意味する。~@~~@~
-6399~@~AdmUsr [  340] Status: BrokerId (ja-JP)~@~935~@~14~@~ブローカー~@~これは、このユーザーがアクセス権を持っているブローカーである、空はすべてを意味する。~@~~@~
+6398~@~AdmUsr [  340] Status: AgentId (ja-JP)~@~934~@~14~@~エージェント~@~これは、このユーザーがアクセス権を持つエージェントである、空はすべてを意味する。~@~~@~
+6399~@~AdmUsr [  350] Status: BrokerId (ja-JP)~@~935~@~14~@~ブローカー~@~これは、このユーザーがアクセス権を持っているブローカーである、空はすべてを意味する。~@~~@~
 6400~@~AdmUsrPref [   10] Main Info: UsrPrefId (ja-JP)~@~939~@~14~@~UsrPref ID~@~これは、このユーザの嗜好を表す内部IDです。~@~~@~
 6401~@~AdmUsrPref [  140] Applied: UsrId (ja-JP)~@~940~@~14~@~ユーザー~@~選択された場合、これは、このプリファレンスを使用する唯一のユーザーです。~@~~@~
 6402~@~AdmUsrPref [  180] Applied: SystemId (ja-JP)~@~941~@~14~@~システム~@~これは、選択された場合、この設定を適用する唯一のシステムです。~@~~@~
@@ -4405,9 +4405,9 @@
 7055~@~AdmUsr [   10] Main Info: UsrId (ru-RU)~@~1~@~12~@~Идентификатор пользователя~@~Это внутренний идентификатор однозначно идентифицировать пользователя.~@~~@~
 7056~@~AdmUsr [   80] Main Info: UsrEmail (ru-RU)~@~2~@~12~@~Пользователь Email~@~Это адрес электронной почты пользователя, если это возможно.~@~~@~
 7057~@~AdmUsr [   30] Main Info: UsrName (ru-RU)~@~3~@~12~@~Имя пользователя~@~Это имя пользователя в полном объеме.~@~Пожалуйста, введите имя пользователя в полном объеме.~@~
-7058~@~AdmUsr [  310] Status: CustomerId (ru-RU)~@~6~@~12~@~Клиент~@~Это клиент этот пользователь имеет доступ к пустым означает все.~@~~@~
-7059~@~AdmUsr [  320] Status: VendorId (ru-RU)~@~7~@~12~@~Продавец~@~Это поставщик этот пользователь имеет доступ к пустым означает все.~@~~@~
-7060~@~AdmUsr [  350] Status: MemberId (ru-RU)~@~8~@~12~@~Член~@~Это входит пользователь имеет доступ, означает, что все пустые.~@~~@~
+7058~@~AdmUsr [  320] Status: CustomerId (ru-RU)~@~6~@~12~@~Клиент~@~Это клиент этот пользователь имеет доступ к пустым означает все.~@~~@~
+7059~@~AdmUsr [  330] Status: VendorId (ru-RU)~@~7~@~12~@~Продавец~@~Это поставщик этот пользователь имеет доступ к пустым означает все.~@~~@~
+7060~@~AdmUsr [  360] Status: MemberId (ru-RU)~@~8~@~12~@~Член~@~Это входит пользователь имеет доступ, означает, что все пустые.~@~~@~
 7061~@~AdmUsr [  170] Main Info: Active (ru-RU)~@~9~@~12~@~Активный~@~Снимите этот, если этот пользователь должен быть отключен.~@~~@~
 7062~@~AdmUsr [  270] Status: ModifiedOn (ru-RU)~@~10~@~12~@~Изменение~@~Это дата этого пользователя последнего изменения.~@~~@~
 7063~@~AdmDbTable [   10] Main Info: TableId (ru-RU)~@~11~@~12~@~Таблица Id~@~Это внутренний идентификатор однозначно представляет эту таблицу базы данных.~@~~@~
@@ -4478,7 +4478,7 @@
 7153~@~AdmAtRowAuth [   50] Main Info: AllowAdd (ru-RU)~@~310~@~12~@~Разрешить Добавить~@~Это проверяется, если этот ряд полномочий позволяет вставлять.~@~~@~
 7154~@~AdmAtRowAuth [   60] Main Info: AllowUpd (ru-RU)~@~311~@~12~@~Разрешить обновление~@~Это проверяется, если этот ряд полномочий позволяет обновить.~@~~@~
 7155~@~AdmAtRowAuth [   70] Main Info: AllowDel (ru-RU)~@~312~@~12~@~Разрешить Удалить~@~Это проверяется, если этот ряд полномочий позволяет обновить.~@~~@~
-7156~@~AdmUsr [  300] Status: InvestorId (ru-RU)~@~316~@~12~@~Инвестор~@~Это инвестора этот пользователь имеет доступ к пустым означает все.~@~~@~
+7156~@~AdmUsr [  310] Status: InvestorId (ru-RU)~@~316~@~12~@~Инвестор~@~Это инвестора этот пользователь имеет доступ к пустым означает все.~@~~@~
 7157~@~AdmCtCulture [   60] Main Info: CultureDefault (ru-RU)~@~418~@~12~@~Культура по умолчанию~@~Это проверяется, если эта культура является одним и только по умолчанию культуры.~@~~@~
 7158~@~AdmCtDisplayType [   10] Main Info: TypeId (ru-RU)~@~419~@~12~@~Тип ID~@~Это внутренний идентификатор однозначно представляет этот тип дисплея, не меняют, не проверив ссылки.~@~Пожалуйста, введите внутренний идентификатор однозначно представляет этот тип отображения.~@~
 7159~@~AdmCtDisplayType [   30] Main Info: TypeDesc (ru-RU)~@~420~@~12~@~Тип Описание~@~Это описание этого показа.~@~Пожалуйста, введите описание этого показа.~@~
@@ -4535,8 +4535,8 @@
 7220~@~AdmScreenFilter [   90] Main Info: FilterName (ru-RU)~@~849~@~12~@~Фильтр заголовков~@~Это заголовок для этого фильтра, который будет отображаться в культуре выбран.~@~Пожалуйста, введите заголовок для этого фильтра, который будет отображаться в культуре выбран.~@~
 7221~@~AdmScreen [  240] Miscellaneous: ScreenObj (ru-RU)~@~925~@~12~@~Экран Столбцы~@~Это кратчайший путь к поп-экран колонки для этого экрана.~@~~@~
 7222~@~AdmScreen [  250] Miscellaneous: ScreenFilter (ru-RU)~@~928~@~12~@~Фильтры сетчатые~@~Это кратчайший путь к поп-экран фильтры для этого экрана.~@~~@~
-7224~@~AdmUsr [  330] Status: AgentId (ru-RU)~@~934~@~12~@~Агент~@~Это агент этот пользователь имеет доступ к пустым означает все.~@~~@~
-7225~@~AdmUsr [  340] Status: BrokerId (ru-RU)~@~935~@~12~@~Брокер~@~Это брокера этот пользователь имеет доступ к пустым означает все.~@~~@~
+7224~@~AdmUsr [  340] Status: AgentId (ru-RU)~@~934~@~12~@~Агент~@~Это агент этот пользователь имеет доступ к пустым означает все.~@~~@~
+7225~@~AdmUsr [  350] Status: BrokerId (ru-RU)~@~935~@~12~@~Брокер~@~Это брокера этот пользователь имеет доступ к пустым означает все.~@~~@~
 7226~@~AdmUsrPref [   10] Main Info: UsrPrefId (ru-RU)~@~939~@~12~@~UsrPref ID~@~Это внутренний идентификатор, представляющий этот предпочтений пользователя.~@~~@~
 7227~@~AdmUsrPref [  140] Applied: UsrId (ru-RU)~@~940~@~12~@~Пользователь~@~Это единственный пользователь, используют этот параметр, если выбрана.~@~~@~
 7228~@~AdmUsrPref [  180] Applied: SystemId (ru-RU)~@~941~@~12~@~Система~@~Это единственная система, применять этот параметр, если выбрана.~@~~@~
@@ -5022,9 +5022,9 @@
 7881~@~AdmUsr [   10] Main Info: UsrId (es-ES)~@~1~@~13~@~ID de usuario~@~Este es el ID interno de identificar de forma exclusiva a este usuario.~@~~@~
 7882~@~AdmUsr [   80] Main Info: UsrEmail (es-ES)~@~2~@~13~@~Usuario E-mail~@~Esta es la dirección de correo electrónico del usuario, si está disponible.~@~~@~
 7883~@~AdmUsr [   30] Main Info: UsrName (es-ES)~@~3~@~13~@~Nombre de usuario~@~Este es el nombre de usuario en su totalidad.~@~Por favor, introduzca el nombre de usuario en su totalidad.~@~
-7884~@~AdmUsr [  310] Status: CustomerId (es-ES)~@~6~@~13~@~Cliente~@~Este es el cliente el usuario tiene acceso a todos los medios vacíos.~@~~@~
-7885~@~AdmUsr [  320] Status: VendorId (es-ES)~@~7~@~13~@~Vendedor~@~Este es el proveedor de este usuario tiene acceso a todos los medios vacíos.~@~~@~
-7886~@~AdmUsr [  350] Status: MemberId (es-ES)~@~8~@~13~@~Miembro~@~Este es el miembro de este usuario tiene acceso a todos los medios vacíos.~@~~@~
+7884~@~AdmUsr [  320] Status: CustomerId (es-ES)~@~6~@~13~@~Cliente~@~Este es el cliente el usuario tiene acceso a todos los medios vacíos.~@~~@~
+7885~@~AdmUsr [  330] Status: VendorId (es-ES)~@~7~@~13~@~Vendedor~@~Este es el proveedor de este usuario tiene acceso a todos los medios vacíos.~@~~@~
+7886~@~AdmUsr [  360] Status: MemberId (es-ES)~@~8~@~13~@~Miembro~@~Este es el miembro de este usuario tiene acceso a todos los medios vacíos.~@~~@~
 7887~@~AdmUsr [  170] Main Info: Active (es-ES)~@~9~@~13~@~Activo~@~Desactive esta opción si el usuario tiene que estar desactivado.~@~~@~
 7888~@~AdmUsr [  270] Status: ModifiedOn (es-ES)~@~10~@~13~@~Modificado el~@~Esta es la fecha en que se modificó este último usuario.~@~~@~
 7889~@~AdmDbTable [   10] Main Info: TableId (es-ES)~@~11~@~13~@~ID de la tabla~@~Este es el ID interno único representa esta tabla de base de datos.~@~~@~
@@ -5095,7 +5095,7 @@
 7979~@~AdmAtRowAuth [   50] Main Info: AllowAdd (es-ES)~@~310~@~13~@~Permitir Agregar~@~Esto se comprueba si esta autoridad fila permite la inserción.~@~~@~
 7980~@~AdmAtRowAuth [   60] Main Info: AllowUpd (es-ES)~@~311~@~13~@~Que permite la actualización~@~Esto se comprueba si esta autoridad le permite actualizar la fila.~@~~@~
 7981~@~AdmAtRowAuth [   70] Main Info: AllowDel (es-ES)~@~312~@~13~@~Permiten eliminar~@~Esto se comprueba si esta autoridad le permite actualizar la fila.~@~~@~
-7982~@~AdmUsr [  300] Status: InvestorId (es-ES)~@~316~@~13~@~Inversor~@~Este es el inversor este usuario tenga acceso a todos los medios vacíos.~@~~@~
+7982~@~AdmUsr [  310] Status: InvestorId (es-ES)~@~316~@~13~@~Inversor~@~Este es el inversor este usuario tenga acceso a todos los medios vacíos.~@~~@~
 7983~@~AdmCtCulture [   60] Main Info: CultureDefault (es-ES)~@~418~@~13~@~Cultura Default~@~Esto se comprueba si esta cultura es la cultura por defecto y sólo.~@~~@~
 7984~@~AdmCtDisplayType [   10] Main Info: TypeId (es-ES)~@~419~@~13~@~Tipo de ID~@~Este es el ID interno único representa este tipo de visualización, no cambian sin la comprobación de referencias.~@~Por favor, introduzca un ID interno único representa este tipo de visualización.~@~
 7985~@~AdmCtDisplayType [   30] Main Info: TypeDesc (es-ES)~@~420~@~13~@~Descripción del tipo de~@~Esta es la descripción de esta pantalla.~@~Por favor, introduzca la descripción de esta pantalla.~@~
@@ -5152,8 +5152,8 @@
 8046~@~AdmScreenFilter [   90] Main Info: FilterName (es-ES)~@~849~@~13~@~Filtro de cabecera~@~Este es el encabezado de este filtro que se muestra en el cultivo seleccionado.~@~Por favor, introduzca la cabecera de este filtro que se muestra en el cultivo seleccionado.~@~
 8047~@~AdmScreen [  240] Miscellaneous: ScreenObj (es-ES)~@~925~@~13~@~Columnas de la pantalla~@~Este es un atajo para que aparezca la pantalla de columnas de esta pantalla.~@~~@~
 8048~@~AdmScreen [  250] Miscellaneous: ScreenFilter (es-ES)~@~928~@~13~@~Los filtros de pantalla~@~Este es un atajo para que aparezca la pantalla filtros para esta pantalla.~@~~@~
-8050~@~AdmUsr [  330] Status: AgentId (es-ES)~@~934~@~13~@~Agente~@~Este es el agente de este usuario tiene acceso a todos los medios vacíos.~@~~@~
-8051~@~AdmUsr [  340] Status: BrokerId (es-ES)~@~935~@~13~@~Corredor~@~Este es el corredor de este usuario tiene acceso a todos los medios vacíos.~@~~@~
+8050~@~AdmUsr [  340] Status: AgentId (es-ES)~@~934~@~13~@~Agente~@~Este es el agente de este usuario tiene acceso a todos los medios vacíos.~@~~@~
+8051~@~AdmUsr [  350] Status: BrokerId (es-ES)~@~935~@~13~@~Corredor~@~Este es el corredor de este usuario tiene acceso a todos los medios vacíos.~@~~@~
 8052~@~AdmUsrPref [   10] Main Info: UsrPrefId (es-ES)~@~939~@~13~@~UsrPref ID~@~Este es el ID interno que representa esta preferencia del usuario.~@~~@~
 8053~@~AdmUsrPref [  140] Applied: UsrId (es-ES)~@~940~@~13~@~Usuario~@~Este es el único usuario que se utiliza esta opción, si es elegido.~@~~@~
 8054~@~AdmUsrPref [  180] Applied: SystemId (es-ES)~@~941~@~13~@~Sistema~@~Este es el único sistema para aplicar esta preferencia, si es elegido.~@~~@~
@@ -5989,9 +5989,9 @@
 10207~@~AdmUsr [   10] Main Info: UsrId (de-DE)~@~1~@~68~@~User Id~@~Dies ist die interne ID eindeutig identifiziert diesen Benutzer.~@~~@~
 10208~@~AdmUsr [   80] Main Info: UsrEmail (de-DE)~@~2~@~68~@~Benutzer per E-Mail~@~Dies ist die Benutzer-E-Mail-Adresse, falls vorhanden.~@~~@~
 10209~@~AdmUsr [   30] Main Info: UsrName (de-DE)~@~3~@~68~@~User Name~@~Dies ist der Benutzername in vollem Umfang.~@~Bitte geben Sie den Benutzernamen in vollem Umfang.~@~
-10210~@~AdmUsr [  310] Status: CustomerId (de-DE)~@~6~@~68~@~Kunde~@~Dies ist der Kunde dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
-10211~@~AdmUsr [  320] Status: VendorId (de-DE)~@~7~@~68~@~Verkäufer~@~Dies ist der Verkäufer dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
-10212~@~AdmUsr [  350] Status: MemberId (de-DE)~@~8~@~68~@~Mitglied~@~Dies ist das Mitglied dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
+10210~@~AdmUsr [  320] Status: CustomerId (de-DE)~@~6~@~68~@~Kunde~@~Dies ist der Kunde dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
+10211~@~AdmUsr [  330] Status: VendorId (de-DE)~@~7~@~68~@~Verkäufer~@~Dies ist der Verkäufer dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
+10212~@~AdmUsr [  360] Status: MemberId (de-DE)~@~8~@~68~@~Mitglied~@~Dies ist das Mitglied dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
 10213~@~AdmUsr [  170] Main Info: Active (de-DE)~@~9~@~68~@~Aktiv~@~Deaktivieren Sie diese Option, wenn dieser Benutzer deaktiviert werden.~@~~@~
 10214~@~AdmUsr [  270] Status: ModifiedOn (de-DE)~@~10~@~68~@~Geändert On~@~Dies ist das Datum dieser Benutzer zuletzt geändert wurde.~@~~@~
 10215~@~AdmDbTable [   10] Main Info: TableId (de-DE)~@~11~@~68~@~Tabelle Id~@~Dies ist die interne ID eindeutig repräsentiert diese Datenbank-Tabelle.~@~~@~
@@ -6069,7 +6069,7 @@
 10305~@~AdmAtRowAuth [   50] Main Info: AllowAdd (de-DE)~@~310~@~68~@~Lassen hinzufügen~@~Dies wird überprüft, ob diese Zeile Behörde erlaubt das Einfügen.~@~~@~
 10306~@~AdmAtRowAuth [   60] Main Info: AllowUpd (de-DE)~@~311~@~68~@~Lassen Sie aktualisieren~@~Dies wird überprüft, ob diese Zeile Behörde erlaubt die Aktualisierung.~@~~@~
 10307~@~AdmAtRowAuth [   70] Main Info: AllowDel (de-DE)~@~312~@~68~@~Lassen Sie löschen~@~Dies wird überprüft, ob diese Zeile Behörde erlaubt die Aktualisierung.~@~~@~
-10308~@~AdmUsr [  300] Status: InvestorId (de-DE)~@~316~@~68~@~Investor~@~Dies ist der Anleger dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
+10308~@~AdmUsr [  310] Status: InvestorId (de-DE)~@~316~@~68~@~Investor~@~Dies ist der Anleger dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
 10309~@~AdmCtCulture [   60] Main Info: CultureDefault (de-DE)~@~418~@~68~@~Kultur Standard~@~Dies wird überprüft, ob diese Kultur ist die erste und einzige Standard-Kultur.~@~~@~
 10310~@~AdmCtDisplayType [   10] Main Info: TypeId (de-DE)~@~419~@~68~@~Typ ID~@~Dies ist die interne ID eindeutig repräsentiert diese Display-Typ, nicht ohne Überprüfung Referenz zu ändern.~@~Bitte geben Sie eine interne ID eindeutig repräsentiert diese Darstellungsart.~@~
 10311~@~AdmCtDisplayType [   30] Main Info: TypeDesc (de-DE)~@~420~@~68~@~Typ Beschreibung~@~Dies ist die Beschreibung des Display.~@~Bitte geben Sie die Beschreibung dieser Anzeige.~@~
@@ -6129,8 +6129,8 @@
 10372~@~AdmScreenFilter [   90] Main Info: FilterName (de-DE)~@~849~@~68~@~Filter-Header~@~Dies ist der Header für dieses Filter in der Kultur ausgewählt angezeigt.~@~Bitte geben Sie die Header für dieses Filter in der Kultur ausgewählt angezeigt.~@~
 10373~@~AdmScreen [  240] Miscellaneous: ScreenObj (de-DE)~@~925~@~68~@~Screen-Spalten~@~Dies ist eine Abkürzung, um Pop-up-Bildschirm Spalten für diesen Bildschirm.~@~~@~
 10374~@~AdmScreen [  250] Miscellaneous: ScreenFilter (de-DE)~@~928~@~68~@~Bildschirmfilter~@~Dies ist eine Abkürzung, um Pop-up-Bildschirm Filter für diesen Bildschirm.~@~~@~
-10376~@~AdmUsr [  330] Status: AgentId (de-DE)~@~934~@~68~@~Agent~@~Dies ist der Agent dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
-10377~@~AdmUsr [  340] Status: BrokerId (de-DE)~@~935~@~68~@~Makler~@~Dies ist der Vermittler dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
+10376~@~AdmUsr [  340] Status: AgentId (de-DE)~@~934~@~68~@~Agent~@~Dies ist der Agent dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
+10377~@~AdmUsr [  350] Status: BrokerId (de-DE)~@~935~@~68~@~Makler~@~Dies ist der Vermittler dieser Benutzer Zugriff hat, bedeutet, leere alle.~@~~@~
 10378~@~AdmUsrPref [   10] Main Info: UsrPrefId (de-DE)~@~939~@~68~@~UsrPref ID~@~Dies ist die interne ID, die diesem Benutzer Präferenz.~@~~@~
 10379~@~AdmUsrPref [  140] Applied: UsrId (de-DE)~@~940~@~68~@~Benutzer~@~Dies ist der einzige Benutzer verwenden diese Einstellung, wenn gewählt.~@~~@~
 10380~@~AdmUsrPref [  180] Applied: SystemId (de-DE)~@~941~@~68~@~System~@~Dies ist das einzige System, um diese Einstellung zu beantragen, wenn gewählt.~@~~@~
@@ -6908,9 +6908,9 @@
 11334~@~AdmUsr [   10] Main Info: UsrId (ko-KR)~@~1~@~28~@~사용자 ID~@~이 내부 ID는 고유 사용자를 식별합니다.~@~~@~
 11335~@~AdmUsr [   80] Main Info: UsrEmail (ko-KR)~@~2~@~28~@~사용자 이메일~@~이 사용 가능한 경우, 사용자의 이메일 주소입니다.~@~~@~
 11336~@~AdmUsr [   30] Main Info: UsrName (ko-KR)~@~3~@~28~@~사용자 이름~@~이 전체의 사용자 이름입니다.~@~전체에 사용자 이름을 입력하십시오.~@~
-11337~@~AdmUsr [  310] Status: CustomerId (ko-KR)~@~6~@~28~@~고객~@~이이 사용자가에 액세스 할 수 있습니다 고객이며, 빈은 모두를 의미합니다.~@~~@~
-11338~@~AdmUsr [  320] Status: VendorId (ko-KR)~@~7~@~28~@~공급 업체~@~이이 사용자가에 액세스 할 수 있습니다 공급 업체이며, 빈은 모두를 의미합니다.~@~~@~
-11339~@~AdmUsr [  350] Status: MemberId (ko-KR)~@~8~@~28~@~회원~@~이이 사용자가에 액세스 할 수 있습니다 회원, 빈은 모두를 의미합니다.~@~~@~
+11337~@~AdmUsr [  320] Status: CustomerId (ko-KR)~@~6~@~28~@~고객~@~이이 사용자가에 액세스 할 수 있습니다 고객이며, 빈은 모두를 의미합니다.~@~~@~
+11338~@~AdmUsr [  330] Status: VendorId (ko-KR)~@~7~@~28~@~공급 업체~@~이이 사용자가에 액세스 할 수 있습니다 공급 업체이며, 빈은 모두를 의미합니다.~@~~@~
+11339~@~AdmUsr [  360] Status: MemberId (ko-KR)~@~8~@~28~@~회원~@~이이 사용자가에 액세스 할 수 있습니다 회원, 빈은 모두를 의미합니다.~@~~@~
 11340~@~AdmUsr [  170] Main Info: Active (ko-KR)~@~9~@~28~@~활동적인~@~이이 사용자가 비활성화해야하는 경우 선택을 취소합니다.~@~~@~
 11341~@~AdmUsr [  270] Status: ModifiedOn (ko-KR)~@~10~@~28~@~에 수정~@~이렇게하면이 사용자가 마지막으로 수정 된 날짜입니다.~@~~@~
 11342~@~AdmDbTable [   10] Main Info: TableId (ko-KR)~@~11~@~28~@~테이블 이드~@~이 내부 ID는 고유이 데이터베이스 테이블을 나타내는 것입니다.~@~~@~
@@ -6988,7 +6988,7 @@
 11432~@~AdmAtRowAuth [   50] Main Info: AllowAdd (ko-KR)~@~310~@~28~@~추가 허용~@~이 행 기관은 삽입을 허용하는 경우를 검사한다.~@~~@~
 11433~@~AdmAtRowAuth [   60] Main Info: AllowUpd (ko-KR)~@~311~@~28~@~업데이트 허용~@~이 행 기관이 업데이트를 허용하는 경우이를 확인합니다.~@~~@~
 11434~@~AdmAtRowAuth [   70] Main Info: AllowDel (ko-KR)~@~312~@~28~@~삭제 허용~@~이 행 기관이 업데이트를 허용하는 경우이를 확인합니다.~@~~@~
-11435~@~AdmUsr [  300] Status: InvestorId (ko-KR)~@~316~@~28~@~투자자~@~이이 사용자가에 액세스 할 수 있습니다 투자이며, 빈은 모두를 의미합니다.~@~~@~
+11435~@~AdmUsr [  310] Status: InvestorId (ko-KR)~@~316~@~28~@~투자자~@~이이 사용자가에 액세스 할 수 있습니다 투자이며, 빈은 모두를 의미합니다.~@~~@~
 11436~@~AdmCtCulture [   60] Main Info: CultureDefault (ko-KR)~@~418~@~28~@~문화의 기본~@~이 문화가 바로 그 사람의 기본 문화 경우를 검사한다.~@~~@~
 11437~@~AdmCtDisplayType [   10] Main Info: TypeId (ko-KR)~@~419~@~28~@~유형 ID~@~이 내부 ID는 고유이 표시 유형을 나타냅니다이며, 참조를 확인하지 않고 변경하지 마십시오.~@~고유이 표시 유형을 나타냅니다 내부 ID를 입력하십시오.~@~
 11438~@~AdmCtDisplayType [   30] Main Info: TypeDesc (ko-KR)~@~420~@~28~@~유형 설명~@~이이 화면의 설명입니다.~@~이 화면의 설명을 입력하세요.~@~
@@ -7048,8 +7048,8 @@
 11499~@~AdmScreenFilter [   90] Main Info: FilterName (ko-KR)~@~849~@~28~@~필터 헤더~@~이 선택 문화에 표시하려면이 필터에 대한 헤더입니다.~@~선택한 문화에 표시하려면이 필터에 대한 헤더를 입력하십시오.~@~
 11500~@~AdmScreen [  240] Miscellaneous: ScreenObj (ko-KR)~@~925~@~28~@~화면 열~@~이이 화면에 대한 화면 항목을 팝업 할 수있는 지름길입니다.~@~~@~
 11501~@~AdmScreen [  250] Miscellaneous: ScreenFilter (ko-KR)~@~928~@~28~@~화면 필터~@~이이 화면에 대한 스크린 필터를 팝업 할 수있는 지름길입니다.~@~~@~
-11503~@~AdmUsr [  330] Status: AgentId (ko-KR)~@~934~@~28~@~대리인~@~이이 사용자가에 액세스 할 수 있습니다 에이전트, 빈은 모두를 의미합니다.~@~~@~
-11504~@~AdmUsr [  340] Status: BrokerId (ko-KR)~@~935~@~28~@~브로커~@~이이 사용자가에 액세스 할 수 있습니다 브로커이며, 빈은 모두를 의미합니다.~@~~@~
+11503~@~AdmUsr [  340] Status: AgentId (ko-KR)~@~934~@~28~@~대리인~@~이이 사용자가에 액세스 할 수 있습니다 에이전트, 빈은 모두를 의미합니다.~@~~@~
+11504~@~AdmUsr [  350] Status: BrokerId (ko-KR)~@~935~@~28~@~브로커~@~이이 사용자가에 액세스 할 수 있습니다 브로커이며, 빈은 모두를 의미합니다.~@~~@~
 11505~@~AdmUsrPref [   10] Main Info: UsrPrefId (ko-KR)~@~939~@~28~@~UsrPref ID~@~이렇게하면이 사용자가 환경 설정을 나타내는 내부 ID입니다.~@~~@~
 11506~@~AdmUsrPref [  140] Applied: UsrId (ko-KR)~@~940~@~28~@~사용자~@~이 밖에 사용자가 선택한 경우이 환경 설정을 사용하여 할 수 있습니다.~@~~@~
 11507~@~AdmUsrPref [  180] Applied: SystemId (ko-KR)~@~941~@~28~@~체계~@~이 선택한 경우이 환경 설정을 적용 할 수있는 유일한 시스템입니다.~@~~@~
@@ -7965,7 +7965,7 @@
 12629~@~AdmScreen [   40] Main Info: ViewOnly (en-US)~@~3103~@~1~@~View Only~@~This determine the view-only property of this screen.~@~Please select the view-only property of this screen.~@~
 13629~@~AdmScreenObj [  300] Main Info: LabelVertical (en-US)~@~3104~@~1~@~Label On Top~@~Check this to show label on top of this control.~@~~@~
 13631~@~AdmScreenTab [   50] Main Info: TabFolderLabel (en-US)~@~3106~@~1~@~If you have a lot of contents and you do not wish to clutter all of them on one page, tab-folder is your savior. You can define a tab with it's own unique name and have it translated into many different human languages.  Simply select that to determine which tab-folder you wish your field to be grouped into. Your designated fields on that tab-folder will show up only when the tab-folder is selected. I think it is beautiful. Hope you are with me on this.~@~~@~~@~
-13633~@~AdmUsr [  390] Status: UsageStat (en-US)~@~3108~@~1~@~~@~~@~~@~
+13633~@~AdmUsr [  400] Status: UsageStat (en-US)~@~3108~@~1~@~~@~~@~~@~
 13635~@~AdmScreenObj [  340] Main Info: HyperLinkUrl (en-US)~@~3110~@~1~@~Static Link URL~@~This is the static hyperlink URL in the absence of dynamic Key Column.~@~~@~
 13647~@~AdmScreen [  260] Miscellaneous: MoreInfo (en-US)~@~3112~@~1~@~For more information~@~~@~~@~
 13659~@~AdmUsrGroup [  100] Main Info: MoreInfo (en-US)~@~3114~@~1~@~~@~~@~~@~
@@ -8026,7 +8026,7 @@
 14724~@~AdmMember [   10] Main Info: SredMebrId (zh-CN)~@~3102~@~4~@~ID~@~这个ID唯一标识该会员的SR＆ED的目的。~@~~@~
 14726~@~AdmScreenObj [  300] Main Info: LabelVertical (zh-CN)~@~3104~@~4~@~标签上顶~@~勾选此显示标签上的这个控件的顶部。~@~~@~
 14727~@~AdmScreenTab [   50] Main Info: TabFolderLabel (zh-CN)~@~3106~@~4~@~如果你有很多的内容，你不希望弄乱它们全部在一个页面上，标签，文件夹是你的救星。你可以定义一个标签都有它自己独特的名称，并将它翻译成多种不同的人类语言。只需选择来确定你希望你的领域可分为哪一个标签文件夹中。您在该选项卡中文件夹指定字段将显示仅当选择该选项卡文件夹。我认为它是美丽的。希望你与我同在此。~@~~@~~@~
-14728~@~AdmUsr [  390] Status: UsageStat (zh-CN)~@~3108~@~4~@~~@~~@~~@~
+14728~@~AdmUsr [  400] Status: UsageStat (zh-CN)~@~3108~@~4~@~~@~~@~~@~
 14729~@~AdmScreenObj [  340] Main Info: HyperLinkUrl (zh-CN)~@~3110~@~4~@~静态链接网址~@~这是在没有动态键列的静态超链接的URL。~@~~@~
 14730~@~AdmScreen [  260] Miscellaneous: MoreInfo (zh-CN)~@~3112~@~4~@~欲了解更多信息~@~~@~~@~
 14731~@~AdmUsrGroup [  100] Main Info: MoreInfo (zh-CN)~@~3114~@~4~@~~@~~@~~@~
@@ -8100,7 +8100,7 @@
 14819~@~AdmMember [   10] Main Info: SredMebrId (ko-KR)~@~3102~@~28~@~신분증~@~이 ID는 고유 SR & ED 목적이 멤버를 식별합니다.~@~~@~
 14821~@~AdmScreenObj [  300] Main Info: LabelVertical (ko-KR)~@~3104~@~28~@~상단에 라벨~@~이 컨트롤의 상단에 라벨을 표시하려면이 옵션을 선택합니다.~@~~@~
 14822~@~AdmScreenTab [   50] Main Info: TabFolderLabel (ko-KR)~@~3106~@~28~@~당신이 내용을 많이 가지고 당신이 한 페이지에 모두를 혼란하지 않으려면, 탭 폴더는 구세주. 당신은 자신의 고유 한 이름으로 탭을 정의하고 여러 다른 인간의 언어로 번역 할 수 있습니다. 단순히 당신이로 그룹화 할 수 있도록 필드를하고자하는 탭으로 폴더를 결정하는 것을 선택합니다. 해당 탭 폴더에 지정된 필드는 탭으로 폴더를 선택한 경우에만 표시됩니다. 나는 아름다운 생각합니다. 당신이 나와 함께 있습니다 바랍니다.~@~~@~~@~
-14823~@~AdmUsr [  390] Status: UsageStat (ko-KR)~@~3108~@~28~@~~@~~@~~@~
+14823~@~AdmUsr [  400] Status: UsageStat (ko-KR)~@~3108~@~28~@~~@~~@~~@~
 14824~@~AdmScreenObj [  340] Main Info: HyperLinkUrl (ko-KR)~@~3110~@~28~@~정적 링크 URL~@~이것은 동적 인 키 열이 없을 정적 하이퍼 링크 URL이다.~@~~@~
 14825~@~AdmScreen [  260] Miscellaneous: MoreInfo (ko-KR)~@~3112~@~28~@~자세한 내용은~@~~@~~@~
 14826~@~AdmUsrGroup [  100] Main Info: MoreInfo (ko-KR)~@~3114~@~28~@~~@~~@~~@~
@@ -8322,9 +8322,9 @@
 16240~@~AdmScreen [  370] Main Info: NoDetailMsg (en-US)~@~4182~@~1~@~No Detail Message~@~Please enter a message to indicate no detail record has been selected.~@~Please enter a message to indicate no detail record has been selected.~@~
 16241~@~AdmScreen [  380] Main Info: AddMasterMsg (en-US)~@~4183~@~1~@~Add Master Message~@~Please enter a message invite click here to enter a new master record.~@~Please enter a message invite click here to enter a new master record.~@~
 16242~@~AdmScreen [  390] Main Info: AddDetailMsg (en-US)~@~4184~@~1~@~Add Detail Message~@~Please enter a message invite click here to enter a new detail record.~@~Please enter a message invite click here to enter a new detail record.~@~
-16243~@~AdmUsr [  360] Status: LenderId (en-US)~@~4185~@~1~@~Lender~@~This is the lender this user has access to, empty means all.~@~~@~
-16244~@~AdmUsr [  370] Status: BorrowerId (en-US)~@~4186~@~1~@~Borrower~@~This is the borrower this user has access to, empty means all.~@~~@~
-16245~@~AdmUsr [  380] Status: GuarantorId (en-US)~@~4187~@~1~@~Guarantor~@~This is the guarantor this user has access to, empty means all.~@~~@~
+16243~@~AdmUsr [  370] Status: LenderId (en-US)~@~4185~@~1~@~Lender~@~This is the lender this user has access to, empty means all.~@~~@~
+16244~@~AdmUsr [  380] Status: BorrowerId (en-US)~@~4186~@~1~@~Borrower~@~This is the borrower this user has access to, empty means all.~@~~@~
+16245~@~AdmUsr [  390] Status: GuarantorId (en-US)~@~4187~@~1~@~Guarantor~@~This is the guarantor this user has access to, empty means all.~@~~@~
 16246~@~AdmUsrPref [  250] Applied: LenderId (en-US)~@~4188~@~1~@~Lender~@~This is the only lender to be using this preference, if chosen.~@~~@~
 16247~@~AdmUsrPref [  260] Applied: BorrowerId (en-US)~@~4189~@~1~@~Borrower~@~This is the only borrower to be using this preference, if chosen.~@~~@~
 16248~@~AdmUsrPref [  270] Applied: GuarantorId (en-US)~@~4190~@~1~@~Guarantor~@~This is the only guarantor to be using this preference, if chosen.~@~~@~
@@ -8364,9 +8364,9 @@
 16363~@~AdmUsr [   10] Main Info: UsrId (fr-CA)~@~1~@~114~@~Identifiant d'utilisateur~@~Il s'agit de l'ID interne identifier de manière unique cet utilisateur.~@~~@~
 16364~@~AdmUsr [   80] Main Info: UsrEmail (fr-CA)~@~2~@~114~@~Courriel de l'utilisateur~@~Il s'agit de l'adresse e-mail de l'utilisateur, si disponible.~@~~@~
 16365~@~AdmUsr [   30] Main Info: UsrName (fr-CA)~@~3~@~114~@~Nom d'utilisateur~@~Il s'agit du nom d'utilisateur complet.~@~Veuillez saisir le nom d'utilisateur en entier.~@~Nom d'utilisateur
-16366~@~AdmUsr [  310] Status: CustomerId (fr-CA)~@~6~@~114~@~Client~@~Il s'agit du client auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16367~@~AdmUsr [  320] Status: VendorId (fr-CA)~@~7~@~114~@~Vendeur~@~Il s'agit du fournisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16368~@~AdmUsr [  350] Status: MemberId (fr-CA)~@~8~@~114~@~Membre~@~Il s'agit du membre auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16366~@~AdmUsr [  320] Status: CustomerId (fr-CA)~@~6~@~114~@~Client~@~Il s'agit du client auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16367~@~AdmUsr [  330] Status: VendorId (fr-CA)~@~7~@~114~@~Vendeur~@~Il s'agit du fournisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16368~@~AdmUsr [  360] Status: MemberId (fr-CA)~@~8~@~114~@~Membre~@~Il s'agit du membre auquel cet utilisateur a accès, vide signifie tout.~@~~@~
 16369~@~AdmUsr [  170] Main Info: Active (fr-CA)~@~9~@~114~@~actif~@~Décochez-la si cet utilisateur doit être désactivé.~@~~@~
 16370~@~AdmUsr [  270] Status: ModifiedOn (fr-CA)~@~10~@~114~@~Modifié le~@~Il s'agit de la date de dernière modification de cet utilisateur.~@~~@~
 16371~@~AdmDbTable [   10] Main Info: TableId (en-US)~@~11~@~114~@~Identifiant de table~@~Il s'agit de l'ID interne qui représente uniquement cette table de base de données.~@~~@~
@@ -8459,7 +8459,7 @@
 16458~@~AdmAtRowAuth [   50] Main Info: AllowAdd (en-US)~@~310~@~114~@~Autoriser l'ajout~@~Ceci est vérifié si cette autorité de ligne autorise l'insertion.~@~~@~
 16459~@~AdmAtRowAuth [   60] Main Info: AllowUpd (en-US)~@~311~@~114~@~Autoriser la mise à jour~@~Ceci est vérifié si cette autorité de ligne autorise la mise à jour.~@~~@~
 16460~@~AdmAtRowAuth [   70] Main Info: AllowDel (en-US)~@~312~@~114~@~Autoriser la suppression~@~Ceci est vérifié si cette autorité de ligne autorise la mise à jour.~@~~@~
-16461~@~AdmUsr [  300] Status: InvestorId (fr-CA)~@~316~@~114~@~Investisseur~@~Il s'agit de l'investisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16461~@~AdmUsr [  310] Status: InvestorId (fr-CA)~@~316~@~114~@~Investisseur~@~Il s'agit de l'investisseur auquel cet utilisateur a accès, vide signifie tout.~@~~@~
 16462~@~AdmCtCulture [   60] Main Info: CultureDefault (en-US)~@~418~@~114~@~Culture par défaut~@~Ceci est vérifié si cette culture est la seule et unique culture par défaut.~@~~@~
 16463~@~AdmCtDisplayType [   10] Main Info: TypeId (en-US)~@~419~@~114~@~ID de type~@~Il s'agit de l'ID interne qui représente uniquement ce type d'affichage, ne changez pas sans vérifier la référence.~@~Veuillez saisir un ID interne qui représente uniquement ce type d'affichage.~@~
 16464~@~AdmCtDisplayType [   30] Main Info: TypeDesc (en-US)~@~420~@~114~@~Type Description~@~Ceci est la description de cet affichage.~@~Veuillez entrer la description de cet affichage.~@~
@@ -8526,8 +8526,8 @@
 16525~@~AdmScreen [  240] Miscellaneous: ScreenObj (en-US)~@~925~@~114~@~Colonnes d'écran~@~Ceci est un raccourci pour faire apparaître des colonnes d'écran pour cet écran.~@~~@~
 16526~@~AdmScreen [  250] Miscellaneous: ScreenFilter (en-US)~@~928~@~114~@~Filtres d'écran~@~Ceci est un raccourci pour faire apparaître des filtres d'écran pour cet écran.~@~~@~
 16527~@~AdmDbTable [  100] Main Info: MultiDesignDb (en-US)~@~933~@~114~@~DB multi-design~@~Cochez cette case si le même tableau apparaît dans toutes les bases de données de conception d'application.~@~~@~
-16528~@~AdmUsr [  330] Status: AgentId (fr-CA)~@~934~@~114~@~Agent~@~Il s'agit de l'agent auquel cet utilisateur a accès, vide signifie tout.~@~~@~
-16529~@~AdmUsr [  340] Status: BrokerId (fr-CA)~@~935~@~114~@~Courtier~@~Il s'agit du courtier auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16528~@~AdmUsr [  340] Status: AgentId (fr-CA)~@~934~@~114~@~Agent~@~Il s'agit de l'agent auquel cet utilisateur a accès, vide signifie tout.~@~~@~
+16529~@~AdmUsr [  350] Status: BrokerId (fr-CA)~@~935~@~114~@~Courtier~@~Il s'agit du courtier auquel cet utilisateur a accès, vide signifie tout.~@~~@~
 16530~@~AdmUsrPref [   10] Main Info: UsrPrefId (fr-CA)~@~939~@~114~@~ID UsrPref~@~Il s'agit de l'ID interne représentant cette préférence utilisateur.~@~~@~
 16531~@~AdmUsrPref [  140] Applied: UsrId (fr-CA)~@~940~@~114~@~Utilisateur~@~C'est le seul utilisateur à utiliser cette préférence, s'il est choisi.~@~~@~
 16532~@~AdmUsrPref [  180] Applied: SystemId (fr-CA)~@~941~@~114~@~Système~@~C'est le seul système à appliquer cette préférence, s'il est choisi.~@~~@~

@@ -872,7 +872,7 @@ namespace RO.Rule3
                 else if (drv["DisplayMode"].ToString() == "EncryptedTextBox") { sb.Append("<rcasp:EncryptedTextBox"); }
                 else if (drv["DisplayMode"].ToString() == "OTPTextBox") { sb.Append("<rcasp:OTPTextBox"); }
                 else { sb.Append("<asp:" + drv["DisplayName"].ToString()); }
-                if (",Password,MultiLine,".IndexOf("," + drv["DisplayMode"].ToString() + ",") >= 0) { sb.Append(" TextMode=\"" + drv["DisplayMode"].ToString() + "\""); }
+                if (",Password,MultiLine,".IndexOf("," + drv["DisplayMode"].ToString() + ",") >= 0) { sb.Append(" TextMode=\"" + drv["DisplayMode"].ToString() + "\" autocomplete=\"new-password\""); }
                 sb.Append(" id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "\"");
                 if (",Button,PlaceHolder,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0 || !string.IsNullOrEmpty(drv["ColumnId"].ToString()))
                 {
@@ -982,7 +982,7 @@ namespace RO.Rule3
                 }
                 if (drv["PwdOvride"].ToString() == "Y" && drv["ColumnIdentity"].ToString() != "Y" && ",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0)
                 {
-                    sb.Append("<asp:TextBox TextMode=\"Password\" id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd\" CssClass=\"PwdBox\" MaxLength=\"32\" ToolTip=\"Please enter a supervisory override password to proceed!\" AutoPostBack=\"true\" OnTextChanged=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd_TextChanged\" runat=\"server\" visible=\"false\" /><div><asp:Label id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwl\" CssClass=\"inp-lbl\" text=\"Invalid\" runat=\"server\" visible=\"false\" /></div>");
+                    sb.Append("<asp:TextBox TextMode=\"Password\" autocomplete=\"new-password\" id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd\" CssClass=\"PwdBox\" MaxLength=\"32\" ToolTip=\"Please enter a supervisory override password to proceed!\" AutoPostBack=\"true\" OnTextChanged=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd_TextChanged\" runat=\"server\" visible=\"false\" /><div><asp:Label id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwl\" CssClass=\"inp-lbl\" text=\"Invalid\" runat=\"server\" visible=\"false\" /></div>");
                 }
                 if (PopTextBox(drv))
                 {
@@ -1070,7 +1070,7 @@ namespace RO.Rule3
                 sbGrid.Append("	<asp:Panel id=\"cImportPwdPanel\" runat=\"server\" visible=\"false\">" + Environment.NewLine);
                 sbGrid.Append("		<div class=\"button-grp\">" + Environment.NewLine);
                 sbGrid.Append("	        <div><asp:label ID=\"cImpPwdLabel\" CssClass=\"inp-lbl\" runat=\"server\" /></div>" + Environment.NewLine);
-                sbGrid.Append("		    <div><asp:TextBox TextMode=\"Password\" id=\"cImportPwd\" CssClass=\"PwdBox\" width=\"250px\" MaxLength=\"32\" runat=\"server\" /></div>" + Environment.NewLine);
+                sbGrid.Append("		    <div><asp:TextBox TextMode=\"Password\" autocomplete=\"new-password\" id=\"cImportPwd\" CssClass=\"PwdBox\" width=\"250px\" MaxLength=\"32\" runat=\"server\" /></div>" + Environment.NewLine);
                 sbGrid.Append("		    <div><asp:Button id=\"cContinueButton\" onclick=\"cContinueButton_Click\" runat=\"server\" /></div>" + Environment.NewLine);
                 sbGrid.Append("		</div>" + Environment.NewLine);
                 sbGrid.Append("	</asp:Panel>" + Environment.NewLine);
@@ -4216,6 +4216,7 @@ namespace RO.Rule3
             sb.Append("			    if (drv[\"DisplayName\"].ToString() == \"ListBox\")" + Environment.NewLine);
             sb.Append("			    {" + Environment.NewLine);
             sb.Append("					cListBox = (ListBox)cCriteria.FindControl(\"x\" + drv[\"ColumnName\"].ToString());" + Environment.NewLine);
+            sb.Append("					bool isRequired = drv[\"RequiredValid\"].ToString() == \"Y\";" + Environment.NewLine);
             sb.Append("					if (cListBox != null)" + Environment.NewLine);
             sb.Append("					{" + Environment.NewLine);
             sb.Append("						int CriCnt = (new AdminSystem()).CountScrCri(drv[\"ScreenCriId\"].ToString(), drv[\"MultiDesignDb\"].ToString(), drv[\"MultiDesignDb\"].ToString() == \"N\" ? LcSysConnString : (string)Session[KEY_sysConnectionString], base.AppPwd(LCurr.DbId));" + Environment.NewLine);
@@ -4226,7 +4227,7 @@ namespace RO.Rule3
             sb.Append("					    if (noneSelected && CriCnt+1 > TotalChoiceCnt) dr[drv[\"ColumnName\"].ToString()] = dr[drv[\"ColumnName\"].ToString()].ToString() + \"'-1'\";" + Environment.NewLine);
             sb.Append("					    foreach (ListItem li in cListBox.Items)" + Environment.NewLine);
             sb.Append("					    {" + Environment.NewLine);
-            sb.Append("					        if (li.Selected)" + Environment.NewLine);
+            sb.Append("					        if (li.Selected || (noneSelected && !isRequired && !string.IsNullOrEmpty(li.Value)))" + Environment.NewLine);
             sb.Append("					        {" + Environment.NewLine);
             sb.Append("					            if (dr[drv[\"ColumnName\"].ToString()].ToString() != \"(\")" + Environment.NewLine);
             sb.Append("					            {" + Environment.NewLine);
@@ -11763,7 +11764,7 @@ namespace RO.Rule3
                 else if (drv["DisplayName"].ToString() == "Editor") { sb.Append("<ajwced:Editor NoScript=\"true\" ActiveMode=\"Html\""); }
                 else { sb.Append("<asp:" + drv["DisplayName"].ToString()); }
                 if (drv["DisplayName"].ToString() == "Signature") { sb.Append(" ShowSaveButton=\"false\""); }
-                if (drv["DisplayMode"].ToString() == "Password" || drv["DisplayMode"].ToString() == "MultiLine") { sb.Append(" TextMode=\"" + drv["DisplayMode"].ToString() + "\""); }
+                if (drv["DisplayMode"].ToString() == "Password" || drv["DisplayMode"].ToString() == "MultiLine") { sb.Append(" TextMode=\"" + drv["DisplayMode"].ToString() + "\" autocomplete=\"new-password\""); }
                 if (drv["DisplayName"].ToString() == "ListBox") { sb.Append(" SelectionMode=\"Multiple\""); }
                 sb.Append(" id=\"c" + cName + "\"");
                 if (",Button,Label,PlaceHolder,".IndexOf("," + drv["DisplayName"].ToString() + ",") < 0 || !string.IsNullOrEmpty(drv["ColumnId"].ToString()))
@@ -11881,7 +11882,7 @@ namespace RO.Rule3
             }
             if (drv["PwdOvride"].ToString() == "Y" && drv["ColumnIdentity"].ToString() != "Y" && ",ComboBox,DropDownList,ListBox,RadioButtonList,".IndexOf("," + drv["DisplayName"].ToString() + ",") >= 0)
             {
-                sb.Append("<asp:TextBox TextMode=\"Password\" id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd\" CssClass=\"PwdBox\" MaxLength=\"32\" ToolTip=\"Please enter a supervisory override password to proceed!\" AutoPostBack=\"true\" OnTextChanged=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd_TextChanged\" runat=\"server\" visible=\"false\" /><asp:Label id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwl\" CssClass=\"inp-lbl\" text=\"Invalid\" runat=\"server\" visible=\"false\" />");
+                sb.Append("<asp:TextBox TextMode=\"Password\" autocomplete=\"new-password\" id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd\" CssClass=\"PwdBox\" MaxLength=\"32\" ToolTip=\"Please enter a supervisory override password to proceed!\" AutoPostBack=\"true\" OnTextChanged=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwd_TextChanged\" runat=\"server\" visible=\"false\" /><asp:Label id=\"c" + drv["ColumnName"].ToString() + drv["TableId"].ToString() + "Pwl\" CssClass=\"inp-lbl\" text=\"Invalid\" runat=\"server\" visible=\"false\" />");
             }
             sb.Append("</div>" + Environment.NewLine);
 		}

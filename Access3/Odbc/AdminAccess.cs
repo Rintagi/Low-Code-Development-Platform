@@ -3167,7 +3167,8 @@ namespace RO.Access3.Odbc
                     + "INNER JOIN dbo.Systems m on m.dbDesDatabase LIKE REPLACE(s.dbDesDatabase,'Design','') + '%'  "
                     + "WHERE s.SysProgram = 'Y' AND s.Active = 'Y' "
                     + "AND m.dbAppUserId = s.dbAppUserId AND m.dbAppServer = s.dbAppServer "
-                   // + "AND m.SysProgram = 'N' "
+                    + "AND (m.SysProgram = 'N' OR '" + ns + "' = 'RO' ) "
+                    // + "AND m.SysProgram = 'N' "
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = s.dbDesDatabase) "
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = m.dbAppDatabase) ", cn);
                 cmd.CommandType = CommandType.Text;
@@ -3210,7 +3211,8 @@ namespace RO.Access3.Odbc
                     + "INNER JOIN Systems m on m.dbDesDatabase LIKE REPLACE(s.dbDesDatabase,'Design','') + '%'  "
                     + "WHERE s.SysProgram = 'Y' AND s.Active = 'Y' "
                     + "AND m.dbAppUserId = s.dbAppUserId AND m.dbAppServer = s.dbAppServer "
-                    + "AND m.SysProgram = 'N' "
+                    + "AND (m.SysProgram = 'N' OR '" + ns + "' = 'RO' ) "
+//                    + "AND m.SysProgram = 'N' "
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = s.dbDesDatabase) "
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = m.dbAppDatabase) ", cn);
 

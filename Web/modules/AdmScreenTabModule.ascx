@@ -230,7 +230,7 @@
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>

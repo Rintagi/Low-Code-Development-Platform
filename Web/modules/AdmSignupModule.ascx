@@ -209,7 +209,7 @@
     	</div>
     	<div class="r-tr">
     		<div id="cUsrPassword270P1" class="r-td r-labelR" runat="server"><asp:Label id="cUsrPassword270Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cUsrPassword270P2" class="r-td r-content signUpInput" runat="server"><asp:TextBox TextMode="Password" id="cUsrPassword270" CssClass="inp-txt" runat="server" /></div>
+    		<div id="cUsrPassword270P2" class="r-td r-content signUpInput" runat="server"><asp:TextBox TextMode="Password" autocomplete="new-password" id="cUsrPassword270" CssClass="inp-txt" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-10-12"><div class="screen-tabfolder" runat="server"><div class="r-table">

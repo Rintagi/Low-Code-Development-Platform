@@ -267,7 +267,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cUsrStyleSheet93P1" class="r-td r-labelR" runat="server"><asp:Label id="cUsrStyleSheet93Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cUsrStyleSheet93P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cUsrStyleSheet93" CssClass="inp-txt" runat="server" /><asp:Image id="cUsrStyleSheet93E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cUsrStyleSheet93P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cUsrStyleSheet93" CssClass="inp-txt" runat="server" /><asp:Image id="cUsrStyleSheet93E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

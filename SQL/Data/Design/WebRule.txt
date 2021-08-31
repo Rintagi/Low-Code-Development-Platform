@@ -2728,6 +2728,26 @@ document.Rintagi = {{
                 }
                 else if (qs["CreateInstaller"] != null)
                 {
+                    if (qs["WIP"] == null)
+                    {
+                        System.Collections.Generic.List<string> wipReleaseContent = (new AdminSystem()).HasOutstandReleaseContent(Config.AppNameSpace, LcSysConnString, LcAppPw);
+                        System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> wipRengenList = (new AdminSystem()).HasOutstandRegen(Config.AppNameSpace, LcSysConnString, LcAppPw);
+                        string wip = (wipReleaseContent.Count > 0
+                                ? string.Format("Has WIP release content, must assign version # first\r\n {0}", string.Join("\r\n", wipReleaseContent.ToArray()))
+                                : "")
+                                +
+                                (wipRengenList.Count > 0
+                                ? string.Format("\r\nFollowing screen/report/wizard requires re-gen first\r\n {0}",
+                                string.Join("\r\n", wipRengenList.Select(kvp => string.Format("{0}\r\n{1}", kvp.Key, string.Join("\r\n", kvp.Value.ToArray()))).ToArray()))
+                                : "");
+
+                        if (!string.IsNullOrEmpty(wip))
+                        {
+                            EndWebHookRequest("text/plain", System.Text.UTF8Encoding.UTF8.GetBytes(wip));
+                            return;
+                        }
+                    }
+
                     string somethingRunning = Application["BuildRunning"] as string;
                     bool fixedInstallerName = (qs["FixedName"] ?? "").ToUpper() == "Y";
                     if (string.IsNullOrEmpty(somethingRunning))

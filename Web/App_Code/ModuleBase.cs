@@ -1769,8 +1769,8 @@ namespace RO.Web
                 else
                 {
                     ErrorTrace(new Exception(string.Format("{0} login failed", loginName)), "error");
-                }
             }
+        }
         }
         protected void AnonymousLogin()
         {
@@ -2743,6 +2743,7 @@ namespace RO.Web
                 }
             }
         }
+
         protected bool IsEditableControl(Control c)
         {
             return ((c is TextBox || c is ListBox || c is CheckBox || c is DropDownList || c is RoboCoder.WebControls.ComboBox || c is RadioButtonList) && (((WebControl)c).Enabled) && (c.Visible) && !string.IsNullOrEmpty(c.ID));
@@ -3049,8 +3050,8 @@ namespace RO.Web
                 {
                     try
                     {
-                        config.Save(ConfigurationSaveMode.Modified);
-                    }
+                    config.Save(ConfigurationSaveMode.Modified);
+                }
                     catch (Exception ex)
                     {
                         ErrorTrace(ex, "critcal");
@@ -3555,6 +3556,7 @@ namespace RO.Web
             return xmlParams;
         }
 
+
         #region embedded doc(ImageButton) content helpers
         protected byte[] ResizeImage(byte[] image, int maxHeight = 360)
         {
@@ -3852,10 +3854,10 @@ namespace RO.Web
             return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
 #endif
         }
-        protected virtual Tuple<int, string, string> sshRemoteCmd(string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        protected virtual Tuple<int, string, string> sshRemoteCmd(string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword, string hostkey = null)
         {
             string plinkPath = Server.MapPath("~/helpers/plink.exe");
-            return new RO.WebRules.WebRule().sshRemoteCmd(plinkPath, localCmdFile, removeTarget, login, sshKeyFile, keyPassword);
+            return new RO.WebRules.WebRule().sshRemoteCmd(plinkPath, localCmdFile, removeTarget, login, sshKeyFile, keyPassword, hostkey);
 #if false
             string sshPort = "22";
             string cmdScript = string.Format("-m {0}", localCmdFile);
@@ -4035,10 +4037,10 @@ namespace RO.Web
                     try
                     {
                         LogToFile(request, e, requestInfo != null ? requestInfo["Url"] : "unknown", mm.Subject, mm.Body, ex);
-                    }
+                }
                     catch
                     {
-                    }
+            }
 
                 }
             }
@@ -4067,11 +4069,27 @@ namespace RO.Web
         #region webhook/http helper
         protected virtual string InvokeWebHook(string url, string method = "GET", Dictionary<string,string> headers = null, Dictionary<string,string> cookies = null) 
         {
+            var uri = new Uri(url);
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
-            wr.CookieContainer = new CookieContainer();
+            wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
+                new CookieContainer(),
+                (cookieContainer, kvp) =>
+                {
+                    cookieContainer.Add(new Uri(uri.GetLeftPart(UriPartial.Authority)), new Cookie(kvp.Key, kvp.Value));
+                    return cookieContainer;
+                });
+            ;
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
+                new WebHeaderCollection(),
+                (headerCollection, kvp) =>
+                {
+                    headerCollection[kvp.Key] = kvp.Value;
+                    return headerCollection;
+                });
             string result = null;
-            try {
-                using (WebResponse resp =  wr.GetResponse())
+            try
+            {
+                using (WebResponse resp = wr.GetResponse())
                 {
                     using (Stream stream = resp.GetResponseStream())
                     {
@@ -4084,8 +4102,26 @@ namespace RO.Web
                     }
                     resp.Close();
                 }
-            } 
-            catch (Exception ex) {
+            }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                }
+            }
+            catch (Exception ex)
+            {
                 if (ex == null) return result;
                 throw;
             }
@@ -4134,6 +4170,23 @@ namespace RO.Web
                         stream.Close();
                     }
                     resp.Close();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
                 }
             }
             catch (Exception ex)
@@ -4189,6 +4242,23 @@ namespace RO.Web
                     resp.Close();
                 }
             }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                }
+            }
             catch (Exception ex)
             {
                 if (ex == null) return result;
@@ -4242,12 +4312,123 @@ namespace RO.Web
                     resp.Close();
                 }
             }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                }
+            }
             catch (Exception ex)
             {
                 if (ex == null) return result;
                 throw;
             }
             return result;
+        }
+        protected virtual Tuple<int, byte[], Dictionary<string, string>> HttpPostMultiPart(string url, Dictionary<string, string> data, List<Tuple<string, string, string, byte[]>> fileList, Dictionary<string, string> headers)
+        {
+            var uri = new Uri(url);
+            string boundary = Guid.NewGuid().ToString().Replace("-", "");
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(uri);
+            webRequest.PreAuthenticate = true;
+            webRequest.Accept = "*/*";
+            webRequest.ContentType = string.Format("multipart/form-data; boundary={0}", boundary);
+            webRequest.Method = "POST";
+            webRequest.KeepAlive = true;
+            foreach (string k in headers.Keys)
+            {
+                webRequest.Headers.Add(k, headers[k]);
+            }
+            //webRequest.ContentLength = header.Length + footer.Length + content.Length;
+            Stream dataStream = webRequest.GetRequestStream();
+            byte[] linBreak = Encoding.UTF8.GetBytes(Environment.NewLine);
+            foreach (var f in fileList)
+            {
+                byte[] header = Encoding.UTF8.GetBytes(
+                                string.Format("--{0}", boundary) + Environment.NewLine
+                                + "Content-Disposition: form-data; name=\"" + f.Item1 + "\"; filename=\"" + f.Item2 + "\"" + Environment.NewLine
+                                + string.Format("Content-Type: {0}", f.Item3) + Environment.NewLine
+                                + Environment.NewLine
+                                );
+                byte[] content = f.Item4;
+                dataStream.Write(header, 0, header.Length);
+                if (content != null)
+                {
+                    dataStream.WriteAsync(content, 0, content.Length);
+                }
+                dataStream.Write(linBreak, 0, linBreak.Length);
+            }
+            foreach (KeyValuePair<string, string> f in data)
+            {
+                byte[] header = Encoding.UTF8.GetBytes(
+                                string.Format("--{0}", boundary) + Environment.NewLine
+                                + "Content-Disposition: form-data; name=\"" + f.Key + "\"" + Environment.NewLine
+                                + Environment.NewLine
+                                );
+                byte[] content = System.Text.UTF8Encoding.UTF8.GetBytes(f.Value ?? "");
+                dataStream.Write(header, 0, header.Length);
+                if (content != null)
+                {
+                    dataStream.WriteAsync(System.Text.UTF8Encoding.UTF8.GetBytes(f.Value), 0, content.Length);
+                }
+                dataStream.Write(linBreak, 0, linBreak.Length);
+            }
+            byte[] footer = Encoding.UTF8.GetBytes(
+                            string.Format("--{0}--", boundary) + Environment.NewLine
+                            );
+            dataStream.Write(footer, 0, footer.Length);
+            dataStream.Close();
+            try
+            {
+                var webResponse = (HttpWebResponse)webRequest.GetResponse();
+                var responseStream = webResponse.GetResponseStream();
+                Dictionary<string, string> responseHeader = new Dictionary<string, string>();
+                foreach (string k in webResponse.Headers.AllKeys)
+                {
+                    responseHeader[k] = webResponse.Headers[k];
+                }
+                MemoryStream ms = new MemoryStream();
+                responseStream.CopyTo(ms);
+                var ret = ms.ToArray();
+                int responseStatusCode = (int)webResponse.StatusCode;
+                return new Tuple<int, byte[], Dictionary<string, string>>(responseStatusCode, ret, responseHeader);
+            }
+            catch (WebException e)
+            {
+                using (WebResponse response = e.Response)
+                {
+                    if (response != null)
+                    {
+                        HttpWebResponse httpResponse = (HttpWebResponse)response;
+                        using (Stream responseStream = response.GetResponseStream())
+                        {
+                            Dictionary<string, string> responseHeader = new Dictionary<string, string>();
+                            foreach (string k in httpResponse.Headers.AllKeys)
+                            {
+                                responseHeader[k] = httpResponse.Headers[k];
+                            }
+                            MemoryStream ms = new MemoryStream();
+                            responseStream.CopyTo(ms);
+                            var ret = ms.ToArray();
+                            int responseStatusCode = (int)httpResponse.StatusCode;
+                            return new Tuple<int, byte[], Dictionary<string, string>>(responseStatusCode, ret, responseHeader);
+                        }
+                    }
+                    else
+                        return new Tuple<int, byte[], Dictionary<string, string>>((int)e.Status, System.Text.UTF8Encoding.UTF8.GetBytes(e.Message), null);
+                }
+            }
         }
         #endregion
         #region XlsImportExport
@@ -4525,7 +4706,7 @@ document.Rintagi = {{
 
                         sr.Close();
 
-                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/src/app/Version.js", false, System.Text.UTF8Encoding.UTF8))
+                        using (var sw = new System.IO.StreamWriter(reactModuleDir + "/src/app/Version.js", false, new System.Text.UTF8Encoding(false)))
                         {
                             sw.WriteLine(string.Format("export const Version = '{0}';", newVer));
                             sw.Close();
@@ -5097,7 +5278,6 @@ document.Rintagi = {{
             };
 
             bool createInProgress = File.Exists(lockFilePath) && new FileInfo(lockFilePath).LastWriteTimeUtc.AddMinutes(30) > DateTime.UtcNow;
-
             if (
                 string.IsNullOrEmpty(somethingRunning)
                 ||

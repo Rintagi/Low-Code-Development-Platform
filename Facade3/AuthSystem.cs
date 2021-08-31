@@ -131,6 +131,7 @@ namespace RO.Facade3
         public byte DefSystemId { get; set; }
         public byte DbId { get; set; }
         public string Resources { get; set; }
+        public short PwdDuration { get; set; }
     }
 
     public class RintagiLoginJWT
@@ -193,14 +194,13 @@ namespace RO.Facade3
             }
             return instance;
         }
-        public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret, string appPath, string appDomain, Func<string, string> getStoredToken, Func<LoginUsr, UsrCurr, UsrImpr, UsrPref, string, bool, bool> ValidateScope, bool reAuth = false)
+        public SerializableDictionary<string, string> GetToken(string client_id, string scope, string grant_type, string code, string code_verifier, string redirect_url, string client_secret, string appPath, string appDomain, Func<string, string> getStoredToken, Func<LoginUsr, UsrCurr, UsrImpr, UsrPref, string, bool, bool> ValidateScope, bool reAuth = false, int access_token_validity = 10 * 60)
         {
             Dictionary<string, object> scopeContext = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(scope);
             byte? systemId = null;
             int? companyId = null;
             int? projectId = null;
             short? cultureId = null;
-            int access_token_validity = 5 * 60; // 20 minutes
             int refresh_token_validity = 60 * 60 * 24 * 14; // 14 days
 
             try { systemId = byte.Parse(scopeContext["SystemId"].ToString()); }
@@ -275,6 +275,7 @@ namespace RO.Facade3
                     LUser.InternalUsr = "Y";
                     LUser.CultureId = 1;
                     LUser.HasPic = false;
+                    LUser.PwdDuration = loginToken.PwdDuration;
 
                     LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
 
@@ -391,6 +392,7 @@ namespace RO.Facade3
                 DefProjectId = defProjectId,
                 DbId = curr.DbId,
                 Resources = resources,
+                PwdDuration = usr.PwdDuration
             };
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(loginToken);
             SHA256CryptoServiceProvider hashsha256 = new SHA256CryptoServiceProvider();

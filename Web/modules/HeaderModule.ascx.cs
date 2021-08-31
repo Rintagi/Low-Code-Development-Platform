@@ -14,8 +14,8 @@ namespace RO.Web
     public partial class HeaderModule : RO.Web.ModuleBase
     {
         private const string KEY_HeaderGenerated = "Cache:HeaderGenerated";
-        private string LcAppConnString = null;
-        private string LcAppPw = null;
+        private string LcAppConnString;
+        private string LcAppPw;
 
         public HeaderModule()
         {

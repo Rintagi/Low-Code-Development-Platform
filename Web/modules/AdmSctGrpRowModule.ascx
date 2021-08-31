@@ -198,7 +198,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cSctGrpRowCss1283P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cSctGrpRowCss1283" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cSctGrpRowCss1283" display="none" ErrorMessage="SctGrpRowCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cSctGrpRowCss1283E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cSctGrpRowCss1283P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cSctGrpRowCss1283" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cSctGrpRowCss1283" display="none" ErrorMessage="SctGrpRowCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cSctGrpRowCss1283E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

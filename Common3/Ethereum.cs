@@ -15,9 +15,11 @@ using Nethereum.Web3.Accounts;
 using System.Security.Cryptography;
 using System.Numerics;
 using Newtonsoft.Json;
+using Nethereum.Contracts;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using Nethereum.ABI.FunctionEncoding.AttributeEncoding;
+using Nethereum.JsonRpc.WebSocketStreamingClient;
 using System.Reflection;
 using System.Reflection.Emit;
 using Nethereum.Hex.HexConvertors;
@@ -26,8 +28,10 @@ using Nethereum.Signer;
 using Nethereum.JsonRpc.Client;
 using Nethereum.RPC.Infrastructure;
 using Nethereum.RPC.Eth.DTOs;
+using Nethereum.RPC.Reactive.Eth.Subscriptions;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Nethereum.Web3;
 
 namespace RO.Common3.Ethereum.RPC
 {
@@ -80,7 +84,7 @@ namespace RO.Common3.Ethereum.RPC
     }
     #endregion
 
-    #region web3 JSOONRPC custom DTO
+    #region web3 JSONRPC custom DTO
     public class Block
     {
         /// <summary>
@@ -226,9 +230,33 @@ namespace RO.Common3.Ethereum.RPC
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<int, List<Nethereum.RPC.Eth.DTOs.Transaction>>> content;
         public System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<int, List<Nethereum.RPC.Eth.DTOs.Transaction>>> pending;
     }
+    public class SignedTransaction
+    {
+        public string raw;
+        public Transaction tx;
+    }
     #endregion
 
     #region custom web3 JSONRPC calls
+    public class EthSignTransaction : RpcRequestResponseHandler<SignedTransaction>
+    {
+        public EthSignTransaction(IClient client)
+            : base(client, "eth_signTransaction")
+        {
+        }
+
+        public Task<SignedTransaction> SendRequestAsync(TransactionInput input, object id = null)
+        {
+            return base.SendRequestAsync(id, input);
+        }
+
+        public RpcRequest BuildRequest(TransactionInput input, object id = null)
+        {
+            return base.BuildRequest(id, input);
+        }
+
+    }
+
     public class EthRpcRequest<T> : Nethereum.JsonRpc.Client.RpcRequestResponseHandler<T>
     {
         public EthRpcRequest(Nethereum.JsonRpc.Client.IClient client, string callName)
@@ -1122,7 +1150,8 @@ namespace RO.Common3.Ethereum
             return abi;
 
         }
-        public static string CreateEth2Validators(string depositEXE, string resultKeyFolder, string keyStorePassword, int validatorCount, string eth2Chain)
+
+        public static string CreateEth2Validators(string depositEXE, string resultKeyFolder, string keyStorePassword, int validatorCount, string eth2Chain, string eth1WithdrawalAddress = null)
         {
             string mnemonic = "";
             bool waitingMnemonic = false;
@@ -1165,10 +1194,12 @@ namespace RO.Common3.Ethereum
                 //ws.WriteLine("");
             };
 
-            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, "new-mnemonic --chain " + eth2Chain + " --keystore_password " + keyStorePassword + "  --mnemonic_language english --num_validators " + validatorCount.ToString() + " --folder .", depositPromptHandler, stdErrHandler, exitHandler);
+            string eth1 = !string.IsNullOrEmpty(eth1WithdrawalAddress) ? " --eth1_withdrawal_address " + eth1WithdrawalAddress : string.Empty;
+
+            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, "new-mnemonic" + eth1 + " --chain " + eth2Chain + " --keystore_password " + keyStorePassword + "  --mnemonic_language english --num_validators " + validatorCount.ToString() + " --folder .", depositPromptHandler, stdErrHandler, exitHandler);
             return mnemonic;
         }
-        public static string CreateEth2Validators(string depositEXE, string resultKeyFolder, string mnemonic, string keyStorePassword, int startFrom, int validatorCount, string eth2Chain)
+        public static string CreateEth2Validators(string depositEXE, string resultKeyFolder, string mnemonic, string keyStorePassword, int startFrom, int validatorCount, string eth2Chain, string eth1WithdrawalAddress = null)
         {
             Action<StreamWriter, Process> initHandler = (ws, proc) =>
             {
@@ -1203,7 +1234,9 @@ namespace RO.Common3.Ethereum
                 //ws.WriteLine("");
             };
 
-            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, "existing-mnemonic --chain " + eth2Chain + " --keystore_password " + keyStorePassword + " --validator_start_index " + startFrom.ToString() + " --num_validators " + validatorCount.ToString() + " --folder .", depositPromptHandler, stdErrHandler, exitHandler, initHandler);
+            string eth1 = !string.IsNullOrEmpty(eth1WithdrawalAddress) ? " --eth1_withdrawal_address " + eth1WithdrawalAddress : string.Empty;
+
+            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, "existing-mnemonic" + eth1 + " --chain " + eth2Chain + " --keystore_password " + keyStorePassword + " --validator_start_index " + startFrom.ToString() + " --num_validators " + validatorCount.ToString() + " --folder .", depositPromptHandler, stdErrHandler, exitHandler, initHandler);
             return mnemonic;
         }
 
@@ -1663,7 +1696,8 @@ namespace RO.Common3.Ethereum
 
         public string SignTransaction(string to, BigInteger ethInWei, BigInteger nounce, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int? chainId = null)
         {
-            var signer = new Nethereum.Signer.TransactionSigner();
+
+            var signer = new Nethereum.Signer.LegacyTransactionSigner();
 
             if (nethereumAccount == null || nethereumAccount.nethereumAccount == null) throw new Exception("No private key is available");
 
@@ -1673,18 +1707,124 @@ namespace RO.Common3.Ethereum
                 return signer.SignTransaction(nethereumAccount.nethereumAccount.PrivateKey, to, ethInWei, nounce, gasPriceInWei, gasLimit, data);
         }
 
-        public async Task<string> SendTransactionAsync(Nethereum.Web3.Web3 web3, string to, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int? chainId = null)
+        public string SignTransaction1559(string to, BigInteger ethInWei, BigInteger nonce, BigInteger maxPriorityFeePerGasInWei, BigInteger maxFeePerGasInWei, BigInteger gasLimit, string data, int chainId, List<AccessListItem> accessList = null)
+        {
+            if (nethereumAccount == null || nethereumAccount.nethereumAccount == null) throw new Exception("No private key is available");
+            Nethereum.Signer.EthECKey ethECKey = new EthECKey(nethereumAccount.nethereumAccount.PrivateKey);
+            var transaction = new Nethereum.Signer.Transaction1559(chainId, nonce, maxPriorityFeePerGasInWei, maxFeePerGasInWei, gasLimit, to, ethInWei, data, accessList);
+            transaction.Sign(ethECKey);
+            return transaction.GetRLPEncoded().ToHex();
+        }
+
+        public async Task<string> SignTransactionAsync(Nethereum.Web3.Web3 web3, string to, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int chainId, BigInteger? maxPriorityFeePerGas = null, HexBigInteger nonce = null)
         {
             var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
-            Nethereum.Hex.HexTypes.HexBigInteger nounce = null;
             int round = 0;
             try
             {
                 if (nethereumAccount.gethManagedAccount != null && !string.IsNullOrEmpty(nethereumAccount.gethManagedAccount.Address))
                 {
                     var gethAccount = this.nethereumAccount.gethManagedAccount;
-                    var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(data, to, gethAccount.Address
-                        , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
+                    var txInput = maxPriorityFeePerGas != null
+                                    ? new Nethereum.RPC.Eth.DTOs.TransactionInput(
+                                            new HexBigInteger((int)Nethereum.Signer.TransactionType.EIP1559)
+                                            , data, to, myAddress
+                                            , new HexBigInteger(gasLimit)
+                                            , new HexBigInteger(ethInWei)
+                                            , new HexBigInteger(gasPriceInWei)
+                                            , new HexBigInteger(maxPriorityFeePerGas.Value))
+                                    : new Nethereum.RPC.Eth.DTOs.TransactionInput(
+                                            data, to, gethAccount.Address
+                                            , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit)
+                                            , new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei)
+                                            , new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
+                    ;
+                    return await gethAccount.TransactionManager.SignTransactionAsync(txInput);
+                }
+                else if (nethereumAccount.nethereumAccount != null)
+                {
+                    Func<Task<string>> task = async () =>
+                    {
+                        var nonceService = new Nethereum.RPC.NonceServices.InMemoryNonceService(myAddress, web3.Client);
+                        var newNonce = nonce ?? await nonceService.GetNextNonceAsync();
+                        string signedDataHexString = maxPriorityFeePerGas == null
+                                                    ? SignTransaction(to, ethInWei, newNonce, gasPriceInWei, gasLimit, data, chainId)
+                                                    : SignTransaction1559(to, ethInWei, newNonce, gasPriceInWei, maxPriorityFeePerGas.Value, gasLimit, data, chainId)
+                                                    ;
+                        return signedDataHexString;
+                    };
+
+                    return await task();
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(myAddress))
+                    {
+                        var nonceService = new Nethereum.RPC.NonceServices.InMemoryNonceService(myAddress, web3.Client);
+                        var newNonce = nonce ?? await nonceService.GetNextNonceAsync();
+                        if (maxPriorityFeePerGas == null)
+                        {
+                            var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(data, to, myAddress
+                                , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
+                            txInput.Nonce = new HexBigInteger(newNonce);
+                            var signedTransaction = await new RO.Common3.Ethereum.RPC.EthSignTransaction(web3.Client).SendRequestAsync(txInput);
+                            return signedTransaction.raw;
+                        }
+                        else
+                        {
+                            var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(
+                                                new HexBigInteger(Nethereum.Signer.TransactionType.EIP1559.AsByte())
+                                                , data, to, myAddress
+                                                , new HexBigInteger(gasLimit)
+                                                , new HexBigInteger(ethInWei)
+                                                , new HexBigInteger(gasPriceInWei)
+                                                , new HexBigInteger(maxPriorityFeePerGas.Value));
+                            txInput.Nonce = new HexBigInteger(newNonce);
+                            var signedTransaction = await new RO.Common3.Ethereum.RPC.EthSignTransaction(web3.Client).SendRequestAsync(txInput);
+                            return signedTransaction.raw;
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("No account/private key is available for executing transaction");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var x = ex.InnerException;
+                if ((x ?? ex).Message == "authentication needed: password or unlock")
+                {
+                    throw new EthereumRPCException((x ?? ex).Message + " " + myAddress);
+                }
+                else
+                    throw new EthereumRPCException(x != null ? x.Message : ex.Message + " round(" + round.ToString() + ")" + (nonce != null ? "nonce " + nonce.Value.ToString() : ""), ex);
+            }
+        }
+
+        public async Task<string> SendTransactionAsync(Nethereum.Web3.Web3 web3, string to, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int chainId, BigInteger? maxPriorityFeePerGas = null, HexBigInteger nonce = null)
+        {
+            var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
+            int round = 0;
+            try
+            {
+                if (nethereumAccount.gethManagedAccount != null && !string.IsNullOrEmpty(nethereumAccount.gethManagedAccount.Address))
+                {
+                    var gethAccount = this.nethereumAccount.gethManagedAccount;
+                    var txInput = maxPriorityFeePerGas != null
+                                    ? new Nethereum.RPC.Eth.DTOs.TransactionInput(
+                                            new HexBigInteger((int)Nethereum.Signer.TransactionType.EIP1559)
+                                            , data, to, myAddress
+                                            , new HexBigInteger(gasLimit)
+                                            , new HexBigInteger(ethInWei)
+                                            , new HexBigInteger(gasPriceInWei)
+                                            , new HexBigInteger(maxPriorityFeePerGas.Value))
+                                    : new Nethereum.RPC.Eth.DTOs.TransactionInput(
+                                            data, to, gethAccount.Address
+                                            , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit)
+                                            , new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei)
+                                            , new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
+                    ;
                     gethAccount.TransactionManager.Client = web3.Client;
                     if (!string.IsNullOrEmpty(gethAccount.Password))
                     {
@@ -1700,10 +1840,14 @@ namespace RO.Common3.Ethereum
                     Func<Task<string>> task = async () =>
                     {
                         var nonceService = new Nethereum.RPC.NonceServices.InMemoryNonceService(myAddress, web3.Client);
-                        nounce = await nonceService.GetNextNonceAsync();
-                        var newNounce = BigInteger.Add(nounce.Value, round);
-                        string signedDataHexString = SignTransaction(to, ethInWei, newNounce, gasPriceInWei, gasLimit, data, chainId);
-                        return await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync("0x" + signedDataHexString);
+                        nonce = nonce ?? await nonceService.GetNextNonceAsync();
+                        var newNounce = BigInteger.Add(nonce.Value, round);
+                        string signedDataHexString = maxPriorityFeePerGas == null
+                                                    ? SignTransaction(to, ethInWei, newNounce, gasPriceInWei, gasLimit, data, chainId)
+                                                    : SignTransaction1559(to, ethInWei, newNounce, gasPriceInWei, maxPriorityFeePerGas.Value, gasLimit, data, chainId)
+                                                    ;
+                        return await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync((
+                            signedDataHexString.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) ? "" : "0x") + signedDataHexString);
                     };
 
                     Exception error = null;
@@ -1733,10 +1877,29 @@ namespace RO.Common3.Ethereum
                 {
                     if (!string.IsNullOrEmpty(myAddress))
                     {
-                        var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(data, to, myAddress
-                            , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
-                        return await web3.TransactionManager.SendTransactionAsync(txInput);
-
+                        if (maxPriorityFeePerGas == null)
+                        {
+                            var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(data, to, myAddress
+                                , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
+                            txInput.Nonce = nonce;
+                            return await web3.TransactionManager.SendTransactionAsync(txInput);
+                        }
+                        else
+                        {
+                            var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(
+                                                new HexBigInteger(Nethereum.Signer.TransactionType.EIP1559.AsByte())
+                                                , data, to, myAddress
+                                                , new HexBigInteger(gasLimit)
+                                                , new HexBigInteger(ethInWei)
+                                                , new HexBigInteger(gasPriceInWei)
+                                                , new HexBigInteger(maxPriorityFeePerGas.Value));
+                            txInput.Nonce = nonce;
+                            var defaultGasPrice = web3.TransactionManager.DefaultGasPrice;
+                            web3.TransactionManager.DefaultGasPrice = -1;
+                            var task = web3.TransactionManager.SendTransactionAsync(txInput);
+                            web3.TransactionManager.DefaultGasPrice = defaultGasPrice;
+                            return await task;
+                        }
                     }
                     else
                     {
@@ -1752,7 +1915,7 @@ namespace RO.Common3.Ethereum
                     throw new EthereumRPCException((x ?? ex).Message + " " + myAddress);
                 }
                 else
-                    throw new EthereumRPCException(x != null ? x.Message : ex.Message + " round(" + round.ToString() + ")" + (nounce != null ? "nounce " + nounce.Value.ToString() : ""), ex);
+                    throw new EthereumRPCException(x != null ? x.Message : ex.Message + " round(" + round.ToString() + ")" + (nonce != null ? "nounce " + nonce.Value.ToString() : ""), ex);
             }
         }
 
@@ -1766,7 +1929,7 @@ namespace RO.Common3.Ethereum
             return contractCreationData;
         }
 
-        public async Task<string> DeployContractAsync(Nethereum.Web3.Web3 web3, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int? chainId, params object[] constructorParams)
+        public async Task<string> DeployContractAsync(Nethereum.Web3.Web3 web3, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int chainId, BigInteger? maxPriorityFeePerGas, params object[] constructorParams)
         {
             var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
             var contract = Ethereum.GetContractBuilder(AbiJSONTranslate(abiJson));
@@ -1777,12 +1940,14 @@ namespace RO.Common3.Ethereum
             var contractCreationData = revisedParams == null || revisedParams.Length == 0
                                         ? constructor.EncodeRequest(byteCode, "")
                                         : contractBuilder.GetData(byteCode, AbiJSONTranslate(abiJson), TranslateConstructorInput(abiJson, revisedParams));
-            var callInput = contractBuilder.BuildTransaction(AbiJSONTranslate(abiJson), byteCode, myAddress, new Nethereum.Hex.HexTypes.HexBigInteger(0), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei), TranslateConstructorInput(abiJson, revisedParams));
+            var callInput = contractBuilder.BuildTransaction(AbiJSONTranslate(abiJson), byteCode, myAddress, new Nethereum.Hex.HexTypes.HexBigInteger(10000000), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei), TranslateConstructorInput(abiJson, revisedParams));
+            BigInteger gasNeeded = new BigInteger(-1);
             try
             {
-                var gasNeeded = this.EstimateGasAsync(web3, callInput).Result + 1000; // slightly increment the estimate for better failed transaction diagnostic 
+                gasNeeded = this.EstimateGasAsync(web3, callInput).Result
+                    + (gasLimit == 0 ? 0 : 1000); // slightly increment the estimate for better failed transaction diagnostic 
                 gasNeeded = gasNeeded < gasLimit ? gasLimit : gasNeeded;
-                return await SendTransactionAsync(web3, null, ethInWei, gasPriceInWei, gasNeeded, contractCreationData, chainId);
+                return await SendTransactionAsync(web3, null, ethInWei, gasPriceInWei, gasNeeded, contractCreationData, chainId, maxPriorityFeePerGas);
             }
             catch (Exception ex)
             {
@@ -1791,10 +1956,14 @@ namespace RO.Common3.Ethereum
                 {
                     throw new EthereumRPCException(x.Message + " " + myAddress);
                 }
+                else if (x != null && x.Message.Contains("exceeds block gas limit") && gasNeeded != -1)
+                {
+                    throw new EthereumRPCException(x.Message + " " + gasNeeded.ToString());
+                }
                 else throw;
             }
         }
-        public string DeployContract(string web3Endpoint, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int? chainId, params object[] constructorParams)
+        public string DeployContract(string web3Endpoint, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int chainId, BigInteger? maxPriorityFeePerGas, params object[] constructorParams)
         {
             try
             {
@@ -1804,7 +1973,7 @@ namespace RO.Common3.Ethereum
 
                     //"0x" + byteCode
 
-                    var hash = await DeployContractAsync(web3, byteCode, abiJson, ethInWei, gasPriceInWei, gasLimit, chainId, constructorParams);
+                    var hash = await DeployContractAsync(web3, byteCode, abiJson, ethInWei, gasPriceInWei, gasLimit, chainId, maxPriorityFeePerGas, constructorParams);
                     if (hash != null)
                     {
                         var tx = await GetTransactionAsync(hash, web3);
@@ -1835,7 +2004,8 @@ namespace RO.Common3.Ethereum
         }
         public async Task<string> SendRawTransactionAsync(Nethereum.Web3.Web3 web3, string signedDataHexString)
         {
-            return await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync("0x" + signedDataHexString);
+            return await web3.Eth.Transactions.SendRawTransaction.SendRequestAsync(
+                (signedDataHexString.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) ? "" : "0x") + signedDataHexString);
         }
 
         public async Task<BigInteger> GetNextNonceAsync(string address, Nethereum.Web3.Web3 web3)
@@ -1996,7 +2166,7 @@ namespace RO.Common3.Ethereum
         {
             var contract = web3.Eth.GetContract(AbiJSONTranslate(abiJson), contractAddress);
             var contractEvent = contract.GetEvent(eventName);
-            var eventLog = await contractEvent.GetFilterChanges<TResult>(filterId);
+            var eventLog = await contractEvent.GetFilterChangesAsync<TResult>(filterId);
             return eventLog;
         }
 
@@ -2257,7 +2427,7 @@ namespace RO.Common3.Ethereum
             return callData;
         }
 
-        public async Task<string> ExecuteAsync(string abiJson, string contractAddress, Nethereum.Web3.Web3 web3, string functionName, BigInteger gasLimit, BigInteger gasPriceInWei, BigInteger ethInWei, object[] functionInput, int? chainId = null, bool hardLimit = false)
+        public async Task<string> ExecuteAsync(string abiJson, string contractAddress, Nethereum.Web3.Web3 web3, string functionName, BigInteger gasLimit, BigInteger gasPriceInWei, BigInteger ethInWei, object[] functionInput, int chainId, BigInteger? maxPriorityFeePerGas, bool hardLimit = false)
         {
             var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : null;
             var contract = web3.Eth.GetContract(AbiJSONTranslate(AbiJSONTranslate(abiJson)), contractAddress);
@@ -2268,7 +2438,7 @@ namespace RO.Common3.Ethereum
             var gasNeeded = await this.EstimateGasAsync(AbiJSONTranslate(abiJson), contractAddress, web3, functionName, ethInWei, functionInput);
             var gasBoosted = gasBoost(gasNeeded, hardLimit);
             var finalGasLimit = hardLimit ? (gasLimit == 0 ? gasNeeded : (gasLimit)) : (gasBoosted < gasLimit ? gasLimit : gasBoosted);
-            return await SendTransactionAsync(web3, contractAddress, ethInWei, gasPriceInWei, finalGasLimit, callData, chainId);
+            return await SendTransactionAsync(web3, contractAddress, ethInWei, gasPriceInWei, finalGasLimit, callData, chainId, maxPriorityFeePerGas);
         }
 
         public async Task<List<Dictionary<string, string>>> GetGEthPendingTransactionsAsync(string web3EndPoint)
@@ -2339,7 +2509,7 @@ namespace RO.Common3.Ethereum
             }
             return revisedfunctParam;
         }
-        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BlockParameter block, BigInteger gasPriceInWei, string ethInWeiToSent = "0", int? chainid = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
+        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BlockParameter block, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
         {
 
             var function = Ethereum.GetFunctionBuilder(contractAbi, functionName);
@@ -2359,7 +2529,7 @@ namespace RO.Common3.Ethereum
                     }
                     else
                     {
-                        var txHash = await ExecuteAsync(contractAbi, contractAddress, web3, functionName, new BigInteger(gasLimit), gasPriceInWei, ethToSent, revisedFunctParam, chainid, hardLimit);
+                        var txHash = await ExecuteAsync(contractAbi, contractAddress, web3, functionName, new BigInteger(gasLimit), gasPriceInWei, ethToSent, revisedFunctParam, chainid, maxPriorityFeePerGas, hardLimit);
                         return txHash;
                     }
                 }).Result;
@@ -2382,9 +2552,9 @@ namespace RO.Common3.Ethereum
                 return result;
             }
         }
-        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BigInteger gasPriceInWei, string ethInWeiToSent = "0", int? chainid = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
+        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
         {
-            return ExecuteEthereumFunction(web3EndPoint, contractAddress, contractAbi, functionName, functParam, BlockParameter.CreateLatest(), gasPriceInWei, ethInWeiToSent, chainid, hardLimit, gasLimit, useAbiFieldName);
+            return ExecuteEthereumFunction(web3EndPoint, contractAddress, contractAbi, functionName, functParam, BlockParameter.CreateLatest(), gasPriceInWei, chainid, ethInWeiToSent, maxPriorityFeePerGas, hardLimit, gasLimit, useAbiFieldName);
         }
 
         public BigInteger EstimateGas(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, string ethInWeiToSent = "0", bool hardLimit = false, bool calcEthNeeded = true)
@@ -2412,20 +2582,20 @@ namespace RO.Common3.Ethereum
             }
         }
 
-        public async Task<string> SendEtherAsync(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int? chainId = null)
+        public async Task<string> SendEtherAsync(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas)
         {
             var web3 = Ethereum.GetWeb3Client(web3EndPoint);
-            string txHash = await SendTransactionAsync(web3, toWalletAddress, ethInWei, gasPriceInWei, new BigInteger(21000), null, chainId);
+            string txHash = await SendTransactionAsync(web3, toWalletAddress, ethInWei, gasPriceInWei, new BigInteger(21000), null, chainId, maxPriorityFeePerGas);
             return txHash;
         }
-        public string SendEther(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int? chainId = null)
+        public string SendEther(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas)
         {
 
             try
             {
                 var result = System.Threading.Tasks.Task.Run(async () =>
                 {
-                    return await SendEtherAsync(web3EndPoint, toWalletAddress, ethInWei, gasPriceInWei, chainId);
+                    return await SendEtherAsync(web3EndPoint, toWalletAddress, ethInWei, gasPriceInWei, chainId, maxPriorityFeePerGas);
                 }).Result;
                 return result;
             }
@@ -2441,10 +2611,10 @@ namespace RO.Common3.Ethereum
         {
             if (!web3url.StartsWith("http:") && !web3url.StartsWith("https:") && !web3url.StartsWith("ws:") && !web3url.StartsWith("wss:"))
             {
-                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient((web3url??"").Trim());
+                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient(web3url);
                 try
                 {
-                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream((web3url ?? "").Trim());
+                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream(web3url);
                     _pipeClient.Connect(5000);
                 }
                 catch (TimeoutException)
@@ -2461,7 +2631,7 @@ namespace RO.Common3.Ethereum
             else
             {
                 // should use our own rpcClient(i.e. httpClient) if we need to control the HTTP request say additional headers(bear token, infura origin etc.)
-                Nethereum.JsonRpc.Client.RpcClient rpcClient = new Nethereum.JsonRpc.Client.RpcClient(new Uri((web3url ?? "").Trim()));
+                Nethereum.JsonRpc.Client.RpcClient rpcClient = new Nethereum.JsonRpc.Client.RpcClient(new Uri(web3url));
                 var web3 = new Nethereum.Web3.Web3(rpcClient);
                 return web3;
             }
@@ -2471,10 +2641,10 @@ namespace RO.Common3.Ethereum
         {
             if (!web3url.StartsWith("http:") && !web3url.StartsWith("https:") && !web3url.StartsWith("ws:") && !web3url.StartsWith("wss:"))
             {
-                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient((web3url ?? "").Trim());
+                Nethereum.JsonRpc.IpcClient.IpcClient ipcClient = new Nethereum.JsonRpc.IpcClient.IpcClient(web3url);
                 try
                 {
-                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream((web3url ?? "").Trim());
+                    var _pipeClient = new System.IO.Pipes.NamedPipeClientStream(web3url);
                     _pipeClient.Connect(5000);
                 }
                 catch (TimeoutException)
@@ -2490,7 +2660,7 @@ namespace RO.Common3.Ethereum
             }
             else
             {
-                var web3 = new Nethereum.Geth.Web3Geth((web3url ?? "").Trim());
+                var web3 = new Nethereum.Geth.Web3Geth(web3url);
                 return web3;
             }
         }
@@ -2867,11 +3037,11 @@ namespace RO.Common3.Ethereum
                 {
                     translated.Add(string.IsNullOrEmpty(inputs[idx] as string) ? null : inputs[idx]);
                 }
-                else if (p.ABIType.Name.StartsWith("string"))
+                else if (p.ABIType.Name.StartsWith("string") && p.ABIType.Name != "string[]")
                 {
                     translated.Add(inputs[idx] == null ? "" : inputs[idx].ToString());
                 }
-                else if (p.ABIType.Name.StartsWith("bool"))
+                else if (p.ABIType.Name.StartsWith("bool") && p.ABIType.Name != "bool[]")
                 {
                     if (inputs[idx] is bool)
                     {
@@ -2947,11 +3117,13 @@ namespace RO.Common3.Ethereum
             var callData = functionBuilder.GetData(TranslateCallInput(AbiJSONTranslate(abiJson), functionName, functionInput));
             return callData;
         }
-        public static Tuple<int, string, string> CompileContract(string codeOrPath, string compilerPath)
+        public static Tuple<int, string, string> CompileContract(string codeOrPath, string compilerPath, string baseDir = null)
         {
             bool isCodePath = File.Exists(codeOrPath);
             string workDirectory = isCodePath ? new FileInfo(codeOrPath).Directory.FullName : "";
-            string cmd_arg = "--optimize --combined-json bin,bin-runtime,abi,hashes,interface,metadata,userdoc,devdoc " + (isCodePath ? codeOrPath : "-");
+            string rootDirectory = isCodePath ? new FileInfo(baseDir ?? workDirectory).Directory.FullName : null;
+
+            string cmd_arg = "--optimize" + (isCodePath ? (" --allow-paths \"" + rootDirectory + "\"") : "") + " --combined-json bin,bin-runtime,abi,hashes,interface,metadata,userdoc,devdoc " + (isCodePath ? codeOrPath : "-");
             string er = "";
             string jsonResult = "";
             ProcessStartInfo psi = new ProcessStartInfo(compilerPath, cmd_arg);
@@ -3093,7 +3265,7 @@ namespace RO.Common3.Ethereum
                         return null;
                     }
                 }).Result;
-                return string.Format("ChainI {4}: Last block {0} - block time {1}, lag by {2} minutes, syncing : {3}, gas Price: {5}",
+                return string.Format("ChainI {4}: Last block {0} - block time {1}, lag by {2} minutes, syncing : {3}, gas Price: {5}, gas Limit: {6}",
                     (int)latestBlock.Number.Value,
                     blockTime.ToLocalTime(),
                     (int)timeDiff.TotalMinutes,
@@ -3101,7 +3273,8 @@ namespace RO.Common3.Ethereum
                         string.Format("block {0}, block time {1}", syncingBlock[0].Number.Value, UnixTimeToDateTime(int.Parse(syncingBlock[0].Timestamp.Value.ToString())).ToLocalTime()
                     )),
                     chainId,
-                    gasPrice
+                    gasPrice,
+                    latestBlock.GasLimit
                     );
             }
             catch (Exception er)
@@ -3113,5 +3286,114 @@ namespace RO.Common3.Ethereum
             }
         }
 
+        public static async Task<Tuple<StreamingWebSocketClient
+            , EthLogsObservableSubscription
+            , EthNewBlockHeadersObservableSubscription
+            , EthNewPendingTransactionObservableSubscription>> abc(string contractAddress, string wsEndpoint, Action<string> logger)
+        {
+            //DAI contract address
+            //var contractAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
+
+            try
+            {
+                var client = new StreamingWebSocketClient(wsEndpoint);
+
+                var newBlockSubscription = new Nethereum.RPC.Reactive.Eth.Subscriptions.EthNewBlockHeadersObservableSubscription(client);
+                var pendingTransactionSubscription = new Nethereum.RPC.Reactive.Eth.Subscriptions.EthNewPendingTransactionObservableSubscription(client);
+                var eventSubscription = new Nethereum.RPC.Reactive.Eth.Subscriptions.EthLogsObservableSubscription(client);
+                eventSubscription.GetSubscriptionDataResponsesAsObservable().Subscribe(log =>
+                {
+                    var transfer = log.DecodeEvent<TransferEventDTO>();
+                    logger(string.Format("{0}: {1} -> {2} - {3}", log.Address, transfer.Event.From, transfer.Event.To, transfer.Event.Value));
+                }, (e) =>
+                {
+                    logger(string.Format("event subscription exception {0}", e.Message));
+                }, () =>
+                {
+                    logger(string.Format("event subscription stopped"));
+                });
+                newBlockSubscription.GetSubscriptionDataResponsesAsObservable().Subscribe(b =>
+                {
+                    logger(string.Format("new block {0}, {1}", b.Number, b.BaseFeePerGas));
+                }, (e) =>
+                {
+                    logger(string.Format("new block subscription exception {0}", e.Message));
+                }, () =>
+                {
+                    logger(string.Format("new subscription stopped"));
+                });
+                newBlockSubscription.GetSubscribeResponseAsObservable().Subscribe((x) =>
+                {
+                    logger(string.Format("new block sub {0}", x));
+                }, (e) =>
+                {
+                    logger(string.Format("new block sub exception {0}", e));
+                }, () =>
+                {
+                    logger(string.Format("new block sub done"));
+                });
+                pendingTransactionSubscription.GetSubscriptionDataResponsesAsObservable().Subscribe(txHash =>
+                {
+                    logger(string.Format("new pending transaction {0}", txHash));
+                }, (e) =>
+                {
+                    logger(string.Format("new pending subscription exception {0}", e.Message));
+                }, () =>
+                {
+                    logger(string.Format("new pending subscription stopped"));
+                });
+                pendingTransactionSubscription.GetSubscribeResponseAsObservable().Subscribe((x) =>
+                {
+                    logger(string.Format("Pending transaction sub {0}", x));
+                }, (e) =>
+                {
+                    logger(string.Format("Pending transaction sub exception {0}", e));
+                }, () =>
+                {
+                    logger(string.Format("Pending transaction sub done"));
+                });
+
+                eventSubscription.GetSubscribeResponseAsObservable().Subscribe(
+                    id => logger(string.Format("Subscribed with id: {0}", id)));
+
+                var filterAuction = Event<TransferEventDTO>.GetEventABI().CreateFilterInput(contractAddress);
+
+                client.Error += (sender, e) =>
+                {
+                    logger(string.Format("websocket client exception {0}, {1}", e, e.Message));
+                };
+
+                await client.StartAsync().ConfigureAwait(false);
+
+                await eventSubscription.SubscribeAsync(filterAuction, 1).ConfigureAwait(false);
+                await newBlockSubscription.SubscribeAsync(2).ConfigureAwait(false);
+                await pendingTransactionSubscription.SubscribeAsync(3).ConfigureAwait(false);
+
+                return new Tuple<StreamingWebSocketClient, EthLogsObservableSubscription, EthNewBlockHeadersObservableSubscription, EthNewPendingTransactionObservableSubscription>(client, eventSubscription, newBlockSubscription, pendingTransactionSubscription);
+                //Console.ReadLine();
+
+                //await eventSubscription.UnsubscribeAsync();
+            }
+            catch (Exception e)
+            {
+                logger(e.Message);
+                throw;
+            }
+        }
     }
+
+
+    [Event("Transfer")]
+    public class TransferEventDTO : IEventDTO
+    {
+        [Parameter("address", "_from", 1, true)]
+        public string From { get; set; }
+
+        [Parameter("address", "_to", 2, true)]
+        public string To { get; set; }
+
+        [Parameter("uint256", "_value", 3, false)]
+        public BigInteger Value { get; set; }
+    }
+
 }

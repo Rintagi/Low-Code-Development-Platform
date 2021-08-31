@@ -188,7 +188,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cChartDesc1325P1" class="r-td r-labelR" runat="server"><asp:Label id="cChartDesc1325Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cChartDesc1325P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cChartDesc1325" CssClass="inp-txt" runat="server" /><asp:Image id="cChartDesc1325E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cChartDesc1325P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cChartDesc1325" CssClass="inp-txt" runat="server" /><asp:Image id="cChartDesc1325E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cCompanyId1325P1" class="r-td r-labelR" runat="server"><asp:Label id="cCompanyId1325Label" CssClass="inp-lbl" runat="server" /></div>
@@ -202,7 +202,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-5-10"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cChartData1325P1" class="r-td r-labelR" runat="server"><asp:Label id="cChartData1325Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cChartData1325P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cChartData1325" CssClass="inp-txt" runat="server" /><asp:Image id="cChartData1325E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cChartData1325P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cChartData1325" CssClass="inp-txt" runat="server" /><asp:Image id="cChartData1325E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-11-12"><div class="screen-tabfolder" runat="server"><div class="r-table">

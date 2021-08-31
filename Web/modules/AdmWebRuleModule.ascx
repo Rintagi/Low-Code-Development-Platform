@@ -199,7 +199,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cRuleDescription128P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleDescription128Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cRuleDescription128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRuleDescription128" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleDescription128" display="none" ErrorMessage="RuleDescription <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cRuleDescription128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRuleDescription128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRuleDescription128" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRuleDescription128" display="none" ErrorMessage="RuleDescription <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cRuleDescription128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cRuleTypeId128P1" class="r-td r-labelR" runat="server"><asp:Label id="cRuleTypeId128Label" CssClass="inp-lbl" runat="server" /></div>
@@ -233,7 +233,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cWebRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cWebRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cWebRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cWebRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cWebRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cWebRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-1-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
@@ -277,7 +277,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cReactRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cReactRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cReactRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cReactRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cReactRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cReactRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -303,7 +303,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cReduxRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cReduxRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cReduxRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cReduxRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cReduxRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cReduxRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -329,7 +329,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cServiceRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cServiceRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cServiceRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cServiceRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cServiceRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cServiceRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -355,7 +355,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cAsmxRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cAsmxRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cAsmxRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cAsmxRuleProg128P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cAsmxRuleProg128" CssClass="inp-txt" runat="server" /><asp:Image id="cAsmxRuleProg128E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

@@ -53,7 +53,8 @@ namespace RO.Web
                                                 )
                                             + " " + Environment.MachineName
                                                 ;
-                    } catch { cVersionTxt.Text = "&#169;1999-" + DateTime.Now.Year.ToString() + " Robocoder Corporation. All rights reserved."; }
+                    }
+                    catch { cVersionTxt.Text = "&#169;1999-" + DateTime.Now.Year.ToString() + " Robocoder Corporation. All rights reserved." + " " + Environment.MachineName; }
                 }
             }
         }

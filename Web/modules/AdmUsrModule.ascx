@@ -404,7 +404,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cNotificationContentP1" class="r-td r-labelR" runat="server"><asp:Label id="cNotificationContentLabel" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cNotificationContentP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cNotificationContent" CssClass="inp-txt" runat="server" /><asp:Image id="cNotificationContentE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cNotificationContentP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cNotificationContent" CssClass="inp-txt" runat="server" /><asp:Image id="cNotificationContentE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

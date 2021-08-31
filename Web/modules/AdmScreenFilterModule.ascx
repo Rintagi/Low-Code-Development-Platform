@@ -201,7 +201,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cFilterClause86P1" class="r-td r-labelR" runat="server"><asp:Label id="cFilterClause86Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cFilterClause86P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cFilterClause86" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cFilterClause86" display="none" ErrorMessage="FilterClause <= 1500 characters please." ValidationExpression="^[\s\S]{0,1500}$" runat="server" /><asp:RequiredFieldValidator id="cRFVFilterClause86" ControlToValidate="cFilterClause86" display="none" runat="server" /><asp:Image id="cFilterClause86E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cFilterClause86P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cFilterClause86" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cFilterClause86" display="none" ErrorMessage="FilterClause <= 1500 characters please." ValidationExpression="^[\s\S]{0,1500}$" runat="server" /><asp:RequiredFieldValidator id="cRFVFilterClause86" ControlToValidate="cFilterClause86" display="none" runat="server" /><asp:Image id="cFilterClause86E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cFilterOrder86P1" class="r-td r-labelR" runat="server"><asp:Label id="cFilterOrder86Label" CssClass="inp-lbl" runat="server" /></div>
@@ -249,7 +249,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>

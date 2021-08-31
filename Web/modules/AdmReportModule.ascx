@@ -346,7 +346,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cWhereClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cWhereClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cWhereClause22" display="none" ErrorMessage="WhereClause <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cWhereClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cWhereClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cWhereClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cWhereClause22" display="none" ErrorMessage="WhereClause <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cWhereClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -386,7 +386,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -532,7 +532,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cRegClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRegClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRegClause22" display="none" ErrorMessage="RegClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:Image id="cRegClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRegClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRegClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cRegClause22" display="none" ErrorMessage="RegClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:Image id="cRegClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
@@ -540,7 +540,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cRegCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cRegCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cRegCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cRegCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cRegCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cRegCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -552,11 +552,11 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-9"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cValClause22P1" class="r-td r-labelR" runat="server"><asp:Label id="cValClause22Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cValClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cValClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cValClause22" display="none" ErrorMessage="ValClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:Image id="cValClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cValClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cValClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cValClause22" display="none" ErrorMessage="ValClause <= 400 characters please." ValidationExpression="^[\s\S]{0,400}$" runat="server" /><asp:Image id="cValClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cValCode22P1" class="r-td r-labelR" runat="server"><asp:Label id="cValCode22Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cValCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cValCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cValCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cValCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cValCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cValCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -568,11 +568,11 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-9"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cUpdClause22P1" class="r-td r-labelR" runat="server"><asp:Label id="cUpdClause22Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cUpdClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cUpdClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cUpdClause22" display="none" ErrorMessage="UpdClause <= 200 characters please." ValidationExpression="^[\s\S]{0,200}$" runat="server" /><asp:Image id="cUpdClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cUpdClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cUpdClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cUpdClause22" display="none" ErrorMessage="UpdClause <= 200 characters please." ValidationExpression="^[\s\S]{0,200}$" runat="server" /><asp:Image id="cUpdClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cUpdCode22P1" class="r-td r-labelR" runat="server"><asp:Label id="cUpdCode22Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cUpdCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cUpdCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cUpdCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cUpdCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cUpdCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cUpdCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -584,11 +584,11 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-9"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cXlsClause22P1" class="r-td r-labelR" runat="server"><asp:Label id="cXlsClause22Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cXlsClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cXlsClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cXlsClause22" display="none" ErrorMessage="XlsClause <= 200 characters please." ValidationExpression="^[\s\S]{0,200}$" runat="server" /><asp:Image id="cXlsClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cXlsClause22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cXlsClause22" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cXlsClause22" display="none" ErrorMessage="XlsClause <= 200 characters please." ValidationExpression="^[\s\S]{0,200}$" runat="server" /><asp:Image id="cXlsClause22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cXlsCode22P1" class="r-td r-labelR" runat="server"><asp:Label id="cXlsCode22Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cXlsCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cXlsCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cXlsCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cXlsCode22P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cXlsCode22" CssClass="inp-txt" runat="server" /><asp:Image id="cXlsCode22E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

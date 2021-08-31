@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 using System.Web;
 using System.Web.SessionState;
 using System.Net;
@@ -11,6 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using System.Configuration;
 using System.Web.Configuration;
+using System.Web.Routing;
 using RO.Facade3;
 using RO.Common3;
 
@@ -90,9 +90,32 @@ namespace RO
                     }
                 }
             }
+            RegisterRoutes(RouteTable.Routes);
         }
  
-		protected void Session_Start(Object sender, EventArgs e)
+        protected void RegisterRoutes(RouteCollection routes)
+        {
+            routes.Ignore("{resource}.axd/{*pathInfo}");
+            routes.MapPageRoute(
+                "CatchAll"
+//                , "restful/{b}/{c}/{*d}"
+                , "restapi/{screen}/{parent}/{child}/{action}/{*rest}"
+                , "~/Restful.aspx"
+                , false
+                , new RouteValueDictionary() { 
+//                { "screen", "aa" } ,
+                { "parent", null } ,
+                { "child", null } ,
+                { "action", null } ,
+                }
+                , new RouteValueDictionary()
+                {
+                    { "screen", ".+" }
+                }
+                );
+        }
+
+        protected void Session_Start(Object sender, EventArgs e)
 		{
 
 		}
@@ -232,11 +255,6 @@ namespace RO
                         && !Request.Url.GetLeftPart(UriPartial.Path).Contains("WebResource.axd") 
                         && !Request.Url.GetLeftPart(UriPartial.Path).Contains("ScriptResource.axd")
                          */ 
-                        /* skip these drive by php/wordpress etc. attack */
-                        && !Request.Url.GetLeftPart(UriPartial.Path).Contains(".php")
-                        && !Request.Url.GetLeftPart(UriPartial.Path).Contains("popper.js")
-                        && !Request.Url.GetLeftPart(UriPartial.Path).Contains("wp-includes")
-                        && !(objErr is ThreadAbortException)
                         )
                         )
                     {
@@ -464,7 +482,7 @@ namespace RO
             try
             {
                 string webtitle = Config.WebTitle ?? "";
-                string to = (Config.TechSuppEmail ?? "cs@robocoder.com").Replace(",",";");
+                string to = Config.TechSuppEmail ?? "cs@robocoder.com";
                 string from = "cs@robocoder.com";
                 string fromTitle = "";
                 string replyTo = "";

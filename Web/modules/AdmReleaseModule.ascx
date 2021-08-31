@@ -268,7 +268,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -497,14 +497,14 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:200px;text-align:left;' visible="<%# GridColumnVisible(15) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cObjectName192ml" runat="server" /></div>
 		<table cellspacing="0" cellpadding="0"><tr><td>
-		    <asp:TextBox TextMode="MultiLine" id="cObjectName192" CssClass="GrdTxt" height="135px" Text='<%# DataBinder.Eval(Container.DataItem,"ObjectName192").ToString() %>' runat="server" /><asp:RequiredFieldValidator id="cRFVObjectName192" ControlToValidate="cObjectName192" display="none" runat="server" /></td><td><asp:Image id="cObjectName192E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
+		    <asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cObjectName192" CssClass="GrdTxt" height="135px" Text='<%# DataBinder.Eval(Container.DataItem,"ObjectName192").ToString() %>' runat="server" /><asp:RequiredFieldValidator id="cRFVObjectName192" ControlToValidate="cObjectName192" display="none" runat="server" /></td><td><asp:Image id="cObjectName192E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
 		</td></tr></table>
 		</div></div>
     </td>
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:400px;text-align:left;' visible="<%# GridColumnVisible(16) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cObjectExempt192ml" runat="server" /></div>
 		<table cellspacing="0" cellpadding="0"><tr><td>
-		    <asp:TextBox TextMode="MultiLine" id="cObjectExempt192" CssClass="GrdTxt" height="135px" Text='<%# DataBinder.Eval(Container.DataItem,"ObjectExempt192").ToString() %>' runat="server" /></td><td><asp:Image id="cObjectExempt192E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
+		    <asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cObjectExempt192" CssClass="GrdTxt" height="135px" Text='<%# DataBinder.Eval(Container.DataItem,"ObjectExempt192").ToString() %>' runat="server" /></td><td><asp:Image id="cObjectExempt192E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
 		</td></tr></table>
 		</div></div>
     </td>
@@ -547,7 +547,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-8"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cTarScriptAft191P1" class="r-td r-labelR" runat="server"><asp:Label id="cTarScriptAft191Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cTarScriptAft191P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cTarScriptAft191" CssClass="inp-txt" runat="server" /><asp:Image id="cTarScriptAft191E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cTarScriptAft191P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cTarScriptAft191" CssClass="inp-txt" runat="server" /><asp:Image id="cTarScriptAft191E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -559,7 +559,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-8"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cReadMe191P1" class="r-td r-labelR" runat="server"><asp:Label id="cReadMe191Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cReadMe191P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cReadMe191" CssClass="inp-txt" runat="server" /><asp:Image id="cReadMe191E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cReadMe191P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cReadMe191" CssClass="inp-txt" runat="server" /><asp:Image id="cReadMe191E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

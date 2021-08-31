@@ -280,6 +280,7 @@ public partial class AuthWs : AsmxBase
         var context = HttpContext.Current;
         string appPath = context.Request.ApplicationPath;
         string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
+        int access_token_validity = LUser != null && LUser.PwdDuration == 23456 ? 60 * 60 * 24 * 750 : 10 * 60;
         HttpSessionState Session = HttpContext.Current.Session;
         System.Web.Caching.Cache cache = HttpContext.Current.Cache;
         string storedToken = (Session != null ? Session["RintagiLoginAccessCode"] as string : null) ?? cache[code] as string;
@@ -302,7 +303,8 @@ public partial class AuthWs : AsmxBase
                 }
                 catch { }
             }
-            return ValidateScope(ignoreCache);
+            var accountNotLocked = new LoginSystem().ChkLoginStatus(LUser.LoginName);
+            return accountNotLocked && ValidateScope(ignoreCache);
         };
 
         if (grant_type == "refresh_token")
@@ -319,7 +321,7 @@ public partial class AuthWs : AsmxBase
         try
         {
             var auth = GetAuthObject();
-            var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope, re_auth == "Y");
+            var token = auth.GetToken(client_id, scope, grant_type, code, code_verifier, redirect_url, client_secret, appPath, domain, getStoredToken, validateScope, re_auth == "Y", access_token_validity);
             if (syncCookie && token != null)
             {
                 SetJWTCookie(token["refresh_token"]);
@@ -505,6 +507,24 @@ public partial class AuthWs : AsmxBase
             LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
             (new LoginSystem()).SetLoginStatus(usr.LoginName, true, GetVisitorIPAddress(), provider, providerLoginName);
 
+            if (!(new LoginSystem()).IsUsrSafeIP(usr.UsrId, GetVisitorIPAddress())) // Email the account holder.
+            {
+                string from = base.SysCustServEmail(3);
+                var reset_url1 = GetResetLoginUrl(usr.UsrId.ToString(), "", "", "k", "&ip=" + HttpUtility.UrlEncode(GetVisitorIPAddress()), null, null);
+                var reset_url2 = GetResetLoginUrl(usr.UsrId.ToString(), "", "", "j", "", null, null);
+                string machineName = Environment.MachineName;
+                string sBody = "Someone recently tried to login to your account '" + LUser.LoginName.Left(3) + "****" + LUser.LoginName.Right(3) + "' at <b>" 
+                        + ResolveUrlCustom(HttpContext.Current.Request.Url.AbsolutePath, false, true) 
+                        + string.Format(" (On Server {0})", machineName) + "</b> from an unrecognized IP location <b>" 
+                        + GetVisitorIPAddress() 
+                        + "</b>.<br /><br />You may choose to ignore this message or click <a href=" + reset_url1.Value + ">YES</a> if this IP Address location will be used again or click <a href=" + reset_url2.Value + ">NO</a> to reset your password immediately.";
+                try
+                {
+                    base.SendEmail("Review Recent Login", sBody, usr.UsrEmail, from, from, Config.WebTitle + " Customer Care", true);
+                }
+                catch { }
+            }
+            
             if (Session != null && ((Session[KEY_CacheLUser] as LoginUsr) == null || (Session[KEY_CacheLUser] as LoginUsr).UsrId == 1))
             {
                 try
@@ -524,7 +544,9 @@ public partial class AuthWs : AsmxBase
             string appPath = HttpContext.Current.Request.ApplicationPath;
             string domain = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
             var referrer = HttpContext.Current.Request.UrlReferrer;
-            string jwtToken = CreateLoginJWT(LUser, usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
+            // service account(pwd duration of 23456) has two year validity
+            int access_token_validity = LUser.PwdDuration == 23456 ? 60*60*24*750 : 60 * 10;
+            string jwtToken = CreateLoginJWT(LUser, usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, LCurr, LImpr, appPath, access_token_validity, guid);
             HttpContext.Current.Cache.Add(guid, jwtToken, null
                 , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, 1, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
             var access_token = GetToken("", "", "authorization_code", guid, "", "", "", "N");

@@ -711,12 +711,13 @@ namespace RO.WebRules
             client.Send(mm);
         }
 
-        public Tuple<int, string, string> sshPush(string pscpPath, string localSource, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        public Tuple<int, string, string> sshPush(string pscpPath, string localSource, string removeTarget, string login, string sshKeyFile, string keyPassword, string hostKey = null)
         {
             string sshPort = "22";
             string password = DecryptString(keyPassword);
             string recursive = Directory.Exists(localSource) ? "-r" : "";
-            string cmdArg = string.Format("-P {0} {1} -q -i \"{2}\" \"{3}\" \"{4}\"", sshPort, recursive, sshKeyFile, localSource, removeTarget);
+            string withHostKey = string.IsNullOrEmpty(hostKey) ? "" : (" -hostkey " + hostKey);
+            string cmdArg = string.Format("-P {0} {1} -q -i \"{2}\" \"{3}\" \"{4}\"" + withHostKey, sshPort, recursive, sshKeyFile, localSource, removeTarget);
             StringBuilder sbStdErr = new StringBuilder();
             StringBuilder sbStdOut = new StringBuilder();
             int wrongPasswordCnt = 0;
@@ -777,12 +778,13 @@ namespace RO.WebRules
             var result = RO.Common3.Utils.WinProcEx(pscpPath, localSource, null, cmdArg, puttyPromptHandler, puttyPromptHandler, exitHandler);
             return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
         }
-        public Tuple<int, string, string> sshRemoteCmd(string plinkPath, string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        public Tuple<int, string, string> sshRemoteCmd(string plinkPath, string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword, string hostKey = null)
         {
             string sshPort = "22";
             string password = DecryptString(keyPassword);
             string cmdScript = string.Format("-m {0}", localCmdFile);
-            string cmdArg = string.Format("-P {0} {1} -i \"{2}\" \"{3}\"", sshPort, cmdScript, sshKeyFile, removeTarget);
+            string withHostKey = string.IsNullOrEmpty(hostKey) ? "" : (" -hostkey " + hostKey);
+            string cmdArg = string.Format("-P {0} {1} -i \"{2}\" \"{3}\"" + withHostKey, sshPort, cmdScript, sshKeyFile, removeTarget);
             StringBuilder sbStdErr = new StringBuilder();
             StringBuilder sbStdOut = new StringBuilder();
             bool sessionConnected = false;

@@ -24,6 +24,12 @@ using System.Diagnostics;
 
 namespace RO.Web
 {
+    public class SaveDataObject
+    {
+        public SerializableDictionary<string, string> mst;
+        public List<SerializableDictionary<string, string>> dtl;
+        public SerializableDictionary<string, string> options;
+    }
 
     [ScriptService()]
     [WebService(Namespace = "http://Rintagi.com/")]
@@ -62,17 +68,17 @@ namespace RO.Web
         private string PageUrlBase;
         private string IntPageUrlBase;
         protected enum IncludeBLOB { None, Icon, Content, DownloadLink };
-        private string SystemListCacheWatchFile { get {return Server.MapPath("~/RefreshSystemList.txt");}}
+        private string SystemListCacheWatchFile { get { return Server.MapPath("~/RefreshSystemList.txt"); } }
 
-		private const String KEY_SystemsList = "Cache:SystemsList";
-		private const String KEY_SystemsDict = "Cache:SystemsDict";
-		private const String KEY_SysConnectStr = "Cache:SysConnectStr";
-		private const String KEY_AppConnectStr = "Cache:AppConnectStr";
+        private const String KEY_SystemsList = "Cache:SystemsList";
+        private const String KEY_SystemsDict = "Cache:SystemsDict";
+        private const String KEY_SysConnectStr = "Cache:SysConnectStr";
+        private const String KEY_AppConnectStr = "Cache:AppConnectStr";
         private const String KEY_SystemAbbr = "Cache:SystemAbbr";
         private const String KEY_DesDb = "Cache:DesDb";
-		private const String KEY_AppDb = "Cache:AppDb";
-		private const String KEY_AppUsrId = "Cache:AppUsrId";
-		private const String KEY_AppPwd = "Cache:AppPwd";
+        private const String KEY_AppDb = "Cache:AppDb";
+        private const String KEY_AppUsrId = "Cache:AppUsrId";
+        private const String KEY_AppPwd = "Cache:AppPwd";
         private const String KEY_SysAdminEmail = "Cache:SysAdminEmail";
         private const String KEY_SysAdminPhone = "Cache:SysAdminPhone";
         private const String KEY_SysCustServEmail = "Cache:SysCustServEmail";
@@ -80,33 +86,33 @@ namespace RO.Web
         private const String KEY_SysCustServFax = "Cache:SysCustServFax";
         private const String KEY_SysWebAddress = "Cache:SysWebAddress";
 
-		private const String KEY_CacheLUser = "Cache:LUser";
-		private const String KEY_CacheLPref = "Cache:LPref";
+        private const String KEY_CacheLUser = "Cache:LUser";
+        private const String KEY_CacheLPref = "Cache:LPref";
         private const String KEY_CacheLImpr = "Cache:LImpr";
-		private const String KEY_CacheLCurr = "Cache:LCurr";
-		private const String KEY_CacheCPrj = "Cache:CPrj";
-		private const String KEY_CacheCSrc = "Cache:CSrc";
-		private const String KEY_CacheCTar = "Cache:CTar";
-		private const String KEY_CacheVMenu = "Cache:VMenu";
+        private const String KEY_CacheLCurr = "Cache:LCurr";
+        private const String KEY_CacheCPrj = "Cache:CPrj";
+        private const String KEY_CacheCSrc = "Cache:CSrc";
+        private const String KEY_CacheCTar = "Cache:CTar";
+        private const String KEY_CacheVMenu = "Cache:VMenu";
 
         private const String KEY_EntityList = "Cache:EntityList";
         private const String KEY_CompanyList = "Cache:CompanyList";
         private const String KEY_ProjectList = "Cache:ProjectList";
         private const String KEY_CultureList = "Cache:CultureList";
 
-        protected UsrImpr LImpr {get;set;}
-        protected UsrCurr LCurr {get;set;}
-        protected LoginUsr LUser {get;set;}
+        protected UsrImpr LImpr { get; set; }
+        protected UsrCurr LCurr { get; set; }
+        protected LoginUsr LUser { get; set; }
         protected UsrPref LPref { get; set; }
         protected byte LcSystemId { get; set; }
-        protected string LcSysConnString {get;set;}
-        protected string LcAppConnString {get;set;}
-        protected string LcAppDb {get;set;}
-        protected string LcDesDb {get;set;}
-        protected string LcAppPw {get;set;}
-        protected CurrPrj CPrj {get;set;}
-        protected CurrSrc CSrc {get;set;}
-        protected CurrTar CTar {get;set;}
+        protected string LcSysConnString { get; set; }
+        protected string LcAppConnString { get; set; }
+        protected string LcAppDb { get; set; }
+        protected string LcDesDb { get; set; }
+        protected string LcAppPw { get; set; }
+        protected CurrPrj CPrj { get; set; }
+        protected CurrSrc CSrc { get; set; }
+        protected CurrTar CTar { get; set; }
 
         protected List<string> _CurrentScreenCriteria = null;
 
@@ -123,12 +129,20 @@ namespace RO.Web
         protected abstract SerializableDictionary<string, string> InitMaster();
         protected abstract SerializableDictionary<string, string> InitDtl();
         protected abstract DataTable _GetMstById(string pid);
-        protected abstract DataTable _GetDtlById(string pid,int screenFilterId);
+        protected abstract DataTable _GetDtlById(string pid, int screenFilterId);
 
         public abstract ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetNewMst();
         public abstract ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetSearchList(string searchStr, int topN, string filterId, SerializableDictionary<string, string> desiredScreenCriteria);
         public abstract ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetDtlById(string keyId, SerializableDictionary<string, string> options, int filterId);
         public abstract ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> GetMstById(string keyId, SerializableDictionary<string, string> options);
+        public virtual ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> DelMst(SerializableDictionary<string, string> mst, SerializableDictionary<string, string> options)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> SaveData(SerializableDictionary<string, string> mst, List<SerializableDictionary<string, string>> dtl, SerializableDictionary<string, string> options)
+        {
+            throw new NotImplementedException();
+        }
 
         protected virtual bool AllowAnonymous() { return false; }
         protected virtual byte GetDbId() { return GetSystemId(); }
@@ -137,7 +151,7 @@ namespace RO.Web
 
         protected static int siteInfoCacheInMinutes = Config.DeployType == "PRD" ? 60 : 1;
         protected static int metaDataCacheInMinutes = Config.DeployType == "PRD" ? 30 : 1;
-        protected static int volatileMetaDataCacheInMinutes = Config.DeployType == "PRD" ? 5 : 1;  
+        protected static int volatileMetaDataCacheInMinutes = Config.DeployType == "PRD" ? 5 : 1;
 
         protected static int systemListCacheMinutes = siteInfoCacheInMinutes;
         protected static int entityListCacheMinutes = siteInfoCacheInMinutes;
@@ -170,7 +184,7 @@ namespace RO.Web
 
         public class _ReactFileUploadObj
         {
-        // this goes hand in hand with the react file upload control any change there must be reflected here
+            // this goes hand in hand with the react file upload control any change there must be reflected here
             public string fileName;
             public string mimeType;
             public Int64 lastModified;
@@ -202,7 +216,7 @@ namespace RO.Web
             public float height;
             public float width;
             public int size;
-            public string previewUrl; 
+            public string previewUrl;
             public int extensionSize;
             public bool contentIsJSON = false;
         }
@@ -227,12 +241,12 @@ namespace RO.Web
         public class SaveDataResponse
         {
             public SerializableDictionary<string, string> mst;
-            public List<SerializableDictionary<string,string>> dtl;
+            public List<SerializableDictionary<string, string>> dtl;
             public string message;
         }
-        public class ApiResponse<T,S>
+        public class ApiResponse<T, S>
         {
-//            public List<SerializableDictionary<string, string>> data;
+            //            public List<SerializableDictionary<string, string>> data;
             public T data;
             public S supportingData;
             public string status;
@@ -320,7 +334,7 @@ namespace RO.Web
         public static int ToUnixTime(DateTime time)
         {
             var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            return (int)DateTime.SpecifyKind(time, DateTimeKind.Utc).Subtract(utc0).TotalSeconds;            
+            return (int)DateTime.SpecifyKind(time, DateTimeKind.Utc).Subtract(utc0).TotalSeconds;
         }
         public static string TranslateISO8601DateTime(string t, bool storeInUTC = true)
         {
@@ -421,12 +435,12 @@ namespace RO.Web
             var CurrentCallInfo = GetCurrentCallInfo();
             var ServiceEndPoint = CurrentCallInfo.Item1;
             string xForwardedHost = HttpContext.Current.Request.Headers["X-Forwarded-Host"];
- 
+
             bool sameEndpoint = (uri.IsLoopback || uri.Host == HttpContext.Current.Request.Url.Host || uri.Host == xForwardedHost) && uri.AbsolutePath.StartsWith(ServiceEndPoint);
 
             uri.GetLeftPart(UriPartial.Path);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            var auth = (HttpContext.Current.Request.Headers["Authorization"] ?? HttpContext.Current.Request.Headers["X-Authorization"]) as string;
+            var auth = (HttpContext.Current.Request.Headers["X-Authorization"] ?? HttpContext.Current.Request.Headers["Authorization"]) as string;
             var scope = HttpContext.Current.Request.Headers["X-RintagiScope"] as string;
 
             if (forwardAccessToken || sameEndpoint)
@@ -476,7 +490,7 @@ namespace RO.Web
         protected RO.Facade3.Auth GetAuthObject()
         {
             string jwtMasterKey = Config.JWTMasterKey;
-            if (string.IsNullOrEmpty(jwtMasterKey)) 
+            if (string.IsNullOrEmpty(jwtMasterKey))
             {
                 jwtMasterKey = RO.Facade3.Auth.GenJWTMasterKey();
                 System.Configuration.ConfigurationManager.AppSettings["JWTMasterKey"] = jwtMasterKey;
@@ -694,7 +708,7 @@ namespace RO.Web
             return true;
         }
         #endregion
-        protected Dictionary<byte,Dictionary<string,string>> GetSystemsDict(bool ignoreCache=false)
+        protected Dictionary<byte, Dictionary<string, string>> GetSystemsDict(bool ignoreCache = false)
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
@@ -716,7 +730,8 @@ namespace RO.Web
                 }
             }
 
-            if (sysDict == null) {
+            if (sysDict == null)
+            {
                 sysDict = new Dictionary<byte, Dictionary<string, string>>();
                 DataTable dt = LoadSystemsList(ignoreCache);
                 bool singleSQLCredential = Config.DesShareCred;
@@ -739,24 +754,30 @@ namespace RO.Web
                 }
                 dt.AcceptChanges();
                 foreach (DataRow dr in dt.Rows)
-			    {
-				    Dictionary<string,string> dict = new Dictionary<string,string>();
+                {
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
                     dict[KEY_SysConnectStr] = Config.GetConnStr(singleSQLCredential ? Config.DesProvider : dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbDesDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
                     dict[KEY_AppConnectStr] = Config.GetConnStr(singleSQLCredential ? Config.DesProvider : dr["dbAppProvider"].ToString(), singleSQLCredential ? Config.DesServer : dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString());
                     dict[KEY_SystemAbbr] = dr["SystemAbbr"].ToString();
-				    dict[KEY_DesDb] = dr["dbDesDatabase"].ToString();
-				    dict[KEY_AppDb] = dr["dbAppDatabase"].ToString();
+                    dict[KEY_DesDb] = dr["dbDesDatabase"].ToString();
+                    dict[KEY_AppDb] = dr["dbAppDatabase"].ToString();
                     dict[KEY_AppUsrId] = singleSQLCredential ? Config.DesUserId : dr["dbAppUserId"].ToString();
                     dict[KEY_AppPwd] = singleSQLCredential ? Config.DesPassword : dr["dbAppPassword"].ToString();
-                    try { dict[KEY_SysAdminEmail] = dr["AdminEmail"].ToString(); } catch { dict[KEY_SysAdminEmail] = string.Empty; } 
-                    try { dict[KEY_SysAdminPhone] = dr["AdminPhone"].ToString(); } catch { dict[KEY_SysAdminPhone] = string.Empty; } 
-                    try { dict[KEY_SysCustServEmail] = dr["CustServEmail"].ToString(); } catch { dict[KEY_SysCustServEmail] = string.Empty; } 
-                    try { dict[KEY_SysCustServPhone] = dr["CustServPhone"].ToString(); } catch { dict[KEY_SysCustServPhone] = string.Empty; } 
-                    try { dict[KEY_SysCustServFax] = dr["CustServFax"].ToString(); } catch { dict[KEY_SysCustServFax] = string.Empty; } 
-                    try { dict[KEY_SysWebAddress] = dr["WebAddress"].ToString(); } catch { dict[KEY_SysWebAddress] = string.Empty; } 
+                    try { dict[KEY_SysAdminEmail] = dr["AdminEmail"].ToString(); }
+                    catch { dict[KEY_SysAdminEmail] = string.Empty; }
+                    try { dict[KEY_SysAdminPhone] = dr["AdminPhone"].ToString(); }
+                    catch { dict[KEY_SysAdminPhone] = string.Empty; }
+                    try { dict[KEY_SysCustServEmail] = dr["CustServEmail"].ToString(); }
+                    catch { dict[KEY_SysCustServEmail] = string.Empty; }
+                    try { dict[KEY_SysCustServPhone] = dr["CustServPhone"].ToString(); }
+                    catch { dict[KEY_SysCustServPhone] = string.Empty; }
+                    try { dict[KEY_SysCustServFax] = dr["CustServFax"].ToString(); }
+                    catch { dict[KEY_SysCustServFax] = string.Empty; }
+                    try { dict[KEY_SysWebAddress] = dr["WebAddress"].ToString(); }
+                    catch { dict[KEY_SysWebAddress] = string.Empty; }
                     sysDict[byte.Parse(dr["SystemId"].ToString())] = dict;
                 }
-                cache.Add(KEY_SystemsDict,sysDict,new System.Web.Caching.CacheDependency(SystemListCacheWatchFile)
+                cache.Add(KEY_SystemsDict, sysDict, new System.Web.Caching.CacheDependency(SystemListCacheWatchFile)
                     , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
             }
             return sysDict;
@@ -770,10 +791,11 @@ namespace RO.Web
 
         protected String SysAdminEmail(byte SystemId)
         {
-            try { return GetSystemsDict()[SystemId][KEY_SystemsDict]; } catch { return string.Empty; }
+            try { return GetSystemsDict()[SystemId][KEY_SystemsDict]; }
+            catch { return string.Empty; }
         }
 
-        protected DataTable LoadSystemsList(bool ignoreCache=false)
+        protected DataTable LoadSystemsList(bool ignoreCache = false)
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
@@ -781,7 +803,8 @@ namespace RO.Web
 
             DataTable dt = cache[KEY_SystemsList] as DataTable;
 
-            if (dt == null || ignoreCache) {
+            if (dt == null || ignoreCache)
+            {
                 dt = (new LoginSystem()).GetSystemsList(string.Empty, string.Empty);
                 dt.PrimaryKey = new DataColumn[] { dt.Columns["SystemId"] };
                 cache.Insert(KEY_SystemsList, dt, new System.Web.Caching.CacheDependency(SystemListCacheWatchFile)
@@ -821,7 +844,7 @@ namespace RO.Web
             }
             return dtCacheX.Item2;
         }
-        protected DataTable _GetProjectList(int companyId,bool ignoreCache=false)
+        protected DataTable _GetProjectList(int companyId, bool ignoreCache = false)
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
@@ -901,7 +924,7 @@ namespace RO.Web
         {
             Dictionary<string, string> dSys = GetSystemsDict()[systemId ?? token.SystemId];
             byte? dbId = systemId;
-            LUser = new LoginUsr(token.LoginName, token.UsrId, token.UsrName, token.UsrEmail, "N", "N", 1, "en-US", token.DefSystemId, token.DefProjectId, token.DefCompanyId, 9999, 0, false, null, null, false);
+            LUser = new LoginUsr(token.LoginName, token.UsrId, token.UsrName, token.UsrEmail, "N", "N", 1, "en-US", token.DefSystemId, token.DefProjectId, token.DefCompanyId, token.PwdDuration, 0, false, null, null, false);
             LCurr = new UsrCurr(companyId ?? token.CompanyId, projectId ?? token.ProjectId, systemId ?? token.SystemId, dbId ?? token.DbId);
             LImpr = SetImpersonation(null, token.UsrId, systemId ?? token.SystemId, companyId ?? token.CompanyId, projectId ?? token.ProjectId);
             LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
@@ -911,6 +934,15 @@ namespace RO.Web
                 { "LImpr", LImpr }, 
                 { "LPref", LPref },
             };
+            if (LUser.PwdDuration == 23456)
+            {
+                bool accountNotLocked = new LoginSystem().ChkLoginStatus(LUser.LoginName);
+                if (!accountNotLocked)
+                {
+                    ErrorTrace(new Exception("locked service account in use, possible security breach"), "error");
+                    throw new UnauthorizedAccessException("account locked");
+                }
+            }
             return userSession;
         }
 
@@ -923,14 +955,15 @@ namespace RO.Web
             loginHandle = "Anonymous";
         }
 
-        protected void SwitchContext(byte sysId, int companyId, int projectId,bool checkSysId = true,bool checkCompanyId = true, bool checkProjectId = true, bool ignoreCache=false)
+        protected void SwitchContext(byte sysId, int companyId, int projectId, bool checkSysId = true, bool checkCompanyId = true, bool checkProjectId = true, bool ignoreCache = false)
         {
-            if (LcSystemId != sysId || (LCurr == null || LCurr.CompanyId != companyId || LCurr.ProjectId != projectId) || ignoreCache) {
+            if (LcSystemId != sysId || (LCurr == null || LCurr.CompanyId != companyId || LCurr.ProjectId != projectId) || ignoreCache)
+            {
                 LcSystemId = sysId;
                 LCurr.CompanyId = companyId;
                 LCurr.ProjectId = projectId;
                 LCurr.SystemId = sysId;
-                LImpr = LoadUsrImpr(LUser.UsrId, sysId, companyId, projectId,ignoreCache);
+                LImpr = LoadUsrImpr(LUser.UsrId, sysId, companyId, projectId, ignoreCache);
                 LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
                 CPrj = new CurrPrj(((new RobotSystem()).GetEntityList()).Rows[0]);
                 DataRow row = LoadSystemsList().Rows.Find(sysId);
@@ -988,11 +1021,11 @@ namespace RO.Web
             if (checkSysId)
             {
                 DataTable dtMenu = _GetMenu(sysId);
-                if (dtMenu.Rows.Count == 0 
+                if (dtMenu.Rows.Count == 0
                     &&
                     // rare test case for RO hitting systemId 5 (should never be used for real app development) and sysId != 3, remove confusion
                     (Config.AppNameSpace != "RO" || sysId != 5)
-                    ) 
+                    )
                     throw new UnauthorizedAccessException("access_denied");
             }
             /* validate selected company/project */
@@ -1014,15 +1047,15 @@ namespace RO.Web
         }
 
 
-        protected Dictionary<string,object> LoadUserSession()
+        protected Dictionary<string, object> LoadUserSession()
         {
             try
             {
                 var context = HttpContext.Current;
                 var cache = context.Cache;
-//                var accessTokenInCookie = context.Request.Cookies["access_token"];
-//                var refreshTokenInCookie = context.Request.Cookies["refresh_token"];
-                var auth = (HttpContext.Current.Request.Headers["Authorization"] ?? HttpContext.Current.Request.Headers["X-Authorization"]) as string;
+                //                var accessTokenInCookie = context.Request.Cookies["access_token"];
+                //                var refreshTokenInCookie = context.Request.Cookies["refresh_token"];
+                var auth = (HttpContext.Current.Request.Headers["X-Authorization"] ?? HttpContext.Current.Request.Headers["Authorization"]) as string;
                 var scope = HttpContext.Current.Request.Headers["X-RintagiScope"] as string;
                 byte? systemId = null;
                 int? companyId = null;
@@ -1033,16 +1066,21 @@ namespace RO.Web
                 if (!string.IsNullOrEmpty(scope))
                 {
 
-                    var x = (scope??"").Split(new char[] { ',' });
-                    try { systemId = byte.Parse(x[0]); dbId = systemId; } catch { };
-                    try { companyId = int.Parse(x[1]); } catch { };
-                    try { projectId = int.Parse(x[2]); } catch { };
-                    try { cultureId = short.Parse(x[3]); } catch { };
-                    try { dbId = byte.Parse(x[4]); } catch { };
+                    var x = (scope ?? "").Split(new char[] { ',' });
+                    try { systemId = byte.Parse(x[0]); dbId = systemId; }
+                    catch { };
+                    try { companyId = int.Parse(x[1]); }
+                    catch { };
+                    try { projectId = int.Parse(x[2]); }
+                    catch { };
+                    try { cultureId = short.Parse(x[3]); }
+                    catch { };
+                    try { dbId = byte.Parse(x[4]); }
+                    catch { };
                 }
                 if (hasSession && Session != null && Session[KEY_CacheLUser] != null)
                 {
-                    Dictionary<string, object> userSession = new Dictionary<string,object>(){
+                    Dictionary<string, object> userSession = new Dictionary<string, object>(){
                         { "LUser", Session[KEY_CacheLUser] }, 
                         { "LCurr", Session[KEY_CacheLCurr] }, 
                         { "LImpr", Session[KEY_CacheLImpr] },
@@ -1068,7 +1106,8 @@ namespace RO.Web
                         var sessionEncryptionKey = authObj.GetSessionEncryptionKey(token.iat.ToString(), token.loginId.ToString());
                         var userSession = cache[handle] as Dictionary<string, object>;
 
-                        if (now < token.exp && ValidateJWTHandle(handle)) {
+                        if (now < token.exp && ValidateJWTHandle(handle))
+                        {
                             RintagiLoginToken loginToken = authObj.DecryptLoginToken(token.loginToken, sessionEncryptionKey);
                             if ((
                                 projectId != null && projectId.Value != loginToken.ProjectId
@@ -1108,15 +1147,20 @@ namespace RO.Web
                         {
                             cache.Remove(handle);
                         }
+                        if (now > token.exp)
+                        {
+                            throw new UnauthorizedAccessException("token expired");
+                        }
                     }
                 }
             }
-            catch (Exception e) {
-                if (e.Message == "access_denied") throw;
+            catch (Exception e)
+            {
+                if (e.Message == "access_denied" || e.Message == "token expired" || e.Message == "account locked") throw;
             }
             return null;
         }
-        protected ApiResponse<T,S> ProtectedCall<T,S>(Func<ApiResponse<T,S>> apiCallFn, bool allowAnonymous = false)
+        protected ApiResponse<T, S> ProtectedCall<T, S>(Func<ApiResponse<T, S>> apiCallFn, bool allowAnonymous = false)
         {
             HttpContext Context = HttpContext.Current;
             try
@@ -1141,7 +1185,8 @@ namespace RO.Web
                     return ManagedApiCall(apiCallFn);
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 ApiResponse<T, S> mr = new ApiResponse<T, S>();
                 /* bypass browser prompt(like safari)
                 Context.Response.StatusCode = 401;
@@ -1242,12 +1287,12 @@ namespace RO.Web
                             mm.To.Add(new System.Net.Mail.MailAddress(t.Trim()));
                         }
                         mm.Subject = webtitle + " Application Error " + (Request != null ? Request.Url.GetLeftPart(UriPartial.Path) : "unknown request url");
-                        mm.Body = (Request != null ? Request.Url.ToString() : "unknown request url" ) 
-                                + "\r\n\r\n" 
-                                + sourceIP 
-                                + usrId 
-                                + machine 
-                                + currentTime 
+                        mm.Body = (Request != null ? Request.Url.ToString() : "unknown request url")
+                                + "\r\n\r\n"
+                                + sourceIP
+                                + usrId
+                                + machine
+                                + currentTime
                                 + roVersion
                                 + exMessages[exMessages.Count - 1] + "\r\n\r\n" + e.StackTrace + (innerException != null ? "\r\n InnerException: \r\n\r\n" + string.Join("\r\n", exMessages.ToArray()) + "\r\n\r\n" + innerException.StackTrace : "") + "\r\n";
                         mm.IsBodyHtml = false;
@@ -1274,9 +1319,9 @@ namespace RO.Web
         {
             GetErrorTracingEx(HttpContext.Current != null ? HttpContext.Current.Request : null)(e, severity);
         }
-        protected ApiResponse<T,S> ManagedApiCall<T,S>(Func<ApiResponse<T,S>> apiCallFn)
+        protected ApiResponse<T, S> ManagedApiCall<T, S>(Func<ApiResponse<T, S>> apiCallFn)
         {
-            try 
+            try
             {
                 return apiCallFn();
             }
@@ -1309,7 +1354,7 @@ namespace RO.Web
                         string xForwardedHost = request != null ? request.Headers["X-Forwarded-Host"] : null;
                         string xForwardedProto = request != null ? request.Headers["X-Forwarded-Proto"] : null;
                         string xOriginalURL = request != null ? request.Headers["X-Original-URL"] : null;
-                        string sourceIP = string.Format("From: {0}, ForwardedFor: {1}\r\n\r\n",Request.UserHostAddress, xForwardedFor);
+                        string sourceIP = string.Format("From: {0}, ForwardedFor: {1}\r\n\r\n", Request.UserHostAddress, xForwardedFor);
                         string usrId = string.Format("User: {0}\r\n\r\n", LUser != null ? LUser.UsrId.ToString() : "");
                         string currentTime = string.Format("Server Time: {0} \r\n\r\n UTC: {1} \r\n\r\n", DateTime.Now.ToString("O"), DateTime.UtcNow.ToString("O"));
                         string roVersion = string.Format("RO Version: {0}\r\n\r\n", ROVersion);
@@ -1320,9 +1365,9 @@ namespace RO.Web
                             mm.To.Add(new System.Net.Mail.MailAddress(t.Trim()));
                         }
                         mm.Subject = webtitle + " Application Error " + Request.Url.GetLeftPart(UriPartial.Path);
-                        mm.Body = Request.Url.ToString() 
-                                + "\r\n\r\n" 
-                                + sourceIP 
+                        mm.Body = Request.Url.ToString()
+                                + "\r\n\r\n"
+                                + sourceIP
                                 + usrId
                                 + machine
                                 + currentTime
@@ -1341,9 +1386,11 @@ namespace RO.Web
                         if (ex == null) return null;
                     }
                 }
-                return new ApiResponse<T,S>() { 
-                    errorMsg = e.Message + (Config.DeployType=="DEV" ? e.StackTrace : "")
-                    ,status = e is UnauthorizedAccessException ? "unauthorized_access" : "failed"
+                return new ApiResponse<T, S>()
+                {
+                    errorMsg = e.Message + (Config.DeployType == "DEV" ? e.StackTrace : "")
+                    ,
+                    status = e is UnauthorizedAccessException ? "unauthorized_access" : "failed"
                 };
             }
         }
@@ -1411,7 +1458,7 @@ namespace RO.Web
 
         protected Func<ApiResponse<T, S>> RestrictedApiCall<T, S>(Func<ApiResponse<T, S>> apiCallFn, byte systemId, int screenId, string action, string columnName, Func<ApiResponse<T, S>> OnErrorResponse = null)
         {
-            Func<ApiResponse<T,S>> fn = () =>
+            Func<ApiResponse<T, S>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
                 Func<ApiResponse<T, S>> errRetFn = () =>
@@ -1434,13 +1481,13 @@ namespace RO.Web
                     DataTable dtAuthRow = _GetAuthRow(screenId);
                     DataTable dtAuthCol = _GetAuthCol(screenId);
                     Dictionary<string, DataRow> authCol = dtAuthCol.AsEnumerable().ToDictionary(dr => dr["ColName"].ToString());
-                    
+
                     if ( // screen based checking, i.e. record level
                         !AllowAnonymous() &&
                         ((dtMenuAccess != null && !dtMenuAccess.ContainsKey(screenId.ToString()))
                         || dtMenuAccess == null
                         || dtAuthRow.Rows.Count == 0
-                        || (dtAuthRow.Rows[0]["ViewOnly"].ToString() == "Y" && (action == "S" || action == "A" || action=="U" || action == "D"))
+                        || (dtAuthRow.Rows[0]["ViewOnly"].ToString() == "Y" && (action == "S" || action == "A" || action == "U" || action == "D"))
                         || (dtAuthRow.Rows[0]["AllowAdd"].ToString() == "N" && dtAuthRow.Rows[0]["AllowUpd"].ToString() == "N" && action == "S")
                         || (dtAuthRow.Rows[0]["AllowAdd"].ToString() == "N" && action == "A")
                         || (dtAuthRow.Rows[0]["AllowUpd"].ToString() == "N" && action == "U")
@@ -1456,7 +1503,7 @@ namespace RO.Web
                         //return mr;
                     }
                     else if (!string.IsNullOrEmpty(columnName) &&
-                            ((authCol.ContainsKey(columnName) && (authCol[columnName]["ColVisible"].ToString() == "N")) || (!authCol.ContainsKey(columnName) && !authCol.ContainsKey(columnName+"Text"))))
+                            ((authCol.ContainsKey(columnName) && (authCol[columnName]["ColVisible"].ToString() == "N")) || (!authCol.ContainsKey(columnName) && !authCol.ContainsKey(columnName + "Text"))))
                     {
                         return errRetFn();
 
@@ -1575,7 +1622,7 @@ namespace RO.Web
                 /* this should be fixed in GetLabels in SP as it doesn't support default FIXEME */
                 //dtLabel = (new AdminSystem()).GetLabels(LUser.CultureId, labelCat, LCurr.CompanyId.ToString(), LcSysConnString, LcAppPw);
                 dtLabel = (new AdminSystem()).GetLabels(LUser.CultureId, labelCat, null, LcSysConnString, LcAppPw);
-                cache.Add(cacheKey, dtLabel, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] {} : new string[] { loginHandle })
+                cache.Add(cacheKey, dtLabel, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] { } : new string[] { loginHandle })
                     , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
             }
             return dtLabel;
@@ -1650,7 +1697,7 @@ namespace RO.Web
                 bool required = drv["RequiredValid"].ToString() == "Y";
                 string columnName = drv["ColumnName"].ToString();
                 string keyName = drv["DdlKeyColumnName"].ToString();
-                string lastValue =lastCriteria[columnName] != null ? lastCriteria[columnName]["LastCriteria"] : "";
+                string lastValue = lastCriteria[columnName] != null ? lastCriteria[columnName]["LastCriteria"] : "";
                 if (!required)
                 {
                     currentCriteriaList[ii] = currentScrCriteria[columnName] = lastValue;
@@ -1672,7 +1719,7 @@ namespace RO.Web
                     {
                         var firstChoice = list.data.data.FirstOrDefault();
                         var lastValid = list.data.data.Where(v => v["key"] == lastValue).Count() > 0;
-                        currentCriteriaList[ii] = currentScrCriteria[columnName] = 
+                        currentCriteriaList[ii] = currentScrCriteria[columnName] =
                                                             useLast && lastValid && !string.IsNullOrEmpty(lastValue)
                                                             ? lastValue
                                                             : (firstChoice != null) ? firstChoice["key"] : MakeCriteriaVal(drv.Row, "");
@@ -1727,7 +1774,7 @@ namespace RO.Web
                 {
                     /* this SHOULD NOT BE DONE ON ACCESS BUT GenScreen, the whole design of these Cri SP creation is WRONG !*/
                     //(new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw,Config.DeployType == "DEV");
-                    (new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw,true);
+                    (new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw, true);
                     cache.Add(cacheKey, DateTime.UtcNow, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] { } : new string[] { loginHandle })
                         , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
 
@@ -1795,7 +1842,7 @@ namespace RO.Web
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
-            string cacheKey = loginHandle + "_ScreenHelp_" + GetSystemId().ToString() + "_" + LUser.CultureId.ToString()  + "_" + screenId.ToString();
+            string cacheKey = loginHandle + "_ScreenHelp_" + GetSystemId().ToString() + "_" + LUser.CultureId.ToString() + "_" + screenId.ToString();
             int minutesToCache = screenHlpCacheMinutes; // 1;
 
             DataTable dtScreenHlp = cache[cacheKey] as DataTable;
@@ -1808,7 +1855,7 @@ namespace RO.Web
             return dtScreenHlp;
         }
 
-        protected DataTable _GetLastScrCriteria(int screenId,int rowExpected, bool refresh=false)
+        protected DataTable _GetLastScrCriteria(int screenId, int rowExpected, bool refresh = false)
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
@@ -1841,7 +1888,7 @@ namespace RO.Web
             }
             return dtCacheX.Item2;
         }
-        protected DataTable _GetScreenFilter(int screenId, bool refresh=false)
+        protected DataTable _GetScreenFilter(int screenId, bool refresh = false)
         {
             var context = HttpContext.Current;
             var cache = context.Cache;
@@ -1996,7 +2043,14 @@ namespace RO.Web
                     bool noneSelected = string.IsNullOrEmpty(matchedVals) || matchedVals == "''" || string.IsNullOrEmpty(val);
                     if (drv["DisplayName"].ToString() == "ListBox")
                     {
-                        return noneSelected && CriCnt + 1 > TotalChoiceCnt ? "'-1'" : (string.IsNullOrEmpty(val) ? null : "(" + val + ")");
+                        bool isRequired = drv["RequiredValid"].ToString() == "Y";
+                        string allowedChoice = string.Join(",",
+                                dictAllowedChoice.Keys.Where(s => !string.IsNullOrEmpty(s))
+                                                    .Select(v => string.Format(v.Contains("'") ? "{0}" : "'{0}'", v)).ToArray());
+                        return noneSelected && CriCnt + 1 > TotalChoiceCnt
+                                    ? "('-1'" + (!string.IsNullOrEmpty(allowedChoice) && !isRequired ? "," + allowedChoice : "") + ")"
+                            // FIXME, should be matchedVals
+                                    : (string.IsNullOrEmpty(val) ? null : "(" + val + ")");
                     }
                     else return matchedVals;
                 }
@@ -2006,10 +2060,12 @@ namespace RO.Web
                     throw;
                 }
             }
-            else if (",DateUTC,DateTimeUTC,ShortDateTimeUTC,LongDateTimeUTC,".IndexOf("," + drv["DisplayMode"].ToString() + ",") >= 0) {
+            else if (",DateUTC,DateTimeUTC,ShortDateTimeUTC,LongDateTimeUTC,".IndexOf("," + drv["DisplayMode"].ToString() + ",") >= 0)
+            {
                 return val;
             }
-            else if (drv["DisplayName"].ToString().Contains("Date")) {
+            else if (drv["DisplayName"].ToString().Contains("Date"))
+            {
                 return val;
             }
             else return val;
@@ -2029,8 +2085,8 @@ namespace RO.Web
             DataRowCollection drcScreenCriHlp = dtScreenCriHlp.Rows;
             foreach (DataRowView drv in dvCri)
             {
-                string val = ValidatedCriVal(screenId, drv, lastScrCri.Count > ii ? lastScrCri[ii] : null,refresh);
-                
+                string val = ValidatedCriVal(screenId, drv, lastScrCri.Count > ii ? lastScrCri[ii] : null, refresh);
+
                 if (drv["RequiredValid"].ToString() == "Y" && string.IsNullOrEmpty(val) && isSave)
                 {
                     string columnHeader = (drcScreenCriHlp.Count > ii) ? drcScreenCriHlp[ii]["ColumnHeader"].ToString() : drv["ColumnName"].ToString();
@@ -2046,15 +2102,15 @@ namespace RO.Web
             ds.Tables["DtScreenIn"].Rows.Add(dr);
             return ds;
         }
-        protected DataSet MakeScrCriteria(int screenId, DataView dvCri, SerializableDictionary<string,object> lastScrCri,bool refresh, bool isSave)
+        protected DataSet MakeScrCriteria(int screenId, DataView dvCri, SerializableDictionary<string, object> lastScrCri, bool refresh, bool isSave)
         {
             var x = dvCri.Table.AsEnumerable().Select(dr => lastScrCri.ContainsKey(dr["ColumnName"].ToString()) ? lastScrCri[dr["ColumnName"].ToString()].ToString() : null).ToList();
             return MakeScrCriteria(screenId, dvCri, x, refresh, isSave);
         }
 
-        protected DataSet MakeScrCriteria(int screenId, DataView dvCri, DataTable dtLastScrCri, bool refresh,bool isSave)
+        protected DataSet MakeScrCriteria(int screenId, DataView dvCri, DataTable dtLastScrCri, bool refresh, bool isSave)
         {
-            return MakeScrCriteria(screenId, dvCri, dtLastScrCri.AsEnumerable().Skip(1).Select(dr => dr["LastCriteria"].ToString()).ToList<string>(),refresh,isSave);
+            return MakeScrCriteria(screenId, dvCri, dtLastScrCri.AsEnumerable().Skip(1).Select(dr => dr["LastCriteria"].ToString()).ToList<string>(), refresh, isSave);
         }
 
         protected DataView GetCriCache(int systemId, int screenId)
@@ -2066,11 +2122,13 @@ namespace RO.Web
         {
             System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
             jss.MaxJsonLength = Int32.MaxValue;
-            try {
+            try
+            {
                 FileUploadObj fileObj = jss.Deserialize<FileUploadObj>(docJson);
                 return new List<_ReactFileUploadObj>() { new _ReactFileUploadObj() { base64 = fileObj.base64, fileName = fileObj.fileName, lastModified = fileObj.lastModified, mimeType = fileObj.mimeType } };
-            } 
-            catch {
+            }
+            catch
+            {
                 List<_ReactFileUploadObj> reactFileArray = jss.Deserialize<List<_ReactFileUploadObj>>(docJson);
                 return reactFileArray;
             }
@@ -2117,8 +2175,8 @@ namespace RO.Web
                 //FileUploadObj fileObj = jss.Deserialize<FileUploadObj>(docJson);
                 _ReactFileUploadObj fileObj = fileArray.Count > 0 ? fileArray[0] : new _ReactFileUploadObj();
                 bool backwardCompatible = false;
-                if (fileArray.Count == 0 || 
-                    (fileArray.Count == 1 
+                if (fileArray.Count == 0 ||
+                    (fileArray.Count == 1
                     && fileArray[0].base64 == "iVBORw0KGgoAAAANSUhEUgAAAhwAAAABCAQAAAA/IL+bAAAAFElEQVR42mN89p9hFIyCUTAKSAIABgMB58aXfLgAAAAASUVORK5CYII=")
                     )
                 {
@@ -2251,7 +2309,7 @@ namespace RO.Web
                      "://" + originalUri.Authority + newUrl;
 
             return newUrl;
-        } 
+        }
 
         protected bool IsProxy()
         {
@@ -2416,15 +2474,35 @@ namespace RO.Web
                 return url;
             }
         }
+        protected KeyValuePair<string, string> GetResetLoginUrl(string UsrId, string LoginName, string Email, string keyAs, string userState, string signUpURL, string returnUrl)
+        {
+            DataRow dr = ((new LoginSystem()).GetSaltedUserInfo(int.Parse(UsrId), LoginName, Email)).Rows[0];
+            string emailOnFile = dr["UsrEmail"].ToString();
+            byte[] resetTime = System.Text.Encoding.ASCII.GetBytes(DateTime.Now.ToFileTimeUtc().ToString());
+            string resetTimeEnc = Convert.ToBase64String(Encrypt(resetTime, dr["UsrPassword"] as byte[], dr["UsrPassword"] as byte[]));
+            string loginUrl = (System.Web.Security.FormsAuthentication.LoginUrl ?? "").Replace("/" + Config.AppNameSpace + "/", "");
+            if (string.IsNullOrEmpty(loginUrl)) loginUrl = "~/MyAccount.aspx";
+            string resetUrlPath =
+                ResolveUrlCustom(loginUrl.StartsWith("~/") || loginUrl.StartsWith("/") || loginUrl.StartsWith("http") ? loginUrl : "~/" + loginUrl, !IsProxy(), true);
+            //((Config.EnableSsl ? Config.SslUrl : Config.OrdUrl).StartsWith("http") ? (new Uri(Config.EnableSsl ? Config.SslUrl : Config.OrdUrl)) : Request.Url).GetLeftPart(UriPartial.Scheme) + Request.Url.Host + Request.Url.AbsolutePath.ToLower().Replace((signUpURL ?? loginUrl).ToLower(), loginUrl);
+            string reset_url = string.Format("{0}" + (resetUrlPath.Contains("?") ? "&" : "?") + "{3}={1}&p={2}{4}",
+                resetUrlPath,
+                HttpUtility.UrlEncode(dr["UsrId"].ToString()),
+                HttpUtility.UrlEncode(resetTimeEnc),
+                string.IsNullOrEmpty(keyAs) ? "j" : keyAs,
+                userState
+                );
+            return new KeyValuePair<string, string>(emailOnFile, reset_url + (string.IsNullOrEmpty(returnUrl) ? "" : "&ReturnUrl=" + Server.UrlEncode(returnUrl)));
+        }
 
         // Overload to handle customized SMTP configuration.
-        private Int32 SendEmail(string subject, string body, string to, string from, string replyTo, string fromTitle, bool isHtml, string smtp, string bcc=null)
+        private Int32 SendEmail(string subject, string body, string to, string from, string replyTo, string fromTitle, bool isHtml, string smtp, string bcc = null)
         {
             return SendEmail(subject, body, to, from, replyTo, fromTitle, isHtml, new List<System.Net.Mail.Attachment>(), smtp, bcc);
         }
 
         // "to" may contain email addresses separated by ";".
-        protected Int32 SendEmail(string subject, string body, string to, string from, string replyTo, string fromTitle, bool isHtml, string bcc=null)
+        protected Int32 SendEmail(string subject, string body, string to, string from, string replyTo, string fromTitle, bool isHtml, string bcc = null)
         {
             return SendEmail(subject, body, to, from, replyTo, fromTitle, isHtml, new List<KeyValuePair<string, byte[]>> { }, bcc);
         }
@@ -2443,7 +2521,7 @@ namespace RO.Web
 
         // Overload to handle attachments and being called by the above and should not be called publicly.
         // Return number of emails sent today; users should not exceed 10,000 a day in order to avoid smtp IP labelled as spam email.
-        protected Int32 SendEmail(string subject, string body, string to, string from, string replyTo, string fromTitle, bool isHtml, List<System.Net.Mail.Attachment> att, string smtp, string bcc=null)
+        protected Int32 SendEmail(string subject, string body, string to, string from, string replyTo, string fromTitle, bool isHtml, List<System.Net.Mail.Attachment> att, string smtp, string bcc = null)
         {
             Int32 iEmailsSentToday = (new RO.WebRules.WebRule()).CountEmailsSent();
             string[] smtpConfig = (string.IsNullOrEmpty(smtp) ? Config.SmtpServer : smtp).Split(new char[] { '|' });
@@ -2455,7 +2533,7 @@ namespace RO.Web
             string domain = smtpConfig.Length > 5 ? smtpConfig[5].Trim() : null;
             System.Net.Mail.MailMessage mm = new System.Net.Mail.MailMessage();
             string[] receipients = to.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] bccRecipients = bcc != null ? bcc.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries) : new string[]{};
+            string[] bccRecipients = bcc != null ? bcc.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries) : new string[] { };
             foreach (var t in receipients)
             {
                 mm.To.Add(new System.Net.Mail.MailAddress(t.Trim()));
@@ -2484,7 +2562,7 @@ namespace RO.Web
         {
             int round = 1;
             var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-            string requestJSON = jss.Serialize(request);            
+            string requestJSON = jss.Serialize(request);
             if (noEncrypt) return base64UrlEncode(System.Text.UTF8Encoding.UTF8.GetBytes(requestJSON));
             RO.Facade3.Auth authObject = GetAuthObject();
             string password = authObject.GetSessionEncryptionKey("", ""); // global non-user specific
@@ -2505,7 +2583,7 @@ namespace RO.Web
             string salt = password; // global, no salt
             T request = jss.Deserialize<T>(
                                             System.Text.UTF8Encoding.UTF8.GetString(
-                                            noEncrypt 
+                                            noEncrypt
                                             ? x
                                             : Decrypt(x,
                                                 System.Text.UTF8Encoding.UTF8.GetBytes(password),
@@ -2591,8 +2669,8 @@ namespace RO.Web
             byte sid = byte.Parse(systemId);
             int scrId = int.Parse(screenId);
             string dbConnectionString = LcAppConnString;
-            string dbPwd = LcAppPw ;
-            List<string> selectedIds = docLs == null ? null : docLs.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries).Select(s=>s.Trim()).ToList();
+            string dbPwd = LcAppPw;
+            List<string> selectedIds = docLs == null ? null : docLs.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
             DataTable dt = (new AdminSystem()).GetDdl(scrId, spName, false, false, 0, mstId, dbConnectionString, dbPwd, string.Empty, LImpr, LCurr);
             if (dt.Rows.Count > 0)
             {
@@ -2725,9 +2803,9 @@ namespace RO.Web
             string qs = questionMarkPos >= 0 ? url.Substring(questionMarkPos).Substring(1) : "";
 
             if (string.IsNullOrEmpty(qs)) return url;
-            if (!(path.ToLower().EndsWith("~/dnload.aspx") 
-                || path.ToLower().EndsWith("/dnload.aspx") 
-                || path.ToLower().EndsWith("~/upload.aspx") 
+            if (!(path.ToLower().EndsWith("~/dnload.aspx")
+                || path.ToLower().EndsWith("/dnload.aspx")
+                || path.ToLower().EndsWith("~/upload.aspx")
                 || path.ToLower().EndsWith("/upload.aspx"))
                 ) return url;
             List<string> qsList = qs.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -2736,7 +2814,7 @@ namespace RO.Web
                 qsList.Add("sys=" + GetSystemId().ToString());
             }
             string qsToHash = string.Join("&",
-                        qsList.Where(s=>!s.StartsWith("inline") && !s.StartsWith("ico")).OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim();
+                        qsList.Where(s => !s.StartsWith("inline") && !s.StartsWith("ico")).OrderBy(v => v.ToLower()).ToArray()).ToLower().Trim();
 
             //RandomNumberGenerator rng = new RNGCryptoServiceProvider();
             //byte[] tokenData = new byte[8];
@@ -3056,10 +3134,10 @@ namespace RO.Web
             return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
 #endif
         }
-        protected virtual Tuple<int, string, string> sshRemoteCmd(string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword)
+        protected virtual Tuple<int, string, string> sshRemoteCmd(string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword, string hostkey = null)
         {
             string plinkPath = Server.MapPath("~/helpers/plink.exe");
-            return new RO.WebRules.WebRule().sshRemoteCmd(plinkPath, localCmdFile, removeTarget, login, sshKeyFile, keyPassword);
+            return new RO.WebRules.WebRule().sshRemoteCmd(plinkPath, localCmdFile, removeTarget, login, sshKeyFile, keyPassword, hostkey);
 #if false
             string sshPort = "22";
             string cmdScript = string.Format("-m {0}", localCmdFile);
@@ -3133,7 +3211,23 @@ namespace RO.Web
         #region webhook/http helper
         protected virtual string InvokeWebHook(string url, string method = "GET", Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
         {
+            var uri = new Uri(url);
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+            wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
+                new CookieContainer(),
+                (cookieContainer, kvp) =>
+                {
+                    cookieContainer.Add(new Uri(uri.GetLeftPart(UriPartial.Authority)), new Cookie(kvp.Key, kvp.Value));
+                    return cookieContainer;
+                });
+            ;
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
+                new WebHeaderCollection(),
+                (headerCollection, kvp) =>
+                {
+                    headerCollection[kvp.Key] = kvp.Value;
+                    return headerCollection;
+                });
             wr.CookieContainer = new CookieContainer();
             string result = null;
             try
@@ -3150,6 +3244,23 @@ namespace RO.Web
                         stream.Close();
                     }
                     resp.Close();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
                 }
             }
             catch (Exception ex)
@@ -3205,6 +3316,23 @@ namespace RO.Web
                     resp.Close();
                 }
             }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                }
+            }
             catch (Exception ex)
             {
                 if (ex == null) return result;
@@ -3256,6 +3384,23 @@ namespace RO.Web
                         stream.Close();
                     }
                     resp.Close();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
                 }
             }
             catch (Exception ex)
@@ -3311,12 +3456,123 @@ namespace RO.Web
                     resp.Close();
                 }
             }
+            catch (WebException ex)
+            {
+                using (WebResponse resp = ex.Response)
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                }
+            }
             catch (Exception ex)
             {
                 if (ex == null) return result;
                 throw;
             }
             return result;
+        }
+        protected virtual Tuple<int, byte[], Dictionary<string, string>> HttpPostMultiPart(string url, Dictionary<string, string> data, List<Tuple<string, string, string, byte[]>> fileList, Dictionary<string, string> headers)
+        {
+            var uri = new Uri(url);
+            string boundary = Guid.NewGuid().ToString().Replace("-", "");
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(uri);
+            webRequest.PreAuthenticate = true;
+            webRequest.Accept = "*/*";
+            webRequest.ContentType = string.Format("multipart/form-data; boundary={0}", boundary);
+            webRequest.Method = "POST";
+            webRequest.KeepAlive = true;
+            foreach (string k in headers.Keys)
+            {
+                webRequest.Headers.Add(k, headers[k]);
+            }
+            //webRequest.ContentLength = header.Length + footer.Length + content.Length;
+            Stream dataStream = webRequest.GetRequestStream();
+            byte[] linBreak = Encoding.UTF8.GetBytes(Environment.NewLine);
+            foreach (var f in fileList)
+            {
+                byte[] header = Encoding.UTF8.GetBytes(
+                                string.Format("--{0}", boundary) + Environment.NewLine
+                                + "Content-Disposition: form-data; name=\"" + f.Item1 + "\"; filename=\"" + f.Item2 + "\"" + Environment.NewLine
+                                + string.Format("Content-Type: {0}", f.Item3) + Environment.NewLine
+                                + Environment.NewLine
+                                );
+                byte[] content = f.Item4;
+                dataStream.Write(header, 0, header.Length);
+                if (content != null)
+                {
+                    dataStream.WriteAsync(content, 0, content.Length);
+                }
+                dataStream.Write(linBreak, 0, linBreak.Length);
+            }
+            foreach (KeyValuePair<string, string> f in data)
+            {
+                byte[] header = Encoding.UTF8.GetBytes(
+                                string.Format("--{0}", boundary) + Environment.NewLine
+                                + "Content-Disposition: form-data; name=\"" + f.Key + "\"" + Environment.NewLine
+                                + Environment.NewLine
+                                );
+                byte[] content = System.Text.UTF8Encoding.UTF8.GetBytes(f.Value ?? "");
+                dataStream.Write(header, 0, header.Length);
+                if (content != null)
+                {
+                    dataStream.WriteAsync(System.Text.UTF8Encoding.UTF8.GetBytes(f.Value), 0, content.Length);
+                }
+                dataStream.Write(linBreak, 0, linBreak.Length);
+            }
+            byte[] footer = Encoding.UTF8.GetBytes(
+                            string.Format("--{0}--", boundary) + Environment.NewLine
+                            );
+            dataStream.Write(footer, 0, footer.Length);
+            dataStream.Close();
+            try
+            {
+                var webResponse = (HttpWebResponse)webRequest.GetResponse();
+                var responseStream = webResponse.GetResponseStream();
+                Dictionary<string, string> responseHeader = new Dictionary<string, string>();
+                foreach (string k in webResponse.Headers.AllKeys)
+                {
+                    responseHeader[k] = webResponse.Headers[k];
+                }
+                MemoryStream ms = new MemoryStream();
+                responseStream.CopyTo(ms);
+                var ret = ms.ToArray();
+                int responseStatusCode = (int)webResponse.StatusCode;
+                return new Tuple<int, byte[], Dictionary<string, string>>(responseStatusCode, ret, responseHeader);
+            }
+            catch (WebException e)
+            {
+                using (WebResponse response = e.Response)
+                {
+                    if (response != null)
+                    {
+                        HttpWebResponse httpResponse = (HttpWebResponse)response;
+                        using (Stream responseStream = response.GetResponseStream())
+                        {
+                            Dictionary<string, string> responseHeader = new Dictionary<string, string>();
+                            foreach (string k in httpResponse.Headers.AllKeys)
+                            {
+                                responseHeader[k] = httpResponse.Headers[k];
+                            }
+                            MemoryStream ms = new MemoryStream();
+                            responseStream.CopyTo(ms);
+                            var ret = ms.ToArray();
+                            int responseStatusCode = (int)httpResponse.StatusCode;
+                            return new Tuple<int, byte[], Dictionary<string, string>>(responseStatusCode, ret, responseHeader);
+                        }
+                    }
+                    else
+                        return new Tuple<int, byte[], Dictionary<string, string>>((int)e.Status, System.Text.UTF8Encoding.UTF8.GetBytes(e.Message), null);
+                }
+            }
         }
         #endregion
 
@@ -3395,7 +3651,7 @@ namespace RO.Web
             int rowExpected = dvCri.Count;
             var effectiveFilterId = GetEffectiveScreenFilterId(filterId, true);
             DataTable dtLastScrCriteria = _GetLastScrCriteria(screenId, rowExpected);
-            DataSet ds = criteria == null || criteria.Count == 0 ? MakeScrCriteria(screenId, dvCri, dtLastScrCriteria,true,false) : MakeScrCriteria(screenId, dvCri, criteria,true,false);
+            DataSet ds = criteria == null || criteria.Count == 0 ? MakeScrCriteria(screenId, dvCri, dtLastScrCriteria, true, false) : MakeScrCriteria(screenId, dvCri, criteria, true, false);
             DataTable dt = (new AdminSystem()).GetLis(screenId, getLisMethod, addRow, "Y", topN, isSys != "N" ? (string)null : LcAppConnString, isSys != "N" ? null : LcAppPw,
                 string.IsNullOrEmpty(filterId) ? 0 : effectiveFilterId, searchStr.StartsWith("**") ? searchStr.Substring(2) : "", searchStr.StartsWith("**") ? "" : searchStr,
                 dvCri, ui, uc, ds);
@@ -3417,13 +3673,13 @@ namespace RO.Web
                 int CriCnt = (new AdminSystem()).CountScrCri(scrCriId, isSys == "Y" ? "Y" : "N", LcSysConnString, LcAppPw);
                 _MkScreenIn(screenId, scrCriId, sp, isSys == "Y" ? "Y" : "N", true);
                 dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, CriCnt, requiredValid, topN,
-                searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2),"") : "", ui, uc,
+                searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2), "") : "", ui, uc,
                 isSys != "N" ? (string)null : LcAppConnString,
                 isSys != "N" ? null : LcAppPw);
             }
             else
             {
-                dt = (new AdminSystem()).GetDdl(screenId, getLisMethod, bAddNew, !searchStr.StartsWith("**"), topN, searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2),"") : "",
+                dt = (new AdminSystem()).GetDdl(screenId, getLisMethod, bAddNew, !searchStr.StartsWith("**"), topN, searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2), "") : "",
                     isSys != "N" ? (string)null : LcAppConnString,
                     isSys != "N" ? null : LcAppPw, searchStr.StartsWith("**") ? "" : searchStr, ui, uc);
             }
@@ -3449,9 +3705,9 @@ namespace RO.Web
         {
             DataTable dtSuggest = GetLis(getListMethod, csy, screenId, query, criteria, "0", "", "N", 1);
             if (
-                (dtSuggest.Rows.Count == 0 
+                (dtSuggest.Rows.Count == 0
                  || (dtSuggest.Rows.Count == 1
-                        && (query ?? "").StartsWith("**") && (query ?? "") != "**-1" && (query ?? "") != "**" 
+                        && (query ?? "").StartsWith("**") && (query ?? "") != "**-1" && (query ?? "") != "**"
                         && string.IsNullOrEmpty(dtSuggest.Rows[0][GetMstKeyColumnName()].ToString()))
                 )
                 && !isAdd)
@@ -3461,7 +3717,7 @@ namespace RO.Web
             else if (isAdd)
             {
                 DataTable dtAuthRow = _GetAuthRow(screenId);
-                if (dtAuthRow.Rows[0]["AllowAdd"].ToString() == "N") 
+                if (dtAuthRow.Rows[0]["AllowAdd"].ToString() == "N")
                 {
                     throw new UnauthorizedAccessException("access denied on add");
                 }
@@ -3515,7 +3771,7 @@ namespace RO.Web
             }
             return scrCri;
         }
-        protected string ToStandardString(string columnName, DataRow dr, bool includeBLOB = false) 
+        protected string ToStandardString(string columnName, DataRow dr, bool includeBLOB = false)
         {
             var colType = dr[columnName].GetType();
             return
@@ -3579,7 +3835,7 @@ namespace RO.Web
 
             foreach (DataRowView drv in dtSuggest.DefaultView)
             {
-                if (hasMatchCount && matchCount < 0 && !string.IsNullOrEmpty(drv[keyF].ToString().Trim()))  int.TryParse(drv["MatchCount"].ToString(), out matchCount);
+                if (hasMatchCount && matchCount < 0 && !string.IsNullOrEmpty(drv[keyF].ToString().Trim())) int.TryParse(drv["MatchCount"].ToString(), out matchCount);
 
                 string ss = drv[keyF].ToString().Trim();
                 string label = drv[valF].ToString().Trim().ToLowerInvariant();
@@ -3615,9 +3871,9 @@ namespace RO.Web
                             };
                             if (hasActive) rec["Active"] = drv["Active"].ToString();
                             results.Add(rec);
-    
+
                         }
-                        else 
+                        else
                         {
                             dropEnded = (ss == startKeyVal || (label.CompareTo(startLabelVal) >= 0));
                             skipped = skipped + 1;
@@ -3907,10 +4163,14 @@ namespace RO.Web
                         retVal = jss.Serialize(new FileUploadObj()
                         {
                             base64 = null
-                            , previewUrl = fileInfo.previewUrl
-                            , mimeType = fileInfo.mimeType
-                            , lastModified = fileInfo.lastModified
-                            , fileName = fileInfo.fileName
+                            ,
+                            previewUrl = fileInfo.previewUrl
+                            ,
+                            mimeType = fileInfo.mimeType
+                            ,
+                            lastModified = fileInfo.lastModified
+                            ,
+                            fileName = fileInfo.fileName
                         });
                     }
                     else
@@ -3925,11 +4185,15 @@ namespace RO.Web
                             retVal = fileContent != null ? System.Text.UTF8Encoding.UTF8.GetString(fileContent) : null;
                         }
                         else
-                            retVal = jss.Serialize(new FileUploadObj() { 
+                            retVal = jss.Serialize(new FileUploadObj()
+                            {
                                 base64 = fileContent != null && !headerOnly ? Convert.ToBase64String(fileContent) : null
-                                , mimeType = fileInfo.mimeType
-                                , lastModified = fileInfo.lastModified
-                                , fileName = fileInfo.fileName 
+                                ,
+                                mimeType = fileInfo.mimeType
+                                ,
+                                lastModified = fileInfo.lastModified
+                                ,
+                                fileName = fileInfo.fileName
                             });
                     }
                 }
@@ -3947,8 +4211,8 @@ namespace RO.Web
 
             int.TryParse((string)Application["MaxJsonLength"] ?? "102400", out MaxJsonLength);
 
-            if (checkJSONSize 
-                && retVal != null 
+            if (checkJSONSize
+                && retVal != null
                 && retVal.Length > MaxJsonLength - 1000)
             {
                 // better error tracing instead of standard 500 error code at ASMX level
@@ -3968,12 +4232,12 @@ namespace RO.Web
             {
                 try
                 {
-                    if (!resize) return new Tuple<string, byte[], bool>(mimeType, ba,  false);
-                    return new Tuple<string,byte[],bool>("image/jpeg", ResizeImage(ba, 96), true);
+                    if (!resize) return new Tuple<string, byte[], bool>(mimeType, ba, false);
+                    return new Tuple<string, byte[], bool>("image/jpeg", ResizeImage(ba, 96), true);
                 }
                 catch
                 {
-                    if (ba.Length <= maxOriginalSize) 
+                    if (ba.Length <= maxOriginalSize)
                         return new Tuple<string, byte[], bool>(mimeType, ba, false);
                     else
                         return new Tuple<string, byte[], bool>(mimeType, new byte[0], true);
@@ -3990,7 +4254,7 @@ namespace RO.Web
                 {
                     FileUploadObj fileInfo = jss.Deserialize<FileUploadObj>(fileContent);
                     string mimeType = string.IsNullOrEmpty(fileInfo.mimeType) ? "application/base64" : fileInfo.mimeType;
-                    var resized =tryResizeImage(Convert.FromBase64String(fileInfo.base64),mimeType, !bFullBLOB);
+                    var resized = tryResizeImage(Convert.FromBase64String(fileInfo.base64), mimeType, !bFullBLOB);
                     return new Tuple<string, byte[]>(resized.Item1, resized.Item2);
                 }
                 catch
@@ -4032,7 +4296,7 @@ namespace RO.Web
             {
                 try
                 {
-                    return ResizeImage(ba,96);
+                    return ResizeImage(ba, 96);
                 }
                 catch
                 {
@@ -4088,7 +4352,7 @@ namespace RO.Web
                 {
                     icon = icon != null
                         ? Convert.ToBase64String(icon)
-                        : ((fileInfo.mimeType ?? "").Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 
+                        : ((fileInfo.mimeType ?? "").Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64
                         : null),
                     mimeType = fileInfo.mimeType,
                     lastModified = fileInfo.lastModified,
@@ -4167,7 +4431,8 @@ namespace RO.Web
                     //    lastModified = fileInfo.lastModified, 
                     //    fileName = fileInfo.fileName });
                 }
-                catch {
+                catch
+                {
                     try
                     {
                         List<_ReactFileUploadObj> fileList = jss.Deserialize<List<_ReactFileUploadObj>>(fileContent);
@@ -4175,13 +4440,15 @@ namespace RO.Web
                         foreach (var fileInfo in fileList)
                         {
                             byte[] icon = tryResizeImage(Convert.FromBase64String(fileInfo.base64));
-                            x.Add(new FileUploadObj() {
+                            x.Add(new FileUploadObj()
+                            {
                                 icon = icon != null
                                     ? Convert.ToBase64String(icon)
                                     : (fileInfo.mimeType.Contains("svg") && (fileInfo.base64 ?? "").Length <= maxOriginalSize ? fileInfo.base64 : null),
-                                mimeType = fileInfo.mimeType, 
-                                lastModified = fileInfo.lastModified, 
-                                fileName = fileInfo.fileName });
+                                mimeType = fileInfo.mimeType,
+                                lastModified = fileInfo.lastModified,
+                                fileName = fileInfo.fileName
+                            });
                         }
                         return jss.Serialize(x);
                     }
@@ -4196,7 +4463,8 @@ namespace RO.Web
                     }
                 }
             }
-            catch {
+            catch
+            {
                 return null;
             }
         }
@@ -4214,9 +4482,9 @@ namespace RO.Web
             if (dt == null) return ret;
             bool isDtlTbl = GetScreenId() > 0 && dt.Columns.Contains(GetDtlKeyColumnName(false));
             bool isMstTbl = GetScreenId() > 0 && !isDtlTbl && dt.Columns.Contains(GetMstKeyColumnName(false));
-            string tableId = isDtlTbl ? 
-                                GetDtlTableName(true).ReplaceInsensitive(GetDtlTableName(false),"")
-                                : (isMstTbl ? GetMstTableName(true).ReplaceInsensitive(GetMstTableName(false),"") 
+            string tableId = isDtlTbl ?
+                                GetDtlTableName(true).ReplaceInsensitive(GetDtlTableName(false), "")
+                                : (isMstTbl ? GetMstTableName(true).ReplaceInsensitive(GetMstTableName(false), "")
                                 : ""
                                 );
             string tableName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlTableName(true) : (isMstTbl ? GetMstTableName(true) : "")) : null;
@@ -4226,8 +4494,8 @@ namespace RO.Web
             Func<string, DataRow, string> convertByteArrayToString = (columnName, dr) =>
             {
                 // technically wrong as there should be associating of colAuth with direct DB retrieval on content type, FIXME
-                string displayMode = colAuth == null || !colAuth.ContainsKey(columnName) 
-                                        ? "ImageButton" 
+                string displayMode = colAuth == null || !colAuth.ContainsKey(columnName)
+                                        ? "ImageButton"
                                         : colAuth[columnName]["DisplayMode"].ToString();
                 if (displayMode == "Signature")
                 {
@@ -4235,15 +4503,15 @@ namespace RO.Web
                     {
                         case IncludeBLOB.None:
                             return "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
-                            //return null;
+                        //return null;
                         case IncludeBLOB.Icon:
                             return "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
-                            //return RO.Common3.Utils.BlobPlaceHolder(dr[columnName] as byte[]);
-                        case IncludeBLOB.Content: 
+                        //return RO.Common3.Utils.BlobPlaceHolder(dr[columnName] as byte[]);
+                        case IncludeBLOB.Content:
                             return "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
                     }
-                    return  includeBLOB == IncludeBLOB.None 
-                                            ? null 
+                    return includeBLOB == IncludeBLOB.None
+                                            ? null
                                             : "data:image/png;base64," + Convert.ToBase64String(dr[columnName] as byte[]);
                 }
                 else if (displayMode == "Upload")
@@ -4321,7 +4589,7 @@ namespace RO.Web
             {
                 SerializableDictionary<string, string> rec = new SerializableDictionary<string, string>();
                 foreach (DataColumn col in dt.Columns)
-                {                
+                {
                     var columnName = col.ColumnName;
                     var baseColumnName = columnName.EndsWith("URL") ? columnName.Substring(0, columnName.Length - 3) : columnName;
                     var colType = dr[columnName].GetType();
@@ -4345,7 +4613,7 @@ namespace RO.Web
                                 (dr[columnName] != null
                                     ? convertByteArrayToString(columnName, dr)
                                     : null)
-                                    : (displayMode == "Password" ? null :  dr[columnName].ToString()) // do not send Password content to client side
+                                    : (displayMode == "Password" ? null : dr[columnName].ToString()) // do not send Password content to client side
                             ;
                         if (colAuth != null && colAuth.ContainsKey(columnName) && colAuth[columnName]["DisplayMode"].ToString() == "Upload")
                         {
@@ -4428,7 +4696,7 @@ namespace RO.Web
                         dr["ColVisible"].ToString().ToUpper() != "Y"
                         ||
                         (!string.IsNullOrEmpty(filteredColName) && filteredColName != dr["ColName"].ToString())
-                        ) 
+                        )
                         continue;
 
                     if (dr["DisplayMode"].ToString().Contains("Date"))
@@ -4456,7 +4724,7 @@ namespace RO.Web
             return string.Join(" OR ", filterExpression.ToArray());
         }
 
-        protected virtual AutoCompleteResponse GridLisSuggests(DataTable dtSuggest, int topN, Dictionary<string,string> options, bool isMaster)
+        protected virtual AutoCompleteResponse GridLisSuggests(DataTable dtSuggest, int topN, Dictionary<string, string> options, bool isMaster)
         {
             AutoCompleteResponse r = new AutoCompleteResponse();
             DataTable dtColAuth = _GetAuthCol(GetScreenId());
@@ -4540,7 +4808,7 @@ namespace RO.Web
         private string GetKeyValue(DataRow dr, List<string> keyColumns)
         {
             string key = string.Empty;
-            foreach(string column in keyColumns)
+            foreach (string column in keyColumns)
             {
                 key += dr[column];
             }
@@ -4568,7 +4836,7 @@ namespace RO.Web
                 rec.Add("value", o[keyColumn].ToString());
                 rec.Add("idx", idx.ToString());
 
-                foreach(string column in addtionalColumns)
+                foreach (string column in addtionalColumns)
                 {
                     rec.Add(column, o[column].ToString());
                 }
@@ -4684,7 +4952,7 @@ namespace RO.Web
                     MenuText = drv["MenuText"].ToString(),
                     Selected = selectedQid.StartsWith(drv["QId"].ToString()),
                     Level = level,
-                    Children = bRecurr ? BuildMenuTree(mh,new DataView(dvMenu.Table, string.Format("ParentId = {0}", drv["MenuId"].ToString()), "ParentId, ParentQId,Qid", DataViewRowState.CurrentRows), path, level + 1, bRecurr) : new List<MenuNode>()
+                    Children = bRecurr ? BuildMenuTree(mh, new DataView(dvMenu.Table, string.Format("ParentId = {0}", drv["MenuId"].ToString()), "ParentId, ParentQId,Qid", DataViewRowState.CurrentRows), path, level + 1, bRecurr) : new List<MenuNode>()
                 };
                 if (mt.ParentId == "" || mh.Contains(mt.ParentId)) menus.Add(mt);
             }
@@ -4962,7 +5230,7 @@ namespace RO.Web
                 ScreenCriteria = DataTableToListOfObject(dtScreenCriteria),
                 ScreenFilter = DataTableToListOfObject(dtScreenFilter),
                 ScreenHlp = DataTableToListOfObject(dtScreenHlp),
-                SystemLabels = systemLabels == null || systemLabels.data == null ? new List<SerializableDictionary<string,string>>() : systemLabels.data.data,
+                SystemLabels = systemLabels == null || systemLabels.data == null ? new List<SerializableDictionary<string, string>>() : systemLabels.data.data,
             };
             return result;
         }
@@ -4980,7 +5248,8 @@ namespace RO.Web
             var ddlContext = GetDdlContext();
             var Ddl = new SerializableDictionary<string, List<SerializableDictionary<string, string>>>();
 
-            foreach (var x in ddlContext.Select((context)=>{
+            foreach (var x in ddlContext.Select((context) =>
+            {
                 if (
                     (includedList == null || includedList.Contains(context.Key))
                     &&
@@ -4998,7 +5267,7 @@ namespace RO.Web
                 {
                     return new KeyValuePair<string, List<SerializableDictionary<string, string>>>(context.Key, new List<SerializableDictionary<string, string>>());
                 }
-            })) 
+            }))
             {
                 Ddl[x.Key] = x.Value;
             }
@@ -5007,6 +5276,17 @@ namespace RO.Web
         protected bool _SetEffectiveScrCriteria(SerializableDictionary<string, string> desiredScreenCriteria)
         {
             var LastScreenCriteria = GetScreenCriteriaEX(true);
+            if (LastScreenCriteria.data == null && LastScreenCriteria.status != "success")
+            {
+                if (LastScreenCriteria.status == "access_denied")
+                {
+                    throw new UnauthorizedAccessException(LastScreenCriteria.errorMsg);
+                }
+                else
+                {
+                    throw new Exception(LastScreenCriteria.errorMsg);
+                }
+            }
             var dtScreenCriteria = _GetScrCriteria(GetScreenId());
             Func<SerializableDictionary<string, string>, SerializableDictionary<string, SerializableDictionary<string, string>>> fn = (d) =>
             {
@@ -5021,8 +5301,9 @@ namespace RO.Web
             var filledScrCriteria = fn(desiredScreenCriteria);
             var currentScrCriteria = _GetCurrentScrCriteria(new DataView(dtScreenCriteria), filledScrCriteria ?? LastScreenCriteria.data.data, true);
             var effectiveScrCriteria = _SetCurrentScrCriteria(currentScrCriteria.Item1);
-            bool validFilledScrCriteria = (filledScrCriteria.Where((o, i) => {
-                return effectiveScrCriteria[i] == o.Value["LastCriteria"]; 
+            bool validFilledScrCriteria = (filledScrCriteria.Where((o, i) =>
+            {
+                return effectiveScrCriteria[i] == o.Value["LastCriteria"];
             }).Count() == filledScrCriteria.Count);
             return validFilledScrCriteria;
         }
@@ -5042,7 +5323,8 @@ namespace RO.Web
             {
                 throw new Exception(string.Format("must define proper Ddl context {0} {1}", GetScreenId(), GetSystemId()));
             }
-            else if (!ddlContext.ContainsKey(columnName)) {
+            else if (!ddlContext.ContainsKey(columnName))
+            {
                 throw new Exception(string.Format("must define proper Ddl context for {0} {1} {2}", GetScreenId(), GetSystemId(), columnName));
             }
             var context = ddlContext[columnName];
@@ -5056,12 +5338,12 @@ namespace RO.Web
             var rec = ddlSuggests(DesiredKeys.Length > 0 ? "**" + SelectedVal : "", x, DesiredKeys.Length > 0 ? DesiredKeys.Length : 1);
             return (rec.data.Count > 0 && DesiredKeys.Length > 0) ? (isMultiValueType ? "(" + string.Join(",", rec.data.Select(o => o["key"]).ToArray()) + ")" : rec.data[0]["key"]) : "";
         }
-        protected void ValidateField(DataRow drAuth, DataRow drLabel, Dictionary<string, string> refRecord, Dictionary<string,string> defRefRecord, ref SerializableDictionary<string, string> revisedRecord, SerializableDictionary<string, string> refMaster, ref List<KeyValuePair<string, string>> errors, SerializableDictionary<string, string> skipValidation)
+        protected void ValidateField(DataRow drAuth, DataRow drLabel, Dictionary<string, string> refRecord, Dictionary<string, string> defRefRecord, ref SerializableDictionary<string, string> revisedRecord, SerializableDictionary<string, string> refMaster, ref List<KeyValuePair<string, string>> errors, SerializableDictionary<string, string> skipValidation)
         {
             string[] isDdlType = { "ComboBox", "DropDownList", "ListBox", "RadioButtonList" };
             string[] isMultiValueType = { "ListBox" };
-            string[] isSimpleTextType = { "TextBox", "MultiLine", "Money", "Currency"};
-            string[] isStringDataType = { "10","11","14","15"};
+            string[] isSimpleTextType = { "TextBox", "MultiLine", "Money", "Currency" };
+            string[] isStringDataType = { "10", "11", "14", "15" };
             string[] isBlobType = { "8", "9" };
             string[] isDateType = { "12", "21" };
             string colName = drLabel["ColumnName"].ToString() + drLabel["TableId"].ToString();
@@ -5081,15 +5363,15 @@ namespace RO.Web
             bool isMasterTable = drAuth["MasterTable"].ToString() == "Y";
 
             // comma delimited rules to skip
-            string skippedValidation = skipValidation != null ? skipValidation[colName] ??  "" : "";
+            string skippedValidation = skipValidation != null ? skipValidation[colName] ?? "" : "";
             string skipAllValidation = skipValidation != null ? skipValidation[(isMasterTable ? "SkipAllMst" : "SkipAllDtl")] ?? "" : "";
             if (
-                ((drAuth["ColReadOnly"].ToString() == "Y" 
-                && !skippedValidation.Contains("ColReadOnly") 
-                && !skipAllValidation.Contains("ColReadOnly")) 
+                ((drAuth["ColReadOnly"].ToString() == "Y"
+                && !skippedValidation.Contains("ColReadOnly")
+                && !skipAllValidation.Contains("ColReadOnly"))
                 || (
-                    drAuth["ColVisible"].ToString() == "N") 
-                    && !skippedValidation.Contains("ColVisible") 
+                    drAuth["ColVisible"].ToString() == "N")
+                    && !skippedValidation.Contains("ColVisible")
                     && !skipAllValidation.Contains("ColVisible"))
                 && (
                     oldVal != val
@@ -5097,7 +5379,7 @@ namespace RO.Web
                 )
             {
                 /* this should either bounce or use refRecord value FIXME */
-                var revertedVal = !string.IsNullOrEmpty(oldVal) ? oldVal : defaultValue ;
+                var revertedVal = !string.IsNullOrEmpty(oldVal) ? oldVal : defaultValue;
                 if (colVisible
                     //Aaron: changes for all ModifiedOn fields
                     //||
@@ -5133,7 +5415,8 @@ namespace RO.Web
                             errors.Add(new KeyValuePair<string, string>(colName, "invalid file upload, incomplete content"));
                         }
                     }
-                    catch {
+                    catch
+                    {
                         // bounce
                         errors.Add(new KeyValuePair<string, string>(colName, "invalid file upload format"));
                     }
@@ -5171,7 +5454,7 @@ namespace RO.Web
                     else
                     {
                         // no new upload, must preserve existing value even when incoming is null but if not empty, treat as textbox data entry
-                        var revertedVal = !string.IsNullOrEmpty(oldVal) ? oldVal : defaultValue ;
+                        var revertedVal = !string.IsNullOrEmpty(oldVal) ? oldVal : defaultValue;
                         val = (val ?? "").Length > 0 ? val.Trim() : revertedVal;
                     }
                 }
@@ -5315,9 +5598,9 @@ namespace RO.Web
                         {
                             ValidateAction(GetScreenId(), isDelete ? "D" : "A");
                         }
-                        if (!string.IsNullOrEmpty(keyId)) 
+                        if (!string.IsNullOrEmpty(keyId))
                         {
-                            if (keys != null) 
+                            if (keys != null)
                             {
                                 if (!keys.Contains(keyId)) throw new Exception(string.Format("access denied **", keyId));
                             }
@@ -5329,7 +5612,7 @@ namespace RO.Web
                     }
                     catch (Exception ex)
                     {
-                        accessViolation.Add(string.Format("{0} KeyId: {1} - {2} ", isDelete ? "delete" : isAdd ? "add" : "update",  keyId, ex.Message));
+                        accessViolation.Add(string.Format("{0} KeyId: {1} - {2} ", isDelete ? "delete" : isAdd ? "add" : "update", keyId, ex.Message));
                         continue;
                     }
                 }
@@ -5354,7 +5637,7 @@ namespace RO.Web
                         if (!string.IsNullOrEmpty(drLabel["TableId"].ToString()) && (drAuth["MasterTable"].ToString() == "N" || IsGridOnlyScreen()))
                         {
                             string colName = drAuth["ColName"].ToString();
-                            ValidateField(drAuth, drLabel, currentDtl,InitDtl(), ref revisedDtl, mst, ref dtlErrors, skipValidation);
+                            ValidateField(drAuth, drLabel, currentDtl, InitDtl(), ref revisedDtl, mst, ref dtlErrors, skipValidation);
                         }
                         jj = jj + 1;
                     }
@@ -5379,10 +5662,10 @@ namespace RO.Web
             var utcColumnList = dtColLabel.AsEnumerable().Where(dr => dr["DisplayMode"].ToString().Contains("UTC")).Select(dr => dr["ColumnName"].ToString() + dr["TableId"].ToString()).ToArray();
             HashSet<string> utcColumns = new HashSet<string>(utcColumnList);
 
-            var currMst = string.IsNullOrEmpty(pid) || dtMst.Rows.Count == 0 
-                        ? InitMaster() 
-                        // full content for image field to validator and utc formatted datetime column, as if it is sent in 
-                        : DataTableToListOfObject(dtMst,IncludeBLOB.Content, null, utcColumns)[0];
+            var currMst = string.IsNullOrEmpty(pid) || dtMst.Rows.Count == 0
+                        ? InitMaster()
+                // full content for image field to validator and utc formatted datetime column, as if it is sent in 
+                        : DataTableToListOfObject(dtMst, IncludeBLOB.Content, null, utcColumns)[0];
 
             List<KeyValuePair<string, string>> mstError = ValidateMst(ref mst, currMst, skipValidation);
             List<List<KeyValuePair<string, string>>> dtlError = new List<List<KeyValuePair<string, string>>>();
@@ -5515,23 +5798,26 @@ namespace RO.Web
 
                 return price.ToString();
             }
-            catch (WebException ex) {
-                if(ex.Status == WebExceptionStatus.ProtocolError) {
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError)
+                {
                     using (StreamReader r = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()))
                     {
                         string responseContent = r.ReadToEnd();
-                        string errDetail = string.Format("Error Detail : {0}\r\n{1}\r\n{2}\r\n", 
+                        string errDetail = string.Format("Error Detail : {0}\r\n{1}\r\n{2}\r\n",
                             ((HttpWebResponse)ex.Response).StatusCode
-                            ,((HttpWebResponse)ex.Response).StatusDescription
-                            ,r.ReadToEnd());
+                            , ((HttpWebResponse)ex.Response).StatusDescription
+                            , r.ReadToEnd());
                         ErrorTracing(new Exception(string.Format("failed to get FX Rate ({0}) - ({1})\r\n {2}", FrISOCurrencySymbol, ToISOCurrencySymbol, errDetail), ex));
                     }
                 }
                 throw ex;
                 //return string.Empty; 
             }
-            catch (Exception ex) {
-                ErrorTracing(new Exception(string.Format("failed to get FX Rate ({0}) - ({1})", FrISOCurrencySymbol, ToISOCurrencySymbol),ex));
+            catch (Exception ex)
+            {
+                ErrorTracing(new Exception(string.Format("failed to get FX Rate ({0}) - ({1})", FrISOCurrencySymbol, ToISOCurrencySymbol), ex));
                 throw ex;
                 //return string.Empty; 
             }
@@ -5552,7 +5838,7 @@ namespace RO.Web
 
         protected IncludeBLOB GetBlobOption(string blobOption)
         {
-            return blobOption == "I" ? IncludeBLOB.Icon : (blobOption == "N" ? IncludeBLOB.None : (blobOption =="C" ? IncludeBLOB.Content : IncludeBLOB.None));
+            return blobOption == "I" ? IncludeBLOB.Icon : (blobOption == "N" ? IncludeBLOB.None : (blobOption == "C" ? IncludeBLOB.Content : IncludeBLOB.None));
         }
 
         protected int GetEffectiveScreenFilterId(string filterId, bool isMaster = true)
@@ -5566,7 +5852,8 @@ namespace RO.Web
             bool hasMstFilter = false;
             if (dt != null && dt.Rows.Count > 0)
             {
-                foreach (DataRow dr in dt.Rows) {
+                foreach (DataRow dr in dt.Rows)
+                {
                     if (
                         (
                         (dr["ApplyToMst"].ToString() == "Y" && isMaster)
@@ -5596,7 +5883,7 @@ namespace RO.Web
                             (!filterIdIsName && id.ToString() == filterId)
                             ||
                             (filterIdIsName && dr["FilterName"].ToString() == filterId)
-                            ) 
+                            )
                         {
                             effectiveScreenFilterId = id;
                             break;
@@ -5605,11 +5892,78 @@ namespace RO.Web
                 }
 
             }
-            return effectiveScreenFilterId != 0 
-                ? effectiveScreenFilterId 
+            return effectiveScreenFilterId != 0
+                ? effectiveScreenFilterId
                 : (isMaster && !hasDtlFilter || !isMaster && !hasMstFilter) ? firstApplicableScreenFilterId : 0;
         }
 
+        #region Request/Response helper, bypass {d:{}} construct for asmx and handle restful request etc.
+        protected void ResponseJson(HttpResponse Response, string json)
+        {
+            Response.Buffer = true; Response.ClearHeaders(); Response.ClearContent();
+            Response.Flush();
+            Response.ContentType = "application/json";
+            Response.Write(json);
+            Response.End();
+        }
+
+        protected void ResponseAsJson(HttpResponse Response, object result)
+        {
+            var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+            var json = jss.Serialize(result);
+            ResponseJson(Response, json);
+        }
+
+        protected void ResponseAsOctet(HttpResponse Response, byte[] result, string mimeType = "application/octet", string fileName = null, bool inLine = false)
+        {
+            string contentDisposition = inLine ? "inline" : "attachment";
+            Response.Buffer = true; Response.ClearHeaders(); Response.ClearContent();
+            Response.Flush();
+            Response.ContentType = mimeType;
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                Response.AppendHeader("Content-Disposition", contentDisposition + "; Filename=" + fileName);
+            }
+            Response.BinaryWrite(result);
+            Response.End();
+        }
+
+        protected RestfulRequest ParseRestfulRequest(HttpRequest Request, string restfulPrefix)
+        {
+            var stripPrefixRx = new Regex(".*restapi/[^/]*/?");
+            var rawUrl = Request.RawUrl;
+            var rawUri = new Uri(Request.Url.Scheme + "://" + Request.Url.Authority + Request.RawUrl);
+            var seg = rawUrl.Split(new char[] { '?' }, StringSplitOptions.RemoveEmptyEntries);
+            var path = seg[0];
+            var restSeg = stripPrefixRx.Replace(path, "");
+            var qs = seg.Length > 1 ? seg[1] : "";
+            var values = restSeg.Split(new char[] { '/' });
+            var method = (Request.Headers["X-METHOD"] ?? "").ToUpper();
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            var mstId = values.Length < 1 || string.IsNullOrEmpty(values[0]) || (values[0] ?? "").Trim() == "_" ? "" : values[0];
+            var dtlId = values.Length < 2 || string.IsNullOrEmpty(values[1]) || (values[1] ?? "").Trim() == "_" ? "" : values[1];
+            var action = values.Length < 3 || string.IsNullOrEmpty(values[2]) || (values[2] ?? "").Trim() == "_" ? "" : values[2];
+            string body = null;
+            Request.InputStream.Position = 0;
+            if (method == "POST" || method == "PUT" || method == "PATCH")
+            {
+                using (var reader = new StreamReader(Request.InputStream))
+                {
+                    body = reader.ReadToEnd();
+                }
+            }
+            return new RestfulRequest
+            {
+                method = method,
+                contentType = Request.ContentType,
+                queryString = qs,
+                body = body,
+                mstId = mstId,
+                dtlId = dtlId,
+                action = action
+            };
+        }
+        #endregion
         #region visible extern service endpoint
         [WebMethod(EnableSession = false)]
         public ApiResponse<AutoCompleteResponse, SerializableDictionary<string, AutoCompleteResponse>> GetAuthRow()
@@ -5771,10 +6125,10 @@ namespace RO.Web
             Func<ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
                 SwitchContext(systemId, LCurr.CompanyId, LCurr.ProjectId);
-             
+
                 SerializableDictionary<string, string> result = new SerializableDictionary<string, string>();
-               DataTable dtMenu = _GetMenu(LCurr.SystemId, true);
-               
+                DataTable dtMenu = _GetMenu(LCurr.SystemId, true);
+
                 ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<List<SerializableDictionary<string, string>>, SerializableDictionary<string, AutoCompleteResponse>>();
                 mr.data = DataTableToListOfObject(dtMenu, false, null);
                 mr.status = "success";
@@ -5917,7 +6271,7 @@ namespace RO.Web
                 }
                 DataTable dtLastScrCriteria = _GetLastScrCriteria(GetScreenId(), 0, refresh);
                 //skip first row in last criteria
-                for (int ii = 1; ii < dtLastScrCriteria.Rows.Count && (ii-1) < dt.Rows.Count; ii++)
+                for (int ii = 1; ii < dtLastScrCriteria.Rows.Count && (ii - 1) < dt.Rows.Count; ii++)
                 {
                     dt.Rows[ii - 1]["LastCriteria"] = dtLastScrCriteria.Rows[ii]["LastCriteria"];
                 }
@@ -6067,7 +6421,7 @@ namespace RO.Web
                         try
                         {
                             // can't pass in the colauth or it would be filtered out DB column name vs Screen column name, FIXEM
-                            mr.data = DataTableToListOfObject(dt,drLabel["DisplayMode"].ToString() == "Upload" ? IncludeBLOB.DownloadLink : IncludeBLOB.Content, null, null);
+                            mr.data = DataTableToListOfObject(dt, drLabel["DisplayMode"].ToString() == "Upload" ? IncludeBLOB.DownloadLink : IncludeBLOB.Content, null, null);
                             mr.status = "success";
                             mr.errorMsg = "";
                             return mr;
@@ -6135,16 +6489,18 @@ namespace RO.Web
                                                                             .GroupBy((e) => e.Value["method"])
                                                                             .Select((g) =>
                                                                             {
-                                                                                return new {
-                                                                                Key = g.Key,
-                                                                                Value = g.Select(v=>new Tuple<string,string>(v.Key, v.Value["mVal"]))
-                                                                                        .ToDictionary(v=>v.Item1, v=>v.Item2)
+                                                                                return new
+                                                                                {
+                                                                                    Key = g.Key,
+                                                                                    Value = g.Select(v => new Tuple<string, string>(v.Key, v.Value["mVal"]))
+                                                                                            .ToDictionary(v => v.Item1, v => v.Item2)
                                                                                 };
                                                                             }
-                                                                            ).ToDictionary(v=>v.Key, v=>v.Value);
+                                                                            ).ToDictionary(v => v.Key, v => v.Value);
 
                         Dictionary<string, DataRow> colAuth = dtAut.AsEnumerable()
-                                                                .ToDictionary(dr => {
+                                                                .ToDictionary(dr =>
+                                                                {
                                                                     var x = ddlDependents[ddlSP];
                                                                     var screenColumName = dr["ColName"].ToString();
                                                                     return x.ContainsKey(screenColumName) ? x[screenColumName] : screenColumName;
@@ -6152,7 +6508,8 @@ namespace RO.Web
                         var utcColumnList = dtLabel
                                             .AsEnumerable()
                                             .Where(dr => dr["DisplayMode"].ToString().Contains("UTC"))
-                                            .Select(dr => {
+                                            .Select(dr =>
+                                            {
                                                 var x = ddlDependents[ddlSP];
                                                 var screenColumName = dr["ColumnName"].ToString() + dr["TableId"].ToString();
                                                 return x.ContainsKey(screenColumName) ? x[screenColumName] : screenColumName;
@@ -6452,7 +6809,7 @@ namespace RO.Web
         public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> GetScreenMetaData(SerializableDictionary<string, string> options)
         {
             int screenId = GetScreenId();
-            byte systemId = GetSystemId(); 
+            byte systemId = GetSystemId();
 
             Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
@@ -6473,7 +6830,7 @@ namespace RO.Web
         public ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>> GetScreenDdls()
         {
             int screenId = GetScreenId();
-            byte systemId = GetSystemId(); 
+            byte systemId = GetSystemId();
 
             Func<ApiResponse<LoadScreenPageResponse, SerializableDictionary<string, AutoCompleteResponse>>> fn = () =>
             {
@@ -6492,11 +6849,11 @@ namespace RO.Web
             return ret;
         }
 
-        protected Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>> LoadFirstOrDefault(DataTable dtScreenCriteria, bool loadFirst, string filterId, string keyId, string topN, SerializableDictionary<string, string> desiredScreenCriteria, SerializableDictionary<string, string> options=null)
+        protected Tuple<List<SerializableDictionary<string, string>>, SerializableDictionary<string, string>, SerializableDictionary<string, string>, List<SerializableDictionary<string, string>>> LoadFirstOrDefault(DataTable dtScreenCriteria, bool loadFirst, string filterId, string keyId, string topN, SerializableDictionary<string, string> desiredScreenCriteria, SerializableDictionary<string, string> options = null)
         {
             var NewMst = GetNewMst();
             var LastScreenCriteria = GetScreenCriteriaEX(true);
-            var effectiveFilterId = GetEffectiveScreenFilterId(filterId,true);
+            var effectiveFilterId = GetEffectiveScreenFilterId(filterId, true);
             var effectiveDtlFilterId = GetEffectiveScreenFilterId("", false);
             Func<SerializableDictionary<string, string>, SerializableDictionary<string, SerializableDictionary<string, string>>> fn = (d) =>
             {
@@ -6527,7 +6884,7 @@ namespace RO.Web
                 var firstMstId = (SearchList.data.data.FirstOrDefault() ?? new SerializableDictionary<string, string>() { { "key", "" } })["key"];
                 var filteringOptions = new SerializableDictionary<string, string>() { 
                         { "CurrentScreenCriteria", new JavaScriptSerializer().Serialize(currentScrCriteria.Item2) } 
-                    }.Clone(options,new List<string>(){"MstBlob","DtlBlob"});
+                    }.Clone(options, new List<string>() { "MstBlob", "DtlBlob" });
                 var Mst = GetMstById(firstMstId, filteringOptions);
                 var Dtl = GetDtlById(firstMstId, filteringOptions, effectiveDtlFilterId).data;
                 return new Tuple<
@@ -6536,7 +6893,7 @@ namespace RO.Web
                         , SerializableDictionary<string, string>
                         , List<SerializableDictionary<string, string>>>(
                             SearchList.data.data
-                            ,new SerializableDictionary<string, string>(){
+                            , new SerializableDictionary<string, string>(){
                                 {"query",SearchList.data.query}
                                 ,{"topN",SearchList.data.topN.ToString()}
                                 ,{"skipped",SearchList.data.skipped.ToString()}
@@ -6660,9 +7017,93 @@ namespace RO.Web
             var ret = ProtectedCall(RestrictedApiCall(fn, systemId, screenId, "R", null));
             return ret;
         }
+        [WebMethod(EnableSession = false)]
+        public virtual object Restful()
+        {
+            var stripPrefixRx = new Regex(".*restapi/[^/]*/?");
+            var Request = HttpContext.Current.Request;
+            var rawUrl = Request.RawUrl;
+            var rawUri = new Uri(Request.Url.Scheme + "://" + Request.Url.Authority + Request.RawUrl);
+            var seg = rawUrl.Split(new char[] { '?' }, StringSplitOptions.RemoveEmptyEntries);
+            var path = seg[0];
+            var restSeg = stripPrefixRx.Replace(path, "");
+            var qs = seg.Length > 1 ? seg[1] : "";
+            var values = restSeg.Split(new char[] { '/' });
+            var method = (Request.Headers["X-METHOD"] ?? "").ToUpper();
+            var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            var mstId = values.Length < 1 || string.IsNullOrEmpty(values[0]) || (values[0] ?? "").Trim() == "_" ? "" : values[0];
+            var dtlId = values.Length < 2 || string.IsNullOrEmpty(values[1]) || (values[1] ?? "").Trim() == "_" ? "" : values[1];
+            var action = values.Length < 3 || string.IsNullOrEmpty(values[2]) || (values[2] ?? "").Trim() == "_" ? "" : values[2];
+            Request.InputStream.Position = 0;
+            if (method == "DELETE")
+            {
+                if (string.IsNullOrEmpty(mstId)) throw new HttpException(500, "invalid request, missing record id");
 
+                var mstKeyColumn = GetMstKeyColumnName();
+                var dtlKeyColumn = GetDtlKeyColumnName();
+
+                if (string.IsNullOrEmpty(dtlId))
+                {
+                    return DelMst(
+                        new SerializableDictionary<string, string>() {
+                        {mstKeyColumn, mstId},
+                    }
+                        , new SerializableDictionary<string, string>());
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            else if (method == "GET")
+            {
+                if (string.IsNullOrEmpty(mstId))
+                {
+                    return GetSearchList("", 0, "", new SerializableDictionary<string, string>());
+                }
+                else
+                {
+                    var mst = GetMstById(mstId, new SerializableDictionary<string, string>());
+                    return mst;
+                }
+            }
+            else if (method == "POST" || method == "PUT" || method == "PATCH")
+            {
+                using (var reader = new StreamReader(Request.InputStream))
+                {
+                    var body = reader.ReadToEnd();
+                    if (!string.IsNullOrEmpty(body))
+                    {
+                        var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+                        var content = jss.Deserialize<SaveDataObject>(body);
+                        return SaveData(content.mst, content.dtl ?? new List<SerializableDictionary<string, string>>(), content.options ?? new SerializableDictionary<string, string>());
+                    }
+                    else
+                    {
+                        ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>> mr = new ApiResponse<SaveDataResponse, SerializableDictionary<string, AutoCompleteResponse>>();
+                        mr.status = "failed";
+                        mr.errorMsg = "nothing to save";
+                        return mr;
+                    }
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
         #endregion
     }
 
+    public class RestfulRequest
+    {
+        public string method;
+        public string queryString;
+        public string body;
+        public string contentType;
+        public string mstId;
+        public string dtlId;
+        public string action;
 
+    }
 }

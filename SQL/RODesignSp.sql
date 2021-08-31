@@ -4877,7 +4877,21 @@ ALTER PROCEDURE [dbo].[ChkLoginStatus]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-IF (SELECT ISNULL(FailedAttempt,0) FROM dbo.Usr WHERE LoginName = @LoginName) >= 5
+IF EXISTS (
+SELECT 1
+FROM
+dbo.Usr u
+WHERE 
+u.LoginName = @LoginName
+AND
+(
+(FailedAttempt >= 5 
+ -- AND ISNULL(PwdDuration, 90) <> 23456 --service account
+)
+OR
+u.Active = 'N'
+)
+)
 	SELECT 0
 ELSE
 	SELECT 1
@@ -38274,8 +38288,9 @@ SELECT @fClause = 'FROM RODesign.dbo.UsrImpr a95'
 SELECT @oClause = 'ORDER BY a95.UsrImprDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a95.UsrImprDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a95.UsrImprLink = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','a95.','Y','N',null,'N','UsrImprId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','a95.','Y','N',null,'N','UsrImprId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','a95.','N','N',null,'N','UsrImprId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'ModifiedBy','Usr','a95.','N','N',null,'Y','UsrImprId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'InputBy','Usr','a95.','N','N',null,'Y','UsrImprId',@tClause OUTPUT,@Usrs
 IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
@@ -47180,6 +47195,8 @@ BEGIN
 		END
 	END
 END
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','b1.','Y','Y',null,'Y','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Projects,'ProjectLs','Project','b1.','Y','Y',null,'Y','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
@@ -47189,7 +47206,6 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','b1.','N','N',null,'N','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Customers,'CustomerId','Customer','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId','Member','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
@@ -59067,6 +59083,8 @@ BEGIN
 		END
 	END
 END
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','b1.','Y','Y',null,'Y','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Projects,'ProjectLs','Project','b1.','Y','Y',null,'Y','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
@@ -59076,7 +59094,6 @@ EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'Culture
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','b1.','Y','N',null,'N','UsrId',@wClause OUTPUT,@Usrs
 SELECT @tClause = ''
-EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','b1.','N','N',null,'N','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Customers,'CustomerId','Customer','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs
 EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId','Member','b1.','N','N',null,'Y','UsrId',@tClause OUTPUT,@Usrs

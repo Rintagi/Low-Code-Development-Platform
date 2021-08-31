@@ -219,7 +219,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div class="r-td"></div>
-    		<div id="cTblObjective3P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cTblObjective3" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cTblObjective3" display="none" ErrorMessage="TblObjective <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cTblObjective3E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cTblObjective3P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cTblObjective3" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cTblObjective3" display="none" ErrorMessage="TblObjective <= 500 characters please." ValidationExpression="^[\s\S]{0,500}$" runat="server" /><asp:Image id="cTblObjective3E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     <div class="r-td rc-10-11"><div class="screen-tabfolder" runat="server"><div class="r-table">
@@ -341,7 +341,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -609,7 +609,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-9"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cVirtualSql3P1" class="r-td r-labelR" runat="server"><asp:Label id="cVirtualSql3Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cVirtualSql3P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cVirtualSql3" CssClass="inp-txt" runat="server" /><asp:Image id="cVirtualSql3E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cVirtualSql3P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cVirtualSql3" CssClass="inp-txt" runat="server" /><asp:Image id="cVirtualSql3E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

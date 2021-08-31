@@ -167,11 +167,11 @@
     	</div>
     	<div class="r-tr">
     		<div id="cUsrPassword1P1" class="r-td r-labelR" runat="server"><asp:Label id="cUsrPassword1Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cUsrPassword1P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="Password" id="cUsrPassword1" CssClass="inp-txt" runat="server" /><asp:RequiredFieldValidator id="cRFVUsrPassword1" ControlToValidate="cUsrPassword1" display="none" runat="server" /></div>
+    		<div id="cUsrPassword1P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="Password" autocomplete="new-password" id="cUsrPassword1" CssClass="inp-txt" runat="server" /><asp:RequiredFieldValidator id="cRFVUsrPassword1" ControlToValidate="cUsrPassword1" display="none" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cConfirmPwd1P1" class="r-td r-labelR" runat="server"><asp:Label id="cConfirmPwd1Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cConfirmPwd1P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="Password" id="cConfirmPwd1" CssClass="inp-txt" runat="server" /><asp:RequiredFieldValidator id="cRFVConfirmPwd1" ControlToValidate="cConfirmPwd1" display="none" runat="server" /></div>
+    		<div id="cConfirmPwd1P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="Password" autocomplete="new-password" id="cConfirmPwd1" CssClass="inp-txt" runat="server" /><asp:RequiredFieldValidator id="cRFVConfirmPwd1" ControlToValidate="cConfirmPwd1" display="none" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cSendMailP1" class="r-td r-labelR" runat="server"><asp:Label id="cSendMailLabel" CssClass="inp-lbl" runat="server" /></div>

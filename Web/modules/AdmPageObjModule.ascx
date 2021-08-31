@@ -223,11 +223,11 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     	</div>
     	<div class="r-tr">
     		<div id="cPageObjCss1277P1" class="r-td r-labelR" runat="server"><asp:Label id="cPageObjCss1277Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cPageObjCss1277P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cPageObjCss1277" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cPageObjCss1277" display="none" ErrorMessage="PageObjCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cPageObjCss1277E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cPageObjCss1277P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cPageObjCss1277" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cPageObjCss1277" display="none" ErrorMessage="PageObjCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cPageObjCss1277E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cPageObjSrp1277P1" class="r-td r-labelR" runat="server"><asp:Label id="cPageObjSrp1277Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cPageObjSrp1277P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cPageObjSrp1277" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cPageObjSrp1277" display="none" ErrorMessage="PageObjSrp <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cPageObjSrp1277E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cPageObjSrp1277P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cPageObjSrp1277" CssClass="inp-txt" runat="server" /><asp:RegularExpressionValidator ControlToValidate="cPageObjSrp1277" display="none" ErrorMessage="PageObjSrp <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /><asp:Image id="cPageObjSrp1277E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>
@@ -293,7 +293,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>
@@ -498,7 +498,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:250px;text-align:left;' visible="<%# GridColumnVisible(21) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cPageLnkCss1278ml" runat="server" /></div>
 		<table cellspacing="0" cellpadding="0"><tr><td>
-		    <asp:TextBox TextMode="MultiLine" id="cPageLnkCss1278" CssClass="GrdTxt" height="50px" Text='<%# DataBinder.Eval(Container.DataItem,"PageLnkCss1278").ToString() %>' runat="server" /><asp:RegularExpressionValidator ControlToValidate="cPageLnkCss1278" display="none" ErrorMessage="PageLnkCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /></td><td><asp:Image id="cPageLnkCss1278E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
+		    <asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cPageLnkCss1278" CssClass="GrdTxt" height="50px" Text='<%# DataBinder.Eval(Container.DataItem,"PageLnkCss1278").ToString() %>' runat="server" /><asp:RegularExpressionValidator ControlToValidate="cPageLnkCss1278" display="none" ErrorMessage="PageLnkCss <= 1000 characters please." ValidationExpression="^[\s\S]{0,1000}$" runat="server" /></td><td><asp:Image id="cPageLnkCss1278E" ImageUrl="~/images/Expand.gif" CssClass="show-expand-button" runat="server" />
 		</td></tr></table>
 		</div></div>
     </td>

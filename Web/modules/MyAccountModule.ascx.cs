@@ -161,6 +161,7 @@ namespace RO.Web
         {
             var context = HttpContext.Current;
             var auth = GetAuthObject();
+            int access_token_validity = 10 * 60;
             string guid = Guid.NewGuid().ToString();
             string xForwardedFor = HttpContext.Current.Request.Headers["X-Forwarded-For"];
             string appPath = 
@@ -169,7 +170,7 @@ namespace RO.Web
                         ? Config.ExtBasePath 
                         : HttpContext.Current.Request.ApplicationPath;
             string domain = context.Request.Url.GetLeftPart(UriPartial.Authority);
-            string jwtToken = auth.CreateLoginJWT(LUser, LUser.DefCompanyId, LUser.DefProjectId, LUser.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
+            string jwtToken = auth.CreateLoginJWT(LUser, LUser.DefCompanyId, LUser.DefProjectId, LUser.DefSystemId, LCurr, LImpr, appPath, access_token_validity, guid);
             Func<string, string> getStoredToken = (accessCode) =>
             {
                 return jwtToken;
@@ -333,9 +334,9 @@ namespace RO.Web
                                 byte defSystemId = LUser.DefSystemId;
                                 int defProjectId = LUser.DefProjectId;
                                 string resources = "";
-                                int validSeconds = 300;
+                                int access_token_validity = 300;
                                 string guidHandle = Guid.NewGuid().ToString();
-                                string LoginJWT = GetAuthObject().CreateLoginJWT(LUser, defCompanyId, defProjectId, defSystemId, LCurr, LImpr, resources, validSeconds, guidHandle);
+                                string LoginJWT = GetAuthObject().CreateLoginJWT(LUser, defCompanyId, defProjectId, defSystemId, LCurr, LImpr, resources, access_token_validity, guidHandle);
                                 HttpCookie sessionCookie = Request.Cookies[sessionCookieName];
                                 HttpCookie c = new HttpCookie("RintagiLoginToken", LoginJWT);
                                 c.Path = "/";
@@ -878,7 +879,11 @@ namespace RO.Web
                         var reset_url1 = GetResetLoginUrl(usr.UsrId.ToString(), "", "", "k", "&ip=" + HttpUtility.UrlEncode(GetVisitorIPAddress()), null, null);
                         var reset_url2 = GetResetLoginUrl(usr.UsrId.ToString(), "", "", "j", "", null, null);
                         string machineName = Environment.MachineName;
-                        string sBody = "Someone recently tried to login to your account at <b>" + ResolveUrlCustom(Request.Url.AbsolutePath,false,true) + string.Format("(On Server {0})",machineName) + "</b> from an unrecognized IP location <b>" + GetVisitorIPAddress() + "</b>.<br /><br />You may choose to ignore this message or click <a href=" + reset_url1.Value + ">YES</a> if this IP Address location will be used again or click <a href=" + reset_url2.Value + ">NO</a> to reset your password immediately.";
+                        string sBody = "Someone recently tried to login to your account '" + usr.LoginName.Left(3) + "****" + usr.LoginName.Right(3) + "' at <b>"
+                                + ResolveUrlCustom(HttpContext.Current.Request.Url.AbsolutePath, false, true)
+                                + string.Format(" (On Server {0})", machineName) + "</b> from an unrecognized IP location <b>"
+                                + GetVisitorIPAddress()
+                                + "</b>.<br /><br />You may choose to ignore this message or click <a href=" + reset_url1.Value + ">YES</a> if this IP Address location will be used again or click <a href=" + reset_url2.Value + ">NO</a> to reset your password immediately.";
                         try
                         {
                             base.SendEmail("Review Recent Login", sBody, usr.UsrEmail, from, from, Config.WebTitle + " Customer Care", true);
@@ -1007,9 +1012,10 @@ namespace RO.Web
             {
                 string guid = Guid.NewGuid().ToString();
                 string appPath = HttpContext.Current.Request.ApplicationPath;
+                int access_token_validity = 10 * 60;
                 if (Provider != "SJ")
                 {
-                    string jwtToken = GetAuthObject().CreateLoginJWT(LUser, usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, LCurr, LImpr, appPath, 10 * 60, guid);
+                    string jwtToken = GetAuthObject().CreateLoginJWT(LUser, usr.DefCompanyId, usr.DefProjectId, usr.DefSystemId, LCurr, LImpr, appPath, access_token_validity, guid);
                 }
                 else
                 {
@@ -1412,6 +1418,7 @@ namespace RO.Web
                     sb.Append("<br /><strong><a href=\"").Append(reset_url.Value).Append("\">").Append(reset_url.Value).Append("</a></strong><br /><br />");
                     sb.Append("<strong>").Append(loginName).Append("</strong>&nbsp;");
                     sb.Append(TranslateItem(dtLabel.Rows, "ResetPwdEmailMsg2"));
+                    sb.Append("<br/>" + loginName.Left(3) + "****" + loginName.Right(3) + "<br/>");
                     string host = XHost();
                     try
                     {

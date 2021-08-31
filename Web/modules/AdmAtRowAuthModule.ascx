@@ -180,7 +180,7 @@
     	</div>
     	<div class="r-tr">
     		<div id="cOvrideId236P1" class="r-td r-labelR" runat="server"><asp:Label id="cOvrideId236Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cOvrideId236P2" class="r-td r-content" runat="server"><asp:DropDownList id="cOvrideId236" CssClass="inp-ddl" DataValueField="OvrideId236" DataTextField="OvrideId236Text" AutoPostBack="true" OnSelectedIndexChanged="cOvrideId236_SelectedIndexChanged" runat="server" /><asp:TextBox TextMode="Password" id="cOvrideId236Pwd" CssClass="PwdBox" MaxLength="32" ToolTip="Please enter a supervisory override password to proceed!" AutoPostBack="true" OnTextChanged="cOvrideId236Pwd_TextChanged" runat="server" visible="false" /><asp:Label id="cOvrideId236Pwl" CssClass="inp-lbl" text="Invalid" runat="server" visible="false" /></div>
+    		<div id="cOvrideId236P2" class="r-td r-content" runat="server"><asp:DropDownList id="cOvrideId236" CssClass="inp-ddl" DataValueField="OvrideId236" DataTextField="OvrideId236Text" AutoPostBack="true" OnSelectedIndexChanged="cOvrideId236_SelectedIndexChanged" runat="server" /><asp:TextBox TextMode="Password" autocomplete="new-password" id="cOvrideId236Pwd" CssClass="PwdBox" MaxLength="32" ToolTip="Please enter a supervisory override password to proceed!" AutoPostBack="true" OnTextChanged="cOvrideId236Pwd_TextChanged" runat="server" visible="false" /><asp:Label id="cOvrideId236Pwl" CssClass="inp-lbl" text="Invalid" runat="server" visible="false" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cAllowSel236P1" class="r-td r-labelR" runat="server"><asp:Label id="cAllowSel236Label" CssClass="inp-lbl" runat="server" /></div>
@@ -240,7 +240,7 @@
 	<asp:Panel id="cImportPwdPanel" runat="server" visible="false">
 		<div class="button-grp">
 	        <div><asp:label ID="cImpPwdLabel" CssClass="inp-lbl" runat="server" /></div>
-		    <div><asp:TextBox TextMode="Password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
+		    <div><asp:TextBox TextMode="Password" autocomplete="new-password" id="cImportPwd" CssClass="PwdBox" width="250px" MaxLength="32" runat="server" /></div>
 		    <div><asp:Button id="cContinueButton" onclick="cContinueButton_Click" runat="server" /></div>
 		</div>
 	</asp:Panel>

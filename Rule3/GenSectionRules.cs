@@ -491,6 +491,18 @@
             {
                 if (dtObj.Select("LinkTypeCd = 'HDR'").Count() > 0) { sb.Append("                if (cLinkHolder.Controls.Count <= 0) { cLinkButton.Visible = false; }" + Environment.NewLine); }
                 if (dtObj.Select("LinkTypeCd = 'SSO'").Count() > 0) { sb.Append("                if (cSociHolder.Controls.Count <= 0) { cSociButton.Visible = false; }" + Environment.NewLine); }
+                sb.Append("                try{" + Environment.NewLine);
+                sb.Append("                    string companyId = LCurr.CompanyId.ToString();" + Environment.NewLine);
+                sb.Append("                    DataTable dtCompanyLogo = new AdminSystem().RunWrRule(0, \"WrGetCompLogo\", LcAppConnString, LcAppPw, string.Format(\"<Params><companyId>{0}</companyId></Params>\", companyId), LImpr, LCurr);" + Environment.NewLine);
+                sb.Append("                    if (dtCompanyLogo.Rows.Count > 0)" + Environment.NewLine);
+                sb.Append("                    {" + Environment.NewLine);
+                sb.Append("                        string logoUrl = dtCompanyLogo.Rows[0][\"CompanyLogo\"].ToString();" + Environment.NewLine);
+                sb.Append("                        if (!string.IsNullOrEmpty(logoUrl))" + Environment.NewLine);
+                sb.Append("                        {" + Environment.NewLine);
+                sb.Append("                            headerLogo.ImageUrl = dtCompanyLogo.Rows[0][\"CompanyLogo\"].ToString();" + Environment.NewLine);
+                sb.Append("                        }" + Environment.NewLine);
+                sb.Append("                    }" + Environment.NewLine);
+                sb.Append("                }catch { }" + Environment.NewLine);
             }
             sb.Append("                try{" + Environment.NewLine);
             sb.Append("                    string companyId = LCurr.CompanyId.ToString();" + Environment.NewLine);

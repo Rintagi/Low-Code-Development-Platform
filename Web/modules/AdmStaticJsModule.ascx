@@ -190,7 +190,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-4-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cScriptDef261P1" class="r-td r-labelR" runat="server"><asp:Label id="cScriptDef261Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cScriptDef261P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cScriptDef261" CssClass="inp-txt" runat="server" /><asp:Image id="cScriptDef261E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cScriptDef261P2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cScriptDef261" CssClass="inp-txt" runat="server" /><asp:Image id="cScriptDef261E" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     </div></div></div>
     </div></div>

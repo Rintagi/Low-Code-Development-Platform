@@ -284,7 +284,7 @@ $(document).ready(function() {if($('.chkMobile').css('position')=='relative'){ $
     <div class="r-td rc-1-12"><div class="screen-tabfolder" runat="server"><div class="r-table">
     	<div class="r-tr">
     		<div id="cLicenseStringP1" class="r-td r-labelR" runat="server"><asp:Label id="cLicenseStringLabel" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cLicenseStringP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" id="cLicenseString" CssClass="inp-txt" runat="server" /><asp:Image id="cLicenseStringE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
+    		<div id="cLicenseStringP2" class="r-td r-content" runat="server"><asp:TextBox TextMode="MultiLine" autocomplete="new-password" id="cLicenseString" CssClass="inp-txt" runat="server" /><asp:Image id="cLicenseStringE" ImageUrl="~/images/Expand.gif" CssClass="r-icon show-expand-button" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cRenewLicenseP1" class="r-td r-labelR" runat="server"><asp:Label id="cRenewLicenseLabel" CssClass="inp-lbl" runat="server" /></div>
