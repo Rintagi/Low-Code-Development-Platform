@@ -2879,4 +2879,6 @@ may need to add the following to web.config for assembly redirection
 12692~@~  11. 255.10831~@~11~@~255~@~2021-08-31 00:00:00.000~@~~@~require change to web.config assembly redirection, check sampleweb.config~@~1. upgrade ethereum helper support to nethereum 4.x(support EIP1559/london fork pricing model)
 2. add nethereum websocket event watcher support
 3. add asmx json value return for compatibility with browser range of 3rd party service(like chainlink)~@~~@~en-US~@~
-12693~@~  11. 256~@~11~@~256~@~~@~~@~~@~~@~~@~~@~
+12693~@~  11. 256.11024~@~11~@~256~@~2021-10-24 00:00:00.000~@~~@~~@~1. minor change to ethereum helper support(assembly dependency of nethereum 4)
+2. create crystal report less community package~@~~@~en-US~@~
+12694~@~  11. 257~@~11~@~257~@~~@~~@~~@~~@~~@~~@~

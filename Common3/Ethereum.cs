@@ -32,7 +32,6 @@ using Nethereum.RPC.Reactive.Eth.Subscriptions;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Nethereum.Web3;
-
 namespace RO.Common3.Ethereum.RPC
 {
     #region newtonsoft custom JSON coverter
@@ -1716,7 +1715,7 @@ namespace RO.Common3.Ethereum
             return transaction.GetRLPEncoded().ToHex();
         }
 
-        public async Task<string> SignTransactionAsync(Nethereum.Web3.Web3 web3, string to, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int chainId, BigInteger? maxPriorityFeePerGas = null, HexBigInteger nonce = null)
+        public async Task<string> SignTransactionAsync(Nethereum.Web3.Web3 web3, string to, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int chainId, BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null)
         {
             var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
             int round = 0;
@@ -1739,6 +1738,7 @@ namespace RO.Common3.Ethereum
                                             , new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei)
                                             , new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
                     ;
+                    if (nonce != null) txInput.Nonce = new HexBigInteger(nonce.Value);
                     return await gethAccount.TransactionManager.SignTransactionAsync(txInput);
                 }
                 else if (nethereumAccount.nethereumAccount != null)
@@ -1746,7 +1746,7 @@ namespace RO.Common3.Ethereum
                     Func<Task<string>> task = async () =>
                     {
                         var nonceService = new Nethereum.RPC.NonceServices.InMemoryNonceService(myAddress, web3.Client);
-                        var newNonce = nonce ?? await nonceService.GetNextNonceAsync();
+                        HexBigInteger newNonce = nonce != null ? new HexBigInteger(nonce.Value) : await nonceService.GetNextNonceAsync();
                         string signedDataHexString = maxPriorityFeePerGas == null
                                                     ? SignTransaction(to, ethInWei, newNonce, gasPriceInWei, gasLimit, data, chainId)
                                                     : SignTransaction1559(to, ethInWei, newNonce, gasPriceInWei, maxPriorityFeePerGas.Value, gasLimit, data, chainId)
@@ -1761,12 +1761,12 @@ namespace RO.Common3.Ethereum
                     if (!string.IsNullOrEmpty(myAddress))
                     {
                         var nonceService = new Nethereum.RPC.NonceServices.InMemoryNonceService(myAddress, web3.Client);
-                        var newNonce = nonce ?? await nonceService.GetNextNonceAsync();
+                        HexBigInteger newNonce = nonce != null ? new HexBigInteger(nonce.Value) : await nonceService.GetNextNonceAsync();
                         if (maxPriorityFeePerGas == null)
                         {
                             var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(data, to, myAddress
                                 , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
-                            txInput.Nonce = new HexBigInteger(newNonce);
+                            txInput.Nonce = newNonce;
                             var signedTransaction = await new RO.Common3.Ethereum.RPC.EthSignTransaction(web3.Client).SendRequestAsync(txInput);
                             return signedTransaction.raw;
                         }
@@ -1779,7 +1779,7 @@ namespace RO.Common3.Ethereum
                                                 , new HexBigInteger(ethInWei)
                                                 , new HexBigInteger(gasPriceInWei)
                                                 , new HexBigInteger(maxPriorityFeePerGas.Value));
-                            txInput.Nonce = new HexBigInteger(newNonce);
+                            txInput.Nonce = newNonce;
                             var signedTransaction = await new RO.Common3.Ethereum.RPC.EthSignTransaction(web3.Client).SendRequestAsync(txInput);
                             return signedTransaction.raw;
                         }
@@ -1802,7 +1802,7 @@ namespace RO.Common3.Ethereum
             }
         }
 
-        public async Task<string> SendTransactionAsync(Nethereum.Web3.Web3 web3, string to, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int chainId, BigInteger? maxPriorityFeePerGas = null, HexBigInteger nonce = null)
+        public async Task<string> SendTransactionAsync(Nethereum.Web3.Web3 web3, string to, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int chainId, BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null)
         {
             var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
             int round = 0;
@@ -1826,6 +1826,7 @@ namespace RO.Common3.Ethereum
                                             , new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
                     ;
                     gethAccount.TransactionManager.Client = web3.Client;
+                    if (nonce != null) txInput.Nonce = new HexBigInteger(nonce.Value);
                     if (!string.IsNullOrEmpty(gethAccount.Password))
                     {
                         return await gethAccount.TransactionManager.SendTransactionAsync(txInput);
@@ -1881,7 +1882,7 @@ namespace RO.Common3.Ethereum
                         {
                             var txInput = new Nethereum.RPC.Eth.DTOs.TransactionInput(data, to, myAddress
                                 , new Nethereum.Hex.HexTypes.HexBigInteger(gasLimit), new Nethereum.Hex.HexTypes.HexBigInteger(gasPriceInWei), new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
-                            txInput.Nonce = nonce;
+                            if (nonce != null) txInput.Nonce = new HexBigInteger(nonce.Value);
                             return await web3.TransactionManager.SendTransactionAsync(txInput);
                         }
                         else
@@ -1893,7 +1894,7 @@ namespace RO.Common3.Ethereum
                                                 , new HexBigInteger(ethInWei)
                                                 , new HexBigInteger(gasPriceInWei)
                                                 , new HexBigInteger(maxPriorityFeePerGas.Value));
-                            txInput.Nonce = nonce;
+                            if (nonce != null) txInput.Nonce = new HexBigInteger(nonce.Value);
                             var defaultGasPrice = web3.TransactionManager.DefaultGasPrice;
                             web3.TransactionManager.DefaultGasPrice = -1;
                             var task = web3.TransactionManager.SendTransactionAsync(txInput);
@@ -1929,7 +1930,7 @@ namespace RO.Common3.Ethereum
             return contractCreationData;
         }
 
-        public async Task<string> DeployContractAsync(Nethereum.Web3.Web3 web3, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int chainId, BigInteger? maxPriorityFeePerGas, params object[] constructorParams)
+        public async Task<string> DeployContractAsync(Nethereum.Web3.Web3 web3, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int chainId, BigInteger? maxPriorityFeePerGas, BigInteger? nonce, params object[] constructorParams)
         {
             var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
             var contract = Ethereum.GetContractBuilder(AbiJSONTranslate(abiJson));
@@ -1947,7 +1948,7 @@ namespace RO.Common3.Ethereum
                 gasNeeded = this.EstimateGasAsync(web3, callInput).Result
                     + (gasLimit == 0 ? 0 : 1000); // slightly increment the estimate for better failed transaction diagnostic 
                 gasNeeded = gasNeeded < gasLimit ? gasLimit : gasNeeded;
-                return await SendTransactionAsync(web3, null, ethInWei, gasPriceInWei, gasNeeded, contractCreationData, chainId, maxPriorityFeePerGas);
+                return await SendTransactionAsync(web3, null, ethInWei, gasPriceInWei, gasNeeded, contractCreationData, chainId, maxPriorityFeePerGas, nonce);
             }
             catch (Exception ex)
             {
@@ -1963,7 +1964,7 @@ namespace RO.Common3.Ethereum
                 else throw;
             }
         }
-        public string DeployContract(string web3Endpoint, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int chainId, BigInteger? maxPriorityFeePerGas, params object[] constructorParams)
+        public string DeployContract(string web3Endpoint, string byteCode, string abiJson, BigInteger ethInWei, BigInteger gasPriceInWei, BigInteger gasLimit, int chainId, BigInteger? maxPriorityFeePerGas, HexBigInteger nonce, params object[] constructorParams)
         {
             try
             {
@@ -1973,7 +1974,7 @@ namespace RO.Common3.Ethereum
 
                     //"0x" + byteCode
 
-                    var hash = await DeployContractAsync(web3, byteCode, abiJson, ethInWei, gasPriceInWei, gasLimit, chainId, maxPriorityFeePerGas, constructorParams);
+                    var hash = await DeployContractAsync(web3, byteCode, abiJson, ethInWei, gasPriceInWei, gasLimit, chainId, maxPriorityFeePerGas, nonce, constructorParams);
                     if (hash != null)
                     {
                         var tx = await GetTransactionAsync(hash, web3);
@@ -2074,6 +2075,7 @@ namespace RO.Common3.Ethereum
 
         public async Task<BigInteger> EstimateGasAsync(Nethereum.Web3.Web3 web3, Nethereum.RPC.Eth.DTOs.CallInput callInput)
         {
+            //return new BigInteger(5000000);
             var gasNeeded = await web3.TransactionManager.EstimateGasAsync(callInput);
             return gasNeeded.Value;
         }
@@ -2427,7 +2429,7 @@ namespace RO.Common3.Ethereum
             return callData;
         }
 
-        public async Task<string> ExecuteAsync(string abiJson, string contractAddress, Nethereum.Web3.Web3 web3, string functionName, BigInteger gasLimit, BigInteger gasPriceInWei, BigInteger ethInWei, object[] functionInput, int chainId, BigInteger? maxPriorityFeePerGas, bool hardLimit = false)
+        public async Task<string> ExecuteAsync(string abiJson, string contractAddress, Nethereum.Web3.Web3 web3, string functionName, BigInteger gasLimit, BigInteger gasPriceInWei, BigInteger ethInWei, object[] functionInput, int chainId, BigInteger? maxPriorityFeePerGas, BigInteger? nonce = null, bool hardLimit = false)
         {
             var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : null;
             var contract = web3.Eth.GetContract(AbiJSONTranslate(AbiJSONTranslate(abiJson)), contractAddress);
@@ -2438,7 +2440,7 @@ namespace RO.Common3.Ethereum
             var gasNeeded = await this.EstimateGasAsync(AbiJSONTranslate(abiJson), contractAddress, web3, functionName, ethInWei, functionInput);
             var gasBoosted = gasBoost(gasNeeded, hardLimit);
             var finalGasLimit = hardLimit ? (gasLimit == 0 ? gasNeeded : (gasLimit)) : (gasBoosted < gasLimit ? gasLimit : gasBoosted);
-            return await SendTransactionAsync(web3, contractAddress, ethInWei, gasPriceInWei, finalGasLimit, callData, chainId, maxPriorityFeePerGas);
+            return await SendTransactionAsync(web3, contractAddress, ethInWei, gasPriceInWei, finalGasLimit, callData, chainId, maxPriorityFeePerGas, nonce);
         }
 
         public async Task<List<Dictionary<string, string>>> GetGEthPendingTransactionsAsync(string web3EndPoint)
@@ -2509,7 +2511,7 @@ namespace RO.Common3.Ethereum
             }
             return revisedfunctParam;
         }
-        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BlockParameter block, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
+        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BlockParameter block, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
         {
 
             var function = Ethereum.GetFunctionBuilder(contractAbi, functionName);
@@ -2529,7 +2531,7 @@ namespace RO.Common3.Ethereum
                     }
                     else
                     {
-                        var txHash = await ExecuteAsync(contractAbi, contractAddress, web3, functionName, new BigInteger(gasLimit), gasPriceInWei, ethToSent, revisedFunctParam, chainid, maxPriorityFeePerGas, hardLimit);
+                        var txHash = await ExecuteAsync(contractAbi, contractAddress, web3, functionName, new BigInteger(gasLimit), gasPriceInWei, ethToSent, revisedFunctParam, chainid, maxPriorityFeePerGas, nonce, hardLimit);
                         return txHash;
                     }
                 }).Result;
@@ -2552,9 +2554,9 @@ namespace RO.Common3.Ethereum
                 return result;
             }
         }
-        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
+        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
         {
-            return ExecuteEthereumFunction(web3EndPoint, contractAddress, contractAbi, functionName, functParam, BlockParameter.CreateLatest(), gasPriceInWei, chainid, ethInWeiToSent, maxPriorityFeePerGas, hardLimit, gasLimit, useAbiFieldName);
+            return ExecuteEthereumFunction(web3EndPoint, contractAddress, contractAbi, functionName, functParam, BlockParameter.CreateLatest(), gasPriceInWei, chainid, ethInWeiToSent, maxPriorityFeePerGas, nonce, hardLimit, gasLimit, useAbiFieldName);
         }
 
         public BigInteger EstimateGas(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, string ethInWeiToSent = "0", bool hardLimit = false, bool calcEthNeeded = true)
@@ -2582,20 +2584,20 @@ namespace RO.Common3.Ethereum
             }
         }
 
-        public async Task<string> SendEtherAsync(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas)
+        public async Task<string> SendEtherAsync(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas, BigInteger? nonce)
         {
             var web3 = Ethereum.GetWeb3Client(web3EndPoint);
-            string txHash = await SendTransactionAsync(web3, toWalletAddress, ethInWei, gasPriceInWei, new BigInteger(21000), null, chainId, maxPriorityFeePerGas);
+            string txHash = await SendTransactionAsync(web3, toWalletAddress, ethInWei, gasPriceInWei, new BigInteger(21000), null, chainId, maxPriorityFeePerGas, nonce);
             return txHash;
         }
-        public string SendEther(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas)
+        public string SendEther(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas, BigInteger? nonce)
         {
 
             try
             {
                 var result = System.Threading.Tasks.Task.Run(async () =>
                 {
-                    return await SendEtherAsync(web3EndPoint, toWalletAddress, ethInWei, gasPriceInWei, chainId, maxPriorityFeePerGas);
+                    return await SendEtherAsync(web3EndPoint, toWalletAddress, ethInWei, gasPriceInWei, chainId, maxPriorityFeePerGas, nonce);
                 }).Result;
                 return result;
             }
@@ -2774,39 +2776,39 @@ namespace RO.Common3.Ethereum
                 var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
                 var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + p.Name).Trim()).ToArray());
                 var returnInterface = string.Join(",", abi.OutputParameters.Select(p =>
+                {
+                    string typeName = p.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    Func<Nethereum.ABI.Model.Parameter[], string> decodeTuple = null;
+                    decodeTuple = ((Nethereum.ABI.Model.Parameter[] tuple_params) =>
+                    {
+                        return string.Join(",", tuple_params.Select(pp =>
                         {
-                            string typeName = p.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                            Func<Nethereum.ABI.Model.Parameter[], string> decodeTuple = null;
-                            decodeTuple = ((Nethereum.ABI.Model.Parameter[] tuple_params) =>
+                            if (pp.ABIType is Nethereum.ABI.TupleType)
                             {
-                                return string.Join(",", tuple_params.Select(pp =>
-                                {
-                                    if (pp.ABIType is Nethereum.ABI.TupleType)
-                                    {
-                                        string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                                        Nethereum.ABI.TupleType cc = pp.ABIType as Nethereum.ABI.TupleType;
-                                        return (typeName + "(" + decodeTuple(cc.Components) + ")" + ' ' + p.Name).Trim();
-                                    }
-                                    else
-                                        return (pp.ABIType.CanonicalName + ' ' + pp.Name).Trim();
-                                }).ToArray());
-                            });
-                            if (p.ABIType is Nethereum.ABI.TupleType)
-                            {
-                                Nethereum.ABI.TupleType c = p.ABIType as Nethereum.ABI.TupleType;
-                                return (typeName + "(" + decodeTuple(c.Components) + ")" + ' ' + p.Name).Trim();
-                            }
-                            else if (p.ABIType.Name.StartsWith("tuple["))
-                            {
-                                // tuple array
-                                Nethereum.ABI.ArrayType a = p.ABIType as Nethereum.ABI.ArrayType;
-                                FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                                Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
-                                return (typeName + "(" + decodeTuple(elementType.Components) + ")" + ' ' + p.Name).Trim();
+                                string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                                Nethereum.ABI.TupleType cc = pp.ABIType as Nethereum.ABI.TupleType;
+                                return (typeName + "(" + decodeTuple(cc.Components) + ")" + ' ' + p.Name).Trim();
                             }
                             else
-                                return (p.ABIType.CanonicalName + ' ' + p.Name).Trim();
-                        }
+                                return (pp.ABIType.CanonicalName + ' ' + pp.Name).Trim();
+                        }).ToArray());
+                    });
+                    if (p.ABIType is Nethereum.ABI.TupleType)
+                    {
+                        Nethereum.ABI.TupleType c = p.ABIType as Nethereum.ABI.TupleType;
+                        return (typeName + "(" + decodeTuple(c.Components) + ")" + ' ' + p.Name).Trim();
+                    }
+                    else if (p.ABIType.Name.StartsWith("tuple["))
+                    {
+                        // tuple array
+                        Nethereum.ABI.ArrayType a = p.ABIType as Nethereum.ABI.ArrayType;
+                        FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
+                        return (typeName + "(" + decodeTuple(elementType.Components) + ")" + ' ' + p.Name).Trim();
+                    }
+                    else
+                        return (p.ABIType.CanonicalName + ' ' + p.Name).Trim();
+                }
                         ).ToArray());
                 /* name format used to calc function sig(i.e. abi.Sha3Signature, keccak256(name).left(4bytes)), per ethereum spec */
                 var name = abi.Name + "(" + callParamName + ")";
@@ -3019,9 +3021,9 @@ namespace RO.Common3.Ethereum
                 }
                 else if (inputs[idx] is string
                     && (inputs[idx] as string).StartsWith("0x")
-                    && (p.ABIType.IsDynamic() && (p.ABIType.Name == "bytes" || p.ABIType.Name == "bytes1[]"))
+                    && (p.ABIType.IsDynamic() && (p.ABIType.Name == "bytes" || p.ABIType.Name == "bytes1[]")
                         || p.ABIType.Name == "bytes32"
-                        || p.ABIType.Name.StartsWith("byte")
+                        || p.ABIType.Name.StartsWith("byte"))
                     )
                 {
                     translated.Add(Utils.HexToByteArray(inputs[idx] as string));
@@ -3075,6 +3077,13 @@ namespace RO.Common3.Ethereum
                         }
                         catch { }
                     }
+                }
+                else if (p.ABIType.Name.EndsWith("[]")
+                        && p.ABIType.Name.StartsWith("byte")
+                        && inputs[idx] != null
+                        && (inputs[idx] is IEnumerable || inputs[idx] is IEnumerable<string>))
+                {
+                    translated.Add((inputs[idx] as IEnumerable<object>).Select((object x) => Utils.HexToByteArray(x as string)).ToArray());
                 }
                 else
                 {

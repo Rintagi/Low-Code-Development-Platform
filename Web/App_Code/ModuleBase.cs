@@ -4127,7 +4127,19 @@ namespace RO.Web
             }
             return result;
         }
-        protected virtual string HttpPostJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        protected virtual string HttpPatchJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        {
+            return HttpPostJSON(url, body, headers, cookies, "PATCH");
+        }
+        protected virtual string HttpPutJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        {
+            return HttpPostJSON(url, body, headers, cookies, "PUT");
+        }
+        protected virtual string HttpdeleteJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        {
+            return HttpPostJSON(url, body, headers, cookies, "DELETE");
+        }
+        protected virtual string HttpPostJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, string method = "POST")
         {
             var uri = new Uri(url);
             byte[] bodyArray = System.Text.UTF8Encoding.UTF8.GetBytes(body);
@@ -4147,7 +4159,7 @@ namespace RO.Web
                     return headerCollection;
                 });
             wr.ContentType = "application/json";
-            wr.Method = "POST";
+            wr.Method = method;
             string result = null;
             try
             {

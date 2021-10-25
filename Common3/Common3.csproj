@@ -84,7 +84,8 @@
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>..\Lib\Nethereum4\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
-    <Reference Include="Common.Logging.Core">
+    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Nethereum4\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="ExifLib">

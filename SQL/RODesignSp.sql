@@ -1554,8 +1554,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
--- Both dates are inclusive. Return number of working days in between except holidays.
-CREATE FUNCTION [dbo].[fWorkingDays] (@dtFr datetime, @dtTo datetime) RETURNS int
+-- Both dates are inclusive. Return number of working days in between except holidays, given CountryId and StateId.
+CREATE FUNCTION [dbo].[fWorkingDays] (@dtFr datetime, @dtTo datetime, @CountryId smallint, @StateId smallint) RETURNS int
 /* WITH ENCRYPTION */
 AS
 BEGIN
@@ -1565,7 +1565,9 @@ BEGIN
 	WHILE @dt <= @dtTo
 	BEGIN
 		IF datepart(dw,@dt) >= 2 AND datepart(dw,@dt) <= 6
-			AND NOT EXISTS (SELECT 1 FROM ROCmon.dbo.HolidayDtl WHERE HolidayDate = @dt)
+			AND NOT EXISTS (SELECT 1 FROM ROCmon.dbo.HolidayDtl a
+				INNER JOIN ROCmon.dbo.Holiday b ON a.HolidayId = b.HolidayId
+				WHERE a.HolidayDate = @dt AND ((b.CountryId IS NULL AND b.StateId IS NULL) OR (b.CountryId = @CountryId AND b.StateId = @StateId)))
 		BEGIN
 			SELECT @iWd = @iWd + 1	-- Monday to Friday
 		END

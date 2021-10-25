@@ -17,8 +17,9 @@ ALTER VIEW [dbo].[VwAppItem] AS
 	SELECT a.AppInfoDesc, b.ItemOrder, b.DbProviderCd, b.AppItemName, b.MultiDesignDb, b.AppItemCode
 	FROM dbo.AppInfo a INNER JOIN dbo.AppItem b ON a.AppInfoId = b.AppInfoId
 	WHERE a.VersionDt is not null AND b.ObjectTypeCd = 'D'
-	--15 year max of history
-	AND a.VersionDt > dateadd(mm,-180,convert(datetime,convert(varchar,getdate(),102)))
+	--full history
+	--20 year max of history
+	--AND a.VersionDt > dateadd(mm,-240,convert(datetime,convert(varchar,getdate(),102)))
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCheckBox') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwCheckBox AS SELECT DUMMY=1')
