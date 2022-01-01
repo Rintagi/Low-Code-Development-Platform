@@ -94,68 +94,87 @@ namespace RO.Access3.Odbc
 		public override DataTable GetSqlReport(string reportId, string programName, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds, string dbConnectionString, string dbPassword, bool bUpd, bool bXls, bool bVal)
 		{
 			if (da == null) {throw new System.ObjectDisposedException( GetType().FullName );}
-			OdbcCommand cmd = new OdbcCommand("Get" + programName, new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			DataRow dr = ds.Tables["DtSqlReportIn"].Rows[0];
-			cmd.Parameters.Add("@reportId", OdbcType.Numeric).Value = reportId;
-			cmd.Parameters.Add("@RowAuthoritys", OdbcType.VarChar).Value = ui.RowAuthoritys;
-			cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
-			cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
-			cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
-			cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
-			cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
-			cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
-			cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
-			cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
-			cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
-			cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
-			cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
-            cmd.Parameters.Add("@Borrowers", OdbcType.VarChar).Value = ui.Borrowers;
-            cmd.Parameters.Add("@Guarantors", OdbcType.VarChar).Value = ui.Guarantors;
-            cmd.Parameters.Add("@Lenders", OdbcType.VarChar).Value = ui.Lenders;
-            cmd.Parameters.Add("@currCompanyId", OdbcType.Numeric).Value = uc.CompanyId;
-			cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
-			foreach (DataRowView drv in dvCri)
-			{
-				if (drv["RequiredValid"].ToString() == "N" && dr[drv["ColumnName"].ToString()].ToString().Trim() == string.Empty)
-				{
-					if (drv["DataTypeSByteOle"].ToString() == "Numeric") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Single") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Real).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Double") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Double).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = System.DBNull.Value; }
-                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = System.DBNull.Value; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = System.DBNull.Value; }
-					else { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarChar).Value = System.DBNull.Value; }
-				}
-				else if (Config.DoubleByteDb && drv["DataTypeDByteOle"].ToString() == "WChar") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.NChar).Value = dr[drv["ColumnName"].ToString()]; }
-				else if (Config.DoubleByteDb && drv["DataTypeDByteOle"].ToString() == "VarWChar") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.NVarChar).Value = dr[drv["ColumnName"].ToString()]; }
-				else
-				{
-					if (drv["DataTypeSByteOle"].ToString() == "Numeric") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Single") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Real).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Double") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Double).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = dr[drv["ColumnName"].ToString()]; }
-                    else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = dr[drv["ColumnName"].ToString()]; }
-					else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = dr[drv["ColumnName"].ToString()]; }
-					else { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarChar).Value = dr[drv["ColumnName"].ToString()]; }
-				}
-			}
-			if (bUpd) { cmd.Parameters.Add("@bUpd", OdbcType.Char).Value = "Y"; } else { cmd.Parameters.Add("@bUpd", OdbcType.Char).Value = "N"; }
-			if (bXls) {cmd.Parameters.Add("@bXls", OdbcType.Char).Value = "Y";} else {cmd.Parameters.Add("@bXls", OdbcType.Char).Value = "N";}
-			if (bVal) {cmd.Parameters.Add("@bVal", OdbcType.Char).Value = "Y";} else {cmd.Parameters.Add("@bVal", OdbcType.Char).Value = "N";}
-			da.SelectCommand = TransformCmd(cmd);
-			cmd.CommandTimeout = _CommandTimeOut;
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
+            DataRow dr = ds != null ? ds.Tables["DtSqlReportIn"].Rows[0] : null;
+            OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
+            cn.Open();
+            try {
+                /* create the temp table that can be used between SPs */
+                OdbcCommand setupCmd = new OdbcCommand("SET NOCOUNT ON CREATE TABLE #ReportTemp (Name varchar(100), Val nvarchar(max))", cn);
+
+                setupCmd.ExecuteNonQuery();
+                if (dr != null && ds.Tables[0].Columns.Contains("tzInfo"))
+                {
+                    setupCmd.CommandText = string.Format("INSERT INTO #ReportTemp VALUES ('{0}','{1}')", "TZInfo", dr["tzInfo"].ToString().Replace("'", "''"));
+                    setupCmd.ExecuteNonQuery();
+                }
+                setupCmd.Dispose();
+
+			    OdbcCommand cmd = new OdbcCommand("Get" + programName, cn);
+			    cmd.CommandType = CommandType.StoredProcedure;
+			    cmd.Parameters.Add("@reportId", OdbcType.Numeric).Value = reportId;
+			    cmd.Parameters.Add("@RowAuthoritys", OdbcType.VarChar).Value = ui.RowAuthoritys;
+			    cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
+			    cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
+			    cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
+			    cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
+			    cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
+			    cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
+			    cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
+			    cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
+			    cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
+			    cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
+			    cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
+                cmd.Parameters.Add("@Borrowers", OdbcType.VarChar).Value = ui.Borrowers;
+                cmd.Parameters.Add("@Guarantors", OdbcType.VarChar).Value = ui.Guarantors;
+                cmd.Parameters.Add("@Lenders", OdbcType.VarChar).Value = ui.Lenders;
+                cmd.Parameters.Add("@currCompanyId", OdbcType.Numeric).Value = uc.CompanyId;
+			    cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
+			    foreach (DataRowView drv in dvCri)
+			    {
+				    if (drv["RequiredValid"].ToString() == "N" && dr[drv["ColumnName"].ToString()].ToString().Trim() == string.Empty)
+				    {
+					    if (drv["DataTypeSByteOle"].ToString() == "Numeric") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Single") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Real).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Double") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Double).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = System.DBNull.Value; }
+                        else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = System.DBNull.Value; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = System.DBNull.Value; }
+					    else { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarChar).Value = System.DBNull.Value; }
+				    }
+				    else if (Config.DoubleByteDb && drv["DataTypeDByteOle"].ToString() == "WChar") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.NChar).Value = dr[drv["ColumnName"].ToString()]; }
+				    else if (Config.DoubleByteDb && drv["DataTypeDByteOle"].ToString() == "VarWChar") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.NVarChar).Value = dr[drv["ColumnName"].ToString()]; }
+				    else
+				    {
+					    if (drv["DataTypeSByteOle"].ToString() == "Numeric") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Single") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Real).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Double") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Double).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Currency") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Numeric).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Binary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Binary).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "VarBinary") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarBinary).Value = dr[drv["ColumnName"].ToString()]; }
+                        else if (drv["DataTypeSByteOle"].ToString() == "DBTimeStamp") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.DateTime).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Decimal") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Decimal).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "DBDate") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Date).Value = dr[drv["ColumnName"].ToString()]; }
+					    else if (drv["DataTypeSByteOle"].ToString() == "Char") { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.Char).Value = dr[drv["ColumnName"].ToString()]; }
+					    else { cmd.Parameters.Add("@" + drv["ColumnName"].ToString(), OdbcType.VarChar).Value = dr[drv["ColumnName"].ToString()]; }
+				    }
+			    }
+			    if (bUpd) { cmd.Parameters.Add("@bUpd", OdbcType.Char).Value = "Y"; } else { cmd.Parameters.Add("@bUpd", OdbcType.Char).Value = "N"; }
+			    if (bXls) {cmd.Parameters.Add("@bXls", OdbcType.Char).Value = "Y";} else {cmd.Parameters.Add("@bXls", OdbcType.Char).Value = "N";}
+			    if (bVal) {cmd.Parameters.Add("@bVal", OdbcType.Char).Value = "Y";} else {cmd.Parameters.Add("@bVal", OdbcType.Char).Value = "N";}
+			    da.SelectCommand = TransformCmd(cmd);
+			    cmd.CommandTimeout = _CommandTimeOut;
+			    DataTable dt = new DataTable();
+			    da.Fill(dt);
+			    return dt;
+            } 
+            finally
+            {
+                cn.Close();
+            }
 		}
 
 		public override void UpdSqlReport(string reportId, string programName, DataView dvCri, Int32 usrId, DataSet ds, string dbConnectionString, string dbPassword)

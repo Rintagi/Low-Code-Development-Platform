@@ -207,9 +207,9 @@ namespace RO.Web
             try { dr["FailedAttempt1"] = mst["FailedAttempt1"]; } catch { }
             drType["FailedAttempt1"] = "Numeric"; drDisp["FailedAttempt1"] = "StarRating";
             try { dr["LastSuccessDt1"] = mst["LastSuccessDt1"]; } catch { }
-            drType["LastSuccessDt1"] = "DBTimeStamp"; drDisp["LastSuccessDt1"] = "LongDateTime";
+            drType["LastSuccessDt1"] = "DBTimeStamp"; drDisp["LastSuccessDt1"] = "LongDateTimeUTC";
             try { dr["LastFailedDt1"] = mst["LastFailedDt1"]; } catch { }
-            drType["LastFailedDt1"] = "DBTimeStamp"; drDisp["LastFailedDt1"] = "LongDateTime";
+            drType["LastFailedDt1"] = "DBTimeStamp"; drDisp["LastFailedDt1"] = "LongDateTimeUTC";
             try { dr["CompanyLs1"] = mst["CompanyLs1"]; } catch { }
             drType["CompanyLs1"] = "VarChar"; drDisp["CompanyLs1"] = "ListBox";
             try { dr["ProjectLs1"] = mst["ProjectLs1"]; } catch { }

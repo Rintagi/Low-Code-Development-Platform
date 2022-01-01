@@ -30,6 +30,7 @@ namespace RO.Common3.Data
 		private DataTable MakeColumns(DataTable dt)
 		{
 			DataColumnCollection columns = dt.Columns;
+			columns.Add("tzInfo", typeof(string));
 			columns.Add("MonthEnding", typeof(DateTime));
 			columns.Add("NumMonths", typeof(Int16));
 			return dt;
@@ -308,6 +309,9 @@ namespace RO.Web
 		{
 			DsAdmRptSredIn ds = new DsAdmRptSredIn();
 			DataRow dr = ds.Tables["DtAdmRptSredIn"].NewRow();
+			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
+			dr["tzInfo"] = tzinfo.StandardName;
+
 			if (cMonthEnding.Text != string.Empty) {dr["MonthEnding"] = base.SetDateTimeUTC(cMonthEnding.Text, !bUpdate);}
 			if (IsPostBack && cMonthEnding.Text == string.Empty) { throw new ApplicationException("Criteria column: MonthEnding should not be empty. Please rectify and try again.");};
 			if (cNumMonths.Text != string.Empty) {dr["NumMonths"] = cNumMonths.Text;}

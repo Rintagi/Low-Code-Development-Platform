@@ -30,6 +30,7 @@ namespace RO.Common3.Data
 		private DataTable MakeColumns(DataTable dt)
 		{
 			DataColumnCollection columns = dt.Columns;
+			columns.Add("tzInfo", typeof(string));
 			columns.Add("Id", typeof(String));
 			columns.Add("ModifiedAfter", typeof(DateTime));
 			return dt;
@@ -344,6 +345,9 @@ namespace RO.Web
 		{
 			DsAdmRptDbTableIn ds = new DsAdmRptDbTableIn();
 			DataRow dr = ds.Tables["DtAdmRptDbTableIn"].NewRow();
+			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
+			dr["tzInfo"] = tzinfo.StandardName;
+
 			if (cId.SelectedIndex >= 0 && cId.SelectedValue != string.Empty) {dr["Id"] = cId.SelectedValue;}
 			if (cModifiedAfter.Text != string.Empty) {dr["ModifiedAfter"] = base.SetDateTimeUTC(cModifiedAfter.Text, !bUpdate);}
 			ds.Tables["DtAdmRptDbTableIn"].Rows.Add(dr);

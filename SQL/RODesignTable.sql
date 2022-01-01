@@ -70,6 +70,9 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwServerRuleRunMode') AND type='V')
 DROP VIEW dbo.VwServerRuleRunMode
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwTimeZoneInfo') AND type='V')
+DROP VIEW dbo.VwTimeZoneInfo
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwUsr') AND type='V')
 DROP VIEW dbo.VwUsr
 GO
@@ -3105,6 +3108,7 @@ CustServPhone varchar (20) NULL ,
 CustServFax varchar (20) NULL ,
 WebAddress varchar (50) NULL ,
 Active char (1) NOT NULL CONSTRAINT DF_Systems_Active DEFAULT ('Y'),
+DfltTimezone nvarchar (150) NULL ,
 CONSTRAINT PK_Systems PRIMARY KEY CLUSTERED (
 SystemId
 )

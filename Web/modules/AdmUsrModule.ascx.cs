@@ -703,8 +703,8 @@ namespace RO.Web
 						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["EmailLink1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MobileLink1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["FailedAttempt1"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastSuccessDt1"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastFailedDt1"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastSuccessDt1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
+						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastFailedDt1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
 						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CompanyLs1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ProjectLs1"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
@@ -893,8 +893,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["EmailLink1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["MobileLink1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["FailedAttempt1"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastSuccessDt1"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastFailedDt1"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastSuccessDt1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
+					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastFailedDt1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
 					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["CompanyLs1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[25]["ColExport"].ToString() == "Y") {sb.Append(drv["ProjectLs1"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[26]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
@@ -2930,8 +2930,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					    try {cMobileLink1.Text = dr["MobileLink1"].ToString();} catch {cMobileLink1.Text = string.Empty;}
 					}
 					try {cFailedAttempt1.Text = RO.Common3.Utils.fmNumeric("0",dr["FailedAttempt1"].ToString(),base.LUser.Culture);} catch {cFailedAttempt1.Text = string.Empty;}
-					try {cLastSuccessDt1.Text = RO.Common3.Utils.fmLongDateTime(dr["LastSuccessDt1"].ToString(),base.LUser.Culture);} catch {cLastSuccessDt1.Text = string.Empty;}
-					try {cLastFailedDt1.Text = RO.Common3.Utils.fmLongDateTime(dr["LastFailedDt1"].ToString(),base.LUser.Culture);} catch {cLastFailedDt1.Text = string.Empty;}
+					try {cLastSuccessDt1.Text = RO.Common3.Utils.fmLongDateTimeUTC(dr["LastSuccessDt1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cLastSuccessDt1.Text = string.Empty;}
+					try {cLastFailedDt1.Text = RO.Common3.Utils.fmLongDateTimeUTC(dr["LastFailedDt1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cLastFailedDt1.Text = string.Empty;}
 					SetCompanyLs1(cCompanyLs1,dr["CompanyLs1"].ToString());
 					SetProjectLs1(cProjectLs1,dr["ProjectLs1"].ToString());
 					try {cModifiedOn1.Text = RO.Common3.Utils.fmShortDateTimeUTC(dr["ModifiedOn1"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cModifiedOn1.Text = string.Empty;}
@@ -3351,10 +3351,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["MobileLink1"] = "VarChar"; drDisp["MobileLink1"] = "HyperLink";
 			try {dr["FailedAttempt1"] = cFailedAttempt1.Text;} catch {}
 			drType["FailedAttempt1"] = "Numeric"; drDisp["FailedAttempt1"] = "StarRating";
-			try {dr["LastSuccessDt1"] = base.ToIntDateTime(cLastSuccessDt1.Text,false,true);} catch {}
-			drType["LastSuccessDt1"] = "DBTimeStamp"; drDisp["LastSuccessDt1"] = "LongDateTime";
-			try {dr["LastFailedDt1"] = base.ToIntDateTime(cLastFailedDt1.Text,false,true);} catch {}
-			drType["LastFailedDt1"] = "DBTimeStamp"; drDisp["LastFailedDt1"] = "LongDateTime";
+			try {dr["LastSuccessDt1"] = base.ToIntDateTime(cLastSuccessDt1.Text,true,true);} catch {}
+			drType["LastSuccessDt1"] = "DBTimeStamp"; drDisp["LastSuccessDt1"] = "LongDateTimeUTC";
+			try {dr["LastFailedDt1"] = base.ToIntDateTime(cLastFailedDt1.Text,true,true);} catch {}
+			drType["LastFailedDt1"] = "DBTimeStamp"; drDisp["LastFailedDt1"] = "LongDateTimeUTC";
 			foreach (ListItem li in cCompanyLs1.Items)
 			{
 				if (li.Selected && li.Value != string.Empty)

@@ -126,3 +126,5 @@
 443~@~~@~1087~@~1~@~Valid User~@~
 444~@~~@~1088~@~1~@~Successful~@~
 445~@~AdmRptUsrAudit    20: ReportCriteria (en-US)~@~1089~@~1~@~Report Criteria~@~
+446~@~AdmRptUsage  1600: ReportTimeTzInfo (en-US)~@~1090~@~1~@~Report Tz Info~@~
+447~@~AdmRptUsrAudit    80: ReportTimeTzInfo (en-US)~@~1091~@~1~@~ReportTime TzInfo~@~

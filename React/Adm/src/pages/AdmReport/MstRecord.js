@@ -483,7 +483,7 @@ class MstRecord extends RintagiScreen {
                     cPageHeight22: formatContent(PageHeight22 || '', 'TextBox'),
                     cAllowSelect22: AllowSelect22 === 'Y',
                     cGenerateRp22: GenerateRp22 === 'Y',
-                    cLastGenDt22: formatContent(LastGenDt22 || '', 'TextBox'),
+                    cLastGenDt22: LastGenDt22 || new Date(),
                     cAuthRequired22: AuthRequired22 === 'Y',
                     cWhereClause22: formatContent(WhereClause22 || '', 'MultiLine'),
                     cRegClause22: formatContent(RegClause22 || '', 'MultiLine'),
@@ -1056,10 +1056,13 @@ class MstRecord extends RintagiScreen {
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmReportState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
+                                        <DatePicker
                                           name='cLastGenDt22'
-                                          disabled={(authCol.LastGenDt22 || {}).readonly ? 'disabled' : ''} />
+                                          onChange={this.DateChange(setFieldValue, setFieldTouched, 'cLastGenDt22', false)}
+                                          onBlur={this.DateChange(setFieldValue, setFieldTouched, 'cLastGenDt22', true)}
+                                          value={values.cLastGenDt22}
+                                          selected={values.cLastGenDt22}
+                                          disabled={(authCol.LastGenDt22 || {}).readonly ? true : false} />
                                       </div>
                                     }
                                     {errors.cLastGenDt22 && touched.cLastGenDt22 && <span className='form__form-group-error'>{errors.cLastGenDt22}</span>}

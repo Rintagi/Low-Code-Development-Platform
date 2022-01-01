@@ -419,7 +419,7 @@ namespace RO.Access3
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
 			OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON DECLARE @now datetime"
-				+ " SELECT @now = getdate() UPDATE dbo.ServerRule SET LastGenDt = @now WHERE ServerRuleId = ?"
+				+ " SELECT @now = GETUTCDATE() UPDATE dbo.ServerRule SET LastGenDt = @now WHERE ServerRuleId = ?"
 				+ " SELECT @now", cn);
 			cmd.CommandType = CommandType.Text;
 			cmd.Parameters.Add("@ServerRuleId", OleDbType.Numeric).Value = ServerRuleId;
@@ -493,7 +493,7 @@ namespace RO.Access3
 			OleDbConnection cn = new OleDbConnection(dbConnectionString + DecryptString(dbPassword));
 			cn.Open();
 			OleDbCommand cmd = new OleDbCommand("SET NOCOUNT ON DECLARE @now datetime"
-				+ " SELECT @now = getdate() UPDATE dbo.Report SET LastGenDt = @now WHERE ReportId = ?"
+				+ " SELECT @now = GETUTCDATE() UPDATE dbo.Report SET LastGenDt = @now WHERE ReportId = ?"
 				+ " SELECT @now", cn);
 			cmd.CommandType = CommandType.Text;
 			cmd.Parameters.Add("@ReportId", OleDbType.Numeric).Value = ReportId;

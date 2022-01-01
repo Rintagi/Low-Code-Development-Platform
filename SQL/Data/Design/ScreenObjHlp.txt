@@ -997,7 +997,7 @@
 2395~@~AdmSystems [  250] Main Info: WebAddress (en-US)~@~1449~@~1~@~Default Page Override~@~This is the default page to orverride OrdUrl and SslUrl in Web.config within this database.~@~~@~
 2396~@~AdmSystems [   70] Main Info: AddDbs (en-US)~@~1450~@~1~@~~@~Click here to add the physical databases; this will take a few minutes.~@~~@~
 2397~@~AdmDbTable [  110] Main Info: ModifiedBy (en-US)~@~1451~@~1~@~Modified By~@~Information about this table was last modified by this user.~@~Information about this table was last modified by this user.~@~
-2398~@~AdmDbTable [  130] Main Info: LastSyncDt (en-US)~@~1452~@~1~@~Synchronized on~@~This table was last synchronized on this date.~@~~@~
+2398~@~AdmDbTable [  180] Main Info: LastSyncDt (en-US)~@~1452~@~1~@~Synchronized on~@~This table was last synchronized on this date.~@~~@~
 2399~@~AdmReportGrp [   90] Main Info: GrpStyle (en-US)~@~1453~@~1~@~Override Style~@~Override the default group style by either a CssClass starting with a "." or the actual style content.~@~~@~
 2402~@~AdmReportObj [   80] Main Info: PaddChar (en-US)~@~1456~@~1~@~With Character~@~This is the character to be padded to the left of this column if the total padding size has been specified; default is blank.~@~~@~
 2407~@~AdmUsrPref [  170] Applied: ProjectId (en-US)~@~1459~@~1~@~Project~@~This is the only project to be using this preference, if chosen.~@~~@~
@@ -1005,7 +1005,7 @@
 2417~@~AdmReportObj [   40] Main Info: RptObjTypeCd (en-US)~@~1469~@~1~@~Column Type~@~This is the report column type for this report column.  Currently either “Field” or “Parameter”.~@~Please select the report column type for this report column.~@~
 2418~@~AdmReport [   60] Main Info: ModifiedBy (en-US)~@~1470~@~1~@~Modified By~@~This report definition was last modified by this user.~@~This report definition was last modified by this user.~@~
 2419~@~AdmReport [   70] Main Info: ModifiedOn (en-US)~@~1471~@~1~@~Modified On~@~This report definition was last modified on this date and time.~@~~@~
-2420~@~AdmReport [  210] Main Info: LastGenDt (en-US)~@~1472~@~1~@~Last Generated~@~The stored procedures were last generated on this date.~@~~@~
+2420~@~AdmReport [  220] Main Info: LastGenDt (en-US)~@~1472~@~1~@~Last Generated~@~The stored procedures were last generated on this date.~@~~@~
 2421~@~AdmReport [  170] Main Info: SyncByDb (en-US)~@~1473~@~1~@~~@~Click here to obtain all the stored procedures from the physical database.~@~~@~
 2422~@~AdmReport [  180] Main Info: SyncToDb (en-US)~@~1474~@~1~@~~@~Click here to synchronize all the stored procedures to the physical database immediately.~@~~@~
 2423~@~AdmReport [  260] Fields: RegCode (en-US)~@~1475~@~1~@~S.Procedure~@~This content will be executed as Stored Procedure (SQL) on the relevant database(s) when not empty.~@~~@~
@@ -1269,14 +1269,14 @@
 2835~@~AdmSystems [  230] Main Info: CustServPhone (zh-CN)~@~1447~@~4~@~客户服务电话~@~这是电话号码的客户服务代表。~@~~@~
 2836~@~AdmSystems [  240] Main Info: CustServFax (zh-CN)~@~1448~@~4~@~客户服务传真~@~这是传真号码，客户服务代表。~@~~@~
 2839~@~AdmDbTable [  110] Main Info: ModifiedBy (zh-CN)~@~1451~@~4~@~修改~@~有关此表的最后修改该用户。~@~有关此表的最后修改该用户。~@~
-2840~@~AdmDbTable [  130] Main Info: LastSyncDt (zh-CN)~@~1452~@~4~@~同步~@~此表最后同步在这个日子。~@~~@~
+2840~@~AdmDbTable [  180] Main Info: LastSyncDt (zh-CN)~@~1452~@~4~@~同步~@~此表最后同步在这个日子。~@~~@~
 2843~@~AdmReportObj [   80] Main Info: PaddChar (zh-CN)~@~1456~@~4~@~字符~@~这是性质是垫的左侧，如果此列的总规模已填充指定;默认是空白的。~@~~@~
 2845~@~AdmUsrPref [  170] Applied: ProjectId (zh-CN)~@~1459~@~4~@~项目~@~这是唯一的项目要使用此优惠，如果选择。~@~~@~
 2849~@~AdmUsrPref [   80] Main Info: PrjListVisible (zh-CN)~@~1467~@~4~@~项目清单可见~@~项目清单将会隐藏登录后，如果“否”的选择。~@~项目清单将会隐藏登录后，如果“否”的选择。~@~
 2850~@~AdmReportObj [   40] Main Info: RptObjTypeCd (zh-CN)~@~1469~@~4~@~柱式~@~这是报告列类型本报告列。目前是“场”或“参数” 。~@~请选择报告列类型本报告列。~@~
 2851~@~AdmReport [   60] Main Info: ModifiedBy (zh-CN)~@~1470~@~4~@~修改~@~该报告定义的最后修改该用户。~@~该报告定义的最后修改该用户。~@~
 2852~@~AdmReport [   70] Main Info: ModifiedOn (zh-CN)~@~1471~@~4~@~修改~@~该报告定义的最后修订在此日期和时间。~@~~@~
-2853~@~AdmReport [  210] Main Info: LastGenDt (zh-CN)~@~1472~@~4~@~最后生成~@~预存程序最后产生在这个日子。~@~~@~
+2853~@~AdmReport [  220] Main Info: LastGenDt (zh-CN)~@~1472~@~4~@~最后生成~@~预存程序最后产生在这个日子。~@~~@~
 2854~@~AdmReport [  170] Main Info: SyncByDb (zh-CN)~@~1473~@~4~@~~@~单击此处以获得所有的存储过程的物理数据库。~@~~@~
 2855~@~AdmReport [  180] Main Info: SyncToDb (zh-CN)~@~1474~@~4~@~~@~点击这里来同步所有的存储过程的物理数据库立即。~@~~@~
 2856~@~AdmReport [  260] Fields: RegCode (zh-CN)~@~1475~@~4~@~南程序~@~此内容将被处死的预存程序（数据库）的有关数据库（县）时，不是空的。~@~~@~
@@ -1524,14 +1524,14 @@
 3172~@~AdmSystems [  230] Main Info: CustServPhone (fr-FR)~@~1447~@~2~@~Service à la clientèle Téléphone~@~Ceci est le numéro de téléphone du service à la clientèle.~@~~@~
 3173~@~AdmSystems [  240] Main Info: CustServFax (fr-FR)~@~1448~@~2~@~Customer Service Fax~@~C'est le numéro de télécopie du représentant du service clientèle.~@~~@~
 3176~@~AdmDbTable [  110] Main Info: ModifiedBy (fr-FR)~@~1451~@~2~@~Par jour~@~Informations sur cette table a été modifié par cet utilisateur.~@~Informations sur cette table a été modifié par cet utilisateur.~@~
-3177~@~AdmDbTable [  130] Main Info: LastSyncDt (fr-FR)~@~1452~@~2~@~Synchronisé sur~@~Ce tableau a été synchronisé sur cette dernière date.~@~~@~
+3177~@~AdmDbTable [  180] Main Info: LastSyncDt (fr-FR)~@~1452~@~2~@~Synchronisé sur~@~Ce tableau a été synchronisé sur cette dernière date.~@~~@~
 3180~@~AdmReportObj [   80] Main Info: PaddChar (fr-FR)~@~1456~@~2~@~Avec personnage~@~C'est le caractère à rembourré à la gauche de cette colonne, si la taille totale de remplissage a été spécifiée par défaut est vide.~@~~@~
 3182~@~AdmUsrPref [  170] Applied: ProjectId (fr-FR)~@~1459~@~2~@~Project~@~C'est le seul projet à l'aide de cette préférence, si elle est choisie.~@~~@~
 3186~@~AdmUsrPref [   80] Main Info: PrjListVisible (fr-FR)~@~1467~@~2~@~Liste des projets visibles~@~Liste de projets seront cachés au moment de la connexion, si &"Non&" est sélectionné.~@~Liste de projets seront cachés au moment de la connexion, si &"Non&" est sélectionné.~@~
 3187~@~AdmReportObj [   40] Main Info: RptObjTypeCd (fr-FR)~@~1469~@~2~@~Le type de colonne~@~Ce rapport est le type de colonne pour ce rapport de la colonne. Actuellement, soit &"Domaine&" ou &"Paramètre&".~@~S'il vous plaît sélectionner le type de rapport de la colonne de la colonne de ce rapport.~@~
 3188~@~AdmReport [   60] Main Info: ModifiedBy (fr-FR)~@~1470~@~2~@~Par jour~@~Ce rapport de définition a été modifiée en dernier lieu par l'utilisateur.~@~Ce rapport de définition a été modifiée en dernier lieu par l'utilisateur.~@~
 3189~@~AdmReport [   70] Main Info: ModifiedOn (fr-FR)~@~1471~@~2~@~Modifié le~@~Ce rapport de définition a été modifiée pour la dernière fois sur la date et l'heure.~@~~@~
-3190~@~AdmReport [  210] Main Info: LastGenDt (fr-FR)~@~1472~@~2~@~Dernière Generated~@~Les procédures stockées ont été produites sur cette dernière date.~@~~@~
+3190~@~AdmReport [  220] Main Info: LastGenDt (fr-FR)~@~1472~@~2~@~Dernière Generated~@~Les procédures stockées ont été produites sur cette dernière date.~@~~@~
 3191~@~AdmReport [  170] Main Info: SyncByDb (fr-FR)~@~1473~@~2~@~~@~Cliquez ici pour obtenir toutes les procédures stockées de la base de données.~@~~@~
 3192~@~AdmReport [  180] Main Info: SyncToDb (fr-FR)~@~1474~@~2~@~~@~Cliquez ici pour synchroniser toutes les procédures stockées de la base de données immédiatement.~@~~@~
 3193~@~AdmReport [  260] Fields: RegCode (fr-FR)~@~1475~@~2~@~S. procédure~@~Ce contenu sera exécutée comme une procédure stockée (SQL) sur la base de données pertinente (s) quand ils ne sont pas vides.~@~~@~
@@ -2198,7 +2198,7 @@
 4074~@~AdmSystems [  230] Main Info: CustServPhone (hi-IN)~@~1447~@~8~@~ग्राहक सेवा फोन~@~यह ग्राहक सेवा प्रतिनिधि के फोन नंबर है.~@~~@~
 4075~@~AdmSystems [  240] Main Info: CustServFax (hi-IN)~@~1448~@~8~@~ग्राहक सेवा फैक्स~@~यह ग्राहक सेवा प्रतिनिधि के फैक्स नंबर है.~@~~@~
 4078~@~AdmDbTable [  110] Main Info: ModifiedBy (hi-IN)~@~1451~@~8~@~संशोधित करके~@~सूचना के बारे में इस मेज पिछले इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~सूचना के बारे में इस मेज पिछले इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~
-4079~@~AdmDbTable [  130] Main Info: LastSyncDt (hi-IN)~@~1452~@~8~@~सिंक्रनाइज़ पर~@~इस मेज पिछले इस तिथि पर सिंक्रनाइज़ था.~@~~@~
+4079~@~AdmDbTable [  180] Main Info: LastSyncDt (hi-IN)~@~1452~@~8~@~सिंक्रनाइज़ पर~@~इस मेज पिछले इस तिथि पर सिंक्रनाइज़ था.~@~~@~
 4080~@~AdmReportGrp [   90] Main Info: GrpStyle (hi-IN)~@~1453~@~8~@~ओवरराइड पहनाव~@~या तो एक CssClass के साथ शुरू से समूह डिफ़ॉल्ट शैली ओवरराइड एक. &" या वास्तविक शैली सामग्री.~@~~@~
 4082~@~AdmReportObj [   80] Main Info: PaddChar (hi-IN)~@~1456~@~8~@~चरित्र के साथ~@~इस चरित्र को इस स्तंभ की बाईं अगर कुल padding आकार दिया गया है निर्दिष्ट करने मोटा होना है, डिफ़ॉल्ट रिक्त है.~@~~@~
 4084~@~AdmUsrPref [  170] Applied: ProjectId (hi-IN)~@~1459~@~8~@~परियोजना~@~यह केवल परियोजना है इस वरीयता का उपयोग कर सकता है, यदि चुना.~@~~@~
@@ -2206,7 +2206,7 @@
 4086~@~AdmReportObj [   40] Main Info: RptObjTypeCd (hi-IN)~@~1469~@~8~@~स्तंभ प्रकार~@~इस इस रिपोर्ट के लिए रिपोर्ट कॉलम प्रकार स्तंभ है. वर्तमान में या तो &"फील्ड&" या &"पैरामीटर&".~@~कृपया इस रिपोर्ट के लिए रिपोर्ट कॉलम प्रकार स्तंभ का चयन करें.~@~
 4087~@~AdmReport [   60] Main Info: ModifiedBy (hi-IN)~@~1470~@~8~@~संशोधित करके~@~इस रिपोर्ट को अंतिम परिभाषा इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~इस रिपोर्ट को अंतिम परिभाषा इस उपयोगकर्ता के द्वारा संशोधित किया गया था.~@~
 4088~@~AdmReport [   70] Main Info: ModifiedOn (hi-IN)~@~1471~@~8~@~संशोधित पर~@~यह रिपोर्ट इस परिभाषा अंतिम तारीख और समय पर संशोधित किया गया था.~@~~@~
-4089~@~AdmReport [  210] Main Info: LastGenDt (hi-IN)~@~1472~@~8~@~पिछले जनरेट~@~संग्रहीत प्रक्रिया पिछले इस तारीख को उत्पन्न किया गया.~@~~@~
+4089~@~AdmReport [  220] Main Info: LastGenDt (hi-IN)~@~1472~@~8~@~पिछले जनरेट~@~संग्रहीत प्रक्रिया पिछले इस तारीख को उत्पन्न किया गया.~@~~@~
 4090~@~AdmReport [  170] Main Info: SyncByDb (hi-IN)~@~1473~@~8~@~~@~यहाँ क्लिक करें शारीरिक डेटाबेस से सभी संग्रहीत प्रक्रिया प्राप्त करने के लिए.~@~~@~
 4091~@~AdmReport [  180] Main Info: SyncToDb (hi-IN)~@~1474~@~8~@~~@~यहाँ क्लिक करें शारीरिक डेटाबेस के सभी संग्रहीत प्रक्रिया तुरंत सिंक्रनाइज़.~@~~@~
 4092~@~AdmReport [  260] Fields: RegCode (hi-IN)~@~1475~@~8~@~एस प्रक्रिया~@~इस सामग्री को प्रासंगिक डाटाबेस (s) जब नहीं खाली पर संग्रहित प्रक्रिया (SQL) के रूप में निष्पादित करेंगे.~@~~@~
@@ -2748,7 +2748,7 @@
 4820~@~AdmSystems [  230] Main Info: CustServPhone (pt-BR)~@~1447~@~9~@~Telefone Atendimento ao Cliente~@~Este é o número de telefone do representante de serviço ao cliente.~@~~@~
 4821~@~AdmSystems [  240] Main Info: CustServFax (pt-BR)~@~1448~@~9~@~Fax Atendimento ao Cliente~@~Este é o número de fax do representante de serviço ao cliente.~@~~@~
 4824~@~AdmDbTable [  110] Main Info: ModifiedBy (pt-BR)~@~1451~@~9~@~Modificado por~@~Informações sobre esta tabela foi modificado pela última vez este usuário.~@~Informações sobre esta tabela foi modificada pela última vez por esse usuário.~@~
-4825~@~AdmDbTable [  130] Main Info: LastSyncDt (pt-BR)~@~1452~@~9~@~Sincronizados em~@~Esta tabela foi sincronizado pela última vez nesta data.~@~~@~
+4825~@~AdmDbTable [  180] Main Info: LastSyncDt (pt-BR)~@~1452~@~9~@~Sincronizados em~@~Esta tabela foi sincronizado pela última vez nesta data.~@~~@~
 4826~@~AdmReportGrp [   90] Main Info: GrpStyle (pt-BR)~@~1453~@~9~@~Substituir Estilo~@~Sobrepor o estilo de grupo padrão por qualquer CssClass uma começando com um "." ou o conteúdo de estilo real.~@~~@~
 4828~@~AdmReportObj [   80] Main Info: PaddChar (pt-BR)~@~1456~@~9~@~Com caracteres~@~Este é o personagem a ser acolchoados à esquerda desta coluna se o tamanho do preenchimento total foi especificado; padrão em branco.~@~~@~
 4830~@~AdmUsrPref [  170] Applied: ProjectId (pt-BR)~@~1459~@~9~@~Projeto~@~Este é o único projeto a ser usando essa preferência, se escolhida.~@~~@~
@@ -2756,7 +2756,7 @@
 4832~@~AdmReportObj [   40] Main Info: RptObjTypeCd (pt-BR)~@~1469~@~9~@~Tipo de coluna~@~Este é o tipo coluna de relatório para esta coluna do relatório. Atualmente qualquer um "campo" ou "parâmetro".~@~Por favor, selecione o tipo de coluna de relatório para esta coluna do relatório.~@~
 4833~@~AdmReport [   60] Main Info: ModifiedBy (pt-BR)~@~1470~@~9~@~Modificado por~@~Esta definição relatório foi modificada pela última vez por esse usuário.~@~Esta definição relatório foi modificada pela última vez por esse usuário.~@~
 4834~@~AdmReport [   70] Main Info: ModifiedOn (pt-BR)~@~1471~@~9~@~Modificado On~@~Esta definição relatório foi modificada pela última vez essa data e hora.~@~~@~
-4835~@~AdmReport [  210] Main Info: LastGenDt (pt-BR)~@~1472~@~9~@~Última Gerado~@~Os procedimentos armazenados eram passado, gerou nesta data.~@~~@~
+4835~@~AdmReport [  220] Main Info: LastGenDt (pt-BR)~@~1472~@~9~@~Última Gerado~@~Os procedimentos armazenados eram passado, gerou nesta data.~@~~@~
 4836~@~AdmReport [  170] Main Info: SyncByDb (pt-BR)~@~1473~@~9~@~~@~Clique aqui para obter todos os procedimentos armazenados do banco de dados físico.~@~~@~
 4837~@~AdmReport [  180] Main Info: SyncToDb (pt-BR)~@~1474~@~9~@~~@~Clique aqui para sincronizar todos os procedimentos armazenados no banco de dados físico imediatamente.~@~~@~
 4838~@~AdmReport [  260] Fields: RegCode (pt-BR)~@~1475~@~9~@~Procedimento S.~@~Este conteúdo será executado como Stored Procedure (SQL) no banco de dados relevantes (s) quando não estiver vazio.~@~~@~
@@ -3503,7 +3503,7 @@
 5851~@~AdmSystems [  230] Main Info: CustServPhone (tr-TR)~@~1447~@~11~@~Müşteri Hizmetleri Telefon~@~Bu müşteri hizmetleri temsilcisine telefon numarasıdır.~@~~@~
 5852~@~AdmSystems [  240] Main Info: CustServFax (tr-TR)~@~1448~@~11~@~Müşteri Hizmetleri Faks~@~Bu, müşteri hizmetleri temsilcisi faks numarası.~@~~@~
 5855~@~AdmDbTable [  110] Main Info: ModifiedBy (tr-TR)~@~1451~@~11~@~Değiştiren~@~Bu tablo hakkında bilgiler, son kullanıcı tarafından güncellenmiştir.~@~Bu tablo hakkında bilgiler, son kullanıcı tarafından güncellenmiştir.~@~
-5856~@~AdmDbTable [  130] Main Info: LastSyncDt (tr-TR)~@~1452~@~11~@~Senkronize~@~Bu tablo, en son bu tarihte senkronize oldu.~@~~@~
+5856~@~AdmDbTable [  180] Main Info: LastSyncDt (tr-TR)~@~1452~@~11~@~Senkronize~@~Bu tablo, en son bu tarihte senkronize oldu.~@~~@~
 5857~@~AdmReportGrp [   90] Main Info: GrpStyle (tr-TR)~@~1453~@~11~@~Stili Geçersiz Kılma~@~Bir başlangıç ​​ya bir CssClass varsayılan grup stilini geçersiz "." ya da gerçek bir stil içerik.~@~~@~
 5859~@~AdmReportObj [   80] Main Info: PaddChar (tr-TR)~@~1456~@~11~@~Karakter ile~@~Bu, toplam dolgu boyutu belirtilmişse, bu sütunun sol doldurulur karakter, varsayılan olarak boştur.~@~~@~
 5861~@~AdmUsrPref [  170] Applied: ProjectId (tr-TR)~@~1459~@~11~@~Proje~@~Bu seçilmiş ise, bu tercihi kullanarak tek bir projedir.~@~~@~
@@ -3511,7 +3511,7 @@
 5863~@~AdmReportObj [   40] Main Info: RptObjTypeCd (tr-TR)~@~1469~@~11~@~Kolon Tipi~@~Bu rapor Bu rapor sütunu sütun türü. Şu anda "Alan" veya "Parametre".~@~Lütfen bu rapor sütunu için rapor sütun türünü seçin.~@~
 5864~@~AdmReport [   60] Main Info: ModifiedBy (tr-TR)~@~1470~@~11~@~Değiştiren~@~Bu rapor tanımı son olarak bu kullanıcı tarafından güncellenmiştir.~@~Bu rapor tanımı son olarak bu kullanıcı tarafından güncellenmiştir.~@~
 5865~@~AdmReport [   70] Main Info: ModifiedOn (tr-TR)~@~1471~@~11~@~Tarihinde güncellenmiştir~@~Bu rapor tanımı son olarak bu tarih ve saati güncellenmiştir.~@~~@~
-5866~@~AdmReport [  210] Main Info: LastGenDt (tr-TR)~@~1472~@~11~@~Son oluşturuldu~@~Saklı yordamlar, son olarak bu tarihte oluşturulmuştur.~@~~@~
+5866~@~AdmReport [  220] Main Info: LastGenDt (tr-TR)~@~1472~@~11~@~Son oluşturuldu~@~Saklı yordamlar, son olarak bu tarihte oluşturulmuştur.~@~~@~
 5867~@~AdmReport [  170] Main Info: SyncByDb (tr-TR)~@~1473~@~11~@~~@~Fiziksel veritabanı tüm saklı yordamlar elde etmek için buraya tıklayın.~@~~@~
 5868~@~AdmReport [  180] Main Info: SyncToDb (tr-TR)~@~1474~@~11~@~~@~Fiziksel veritabanı hemen tüm saklı yordamlar senkronize etmek için buraya tıklayın.~@~~@~
 5869~@~AdmReport [  260] Fields: RegCode (tr-TR)~@~1475~@~11~@~S. Prosedürü~@~Bu içerik ile ilgili bir veritabanı (ler) boş değil Saklı Yordam (SQL) olarak çalıştırılacaktır.~@~~@~
@@ -4120,7 +4120,7 @@
 6677~@~AdmSystems [  230] Main Info: CustServPhone (ja-JP)~@~1447~@~14~@~カスタマーサービス電話番号~@~これにより、顧客サービス担当者の電話番号です。~@~~@~
 6678~@~AdmSystems [  240] Main Info: CustServFax (ja-JP)~@~1448~@~14~@~カスタマーサービスファックス~@~これにより、顧客サービス担当者のファックス番号です。~@~~@~
 6681~@~AdmDbTable [  110] Main Info: ModifiedBy (ja-JP)~@~1451~@~14~@~変更者~@~このテーブルに関する情報は、最後に、このユーザによって変更されました。~@~このテーブルに関する情報は、最後に、このユーザによって変更されました。~@~
-6682~@~AdmDbTable [  130] Main Info: LastSyncDt (ja-JP)~@~1452~@~14~@~に同期さ~@~このテーブルは、最後のこの日に同期化されていました。~@~~@~
+6682~@~AdmDbTable [  180] Main Info: LastSyncDt (ja-JP)~@~1452~@~14~@~に同期さ~@~このテーブルは、最後のこの日に同期化されていました。~@~~@~
 6683~@~AdmReportGrp [   90] Main Info: GrpStyle (ja-JP)~@~1453~@~14~@~スタイルをオーバーライド~@~で始まるいずれかのCssClassでデフォルトグループのスタイルを上書きする"。"または実際のスタイルのコンテンツ。~@~~@~
 6685~@~AdmReportObj [   80] Main Info: PaddChar (ja-JP)~@~1456~@~14~@~文字と~@~これは全体のパディングのサイズが指定されている場合、この列の左側にパディングされる文字で、デフォルトは空白です。~@~~@~
 6687~@~AdmUsrPref [  170] Applied: ProjectId (ja-JP)~@~1459~@~14~@~プロジェクト~@~これは、選択された場合、このプリファレンスを使用する唯一のプロジェクトです。~@~~@~
@@ -4128,7 +4128,7 @@
 6689~@~AdmReportObj [   40] Main Info: RptObjTypeCd (ja-JP)~@~1469~@~14~@~カラムの種類~@~これは、このレポートの列のレポートの列のタイプです。現在、"フィールド"または"パラメータ"のどちらか。~@~このレポートの列のレポートの列の種類を選択してください。~@~
 6690~@~AdmReport [   60] Main Info: ModifiedBy (ja-JP)~@~1470~@~14~@~変更者~@~このレポート定義は、最後に、このユーザによって変更されました。~@~このレポート定義は、最後に、このユーザによって変更されました。~@~
 6691~@~AdmReport [   70] Main Info: ModifiedOn (ja-JP)~@~1471~@~14~@~に行わ~@~このレポート定義は、最後にこの日時に行われました。~@~~@~
-6692~@~AdmReport [  210] Main Info: LastGenDt (ja-JP)~@~1472~@~14~@~最後に生成された~@~ストアドプロシージャは、最後のこの日に生成されていました。~@~~@~
+6692~@~AdmReport [  220] Main Info: LastGenDt (ja-JP)~@~1472~@~14~@~最後に生成された~@~ストアドプロシージャは、最後のこの日に生成されていました。~@~~@~
 6693~@~AdmReport [  170] Main Info: SyncByDb (ja-JP)~@~1473~@~14~@~~@~物理的なデータベースからすべてのストアドプロシージャを取得するには、ここをクリックしてください。~@~~@~
 6694~@~AdmReport [  180] Main Info: SyncToDb (ja-JP)~@~1474~@~14~@~~@~すぐに物理的なデータベースへのすべてのストアドプロシージャを同期させるためにはここをクリックしてください。~@~~@~
 6695~@~AdmReport [  260] Fields: RegCode (ja-JP)~@~1475~@~14~@~S.の手順~@~このコンテンツは、関連するデータベース（の）空ではないのストアドプロシージャ（SQL）として実行されます。~@~~@~
@@ -4737,7 +4737,7 @@
 7503~@~AdmSystems [  230] Main Info: CustServPhone (ru-RU)~@~1447~@~12~@~Телефон обслуживания клиентов~@~Это номер телефона представителя обслуживания клиентов.~@~~@~
 7504~@~AdmSystems [  240] Main Info: CustServFax (ru-RU)~@~1448~@~12~@~Факс Обслуживание клиентов~@~Это номер факса представителем службы поддержки клиентов.~@~~@~
 7507~@~AdmDbTable [  110] Main Info: ModifiedBy (ru-RU)~@~1451~@~12~@~Автор изменений~@~Информация об этой таблице Последнее изменение этого пользователя.~@~Информация об этой таблице Последнее изменение этого пользователя.~@~
-7508~@~AdmDbTable [  130] Main Info: LastSyncDt (ru-RU)~@~1452~@~12~@~Синхронизированная на~@~Эта таблица была последней синхронизации на эту дату.~@~~@~
+7508~@~AdmDbTable [  180] Main Info: LastSyncDt (ru-RU)~@~1452~@~12~@~Синхронизированная на~@~Эта таблица была последней синхронизации на эту дату.~@~~@~
 7509~@~AdmReportGrp [   90] Main Info: GrpStyle (ru-RU)~@~1453~@~12~@~Переопределение стиля~@~Переопределение стиля по умолчанию группы либо CssClass, начиная с "". или фактическое содержание стиле.~@~~@~
 7511~@~AdmReportObj [   80] Main Info: PaddChar (ru-RU)~@~1456~@~12~@~С помощью символа~@~Это символ, который будет дополнен до слева от этой колонке, если общий размер обивка была указана, по умолчанию пустой.~@~~@~
 7513~@~AdmUsrPref [  170] Applied: ProjectId (ru-RU)~@~1459~@~12~@~Проект~@~Это единственный проект, чтобы использовать это предпочтение, если выбрана.~@~~@~
@@ -4745,7 +4745,7 @@
 7515~@~AdmReportObj [   40] Main Info: RptObjTypeCd (ru-RU)~@~1469~@~12~@~Колонка типа~@~Это тип отчета колонки для настоящего доклада колонке. В настоящее время либо "Нива" или "Параметры".~@~Пожалуйста, выберите тип отчета колонки для настоящего доклада колонке.~@~
 7516~@~AdmReport [   60] Main Info: ModifiedBy (ru-RU)~@~1470~@~12~@~Автор изменений~@~Это определение отчета Последнее изменение этого пользователя.~@~Это определение отчета Последнее изменение этого пользователя.~@~
 7517~@~AdmReport [   70] Main Info: ModifiedOn (ru-RU)~@~1471~@~12~@~Изменение~@~Это определение отчета Последнее изменение этой дате и времени.~@~~@~
-7518~@~AdmReport [  210] Main Info: LastGenDt (ru-RU)~@~1472~@~12~@~Последнее Сгенерировано~@~Хранимые процедуры были в прошлом, образующихся на эту дату.~@~~@~
+7518~@~AdmReport [  220] Main Info: LastGenDt (ru-RU)~@~1472~@~12~@~Последнее Сгенерировано~@~Хранимые процедуры были в прошлом, образующихся на эту дату.~@~~@~
 7519~@~AdmReport [  170] Main Info: SyncByDb (ru-RU)~@~1473~@~12~@~~@~Нажмите здесь для получения всех хранимых процедур из физической базы данных.~@~~@~
 7520~@~AdmReport [  180] Main Info: SyncToDb (ru-RU)~@~1474~@~12~@~~@~Кликните здесь, чтобы синхронизировать все хранимые процедуры для физической базы данных немедленно.~@~~@~
 7521~@~AdmReport [  260] Fields: RegCode (ru-RU)~@~1475~@~12~@~С. Процедура~@~Это содержимое будет выполняться, как хранимые процедуры (SQL) на соответствующую базу данных (ы), когда он не пустой.~@~~@~
@@ -5354,7 +5354,7 @@
 8329~@~AdmSystems [  230] Main Info: CustServPhone (es-ES)~@~1447~@~13~@~Teléfono de Atención al Cliente~@~Este es el número de teléfono del representante de servicio al cliente.~@~~@~
 8330~@~AdmSystems [  240] Main Info: CustServFax (es-ES)~@~1448~@~13~@~Fax Servicio al Cliente~@~Este es el número de fax del representante de servicio al cliente.~@~~@~
 8333~@~AdmDbTable [  110] Main Info: ModifiedBy (es-ES)~@~1451~@~13~@~Modificado por~@~Información acerca de este cuadro fue modificada por última vez de este usuario.~@~Información acerca de este cuadro fue modificada por última vez de este usuario.~@~
-8334~@~AdmDbTable [  130] Main Info: LastSyncDt (es-ES)~@~1452~@~13~@~Sincronizados en~@~Esta tabla se sincronizó por última en esta fecha.~@~~@~
+8334~@~AdmDbTable [  180] Main Info: LastSyncDt (es-ES)~@~1452~@~13~@~Sincronizados en~@~Esta tabla se sincronizó por última en esta fecha.~@~~@~
 8335~@~AdmReportGrp [   90] Main Info: GrpStyle (es-ES)~@~1453~@~13~@~Anular estilo~@~Reemplazar el estilo de grupo por omisión ya sea por un CssClass a partir de un "." o el contenido de estilo actual.~@~~@~
 8337~@~AdmReportObj [   80] Main Info: PaddChar (es-ES)~@~1456~@~13~@~Con carácter~@~Este es el carácter que se rellena a la izquierda de esta columna si el tamaño total de relleno se ha especificado, por defecto está en blanco.~@~~@~
 8339~@~AdmUsrPref [  170] Applied: ProjectId (es-ES)~@~1459~@~13~@~Proyecto~@~Este es el único proyecto que se utiliza esta opción, si es elegido.~@~~@~
@@ -5362,7 +5362,7 @@
 8341~@~AdmReportObj [   40] Main Info: RptObjTypeCd (es-ES)~@~1469~@~13~@~Columna Tipo~@~Este es el tipo de columna del informe de esta columna del informe. En la actualidad ya sea "campo" o "parámetros".~@~Por favor, seleccione el tipo de columna del informe de esta columna del informe.~@~
 8342~@~AdmReport [   60] Main Info: ModifiedBy (es-ES)~@~1470~@~13~@~Modificado por~@~Esta definición de informe fue modificada por última vez de este usuario.~@~Esta definición de informe fue modificada por última vez de este usuario.~@~
 8343~@~AdmReport [   70] Main Info: ModifiedOn (es-ES)~@~1471~@~13~@~Modificado el~@~Esta definición de informe fue modificada por última vez en esta fecha y la hora.~@~~@~
-8344~@~AdmReport [  210] Main Info: LastGenDt (es-ES)~@~1472~@~13~@~Última Generado~@~Los procedimientos almacenados se generaron pasado en esta fecha.~@~~@~
+8344~@~AdmReport [  220] Main Info: LastGenDt (es-ES)~@~1472~@~13~@~Última Generado~@~Los procedimientos almacenados se generaron pasado en esta fecha.~@~~@~
 8345~@~AdmReport [  170] Main Info: SyncByDb (es-ES)~@~1473~@~13~@~~@~Haga clic aquí para obtener todos los procedimientos almacenados de la base de datos física.~@~~@~
 8346~@~AdmReport [  180] Main Info: SyncToDb (es-ES)~@~1474~@~13~@~~@~Haga clic aquí para sincronizar todos los procedimientos almacenados para la base de datos física de inmediato.~@~~@~
 8347~@~AdmReport [  260] Fields: RegCode (es-ES)~@~1475~@~13~@~S. Procedimiento~@~Este contenido se ejecutará como procedimiento almacenado (SQL) en la base de datos correspondiente (s) cuando no está vacío.~@~~@~
@@ -6339,7 +6339,7 @@
 10653~@~AdmSystems [  240] Main Info: CustServFax (de-DE)~@~1448~@~68~@~Kundenservice Fax~@~Dies ist die Faxnummer des Kundendienst.~@~~@~
 10655~@~AdmSystems [   70] Main Info: AddDbs (de-DE)~@~1450~@~68~@~~@~Klicken Sie hier, um die physischen Datenbanken hinzuzufügen, dies wird ein paar Minuten dauern.~@~~@~
 10656~@~AdmDbTable [  110] Main Info: ModifiedBy (de-DE)~@~1451~@~68~@~Geändert von~@~Informationen zu dieser Tabelle wurde zuletzt von diesem Benutzer geändert.~@~Informationen zu dieser Tabelle wurde zuletzt von diesem Benutzer geändert.~@~
-10657~@~AdmDbTable [  130] Main Info: LastSyncDt (de-DE)~@~1452~@~68~@~Synchronisiert werden~@~Diese Tabelle wurde zuletzt an diesem Tag synchronisiert.~@~~@~
+10657~@~AdmDbTable [  180] Main Info: LastSyncDt (de-DE)~@~1452~@~68~@~Synchronisiert werden~@~Diese Tabelle wurde zuletzt an diesem Tag synchronisiert.~@~~@~
 10658~@~AdmReportGrp [   90] Main Info: GrpStyle (de-DE)~@~1453~@~68~@~Überschreiben Stil~@~Überschreiben Sie die Default-Gruppe Stil entweder durch eine CssClass beginnend mit einem "." oder die tatsächlichen Stil Inhalt.~@~~@~
 10660~@~AdmReportObj [   80] Main Info: PaddChar (de-DE)~@~1456~@~68~@~Mit Charakter~@~Dies ist das Zeichen, das in der linken Spalte aufgefüllt werden, wenn die gesamte Polsterung Größe angegeben wurde; Standardeinstellung ist leer.~@~~@~
 10662~@~AdmUsrPref [  170] Applied: ProjectId (de-DE)~@~1459~@~68~@~Projekt~@~Dies ist das einzige Projekt zu sein mit diese Einstellung, wenn gewählt.~@~~@~
@@ -6347,7 +6347,7 @@
 10664~@~AdmReportObj [   40] Main Info: RptObjTypeCd (de-DE)~@~1469~@~68~@~Column Type~@~Dies ist der Bericht Spaltentyp für diesen Bericht Spalte. Derzeit entweder "Field" oder "Parameter".~@~Bitte wählen Sie den Bericht Spaltentyp für diesen Bericht Spalte.~@~
 10665~@~AdmReport [   60] Main Info: ModifiedBy (de-DE)~@~1470~@~68~@~Geändert von~@~Dieser Bericht Definition wurde zuletzt dieses Benutzers geändert.~@~Dieser Bericht Definition wurde zuletzt dieses Benutzers geändert.~@~
 10666~@~AdmReport [   70] Main Info: ModifiedOn (de-DE)~@~1471~@~68~@~Geändert On~@~Dieser Bericht Definition wurde zuletzt am diesem Datum und Zeit geändert.~@~~@~
-10667~@~AdmReport [  210] Main Info: LastGenDt (de-DE)~@~1472~@~68~@~Zuletzt generiert~@~Die gespeicherten Prozeduren wurden zuletzt an diesem Tag generiert.~@~~@~
+10667~@~AdmReport [  220] Main Info: LastGenDt (de-DE)~@~1472~@~68~@~Zuletzt generiert~@~Die gespeicherten Prozeduren wurden zuletzt an diesem Tag generiert.~@~~@~
 10668~@~AdmReport [  170] Main Info: SyncByDb (de-DE)~@~1473~@~68~@~~@~Klicken Sie hier, um alle gespeicherten Prozeduren aus der physischen Datenbank zu erhalten.~@~~@~
 10669~@~AdmReport [  180] Main Info: SyncToDb (de-DE)~@~1474~@~68~@~~@~Klicken Sie hier, um alle gespeicherten Prozeduren, um die physische Datenbank sofort zu synchronisieren.~@~~@~
 10670~@~AdmReport [  260] Fields: RegCode (de-DE)~@~1475~@~68~@~S.Procedure~@~Diese Inhalte werden als Stored Procedure (SQL) auf der entsprechenden Datenbank (en), wenn nicht leer ausgeführt werden.~@~~@~
@@ -7258,7 +7258,7 @@
 11780~@~AdmSystems [  240] Main Info: CustServFax (ko-KR)~@~1448~@~28~@~고객 서비스 팩스~@~이것은 고객 서비스 담당자의 팩스 번호입니다.~@~~@~
 11782~@~AdmSystems [   70] Main Info: AddDbs (ko-KR)~@~1450~@~28~@~~@~물리적 데이터베이스를 추가하려면 여기를 클릭하십시오,이 몇 분 정도 소요됩니다.~@~~@~
 11783~@~AdmDbTable [  110] Main Info: ModifiedBy (ko-KR)~@~1451~@~28~@~으로 수정~@~이 테이블에 대한 정보는 마지막으로 사용자가 바뀌 었습니다.~@~이 테이블에 대한 정보는 마지막으로 사용자가 바뀌 었습니다.~@~
-11784~@~AdmDbTable [  130] Main Info: LastSyncDt (ko-KR)~@~1452~@~28~@~에 동기화~@~이 표는 최근이 날짜에 동기화되었습니다.~@~~@~
+11784~@~AdmDbTable [  180] Main Info: LastSyncDt (ko-KR)~@~1452~@~28~@~에 동기화~@~이 표는 최근이 날짜에 동기화되었습니다.~@~~@~
 11785~@~AdmReportGrp [   90] Main Info: GrpStyle (ko-KR)~@~1453~@~28~@~스타일을 덮어 쓰기~@~로 시작하는 CssClass에 의해 기본 그룹 스타일을 덮어 쓰기 "." 또는 실제 스타일의 콘텐츠입니다.~@~~@~
 11787~@~AdmReportObj [   80] Main Info: PaddChar (ko-KR)~@~1456~@~28~@~문자로~@~이 전체 패딩 크기가 지정되어있는 경우이 항목의 왼쪽에 패드를 물렸다 할 문자이며 기본값은 비어 있습니다.~@~~@~
 11789~@~AdmUsrPref [  170] Applied: ProjectId (ko-KR)~@~1459~@~28~@~계획~@~이 선택한 경우이 환경 설정을 사용 할 수있는 유일한 프로젝트입니다.~@~~@~
@@ -7266,7 +7266,7 @@
 11791~@~AdmReportObj [   40] Main Info: RptObjTypeCd (ko-KR)~@~1469~@~28~@~열 유형~@~이이 보고서 항목에 대한 보고서 항목 유형입니다. 현재 중 "필드"또는 "매개 변수".~@~이 보고서 열의 보고서 항목 유형을 선택하십시오.~@~
 11792~@~AdmReport [   60] Main Info: ModifiedBy (ko-KR)~@~1470~@~28~@~으로 수정~@~이 보고서 정의를 마지막 사용자가 바뀌 었습니다.~@~이 보고서 정의를 마지막 사용자가 바뀌 었습니다.~@~
 11793~@~AdmReport [   70] Main Info: ModifiedOn (ko-KR)~@~1471~@~28~@~에 수정~@~이 보고서 정의를 마지막 날짜와 시간에 바뀌 었습니다.~@~~@~
-11794~@~AdmReport [  210] Main Info: LastGenDt (ko-KR)~@~1472~@~28~@~마지막 생성~@~저장 프로 시저를 마지막 날짜에 생성되었습니다.~@~~@~
+11794~@~AdmReport [  220] Main Info: LastGenDt (ko-KR)~@~1472~@~28~@~마지막 생성~@~저장 프로 시저를 마지막 날짜에 생성되었습니다.~@~~@~
 11795~@~AdmReport [  170] Main Info: SyncByDb (ko-KR)~@~1473~@~28~@~~@~물리적 데이터베이스의 모든 저장 프로 시저를 얻기 위해 여기를 클릭하십시오.~@~~@~
 11796~@~AdmReport [  180] Main Info: SyncToDb (ko-KR)~@~1474~@~28~@~~@~즉시 실제 데이터베이스에있는 모든 저장 프로 시저를 동기화하려면 여기를 클릭하십시오.~@~~@~
 11797~@~AdmReport [  260] Fields: RegCode (ko-KR)~@~1475~@~28~@~S.Procedure~@~이 내용은 관련 데이터베이스 (들)에 대한 저장 프로 시저 (SQL) 비어 있지로 실행됩니다.~@~~@~
@@ -8358,7 +8358,7 @@
 16313~@~AdmLicense [   40] Main: InstallID (en-US)~@~4255~@~1~@~Installation ID~@~~@~~@~
 16314~@~AdmLicense [   50] Main: AppID (en-US)~@~4256~@~1~@~App ID~@~~@~~@~
 16315~@~AdmLicense [   60] Main: RegisterInsall (en-US)~@~4257~@~1~@~Register Installation~@~~@~~@~
-16360~@~AdmSystems [  300] Main Info: UpdBaseSystemId (en-US)~@~4302~@~1~@~Update Base SystemId~@~when checked, all systemId referring to the given Design/App Db would be changed to current one(based on heuristic)~@~~@~
+16360~@~AdmSystems [  310] Main Info: UpdBaseSystemId (en-US)~@~4302~@~1~@~Update Base SystemId~@~when checked, all systemId referring to the given Design/App Db would be changed to current one(based on heuristic)~@~~@~
 16361~@~AdmSystems [  320] Main Info: UpdRefSystemId (en-US)~@~4303~@~1~@~Update Reference SystemId~@~when checked, all modules referencing old system Id would be changed to current one~@~~@~
 16362~@~AdmSystems [  300] Main Info: FromSystemId (en-US)~@~4304~@~1~@~From SystemId~@~Old system Id to update from, only needed if either Update Base SystemId or Update Reference System Id~@~~@~
 16363~@~AdmUsr [   10] Main Info: UsrId (fr-CA)~@~1~@~114~@~Identifiant d'utilisateur~@~Il s'agit de l'ID interne identifier de manière unique cet utilisateur.~@~~@~
@@ -8736,31 +8736,31 @@
 16735~@~AdmScreenObj [  110] Main Info: ColumnJustify (en-US)~@~1422~@~114~@~Justifier~@~Il s'agit de l'alignement horizontal de l'affichage des colonnes (gauche, droite ou centre).~@~Veuillez sélectionner l'alignement horizontal de l'affichage des colonnes (gauche, droite ou centre).~@~
 16736~@~AdmScreenCri [  100] Main Info: ColumnJustify (en-US)~@~1425~@~114~@~Justifier~@~Il s'agit de la justification de l'affichage des colonnes (gauche, droite ou centre).~@~Veuillez sélectionner la justification de l'affichage des colonnes (gauche, droite ou centre).~@~
 16737~@~AdmCtCulture [   70] Main Info: EnNumberRule (en-US)~@~1427~@~114~@~11/12 Règle~@~Ceci est vérifié si cette culture utilise onze et douze mots.~@~~@~
-16738~@~AdmSystems [   10] Main Info: SystemId (en-US)~@~1428~@~114~@~Identifiant~@~Il s'agit d'un nombre entier compris entre 1 et 255 qui représente uniquement cette application / base de données (l'administration doit toujours être 3).~@~Veuillez saisir un nombre entier compris entre 1 et 255 pour représenter de manière unique cette application / base de données (l'administration doit toujours être 3).~@~
-16739~@~AdmSystems [   30] Main Info: SystemName (en-US)~@~1429~@~114~@~Nom du système~@~Il s'agit d'un nom qui représente uniquement cette application / base de données.~@~Veuillez saisir un nom qui représente uniquement cette application / base de données.~@~
-16740~@~AdmSystems [   20] Main Info: ServerName (en-US)~@~1430~@~114~@~Nom du serveur~@~Il s'agit du nom du serveur informatique hébergeant le serveur de base de données.~@~Veuillez saisir le nom du serveur informatique hébergeant le serveur de base de données.~@~
-16741~@~AdmSystems [   80] Main Info: dbAppProvider (en-US)~@~1431~@~114~@~Fournisseur DB~@~Il s'agit par exemple de la chaîne du fournisseur de base de données. Sqloledb pour MSSQL.~@~Veuillez saisir la chaîne du fournisseur de base de données, par exemple. Sqloledb pour MSSQL.~@~
-16742~@~AdmSystems [   90] Main Info: dbAppServer (en-US)~@~1432~@~114~@~Nom du serveur de base de données~@~Il s'agit du nom du serveur de base de données hébergeant la base de données.~@~Veuillez saisir le nom du serveur de base de données hébergeant la base de données.~@~
-16743~@~AdmSystems [  100] Main Info: dbAppDatabase (en-US)~@~1433~@~114~@~Base de données d'application~@~Il s'agit du nom de la base de données d'application.~@~Veuillez saisir le nom de la base de données d'application.~@~
-16744~@~AdmSystems [  110] Main Info: dbDesDatabase (en-US)~@~1434~@~114~@~Base de données de conception~@~Il s'agit du nom de la base de données de conception de l'application.~@~Veuillez saisir le nom de la base de données de conception de l'application.~@~
-16745~@~AdmSystems [  120] Main Info: dbAppUserId (en-US)~@~1435~@~114~@~ID utilisateur DB~@~Il s'agit du nom d'utilisateur de connexion à la base de données d'application avec les informations d'identification sa.~@~Veuillez saisir le nom d'utilisateur de connexion à la base de données d'application avec les informations d'identification sa.~@~
-16746~@~AdmSystems [  130] Main Info: dbAppPassword (en-US)~@~1436~@~114~@~Mot de passe DB~@~Il s'agit du mot de passe d'utilisateur de connexion sa chiffré à la base de données d'application.~@~Veuillez saisir le mot de passe d'utilisateur de connexion sa crypté dans la base de données d'application.~@~
-16747~@~AdmSystems [  140] Main Info: dbX01Provider (en-US)~@~1437~@~114~@~Fournisseur DB1~@~Il s'agit du fournisseur de base de données d'authentification externe et secondaire.~@~~@~
-16748~@~AdmSystems [  150] Main Info: dbX01Server (en-US)~@~1438~@~114~@~Nom du serveur DB1~@~Il s'agit du serveur de base de données d'authentification externe et secondaire.~@~~@~
-16749~@~AdmSystems [  160] Main Info: dbX01Database (en-US)~@~1439~@~114~@~Nom de la base de données~@~Il s'agit du nom de la base de données d'authentification externe et secondaire.~@~~@~
-16750~@~AdmSystems [  170] Main Info: dbX01UserId (en-US)~@~1440~@~114~@~ID utilisateur DB1~@~Il s'agit du nom d'utilisateur de la base de données d'authentification externe et secondaire.~@~~@~
-16751~@~AdmSystems [  180] Main Info: dbX01Password (en-US)~@~1441~@~114~@~Mot de passe DB1~@~Il s'agit de la base de données d'authentification externe et secondaire pour le mot de passe utilisateur.~@~~@~
-16752~@~AdmSystems [  190] Main Info: dbX01Extra (en-US)~@~1442~@~114~@~DB1 Extra String~@~Cela peut être utilisé à des fins diverses personnalisées.~@~~@~
-16753~@~AdmSystems [   50] Main Info: SysProgram (en-US)~@~1443~@~114~@~Administration~@~Seule la base de données d'administration est vérifiée comme Y, le reste n'est pas vérifié comme N.~@~~@~
-16754~@~AdmSystems [  200] Main Info: AdminEmail (en-US)~@~1444~@~114~@~Courriel de l'administrateur~@~Il s'agit du courriel de l'administrateur de la base de données.~@~~@~
-16755~@~AdmSystems [  210] Main Info: AdminPhone (en-US)~@~1445~@~114~@~Téléphone administrateur~@~Il s'agit du numéro de téléphone de l'administrateur de la base de données.~@~~@~
-16756~@~AdmSystems [  220] Main Info: CustServEmail (en-US)~@~1446~@~114~@~Courriel du service à la clientèle~@~Il s'agit de l'e-mail du représentant du service client.~@~~@~
-16757~@~AdmSystems [  230] Main Info: CustServPhone (en-US)~@~1447~@~114~@~Téléphone du service client~@~Il s'agit du numéro de téléphone du représentant du service client.~@~~@~
-16758~@~AdmSystems [  240] Main Info: CustServFax (en-US)~@~1448~@~114~@~Fax du service client~@~Il s'agit du numéro de fax du représentant du service client.~@~~@~
-16759~@~AdmSystems [  250] Main Info: WebAddress (en-US)~@~1449~@~114~@~Remplacement de page par défaut~@~Il s'agit de la page par défaut pour orverride OrdUrl et SslUrl dans Web.config dans cette base de données.~@~~@~
-16760~@~AdmSystems [   70] Main Info: AddDbs (en-US)~@~1450~@~114~@~~@~Cliquez ici pour ajouter les bases de données physiques; cela prendra quelques minutes.~@~~@~
+16738~@~AdmSystems [   10] Main Info: SystemId (fr-CA)~@~1428~@~114~@~Identifiant~@~Il s'agit d'un nombre entier compris entre 1 et 255 qui représente uniquement cette application / base de données (l'administration doit toujours être 3).~@~Veuillez saisir un nombre entier compris entre 1 et 255 pour représenter de manière unique cette application / base de données (l'administration doit toujours être 3).~@~
+16739~@~AdmSystems [   30] Main Info: SystemName (fr-CA)~@~1429~@~114~@~Nom du système~@~Il s'agit d'un nom qui représente uniquement cette application / base de données.~@~Veuillez saisir un nom qui représente uniquement cette application / base de données.~@~
+16740~@~AdmSystems [   20] Main Info: ServerName (fr-CA)~@~1430~@~114~@~Nom du serveur~@~Il s'agit du nom du serveur informatique hébergeant le serveur de base de données.~@~Veuillez saisir le nom du serveur informatique hébergeant le serveur de base de données.~@~
+16741~@~AdmSystems [   80] Main Info: dbAppProvider (fr-CA)~@~1431~@~114~@~Fournisseur DB~@~Il s'agit par exemple de la chaîne du fournisseur de base de données. Sqloledb pour MSSQL.~@~Veuillez saisir la chaîne du fournisseur de base de données, par exemple. Sqloledb pour MSSQL.~@~
+16742~@~AdmSystems [   90] Main Info: dbAppServer (fr-CA)~@~1432~@~114~@~Nom du serveur de base de données~@~Il s'agit du nom du serveur de base de données hébergeant la base de données.~@~Veuillez saisir le nom du serveur de base de données hébergeant la base de données.~@~
+16743~@~AdmSystems [  100] Main Info: dbAppDatabase (fr-CA)~@~1433~@~114~@~Base de données d'application~@~Il s'agit du nom de la base de données d'application.~@~Veuillez saisir le nom de la base de données d'application.~@~
+16744~@~AdmSystems [  110] Main Info: dbDesDatabase (fr-CA)~@~1434~@~114~@~Base de données de conception~@~Il s'agit du nom de la base de données de conception de l'application.~@~Veuillez saisir le nom de la base de données de conception de l'application.~@~
+16745~@~AdmSystems [  120] Main Info: dbAppUserId (fr-CA)~@~1435~@~114~@~ID utilisateur DB~@~Il s'agit du nom d'utilisateur de connexion à la base de données d'application avec les informations d'identification sa.~@~Veuillez saisir le nom d'utilisateur de connexion à la base de données d'application avec les informations d'identification sa.~@~
+16746~@~AdmSystems [  130] Main Info: dbAppPassword (fr-CA)~@~1436~@~114~@~Mot de passe DB~@~Il s'agit du mot de passe d'utilisateur de connexion sa chiffré à la base de données d'application.~@~Veuillez saisir le mot de passe d'utilisateur de connexion sa crypté dans la base de données d'application.~@~
+16747~@~AdmSystems [  140] Main Info: dbX01Provider (fr-CA)~@~1437~@~114~@~Fournisseur DB1~@~Il s'agit du fournisseur de base de données d'authentification externe et secondaire.~@~~@~
+16748~@~AdmSystems [  150] Main Info: dbX01Server (fr-CA)~@~1438~@~114~@~Nom du serveur DB1~@~Il s'agit du serveur de base de données d'authentification externe et secondaire.~@~~@~
+16749~@~AdmSystems [  160] Main Info: dbX01Database (fr-CA)~@~1439~@~114~@~Nom de la base de données~@~Il s'agit du nom de la base de données d'authentification externe et secondaire.~@~~@~
+16750~@~AdmSystems [  170] Main Info: dbX01UserId (fr-CA)~@~1440~@~114~@~ID utilisateur DB1~@~Il s'agit du nom d'utilisateur de la base de données d'authentification externe et secondaire.~@~~@~
+16751~@~AdmSystems [  180] Main Info: dbX01Password (fr-CA)~@~1441~@~114~@~Mot de passe DB1~@~Il s'agit de la base de données d'authentification externe et secondaire pour le mot de passe utilisateur.~@~~@~
+16752~@~AdmSystems [  190] Main Info: dbX01Extra (fr-CA)~@~1442~@~114~@~DB1 Extra String~@~Cela peut être utilisé à des fins diverses personnalisées.~@~~@~
+16753~@~AdmSystems [   50] Main Info: SysProgram (fr-CA)~@~1443~@~114~@~Administration~@~Seule la base de données d'administration est vérifiée comme Y, le reste n'est pas vérifié comme N.~@~~@~
+16754~@~AdmSystems [  200] Main Info: AdminEmail (fr-CA)~@~1444~@~114~@~Courriel de l'administrateur~@~Il s'agit du courriel de l'administrateur de la base de données.~@~~@~
+16755~@~AdmSystems [  210] Main Info: AdminPhone (fr-CA)~@~1445~@~114~@~Téléphone administrateur~@~Il s'agit du numéro de téléphone de l'administrateur de la base de données.~@~~@~
+16756~@~AdmSystems [  220] Main Info: CustServEmail (fr-CA)~@~1446~@~114~@~Courriel du service à la clientèle~@~Il s'agit de l'e-mail du représentant du service client.~@~~@~
+16757~@~AdmSystems [  230] Main Info: CustServPhone (fr-CA)~@~1447~@~114~@~Téléphone du service client~@~Il s'agit du numéro de téléphone du représentant du service client.~@~~@~
+16758~@~AdmSystems [  240] Main Info: CustServFax (fr-CA)~@~1448~@~114~@~Fax du service client~@~Il s'agit du numéro de fax du représentant du service client.~@~~@~
+16759~@~AdmSystems [  250] Main Info: WebAddress (fr-CA)~@~1449~@~114~@~Remplacement de page par défaut~@~Il s'agit de la page par défaut pour orverride OrdUrl et SslUrl dans Web.config dans cette base de données.~@~~@~
+16760~@~AdmSystems [   70] Main Info: AddDbs (fr-CA)~@~1450~@~114~@~~@~Cliquez ici pour ajouter les bases de données physiques; cela prendra quelques minutes.~@~~@~
 16761~@~AdmDbTable [  110] Main Info: ModifiedBy (en-US)~@~1451~@~114~@~Modifié par~@~Les informations sur ce tableau ont été modifiées pour la dernière fois par cet utilisateur.~@~Les informations sur ce tableau ont été modifiées pour la dernière fois par cet utilisateur.~@~
-16762~@~AdmDbTable [  130] Main Info: LastSyncDt (en-US)~@~1452~@~114~@~Synchronisé sur~@~Cette table a été synchronisée pour la dernière fois à cette date.~@~~@~
+16762~@~AdmDbTable [  180] Main Info: LastSyncDt (fr-CA)~@~1452~@~114~@~Synchronisé sur~@~Cette table a été synchronisée pour la dernière fois à cette date.~@~~@~
 16763~@~AdmReportGrp [   90] Main Info: GrpStyle (en-US)~@~1453~@~114~@~Remplacer le style~@~Remplacez le style de groupe par défaut par une classe Css commençant par un "." ou le contenu du style réel.~@~~@~
 16764~@~AdmReportObj [   80] Main Info: PaddChar (en-US)~@~1456~@~114~@~Avec caractère~@~Il s'agit du caractère à compléter à gauche de cette colonne si la taille totale du remplissage a été spécifiée; la valeur par défaut est vide.~@~~@~
 16765~@~AdmUsrPref [  170] Applied: ProjectId (fr-CA)~@~1459~@~114~@~Projet~@~C'est le seul projet à utiliser cette préférence, s'il est choisi.~@~~@~
@@ -8768,7 +8768,7 @@
 16767~@~AdmReportObj [   40] Main Info: RptObjTypeCd (en-US)~@~1469~@~114~@~Type de colonne~@~Il s'agit du type de colonne de rapport pour cette colonne de rapport. Actuellement, soit «Champ» ou «Paramètre».~@~Veuillez sélectionner le type de colonne de rapport pour cette colonne de rapport.~@~
 16768~@~AdmReport [   60] Main Info: ModifiedBy (fr-CA)~@~1470~@~114~@~Modifié par~@~Cette définition de rapport a été modifiée pour la dernière fois par cet utilisateur.~@~Cette définition de rapport a été modifiée pour la dernière fois par cet utilisateur.~@~
 16769~@~AdmReport [   70] Main Info: ModifiedOn (fr-CA)~@~1471~@~114~@~Modifié le~@~Cette définition de rapport a été modifiée pour la dernière fois à cette date et à cette heure.~@~~@~
-16770~@~AdmReport [  210] Main Info: LastGenDt (fr-CA)~@~1472~@~114~@~Dernière génération~@~Les procédures stockées ont été générées pour la dernière fois à cette date.~@~~@~
+16770~@~AdmReport [  220] Main Info: LastGenDt (fr-CA)~@~1472~@~114~@~Dernière génération~@~Les procédures stockées ont été générées pour la dernière fois à cette date.~@~~@~
 16771~@~AdmReport [  170] Main Info: SyncByDb (fr-CA)~@~1473~@~114~@~~@~Cliquez ici pour obtenir toutes les procédures stockées de la base de données physique.~@~~@~
 16772~@~AdmReport [  180] Main Info: SyncToDb (fr-CA)~@~1474~@~114~@~~@~Cliquez ici pour synchroniser immédiatement toutes les procédures stockées avec la base de données physique.~@~~@~
 16773~@~AdmReport [  260] Fields: RegCode (fr-CA)~@~1475~@~114~@~S.Procedure~@~Ce contenu sera exécuté en tant que procédure stockée (SQL) sur la ou les bases de données pertinentes lorsqu'il n'est pas vide.~@~~@~
@@ -9026,7 +9026,7 @@
 17025~@~AdmMaintMsg [   20] Main Info: MaintMsgName (en-US)~@~1870~@~114~@~Nom du message~@~Il s'agit du nom ou de la description du message de maintenance.~@~Veuillez saisir le nom ou la description de ce message de maintenance.~@~
 17026~@~AdmMaintMsg [   30] Main Info: MaintMessage (en-US)~@~1871~@~114~@~Message~@~Il s'agit du message de maintenance à afficher sur la page de connexion ou à envoyer par e-mail.~@~Veuillez saisir le message de maintenance à afficher sur la page de connexion ou à envoyer par e-mail.~@~
 17027~@~AdmMaintMsg [   40] Main Info: ShowOnLogin (en-US)~@~1872~@~114~@~Afficher sur la page de connexion~@~Cochez cette option pour afficher sur la page de connexion, les autres messages sont supprimés lors de la mise à jour.~@~~@~
-17028~@~AdmMaintMsg [   50] Main Info: LastEmailDt (en-US)~@~1873~@~114~@~Date du dernier e-mail~@~Ce message de maintenance a été envoyé pour la dernière fois à cette date et à cette heure.~@~~@~
+17028~@~AdmMaintMsg [   50] Main Info: LastEmailDt (fr-CA)~@~1873~@~114~@~Date du dernier e-mail~@~Ce message de maintenance a été envoyé pour la dernière fois à cette date et à cette heure.~@~~@~
 17029~@~AdmMaintMsg [   60] Main Info: EmailUsers (en-US)~@~1874~@~114~@~Envoyer un e-mail à tous les utilisateurs actifs~@~Cliquez ici pour envoyer immédiatement un e-mail à tous les utilisateurs actifs.~@~~@~
 17030~@~AdmAtRowAuth [   90] Main Info: RowAuthPrmId (en-US)~@~1875~@~114~@~Remplacer l'ID~@~Il s'agit de l'ID interne qui représente uniquement cette valeur par défaut de l'autorité de ligne prioritaire.~@~~@~
 17031~@~AdmAtRowAuth [  100] Main Info: PermKeyId (en-US)~@~1877~@~114~@~Type d'entité~@~Il s'agit du type d'entité auquel l'accès de sélection doit être accordé par défaut pour cette autorité de ligne.~@~Veuillez sélectionner le type d'entité auquel accorder l'accès de sélection à cette autorité de ligne par défaut.~@~
@@ -9176,3 +9176,4 @@
 17250~@~AdmCompPref [   40] Main: CompPrefDesc (en-US)~@~4433~@~1~@~Description~@~This is company preference description.~@~~@~
 17251~@~AdmCompPref [   40] Main: SystemLs (en-US)~@~4434~@~1~@~Systems~@~~@~~@~
 17252~@~AdmUsr [  300] Status: PeekBtn (en-US)~@~4435~@~1~@~Hint Peek~@~~@~~@~
+17257~@~AdmSystems [  330] Main Info: DfltTimezone (en-US)~@~4440~@~1~@~Default Timezone Name~@~~@~~@~

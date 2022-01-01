@@ -200,6 +200,7 @@ class MstRecord extends RintagiScreen {
           FromSystemId: values.cFromSystemId || '',
           UpdBaseSystemId: values.cUpdBaseSystemId ? 'Y' : 'N',
           UpdRefSystemId: values.cUpdRefSystemId ? 'Y' : 'N',
+          DfltTimezone45: values.cDfltTimezone45 || '',
         },
         [],
         {
@@ -422,6 +423,7 @@ class MstRecord extends RintagiScreen {
     const FromSystemId = currMst.FromSystemId;
     const UpdBaseSystemId = currMst.UpdBaseSystemId;
     const UpdRefSystemId = currMst.UpdRefSystemId;
+    const DfltTimezone45 = currMst.DfltTimezone45;
 
     const { dropdownMenuButtonList, bottomButtonList, hasDropdownMenuButton, hasBottomButton, hasRowButton } = this.state.Buttons;
     const hasActableButtons = hasBottomButton || hasRowButton || hasDropdownMenuButton;
@@ -489,6 +491,7 @@ class MstRecord extends RintagiScreen {
                     cFromSystemId: formatContent(FromSystemId || '', 'TextBox'),
                     cUpdBaseSystemId: UpdBaseSystemId === 'Y',
                     cUpdRefSystemId: UpdRefSystemId === 'Y',
+                    cDfltTimezone45: formatContent(DfltTimezone45 || '', 'TextBox'),
                   }}
                   validate={this.ValidatePage}
                   onSubmit={this.SavePage}
@@ -1211,6 +1214,27 @@ class MstRecord extends RintagiScreen {
                                     {(columnLabel.UpdRefSystemId || {}).ToolTip &&
                                       (<ControlledPopover id={(columnLabel.UpdRefSystemId || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.UpdRefSystemId || {}).ToolTip} />
                                       )}
+                                  </div>
+                                </Col>
+                              }
+                              {(authCol.DfltTimezone45 || {}).visible &&
+                                <Col lg={6} xl={6}>
+                                  <div className='form__form-group'>
+                                    {((true && this.constructor.ShowSpinner(AdmSystemsState)) && <Skeleton height='20px' />) ||
+                                      <label className='form__form-group-label'>{(columnLabel.DfltTimezone45 || {}).ColumnHeader} {(columnLabel.DfltTimezone45 || {}).ToolTip &&
+                                        (<ControlledPopover id={(columnLabel.DfltTimezone45 || {}).ColumnName} className='sticky-icon pt-0 lh-23' message={(columnLabel.DfltTimezone45 || {}).ToolTip} />
+                                        )}
+                                      </label>
+                                    }
+                                    {((true && this.constructor.ShowSpinner(AdmSystemsState)) && <Skeleton height='36px' />) ||
+                                      <div className='form__form-group-field'>
+                                        <Field
+                                          type='text'
+                                          name='cDfltTimezone45'
+                                          disabled={(authCol.DfltTimezone45 || {}).readonly ? 'disabled' : ''} />
+                                      </div>
+                                    }
+                                    {errors.cDfltTimezone45 && touched.cDfltTimezone45 && <span className='form__form-group-error'>{errors.cDfltTimezone45}</span>}
                                   </div>
                                 </Col>
                               }

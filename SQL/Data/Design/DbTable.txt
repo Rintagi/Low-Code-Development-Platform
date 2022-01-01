@@ -19,7 +19,7 @@
 27~@~5~@~Investor~@~Cmn - Investor Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:41:06.717~@~
 39~@~3~@~Menu~@~Adm - Menu Items~@~Y~@~N~@~~@~This captures the menu information.~@~~@~2~@~2020-04-04 00:15:22.750~@~2020-04-03 17:17:15.090
 40~@~3~@~MenuHlp~@~Adm - Menu Items Label~@~Y~@~N~@~~@~This captures the display label of each menu item in its locale.~@~~@~55~@~2011-05-10 14:43:58.750~@~2011-05-10 14:45:52.367
-45~@~3~@~Systems~@~Adm - Systems Particulars~@~N~@~N~@~~@~This captures all systems information for the databases.~@~~@~55~@~2017-03-25 06:46:05.780~@~2017-03-24 23:46:17.410
+45~@~3~@~Systems~@~Adm - Systems Particulars~@~N~@~N~@~~@~This captures all systems information for the databases.~@~~@~2~@~2021-11-23 05:44:15.057~@~2021-11-22 21:44:26.340
 52~@~5~@~Customer~@~Cmn - Customer Particulars~@~N~@~N~@~~@~~@~~@~55~@~2012-02-27 13:40:33.913~@~
 54~@~5~@~Member~@~Cmn - Member Particulars~@~N~@~N~@~~@~~@~~@~55~@~2013-06-23 17:23:09.430~@~2013-06-14 10:32:51.000
 58~@~3~@~UsrGroupAuth~@~Adm - User Group Authority~@~N~@~N~@~~@~This captures all user group authority overrides information.~@~~@~55~@~2013-02-26 19:47:15.517~@~2009-08-18 16:28:10.000
@@ -350,3 +350,4 @@ FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1327~@~3~@~UsrDevice~@~Adm - User Device~@~N~@~N~@~~@~table to track user login devices(for push notification etc.)~@~~@~2~@~2020-11-23 05:25:07.330~@~2020-11-22 21:25:14.447
 1328~@~3~@~VwMIMEType~@~Adm - MIME Type~@~N~@~N~@~~@~~@~~@~2~@~2020-12-11 12:54:19.130~@~2020-12-11 04:53:44.000
 1329~@~3~@~CompPref~@~Adm - Company Preference~@~N~@~N~@~~@~This captures all company preferences information.~@~~@~2~@~2021-02-24 14:11:05.760~@~2021-02-24 06:11:12.463
+1330~@~3~@~VwTimeZoneInfo~@~Adm - Time Zone Info~@~N~@~N~@~~@~~@~~@~2~@~2021-11-23 05:42:24.560~@~2021-11-22 21:41:34.000

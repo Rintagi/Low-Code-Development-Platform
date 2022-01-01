@@ -441,7 +441,7 @@ namespace RO.Access3.Odbc
 			OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
 			cn.Open();
 			OdbcCommand cmd = new OdbcCommand("SET NOCOUNT ON DECLARE @now datetime"
-				+ " SELECT @now = getdate() UPDATE dbo.ServerRule SET LastGenDt = @now WHERE ServerRuleId = ?"
+				+ " SELECT @now = GETUTCDATE() UPDATE dbo.ServerRule SET LastGenDt = @now WHERE ServerRuleId = ?"
 				+ " SELECT @now", cn);
 			cmd.CommandType = CommandType.Text;
 			cmd.Parameters.Add("@ServerRuleId", OdbcType.Numeric).Value = ServerRuleId;
@@ -515,7 +515,7 @@ namespace RO.Access3.Odbc
 			OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
 			cn.Open();
 			OdbcCommand cmd = new OdbcCommand("SET NOCOUNT ON DECLARE @now datetime"
-				+ " SELECT @now = getdate() UPDATE dbo.Report SET LastGenDt = @now WHERE ReportId = ?"
+				+ " SELECT @now = GETUTCDATE() UPDATE dbo.Report SET LastGenDt = @now WHERE ReportId = ?"
 				+ " SELECT @now", cn);
 			cmd.CommandType = CommandType.Text;
 			cmd.Parameters.Add("@ReportId", OdbcType.Numeric).Value = ReportId;

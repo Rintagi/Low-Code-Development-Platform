@@ -30,6 +30,7 @@ namespace RO.Common3.Data
 		private DataTable MakeColumns(DataTable dt)
 		{
 			DataColumnCollection columns = dt.Columns;
+			columns.Add("tzInfo", typeof(string));
 			columns.Add("SystemId", typeof(Byte));
 			return dt;
 		}
@@ -307,6 +308,9 @@ namespace RO.Web
 		{
 			DsAdmRptBizRuleIn ds = new DsAdmRptBizRuleIn();
 			DataRow dr = ds.Tables["DtAdmRptBizRuleIn"].NewRow();
+			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
+			dr["tzInfo"] = tzinfo.StandardName;
+
 			if (cSystemId.SelectedIndex >= 0 && cSystemId.SelectedValue != string.Empty) {dr["SystemId"] = cSystemId.SelectedValue;}
 			if (IsPostBack && cSystemId.SelectedValue == string.Empty) { throw new ApplicationException("Criteria column: SystemId should not be empty. Please rectify and try again.");};
 			ds.Tables["DtAdmRptBizRuleIn"].Rows.Add(dr);

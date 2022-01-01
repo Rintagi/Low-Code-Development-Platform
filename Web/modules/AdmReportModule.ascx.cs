@@ -751,7 +751,7 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageHeight22"].ToString(),base.LUser.Culture) + (char)9);}
 						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AllowSelect22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["GenerateRp22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt22"].ToString() + (char)9);}
+						if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastGenDt22"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
 						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["AuthRequired22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["WhereClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["RegClause22"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
@@ -929,7 +929,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("2",drv["PageHeight22"].ToString(),base.LUser.Culture) + @"\cell ");}
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(drv["AllowSelect22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(drv["GenerateRp22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(drv["LastGenDt22"].ToString() + @"\cell ");}
+					if (dtAu.Rows[21]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastGenDt22"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
 					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["AuthRequired22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(drv["WhereClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["RegClause22"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
@@ -2335,7 +2335,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif";
 					try {cAllowSelect22.Checked = base.GetBool(dr["AllowSelect22"].ToString());} catch {cAllowSelect22.Checked = false;}
 					try {cGenerateRp22.Checked = base.GetBool(dr["GenerateRp22"].ToString());} catch {cGenerateRp22.Checked = false;}
-					try {cLastGenDt22.Text = dr["LastGenDt22"].ToString();} catch {cLastGenDt22.Text = string.Empty;}
+					try {cLastGenDt22.Text = RO.Common3.Utils.fmShortDateTimeUTC(dr["LastGenDt22"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cLastGenDt22.Text = string.Empty;}
 					try {cAuthRequired22.Checked = base.GetBool(dr["AuthRequired22"].ToString());} catch {cAuthRequired22.Checked = false;}
 					try {cWhereClause22.Text = dr["WhereClause22"].ToString();} catch {cWhereClause22.Text = string.Empty;}
 					try {cRegClause22.Text = dr["RegClause22"].ToString();} catch {cRegClause22.Text = string.Empty;}
@@ -3415,8 +3415,8 @@ bool bRegenNeeded = false;
 			drType["AllowSelect22"] = "Char"; drDisp["AllowSelect22"] = "CheckBox";
 			try {dr["GenerateRp22"] = base.SetBool(cGenerateRp22.Checked);} catch {}
 			drType["GenerateRp22"] = "Char"; drDisp["GenerateRp22"] = "CheckBox";
-			try {dr["LastGenDt22"] = cLastGenDt22.Text.Trim();} catch {}
-			drType["LastGenDt22"] = "DBTimeStamp"; drDisp["LastGenDt22"] = "TextBox";
+			try {dr["LastGenDt22"] = base.ToIntDateTime(cLastGenDt22.Text,true,true);} catch {}
+			drType["LastGenDt22"] = "DBTimeStamp"; drDisp["LastGenDt22"] = "ShortDateTimeUTC";
 			try {dr["AuthRequired22"] = base.SetBool(cAuthRequired22.Checked);} catch {}
 			drType["AuthRequired22"] = "Char"; drDisp["AuthRequired22"] = "CheckBox";
 			try {dr["WhereClause22"] = cWhereClause22.Text;} catch {}

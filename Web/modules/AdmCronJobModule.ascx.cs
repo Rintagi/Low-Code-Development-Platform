@@ -569,8 +569,8 @@ namespace RO.Web
 					{
 						if (dtAu.Rows[0]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["CronJobId264"].ToString(),base.LUser.Culture) + (char)9);}
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CronJobName264"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastRun264"].ToString(),base.LUser.Culture) + (char)9);}
-						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["NextRun264"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastRun264"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
+						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["NextRun264"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
 						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["JobLink264"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["LastStatus264"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["Year264"].ToString(),base.LUser.Culture) + (char)9);}
@@ -684,8 +684,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					sb.Append(@"{");
 					if (dtAu.Rows[0]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["CronJobId264"].ToString(),base.LUser.Culture) + @"\cell ");}
 					if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["CronJobName264"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastRun264"].ToString(),base.LUser.Culture) + @"\cell ");}
-					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["NextRun264"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastRun264"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
+					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["NextRun264"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["JobLink264"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["LastStatus264"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["Year264"].ToString(),base.LUser.Culture) + @"\cell ");}
@@ -1526,8 +1526,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					DataRow dr = dt.Rows[0];
 					try {cCronJobId264.Text = RO.Common3.Utils.fmNumeric("0",dr["CronJobId264"].ToString(),base.LUser.Culture);} catch {cCronJobId264.Text = string.Empty;}
 					try {cCronJobName264.Text = dr["CronJobName264"].ToString();} catch {cCronJobName264.Text = string.Empty;}
-					try {cLastRun264.Text = RO.Common3.Utils.fmLongDateTime(dr["LastRun264"].ToString(),base.LUser.Culture);} catch {cLastRun264.Text = string.Empty;}
-					try {cNextRun264.Text = RO.Common3.Utils.fmLongDateTime(dr["NextRun264"].ToString(),base.LUser.Culture);} catch {cNextRun264.Text = string.Empty;}
+					try {cLastRun264.Text = RO.Common3.Utils.fmLongDateTimeUTC(dr["LastRun264"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cLastRun264.Text = string.Empty;}
+					try {cNextRun264.Text = RO.Common3.Utils.fmLongDateTimeUTC(dr["NextRun264"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cNextRun264.Text = string.Empty;}
 					try {cJobLink264.Text = dr["JobLink264"].ToString();} catch {cJobLink264.Text = string.Empty;}
 					try {cLastStatus264.Text = dr["LastStatus264"].ToString();} catch {cLastStatus264.Text = string.Empty;}
 					try {cYear264.Text = RO.Common3.Utils.fmNumeric("0",dr["Year264"].ToString(),base.LUser.Culture);} catch {cYear264.Text = string.Empty;}
@@ -1832,10 +1832,10 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["CronJobId264"] = "Numeric"; drDisp["CronJobId264"] = "TextBox";
 			try {dr["CronJobName264"] = cCronJobName264.Text.Trim();} catch {}
 			drType["CronJobName264"] = "VarWChar"; drDisp["CronJobName264"] = "TextBox";
-			try {dr["LastRun264"] = base.ToIntDateTime(cLastRun264.Text,false,true);} catch {}
-			drType["LastRun264"] = "DBTimeStamp"; drDisp["LastRun264"] = "LongDateTime";
-			try {dr["NextRun264"] = base.ToIntDateTime(cNextRun264.Text,false,true);} catch {}
-			drType["NextRun264"] = "DBTimeStamp"; drDisp["NextRun264"] = "LongDateTime";
+			try {dr["LastRun264"] = base.ToIntDateTime(cLastRun264.Text,true,true);} catch {}
+			drType["LastRun264"] = "DBTimeStamp"; drDisp["LastRun264"] = "LongDateTimeUTC";
+			try {dr["NextRun264"] = base.ToIntDateTime(cNextRun264.Text,true,true);} catch {}
+			drType["NextRun264"] = "DBTimeStamp"; drDisp["NextRun264"] = "LongDateTimeUTC";
 			try {dr["JobLink264"] = cJobLink264.Text.Trim();} catch {}
 			drType["JobLink264"] = "VarChar"; drDisp["JobLink264"] = "TextBox";
 			try {dr["LastStatus264"] = cLastStatus264.Text;} catch {}

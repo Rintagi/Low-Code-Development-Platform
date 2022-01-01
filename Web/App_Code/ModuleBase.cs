@@ -2082,7 +2082,7 @@ namespace RO.Web
             TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
             return TimeZoneInfo.ConvertTimeToUtc(d, tzinfo).ToString();
         }
-        protected DateTime SetDateTimzeLocal(string datetimeUTC, bool forceConvert)
+        protected DateTime SetDateTimeLocal(string datetimeUTC, bool forceConvert)
         {
             DateTime d = Convert.ToDateTime(datetimeUTC, System.Threading.Thread.CurrentThread.CurrentCulture);
             if (d.Hour == 0 && d.Minute == 0 && d.Second == 0 && d.Millisecond == 0 && !forceConvert) return d;
@@ -2095,17 +2095,28 @@ namespace RO.Web
             if (dt == null) return;
 
             List<int> ord = new List<int>();
-
-            if (dt.Columns.Contains("ModifiedOn")) ord.Add(dt.Columns["ModifiedOn"].Ordinal);
-            if (dt.Columns.Contains("InputOn")) ord.Add(dt.Columns["InputOn"].Ordinal);
-            if (dt.Columns.Contains("UsageDt")) ord.Add(dt.Columns["UsageDt"].Ordinal);
+            foreach (DataColumn c in dt.Columns) {
+                if (c.DataType.Name == "DateTime" &&
+                    (
+                    c.ColumnName.EndsWith("UTC", StringComparison.InvariantCultureIgnoreCase)
+                    || c.ColumnName == "ModifiedOn"
+                    || c.ColumnName == "InputOn"
+                    || c.ColumnName == "UsageDt"
+                    ))
+                {
+                    ord.Add(c.Ordinal);
+                }
+            }
+            //if (dt.Columns.Contains("ModifiedOn")) ord.Add(dt.Columns["ModifiedOn"].Ordinal);
+            //if (dt.Columns.Contains("InputOn")) ord.Add(dt.Columns["InputOn"].Ordinal);
+            //if (dt.Columns.Contains("UsageDt")) ord.Add(dt.Columns["UsageDt"].Ordinal);
             if (ord.Count > 0)
             {
                 foreach (DataRow dr in dt.Rows)
                 {
                     foreach (int o in ord)
                     {
-                        dr[o] = SetDateTimzeLocal(dr[o].ToString(), false);
+                        dr[o] = SetDateTimeLocal(dr[o].ToString(), false);
                     }
                 }
             }

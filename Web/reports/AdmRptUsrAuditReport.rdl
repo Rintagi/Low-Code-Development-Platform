@@ -44,6 +44,7 @@
 			<Field Name="LoginName"><DataField>LoginName</DataField></Field>
 			<Field Name="ValidUser"><DataField>ValidUser</DataField></Field>
 			<Field Name="LoginSuccess"><DataField>LoginSuccess</DataField></Field>
+			<Field Name="ReportTimeTzInfo"><DataField>ReportTimeTzInfo</DataField></Field>
 		</Fields>
 		</DataSet>
 	</DataSets>
@@ -83,6 +84,7 @@
 		<ReportParameter Name="L_LoginName"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_LoginName</Prompt></ReportParameter>
 		<ReportParameter Name="L_ValidUser"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_ValidUser</Prompt></ReportParameter>
 		<ReportParameter Name="L_LoginSuccess"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_LoginSuccess</Prompt></ReportParameter>
+		<ReportParameter Name="L_ReportTimeTzInfo"><AllowBlank>true</AllowBlank><DataType>String</DataType><Prompt>L_ReportTimeTzInfo</Prompt></ReportParameter>
 	</ReportParameters>
 	<PageFooter>
 		<Height>0.70in</Height><Style><BackgroundColor>White</BackgroundColor></Style><PrintOnFirstPage>true</PrintOnFirstPage><PrintOnLastPage>true</PrintOnLastPage>

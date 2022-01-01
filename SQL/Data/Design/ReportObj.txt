@@ -125,3 +125,5 @@
 1087~@~64~@~F~@~ValidUser~@~AdmRptUsrAudit    60: ValidUser~@~60~@~~@~~@~~@~14~@~~@~
 1088~@~64~@~F~@~LoginSuccess~@~AdmRptUsrAudit    70: LoginSuccess~@~70~@~~@~~@~~@~14~@~~@~
 1089~@~64~@~P~@~ReportCriteria~@~AdmRptUsrAudit    20: ReportCriteria~@~20~@~~@~~@~~@~11~@~~@~
+1090~@~54~@~F~@~ReportTimeTzInfo~@~AdmRptUsage  1600: ReportTimeTzInfo~@~1600~@~~@~~@~~@~11~@~~@~
+1091~@~64~@~F~@~ReportTimeTzInfo~@~AdmRptUsrAudit    80: ReportTimeTzInfo~@~80~@~~@~~@~~@~15~@~~@~

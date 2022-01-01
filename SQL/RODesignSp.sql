@@ -190,6 +190,90 @@ END
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fConvertFromUTC') AND type='FN')
+DROP FUNCTION dbo.fConvertFromUTC
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- ??Design only
+-- convert datetime in UTC to target time zone
+CREATE FUNCTION [dbo].[fConvertFromUTC] (@datetime DATETIME, @targetTZ nvarchar(500)) RETURNS DATETIME
+/* WITH ENCRYPTION */
+AS
+BEGIN
+
+DECLARE @retDateTime DATETIME = @datetime, @sign char(1), @min char(2), @sec char(2)
+
+SELECT
+@retDateTime = DATEADD(minute,CASE WHEN offset_sign = '-' THEN -1 ELSE 1 END * (offset_hour * 60 + offset_min), @datetime)
+FROM
+sys.time_zone_info tz
+CROSS APPLY 
+(
+select 
+-- '-08:00', first char
+offset_sign = SUBSTRING(tz.current_utc_offset,1, 1),
+-- second char till ':'
+offset_hour = SUBSTRING(tz.current_utc_offset,2, CHARINDEX(':',tz.current_utc_offset) - 1 - 1),
+-- ':' onward till end
+offset_min = SUBSTRING(tz.current_utc_offset, CHARINDEX(':',tz.current_utc_offset) + 1, LEN(tz.current_utc_offset) - CHARINDEX(':',tz.current_utc_offset))
+
+
+) X
+WHERE 
+tz.name = @targetTZ
+
+-- return converted or original UTC
+RETURN @retDateTime
+
+END
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fConvertToUTC') AND type='FN')
+DROP FUNCTION dbo.fConvertToUTC
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+-- ??Design only
+-- convert datetime in local time zone to UTC
+CREATE FUNCTION [dbo].[fConvertToUTC] (@datetime DATETIME, @fromTZ nvarchar(500)) RETURNS DATETIME
+/* WITH ENCRYPTION */
+AS
+BEGIN
+
+DECLARE @retDateTime DATETIME = @datetime, @sign char(1), @min char(2), @sec char(2)
+
+SELECT
+@retDateTime = DATEADD(minute,CASE WHEN offset_sign = '-' THEN 1 ELSE -1 END * (offset_hour * 60 + offset_min), @datetime)
+FROM
+sys.time_zone_info tz
+CROSS APPLY 
+(
+select 
+-- '-08:00', first char
+offset_sign = SUBSTRING(tz.current_utc_offset,1, 1),
+-- second char till ':'
+offset_hour = SUBSTRING(tz.current_utc_offset,2, CHARINDEX(':',tz.current_utc_offset) - 1 - 1),
+-- ':' onward till end
+offset_min = SUBSTRING(tz.current_utc_offset, CHARINDEX(':',tz.current_utc_offset) + 1, LEN(tz.current_utc_offset) - CHARINDEX(':',tz.current_utc_offset))
+
+
+) X
+WHERE 
+tz.name = @fromTZ
+
+-- return converted or original UTC
+RETURN @retDateTime
+
+END
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.fEffectiveRowAuthoritys') AND type='IF')
 DROP FUNCTION dbo.fEffectiveRowAuthoritys
 GO
@@ -1755,7 +1839,7 @@ Returns: >
 	  WHILE 1=1 --find the innermost object or list...
 	    BEGIN
 	      SELECT
-	       @lenJSON=LEN(@JSON+'|')-1
+	      @lenJSON=LEN(@JSON+'|')-1
 	  --find the matching close-delimiter proceeding after the open-delimiter
 	      SELECT
 	        @NextCloseDelimiter=CHARINDEX(@NextCloseDelimiterChar, @json,
@@ -2805,6 +2889,10 @@ DECLARE	 @xClause		varchar(4000)
 		,@dbDesDabatase		varchar(50)
 		,@SystemName		nvarchar(50)
 SET NOCOUNT ON
+
+DECLARE @TzInfo varchar(200)
+SELECT @TzInfo = Val FROM #ReportTemp WHERE [Name] = 'tzInfo'
+
 SELECT @xClause = 'IF ' + convert(varchar,isnull(@CompanyId,0)) + '=0 AND NOT EXISTS (SELECT 1 FROM RODesign.dbo.VwRowAuth'
 	+ ' WHERE RowAuthId in (' + replace(@RowAuthoritys,nchar(191),',') + ') AND SysAdmin = ''Y'')'
 	+ ' BEGIN'
@@ -2867,8 +2955,18 @@ IF @CompanyId is not null SELECT @wClause = @wClause + ' AND (b.CompanyLs is nul
 IF @ProjectId is not null SELECT @wClause = @wClause + ' AND (b.ProjectLs is null OR charindex('',' + convert(varchar,@ProjectId) + ','',replace(replace(b.ProjectLs,''('','',''),'')'','','')) > 0)'
 
 EXEC (@xClause + ' ' + @sClause + ' ' + @fClause + ' ' + @wClause)
-SELECT AuthorityLevel=@usrName,Summary=@Summary,SystemName=@SystemName,UsrTypeGrp,UsrTypeName,EntityTitle,UsrGroupName,UsrName,UsageDt,UsageNote,NumTimes=1
-	FROM #Usage ORDER BY UsrTypeGrp,UsrTypeName,EntityTitle,UsrGroupName,UsrName,UsageDt
+SELECT 
+    ReportTime = RODesign.dbo.fConvertFromUTC(GETUTCDATE(), ISNULL(r.Val, s.DfltTimeZone))
+    ,AuthorityLevel=@usrName,Summary=@Summary,SystemName=@SystemName,UsrTypeGrp,UsrTypeName,EntityTitle,UsrGroupName,UsrName
+	,UsageDt 	
+	,UsageDtDfltTimeZone = RODesign.dbo.fConvertFromUTC(u.UsageDt, ISNULL(r.Val, s.DfltTimeZone))
+	,UsageNote,NumTimes=1
+	,ReportTimeTzInfo = CONVERT (VARCHAR, RODesign.dbo.fConvertFromUTC(GETUTCDATE(), ISNULL(r.Val, s.DfltTimeZone))) + ' (UTC ' + CONVERT(varchar,TZ.current_utc_offset) +')'
+	FROM #Usage u
+		LEFT OUTER JOIN #ReportTemp r ON r.Name = 'TZInfo'
+		LEFT OUTER JOIN dbo.Systems s ON s.SystemId = @SystemId
+		LEFT OUTER JOIN sys.time_zone_info tz on tz.name = r.val
+	ORDER BY UsrTypeGrp,UsrTypeName,EntityTitle,UsrGroupName,UsrName,UsageDt
 DROP TABLE dbo.#Usage
 RETURN 0
 GO
@@ -2894,13 +2992,19 @@ DECLARE	 @sClause		nvarchar(4000)
 	,@fClause		nvarchar(4000)
 	,@oClause		nvarchar(4000)
 SET NOCOUNT ON
-SELECT @sClause = 'SELECT t1288.AttemptDt, t1288.IpAddress, t1288.LoginName, t1288.ValidUser, t1288.LoginSuccess'
-SELECT @fClause = 'FROM dbo.VwUsrAudit t1288'
+
+DECLARE @TzInfo varchar(200)
+SELECT @TzInfo = Val FROM #ReportTemp WHERE [Name] = 'tzInfo'
+
+SELECT @sClause = 'SELECT AttemptDt = RODesign.dbo.fConvertFromUTC(t1288.AttemptDt, ISNULL(x.Val, s.DfltTimeZone)), t1288.IpAddress, t1288.LoginName, t1288.ValidUser, t1288.LoginSuccess,ReportTimeTzInfo = CONVERT (VARCHAR, RODesign.dbo.fConvertFromUTC(GETUTCDATE(), ISNULL(x.Val, s.DfltTimeZone))) + '' (UTC '' + CONVERT(varchar,TZ.current_utc_offset) +'')'''
+
+ 
+SELECT @fClause = 'FROM dbo.VwUsrAudit t1288 LEFT OUTER JOIN #ReportTemp x ON [Name] = ''tzInfo'' LEFT OUTER JOIN dbo.Systems s ON s.SystemId = 3 LEFT OUTER JOIN sys.time_zone_info tz on tz.name = x.val'
 IF @LoginSuccess10 is not null SELECT @wClause = @wClause + ' AND t1288.LoginSuccess = ''' + @LoginSuccess10 + ''''
 IF @ValidUser20 is not null SELECT @wClause = @wClause + ' AND t1288.ValidUser = ''' + @ValidUser20 + ''''
 IF @LoginName30 is not null SELECT @wClause = @wClause + ' AND t1288.LoginName like ''%' + @LoginName30 + '%'''
-IF @AttemptDt40 is not null SELECT @wClause = @wClause + ' AND t1288.AttemptDt >= ''' + CONVERT(varchar(10),@AttemptDt40,102) + ''''
-IF @AttemptDt50 is not null SELECT @wClause = @wClause + ' AND t1288.AttemptDt <= ''' + CONVERT(varchar(10),@AttemptDt50,102) + ''''
+IF @AttemptDt40 is not null SELECT @wClause = @wClause + ' AND t1288.AttemptDt >= ''' + CONVERT(varchar(30),@AttemptDt40,120) + ''''
+IF @AttemptDt50 is not null SELECT @wClause = @wClause + ' AND t1288.AttemptDt < ''' + CONVERT(varchar(30),DATEADD(day,1,@AttemptDt50),120) + ''''
 SELECT @oClause = 'ORDER BY t1288.AttemptDt'
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 RETURN 0
@@ -4917,12 +5021,12 @@ DECLARE	 @ms	int
 SET NOCOUNT ON
 SELECT @ms = -1, @cnt = 1
 IF NOT EXISTS (SELECT 1 FROM dbo.LastEmail)										-- start from scratch.
-	INSERT dbo.LastEmail SELECT getdate(), @cnt
-ELSE IF (SELECT datediff(DD,LastEmailDt,getdate()) FROM dbo.LastEmail) <> 0		-- not today's date.
+	INSERT dbo.LastEmail SELECT GETUTCDATE(), @cnt
+ELSE IF (SELECT datediff(DD,LastEmailDt,GETUTCDATE()) FROM dbo.LastEmail) <> 0		-- not today's date.
 	SELECT @cnt = 1
 ELSE
 BEGIN
-	SELECT @ms = datediff(MILLISECOND,LastEmailDt,getdate()) FROM dbo.LastEmail
+	SELECT @ms = datediff(MILLISECOND,LastEmailDt,GETUTCDATE()) FROM dbo.LastEmail
 	IF @ms < 0																	-- future timed so start over.
 		SELECT @cnt = 1
 	ELSE																		-- today's count and not in the future.
@@ -4930,7 +5034,7 @@ BEGIN
 END
 /* Wait one second if less than a second */
 IF @ms >= 0 AND @ms < 1000 WAITFOR DELAY '00:00:01'
-UPDATE dbo.LastEmail SET LastEmailDt = getdate(), LastEmailCnt = @cnt
+UPDATE dbo.LastEmail SET LastEmailDt = GETUTCDATE(), LastEmailCnt = @cnt
 SELECT @cnt
 RETURN 0
 GO
@@ -7130,7 +7234,7 @@ END
 ELSE
 BEGIN
 	UPDATE RODesign.dbo.Usr SET LastPwdChgDt =
-		CASE WHEN @UsrId = @CurrUsrId OR @ForcePwdChg = 'N' THEN getdate() ELSE NULL END,
+		CASE WHEN @UsrId = @CurrUsrId OR @ForcePwdChg = 'N' THEN GETUTCDATE() ELSE NULL END,
 	UsrPassword = CONVERT(binary(4),substring(@UsrPassword,1,4)^UsrId)
 	+CONVERT(binary(4),substring(@UsrPassword,5,4)^UsrId)
 	+CONVERT(binary(4),substring(@UsrPassword,9,4)^UsrId)
@@ -10998,7 +11102,7 @@ DECLARE	 @usrName		nvarchar(50)
 EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT
 SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
-IF @ModifiedAfter IS NOT NULL SELECT @wClause = @wClause + ' AND (ModifiedOn >= ''' + convert(varchar,@ModifiedAfter,102) + ''')'
+IF @ModifiedAfter IS NOT NULL SELECT @wClause = @wClause + ' AND (ModifiedOn >= ''' + convert(varchar,@ModifiedAfter,120) + ''')'
 EXEC dbo._GetAdmRptTblR @usrName, @wClause, @Id
 RETURN 0
 GO
@@ -11525,13 +11629,13 @@ DECLARE	 @usrName		nvarchar(50)
 EXEC RODesign.dbo.Pop1Int @Usrs, @UsrId OUTPUT
 SELECT @usrName = UsrName FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 SELECT @wClause = 'WHERE 1=1'
-IF @FrDate IS NOT NULL SELECT @wClause = @wClause + ' AND (a.UsageDt >= ''' + convert(varchar,@FrDate,102) + ''')'
+IF @FrDate IS NOT NULL SELECT @wClause = @wClause + ' AND (a.UsageDt >= ''' + convert(varchar,@FrDate,120) + ''')'
 ELSE
 BEGIN
     RAISERROR('Please enter a value for From and try again.',18,2) WITH SETERROR
     RETURN 1
 END
-IF @ToDate IS NOT NULL SELECT @wClause = @wClause + ' AND (a.UsageDt < ''' + convert(varchar,DATEADD(day,1,@ToDate),102) + ''')'
+IF @ToDate IS NOT NULL SELECT @wClause = @wClause + ' AND (a.UsageDt < ''' + convert(varchar,DATEADD(day,1,@ToDate),120) + ''')'
 EXEC dbo._GetAdmRptUsageR @usrName, @wClause, @RowAuthoritys, @Summary, @SystemId, @CompanyId, @AgentId, @BrokerId, @VendorId, @ProjectId, @CustomerId, @InvestorId, @MemberId, @BorrowerId, @GuarantorId, @LenderId, @UsrGroupId, @UserId
 RETURN 0
 GO
@@ -12766,6 +12870,7 @@ SELECT @sClause = 'SELECT SystemId45=b45.SystemId'
 + ', CustServPhone45=b45.CustServPhone'
 + ', CustServFax45=b45.CustServFax'
 + ', WebAddress45=b45.WebAddress'
++ ', DfltTimezone45=b45.DfltTimezone'
 SELECT @wClause = 'WHERE b45.SystemId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
 RETURN 0
@@ -46828,6 +46933,7 @@ SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN 
 + ', CustServPhone45=b45.CustServPhone'
 + ', CustServFax45=b45.CustServFax'
 + ', WebAddress45=b45.WebAddress'
++ ', DfltTimezone45=b45.DfltTimezone'
 SELECT @oClause='ORDER BY b45.SystemId'
 SELECT @wClause='WHERE 1=1', @bUsr='Y'
 SELECT @pp = @Usrs
@@ -60662,7 +60768,7 @@ DECLARE	 @NumExpDays	varchar(10)
 		,@DefCultureId	smallint
 		,@MsgId			int
 SET NOCOUNT ON
-SELECT @NumExpDays = convert(varchar(10),datediff(dd,isnull(LastPwdChgDt,'2009.06.01'),getdate())) FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
+SELECT @NumExpDays = convert(varchar(10),datediff(dd,isnull(LastPwdChgDt,'2009.06.01'),GETUTCDATE())) FROM RODesign.dbo.Usr WHERE UsrId = @UsrId
 IF @NumExpDays > @PwdExpDays
 BEGIN
 	SELECT @MsgId = 47
@@ -61294,32 +61400,36 @@ DECLARE	 @ReportCriId		int
 	,@TableId		int
 	,@RequiredValid		char(1)
 	,@ColumnHeader		varchar(50)
+	,@DisplayMode		varchar(50)
+
 SET NOCOUNT ON
 SELECT @SelfColumns = '', @SelfHeaders = ''
 IF @GenPrefix = 'Ut'
 BEGIN
 	DECLARE criCursor CURSOR FOR
-	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader
+	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader, dt.TypeDesc
 	FROM dbo.UtReportCri a
 	INNER JOIN dbo.UtReportCriHlp c ON a.ReportCriId = c.ReportCriId
 	INNER JOIN RODesign.dbo.VwCulture d ON c.CultureId = d.CultureId AND d.CultureDefault = 'Y'
 	INNER JOIN RODesign.dbo.CtDataType b ON a.DataTypeId = b.DataTypeId
+	INNER JOIN RODesign.dbo.CtDisplayType dt ON dt.TypeId = a.DisplayModeId
 	WHERE a.ReportId = @reportId
 	ORDER BY a.TabIndex FOR READ ONLY
 END
 ELSE
 BEGIN
 	DECLARE criCursor CURSOR FOR
-	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader
+	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader, dt.TypeDesc
 	FROM dbo.ReportCri a
 	INNER JOIN dbo.ReportCriHlp c ON a.ReportCriId = c.ReportCriId
 	INNER JOIN RODesign.dbo.VwCulture d ON c.CultureId = d.CultureId AND d.CultureDefault = 'Y'
 	INNER JOIN RODesign.dbo.CtDataType b ON a.DataTypeId = b.DataTypeId
+	INNER JOIN RODesign.dbo.CtDisplayType dt ON dt.TypeId = a.DisplayModeId
 	WHERE a.ReportId = @reportId
 	ORDER BY a.TabIndex FOR READ ONLY
 END
 OPEN criCursor
-FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader
+FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader, @DisplayMode
 WHILE @@FETCH_STATUS = 0
 BEGIN
 	IF @TableId is not null AND @RequiredValid = 'N'
@@ -61363,7 +61473,14 @@ BEGIN
         SELECT @tc = @tc + 'IF @' + @ColumnName + ' IS NOT NULL SELECT @wClause = @wClause + '''' AND (' + @ObjColumnName + ' ' + CASE WHEN (lower(@DataTypeSqlName) = 'datetime' OR lower(@DataTypeSqlName) = 'smalldatetime') AND @OperatorName='<=' THEN '<' ELSE @OperatorName END 
         IF @NumericData = 'Y' SELECT @tc = @tc + ' '''' + convert(varchar,@'+ @ColumnName + ') + '''')''''' + CHAR(13)
         ELSE IF lower(@DataTypeSqlName) = 'datetime' OR lower(@DataTypeSqlName) = 'smalldatetime'
-              SELECT @tc = @tc + ' '''''''''''' + convert(varchar,' + + CASE WHEN @OperatorName='<=' THEN 'DATEADD(day,1,' ELSE '' END + '@' + @ColumnName + CASE WHEN @OperatorName='<=' THEN ')' ELSE '' END + ',102) + '''''''''''')''''' + CHAR(13)
+              SELECT @tc = @tc + ' '''''''''''' + convert(varchar,' 
+									+ CASE WHEN @OperatorName='<=' THEN 
+										'DATEADD(day,1,' ELSE '' END + '@' + @ColumnName + CASE WHEN @OperatorName='<=' THEN ')' 
+										ELSE '' END 
+									+ ',' 
+									--if input is UTC aware(time specific), we need the time component
+									+ CASE WHEN @DisplayMode LIKE '%UTC%' THEN '120' ELSE '102' END 
+									+ ') + '''''''''''')''''' + CHAR(13)
         ELSE IF lower(@OperatorName) = 'in'
               SELECT @tc = @tc + ' '''' + @' + @ColumnName + ' + '''')''''' + CHAR(13)
         ELSE IF lower(@OperatorName) = 'like'
@@ -61380,7 +61497,7 @@ BEGIN
 	END
 	CLOSE objCursor
 	DEALLOCATE objCursor
-	FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader
+	FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader, @DisplayMode
 END
 CLOSE criCursor
 DEALLOCATE criCursor
@@ -70261,7 +70378,6 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
--- Only exists in ??Design:
 ALTER PROCEDURE [dbo].[IrUpdRelease]
  @ReleaseId		int
 /* WITH ENCRYPTION */
@@ -70273,7 +70389,7 @@ DECLARE	 @EntityId			smallint
 		,@ReleaseDate		datetime
 SET NOCOUNT ON
 SELECT @EntityId = a.EntityId, @EntityCode = b.EntityCode, @ReleaseTypeId = a.ReleaseTypeId, @ReleaseTypeAbbr = c.ReleaseTypeAbbr
-	,@ReleaseDate = CASE WHEN a.ReleaseDate is null THEN convert(datetime,convert(varchar,getdate(),102)) ELSE a.ReleaseDate END
+	,@ReleaseDate = CASE WHEN a.ReleaseDate is null THEN convert(datetime,convert(varchar,GETUTCDATE(),102)) ELSE a.ReleaseDate END
 	FROM dbo.Release a
 	INNER JOIN dbo.Entity b ON a.EntityId = b.EntityId
 	INNER JOIN CtReleaseType c ON a.ReleaseTypeId = c.ReleaseTypeId
@@ -70642,14 +70758,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
 SELECT @RptMemCriId
@@ -70683,14 +70799,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'TableName', @TableName
@@ -70725,14 +70841,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'Id', @Id
 SELECT @cri = convert(nvarchar,convert(datetime,@ModifiedAfter),102)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ModifiedAfter', @cri
@@ -70766,14 +70882,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,@CultureId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CultureId', @cri
 SELECT @cri = convert(nvarchar,@SystemId)
@@ -70810,14 +70926,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ActiveOnly', @ActiveOnly
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'EntityName', @EntityName
 SELECT @cri = convert(nvarchar,@CultureId)
@@ -70854,14 +70970,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,@CultureId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'CultureId', @cri
 SELECT @cri = convert(nvarchar,@SystemId)
@@ -70896,14 +71012,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,convert(datetime,@MonthEnding),102)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MonthEnding', @cri
 SELECT @cri = convert(nvarchar,@NumMonths)
@@ -70939,14 +71055,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,@MemberId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MemberId', @cri
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MnFr', @MnFr
@@ -70981,14 +71097,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,convert(datetime,@MonthEnding),102)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'MonthEnding', @cri
 SELECT @cri = convert(nvarchar,@NumMonths)
@@ -71038,14 +71154,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'Summary', @Summary
 SELECT @cri = convert(nvarchar,@SystemId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'SystemId', @cri
@@ -71110,14 +71226,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'Active', @Active
 SELECT @cri = convert(nvarchar,@UsrGroupId)
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'UsrGroupId', @cri
@@ -71156,14 +71272,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.RptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'LoginSuccess10', @LoginSuccess10
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'ValidUser20', @ValidUser20
 EXEC RODesign.dbo.UpdRptMemCri @RptMemCriId, @reportId, 'LoginName30', @LoginName30
@@ -71200,14 +71316,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.UtRptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'MultiDesignDb10', @MultiDesignDb10
 SELECT @RptMemCriId
 RETURN 0
@@ -71239,14 +71355,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.UtRptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'LoginSuccess10', @LoginSuccess10
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'ValidUser20', @ValidUser20
 SELECT @RptMemCriId
@@ -71278,14 +71394,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.UtRptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'LoginSuccess10', @LoginSuccess10
 SELECT @RptMemCriId
 RETURN 0
@@ -71316,14 +71432,14 @@ SET NOCOUNT ON
 IF @RptMemCriId is null
 BEGIN
 	INSERT RODesign.dbo.UtRptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)
-		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, getdate()
+		SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()
 	SELECT @RptMemCriId = @@IDENTITY
 END
 ELSE UPDATE RODesign.dbo.UtRptMemCri SET
 	 RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName
 	,RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink
 	,UsrId = CASE WHEN @PublicAccess = 'P' THEN null ELSE @UsrId END
-	,ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	,ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 SELECT @cri = convert(nvarchar,convert(datetime,@VersionDt10),102)
 EXEC RODesign.dbo.UpdUtRptMemCri @RptMemCriId, @reportId, 'VersionDt10', @cri
 SELECT @RptMemCriId
@@ -72541,14 +72657,14 @@ SELECT @DeclareClause = '', @ExeUpdClause = ''
 SELECT @ExeMemClause = CHAR(13) + CHAR(10) + 'IF @RptMemCriId is null'
 	+ CHAR(13) + CHAR(10) +'BEGIN'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + 'INSERT ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)'
-	+ CHAR(13) + CHAR(10) + CHAR(9) + CHAR(9) + 'SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END, @UsrId, getdate()'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + CHAR(9) + 'SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + 'SELECT @RptMemCriId = @@IDENTITY'
 	+ CHAR(13) + CHAR(10) + 'END'
 	+ CHAR(13) + CHAR(10) + 'ELSE UPDATE ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri SET'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + ' RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + ',RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + ',UsrId = CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END'
-	+ CHAR(13) + CHAR(10) + CHAR(9) + ',ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + ',ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId'
 IF @GenPrefix = 'Ut'
 BEGIN
 	DECLARE objCursor CURSOR FOR SELECT a.ColumnName, b.DataTypeSqlName, a.DataTypeSize
@@ -73099,7 +73215,7 @@ SELECT @ProcedureSql = 'CREATE PROCEDURE dbo.' + @ProcedureName + CHAR(13)
 + ' INSERT dbo.' + @ColumnName + 'H (UserId,EntityId,StatusCd,IsDone,StatusDt)' + CHAR(13)
 + ' SELECT @UsrId,@' + @PkeyCol + ',@StatusCd,CASE WHEN NStatusLs IS NOT NULL AND charindex('
 + CASE WHEN @IsChar = 'Y' THEN '''''''''''''''''+@StatusCd+''''''''''''''''' ELSE '@StatusCd' END + ',NStatusLs) > 0'
-+ ' THEN ''''Y'''' ELSE ''''N'''' END,getdate() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
++ ' THEN ''''Y'''' ELSE ''''N'''' END,GETUTCDATE() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
 + 'END' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 
@@ -73138,7 +73254,7 @@ SELECT @ProcedureSql = 'CREATE PROCEDURE dbo.' + @ProcedureName + CHAR(13)
 + 'INSERT dbo.' + @ColumnName + 'H (UserId,EntityId,StatusCd,IsDone,StatusDt)' + CHAR(13)
 + ' SELECT @UsrId,@' + @PkeyCol + ',@StatusCd,CASE WHEN NStatusLs IS NOT NULL AND charindex('
 + CASE WHEN @IsChar = 'Y' THEN '''''''''''''''''+@StatusCd+''''''''''''''''' ELSE '@StatusCd' END + ',NStatusLs) > 0'
-+ ' THEN ''''Y'''' ELSE ''''N'''' END,getdate() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
++ ' THEN ''''Y'''' ELSE ''''N'''' END,GETUTCDATE() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 
 IF @ProcedureSql IS NULL
@@ -75047,7 +75163,7 @@ UPDATE RODesign.dbo.Usr SET
 	,HintQuestionId=@hintQuestionId1
 	,HintAnswer=@hintAnswer1
 	,Active=@active1
-	,ModifiedOn=getdate()
+	,ModifiedOn=GETUTCDATE()
 	,CompanyLs=@companyLs1
 	,ProjectLs=@projectLs1
 	,InvestorId=@investorId1
@@ -75370,9 +75486,9 @@ ALTER PROCEDURE [dbo].[UpdMemViewdt]
 AS
 SET NOCOUNT ON
 IF @GenPrefix = 'Ut'
-	UPDATE dbo.UtRptMemCri SET ViewedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	UPDATE dbo.UtRptMemCri SET ViewedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 ELSE
-	UPDATE dbo.RptMemCri SET ViewedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	UPDATE dbo.RptMemCri SET ViewedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -75384,14 +75500,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-/* This only exist in ??Design */
 ALTER PROCEDURE [dbo].[UpdReleaseBuild]
  @ReleaseId		smallint
 ,@ReleaseBuild		varchar(50)
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-UPDATE dbo.Release SET ReleaseBuild = @ReleaseBuild, ReleaseDate = convert(datetime,convert(varchar,getdate(),102)) WHERE ReleaseId = @ReleaseId
+UPDATE dbo.Release SET ReleaseBuild = @ReleaseBuild, ReleaseDate = convert(datetime,convert(varchar,getutcdate(),102)) WHERE ReleaseId = @ReleaseId
 EXEC dbo.IrUpdRelease @ReleaseId
 RETURN 0
 GO
@@ -75706,7 +75821,7 @@ UPDATE RODesign.dbo.Usr SET UsrPassword =
 	+CONVERT(binary(4),substring(@UsrPassword,9,4)^UsrId)
 	+CONVERT(binary(4),substring(@UsrPassword,13,4)^UsrId)
 	+CONVERT(binary(4),substring(@UsrPassword,17,4)^UsrId), 
-	LastPwdChgDt = CASE WHEN UsrId = @CurrUsrId OR @CurrUsrId <= 0 THEN getdate() ELSE NULL END, FailedAttempt = 0
+	LastPwdChgDt = CASE WHEN UsrId = @CurrUsrId OR @CurrUsrId <= 0 THEN GETUTCDATE() ELSE NULL END, FailedAttempt = 0
 	WHERE UsrId = @UsrId
 
 DECLARE @rowcount int
@@ -75821,7 +75936,7 @@ IF NOT EXISTS (SELECT 1 FROM dbo.DbTable WHERE TableName = @TableName)
 BEGIN
 	SELECT @SystemName = SystemName FROM RODesign.dbo.Systems WHERE SystemId = @SystemId
 	INSERT dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, VirtualTbl, TblObjective, ModifiedOn)
-		SELECT @SystemId, @TableName, @SystemName + ' - ' + @TableName + ' Doc', 'N', 'N', 'This table captures upload of all document types.', getdate()
+		SELECT @SystemId, @TableName, @SystemName + ' - ' + @TableName + ' Doc', 'N', 'N', 'This table captures upload of all document types.', GETUTCDATE()
 	SELECT @TableId = @@IDENTITY
 	INSERT dbo.DbColumn (TableId,ColumnName,ColumnDesc,DataType,ColumnLength,AllowNulls,ColumnIdentity,PrimaryKey,IsIndex,ColObjective,ColumnIndex)
 		SELECT @TableId,'DocId',@TableName + ' - DocId',4,8,'N','Y','Y','N','This internal identity uniquely represents this document.',10
@@ -76282,7 +76397,7 @@ BEGIN
 	/* Create Workflow status history */
 	SELECT @Tbl = @TableName + 'H'
 	INSERT dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, VirtualTbl, TblObjective, ModifiedOn)
-		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow History', 'N', 'N', 'This table captures workflow status history.', getdate()
+		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow History', 'N', 'N', 'This table captures workflow status history.', GETUTCDATE()
 	SELECT @TableId = @@IDENTITY
 	INSERT dbo.DbColumn (TableId,ColumnName,ColumnDesc,DataType,ColumnLength,AllowNulls,ColumnIdentity,PrimaryKey,IsIndex,ColObjective,ColumnIndex)
 		SELECT @TableId,'StatusHId',@Tbl + ' - StatusHId',4,8,'N','Y','Y','N','This ID uniquely represents this workflow status history.',10
@@ -76304,7 +76419,7 @@ BEGIN
 	/* Create Workflow status table */
 	SELECT @Tbl = @TableName
 	INSERT dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, VirtualTbl, TblObjective, ModifiedOn)
-		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow', 'N', 'N', 'This table captures workflow statuses.', getdate()
+		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow', 'N', 'N', 'This table captures workflow statuses.', GETUTCDATE()
 	SELECT @TableId = @@IDENTITY
 	INSERT dbo.DbColumn (TableId,ColumnName,ColumnDesc,DataType,ColumnLength,AllowNulls,ColumnIdentity,PrimaryKey,IsIndex,ColObjective,ColumnIndex)
 		SELECT @TableId,'StatusCd',@Tbl + ' - StatusCd',14,1,'N','N','Y','N','This code uniquely represents this workflow status.',10
@@ -77257,7 +77372,7 @@ ALTER PROCEDURE [dbo].[WrGetActiveEmails]
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-UPDATE dbo.MaintMsg SET LastEmailDt = getdate() WHERE MaintMsgId = @MaintMsgId
+UPDATE dbo.MaintMsg SET LastEmailDt = GETUTCDATE() WHERE MaintMsgId = @MaintMsgId
 SELECT UsrEmail FROM dbo.Usr WHERE Active = 'Y' AND UsrEmail <> ''
 RETURN 0
 GO
@@ -78435,7 +78550,7 @@ DECLARE	 @ProcedureName	varchar(50)
 SET NOCOUNT ON
 SELECT @ProcedureName = ProcedureName FROM dbo.ServerRule WHERE ServerRuleId = @ServerRuleId
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
-UPDATE dbo.ServerRule SET LastGenDt = getdate() WHERE ServerRuleId = @ServerRuleId
+UPDATE dbo.ServerRule SET LastGenDt = GETUTCDATE() WHERE ServerRuleId = @ServerRuleId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @ProcedureName + '''')
 RETURN 0
 GO
@@ -79015,7 +79130,7 @@ r.ServerRuleId IS NULL
 INSERT INTO dbo.atServerRuleOvrd
            (ServerRuleOvrdDesc
            ,ServerRuleOvrdName
-          ,ServerRuleId
+       ,ServerRuleId
            ,Disable
            ,ServerRuleGuid
            ,ScreenId
@@ -79530,7 +79645,7 @@ DECLARE	 @ReportId		int
 		,@CompanyLs		varchar(1000)
 		,@AccessCd		char(1)
 SET NOCOUNT ON
-SELECT @Today = getdate(), @PIndent = 0.0
+SELECT @Today = GETUTCDATE(), @PIndent = 0.0
 SELECT @ProgramName = 'S' + right('0' + convert(varchar,@SystemId),2) + 'Rptwiz' + convert(varchar,@RptwizId)
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 SELECT @ReportId = ReportId, @RptwizTypeCd = RptwizTypeCd
@@ -79818,7 +79933,7 @@ BEGIN
 		SELECT @RptMemFldId = @@IDENTITY
 	END
 	INSERT dbo.UtRptMemCri (RptMemFldId, RptMemCriName, ReportId, UsrId, InputBy, InputOn, CompanyLs)
-		SELECT @RptMemFldId, @RptwizName, @ReportId, CASE WHEN @AccessCd = 'P' THEN NULL ELSE @UsrId END, @UsrId, getdate(), @CompanyLs
+		SELECT @RptMemFldId, @RptwizName, @ReportId, CASE WHEN @AccessCd = 'P' THEN NULL ELSE @UsrId END, @UsrId, GETUTCDATE(), @CompanyLs
 	SELECT @RptMemCriId = @@IDENTITY
 	UPDATE dbo.UtRptMemCri SET RptMemCriLink = 'SqlReport.aspx?gen=Y&csy=' + convert(varchar,@SystemId) + '&typ=N&rpt=' + convert(varchar,@ReportId) + '&key=' + convert(varchar,@RptMemCriId)
 		WHERE RptMemCriId = @RptMemCriId
@@ -79938,7 +80053,7 @@ keep function call for things like GETUTCDATE()
 IF @TableId is null
 	SELECT @sClause = ' INSERT ' + @DesDb + '.dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, ModifiedBy, ModifiedOn)'
 	+ ' SELECT ' + convert(varchar,@SystemId) + ',''''' + @TableName + ''''',''''' + @TableDesc + ''''''
-	+ ',''''' + @MultiDesignDb + ''''',' + convert(varchar,@UsrId) + ',getdate() SELECT @Tid = @@IDENTITY'
+	+ ',''''' + @MultiDesignDb + ''''',' + convert(varchar,@UsrId) + ',GETUTCDATE() SELECT @Tid = @@IDENTITY'
 ELSE SELECT @sClause = ' SELECT @Tid = ' + convert(varchar,@TableId)
 /* Cannot return 1 from MkStoredProcedure. */
 SELECT @sClause = @sClause + ' IF EXISTS (SELECT 1 FROM #sync WHERE len(ColumnName) > 50)'
@@ -79962,7 +80077,7 @@ SELECT @sClause = @sClause + ' IF EXISTS (SELECT 1 FROM #sync WHERE len(ColumnNa
 + ' WHERE TableId = @Tid AND (ExternalTable is null OR ExternalTable = '''''''')'
 + ' AND ColumnName = #sync.ColumnName)'
 + ' END END DROP TABLE dbo.#sync SELECT @Tid'
-+ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = @Tid'
++ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = GETUTCDATE() WHERE TableId = @Tid'
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + ''', ''' + @sClause + '''')
 RETURN 0
 GO
@@ -80262,7 +80377,7 @@ SELECT @a5 = @a5 + ' SELECT @AppItemId = @@IDENTITY'
 + ' UPDATE ' + @DesDb + '.dbo.AppItem SET AppItemLink = ''''SearchLink("AdmAppItem.aspx?id=213&key='''' + convert(varchar,@AppItemId)'
 + ' + ''''&typ=N&sys=' + convert(varchar,@SystemId) + '","","",""); return false;'''' WHERE AppItemId = @AppItemId'
 + ' UPDATE ' + @DesDb + '.dbo.DbColumn SET PrevColName = null WHERE TableId = ' + convert(varchar,@TableId) + ' END'
-+ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = ' + convert(varchar,@TableId)
++ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = GETUTCDATE() WHERE TableId = ' + convert(varchar,@TableId)
 + '
 DECLARE cur5 CURSOR FAST_FORWARD FOR
 SELECT TableName, IndexName, [Cluster], [Unique], [CreateScript], [DropScript] FROM #idx

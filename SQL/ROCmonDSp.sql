@@ -38429,32 +38429,36 @@ DECLARE	 @ReportCriId		int
 	,@TableId		int
 	,@RequiredValid		char(1)
 	,@ColumnHeader		varchar(50)
+	,@DisplayMode		varchar(50)
+
 SET NOCOUNT ON
 SELECT @SelfColumns = '', @SelfHeaders = ''
 IF @GenPrefix = 'Ut'
 BEGIN
 	DECLARE criCursor CURSOR FOR
-	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader
+	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader, dt.TypeDesc
 	FROM dbo.UtReportCri a
 	INNER JOIN dbo.UtReportCriHlp c ON a.ReportCriId = c.ReportCriId
 	INNER JOIN RODesign.dbo.VwCulture d ON c.CultureId = d.CultureId AND d.CultureDefault = 'Y'
 	INNER JOIN RODesign.dbo.CtDataType b ON a.DataTypeId = b.DataTypeId
+	INNER JOIN RODesign.dbo.CtDisplayType dt ON dt.TypeId = a.DisplayModeId
 	WHERE a.ReportId = @reportId
 	ORDER BY a.TabIndex FOR READ ONLY
 END
 ELSE
 BEGIN
 	DECLARE criCursor CURSOR FOR
-	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader
+	SELECT a.ReportCriId, a.ColumnName, b.DataTypeSqlName, b.NumericData, a.DataTypeSize, a.TableId, a.RequiredValid, c.ColumnHeader, dt.TypeDesc
 	FROM dbo.ReportCri a
 	INNER JOIN dbo.ReportCriHlp c ON a.ReportCriId = c.ReportCriId
 	INNER JOIN RODesign.dbo.VwCulture d ON c.CultureId = d.CultureId AND d.CultureDefault = 'Y'
 	INNER JOIN RODesign.dbo.CtDataType b ON a.DataTypeId = b.DataTypeId
+	INNER JOIN RODesign.dbo.CtDisplayType dt ON dt.TypeId = a.DisplayModeId
 	WHERE a.ReportId = @reportId
 	ORDER BY a.TabIndex FOR READ ONLY
 END
 OPEN criCursor
-FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader
+FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader, @DisplayMode
 WHILE @@FETCH_STATUS = 0
 BEGIN
 	IF @TableId is not null AND @RequiredValid = 'N'
@@ -38470,7 +38474,7 @@ BEGIN
 		IF @DataTypeSize is not null SELECT @paramClause = @paramClause + '(' + case when @DataTypeSize > 0 then convert(varchar,@DataTypeSize) else 'max' end + ')'
 		ELSE
 		BEGIN
-			RAISERROR('Please specify character size for column "%s".',18,2,@ColumnName) WITH SETERROR
+			RAISERROR('Please specify character size for column "%s" and try again.',18,2,@ColumnName) WITH SETERROR
 			RETURN 1
 		END
 	END
@@ -38498,7 +38502,14 @@ BEGIN
         SELECT @tc = @tc + 'IF @' + @ColumnName + ' IS NOT NULL SELECT @wClause = @wClause + '''' AND (' + @ObjColumnName + ' ' + CASE WHEN (lower(@DataTypeSqlName) = 'datetime' OR lower(@DataTypeSqlName) = 'smalldatetime') AND @OperatorName='<=' THEN '<' ELSE @OperatorName END 
         IF @NumericData = 'Y' SELECT @tc = @tc + ' '''' + convert(varchar,@'+ @ColumnName + ') + '''')''''' + CHAR(13)
         ELSE IF lower(@DataTypeSqlName) = 'datetime' OR lower(@DataTypeSqlName) = 'smalldatetime'
-              SELECT @tc = @tc + ' '''''''''''' + convert(varchar,' + + CASE WHEN @OperatorName='<=' THEN 'DATEADD(day,1,' ELSE '' END + '@' + @ColumnName + CASE WHEN @OperatorName='<=' THEN ')' ELSE '' END + ',102) + '''''''''''')''''' + CHAR(13)
+              SELECT @tc = @tc + ' '''''''''''' + convert(varchar,' 
+									+ CASE WHEN @OperatorName='<=' THEN 
+										'DATEADD(day,1,' ELSE '' END + '@' + @ColumnName + CASE WHEN @OperatorName='<=' THEN ')' 
+										ELSE '' END 
+									+ ',' 
+									--if input is UTC aware(time specific), we need the time component
+									+ CASE WHEN @DisplayMode LIKE '%UTC%' THEN '120' ELSE '102' END 
+									+ ') + '''''''''''')''''' + CHAR(13)
         ELSE IF lower(@OperatorName) = 'in'
               SELECT @tc = @tc + ' '''' + @' + @ColumnName + ' + '''')''''' + CHAR(13)
         ELSE IF lower(@OperatorName) = 'like'
@@ -38515,7 +38526,7 @@ BEGIN
 	END
 	CLOSE objCursor
 	DEALLOCATE objCursor
-	FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader
+	FETCH NEXT FROM criCursor INTO @ReportCriId, @ColumnName, @DataTypeSqlName, @NumericData, @DataTypeSize, @TableId, @RequiredValid, @ColumnHeader, @DisplayMode
 END
 CLOSE criCursor
 DEALLOCATE criCursor
@@ -47788,14 +47799,14 @@ SELECT @DeclareClause = '', @ExeUpdClause = ''
 SELECT @ExeMemClause = CHAR(13) + CHAR(10) + 'IF @RptMemCriId is null'
 	+ CHAR(13) + CHAR(10) +'BEGIN'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + 'INSERT ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri (ReportId, RptMemFldId, RptMemCriName, RptMemCriDesc, RptMemCriLink, UsrId, InputBy, InputOn)'
-	+ CHAR(13) + CHAR(10) + CHAR(9) + CHAR(9) + 'SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END, @UsrId, getdate()'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + CHAR(9) + 'SELECT @ReportId, @RptMemFldId, @RptMemCriName, @RptMemCriDesc, @RptMemCriLink, CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END, @UsrId, GETUTCDATE()'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + 'SELECT @RptMemCriId = @@IDENTITY'
 	+ CHAR(13) + CHAR(10) + 'END'
 	+ CHAR(13) + CHAR(10) + 'ELSE UPDATE ' + @sysDatabase + '.dbo.' + @GenPrefix + 'RptMemCri SET'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + ' RptMemFldId = @RptMemFldId, RptMemCriName = @RptMemCriName'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + ',RptMemCriDesc = @RptMemCriDesc, RptMemCriLink = @RptMemCriLink'
 	+ CHAR(13) + CHAR(10) + CHAR(9) + ',UsrId = CASE WHEN @PublicAccess = ''''P'''' THEN null ELSE @UsrId END'
-	+ CHAR(13) + CHAR(10) + CHAR(9) + ',ModifiedOn = getdate() WHERE RptMemCriId = @RptMemCriId'
+	+ CHAR(13) + CHAR(10) + CHAR(9) + ',ModifiedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId'
 IF @GenPrefix = 'Ut'
 BEGIN
 	DECLARE objCursor CURSOR FOR SELECT a.ColumnName, b.DataTypeSqlName, a.DataTypeSize
@@ -48346,7 +48357,7 @@ SELECT @ProcedureSql = 'CREATE PROCEDURE dbo.' + @ProcedureName + CHAR(13)
 + ' INSERT dbo.' + @ColumnName + 'H (UserId,EntityId,StatusCd,IsDone,StatusDt)' + CHAR(13)
 + ' SELECT @UsrId,@' + @PkeyCol + ',@StatusCd,CASE WHEN NStatusLs IS NOT NULL AND charindex('
 + CASE WHEN @IsChar = 'Y' THEN '''''''''''''''''+@StatusCd+''''''''''''''''' ELSE '@StatusCd' END + ',NStatusLs) > 0'
-+ ' THEN ''''Y'''' ELSE ''''N'''' END,getdate() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
++ ' THEN ''''Y'''' ELSE ''''N'''' END,GETUTCDATE() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
 + 'END' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 
@@ -48385,7 +48396,7 @@ SELECT @ProcedureSql = 'CREATE PROCEDURE dbo.' + @ProcedureName + CHAR(13)
 + 'INSERT dbo.' + @ColumnName + 'H (UserId,EntityId,StatusCd,IsDone,StatusDt)' + CHAR(13)
 + ' SELECT @UsrId,@' + @PkeyCol + ',@StatusCd,CASE WHEN NStatusLs IS NOT NULL AND charindex('
 + CASE WHEN @IsChar = 'Y' THEN '''''''''''''''''+@StatusCd+''''''''''''''''' ELSE '@StatusCd' END + ',NStatusLs) > 0'
-+ ' THEN ''''Y'''' ELSE ''''N'''' END,getdate() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
++ ' THEN ''''Y'''' ELSE ''''N'''' END,GETUTCDATE() FROM dbo.' + @ColumnName + ' WHERE StatusCd = @StatusCd' + CHAR(13)
 + 'RETURN 0' + CHAR(13)
 
 IF @ProcedureSql IS NULL
@@ -48819,9 +48830,9 @@ ALTER PROCEDURE [dbo].[UpdMemViewdt]
 AS
 SET NOCOUNT ON
 IF @GenPrefix = 'Ut'
-	UPDATE dbo.UtRptMemCri SET ViewedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	UPDATE dbo.UtRptMemCri SET ViewedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 ELSE
-	UPDATE dbo.RptMemCri SET ViewedOn = getdate() WHERE RptMemCriId = @RptMemCriId
+	UPDATE dbo.RptMemCri SET ViewedOn = GETUTCDATE() WHERE RptMemCriId = @RptMemCriId
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -48959,7 +48970,7 @@ IF NOT EXISTS (SELECT 1 FROM dbo.DbTable WHERE TableName = @TableName)
 BEGIN
 	SELECT @SystemName = SystemName FROM RODesign.dbo.Systems WHERE SystemId = @SystemId
 	INSERT dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, VirtualTbl, TblObjective, ModifiedOn)
-		SELECT @SystemId, @TableName, @SystemName + ' - ' + @TableName + ' Doc', 'N', 'N', 'This table captures upload of all document types.', getdate()
+		SELECT @SystemId, @TableName, @SystemName + ' - ' + @TableName + ' Doc', 'N', 'N', 'This table captures upload of all document types.', GETUTCDATE()
 	SELECT @TableId = @@IDENTITY
 	INSERT dbo.DbColumn (TableId,ColumnName,ColumnDesc,DataType,ColumnLength,AllowNulls,ColumnIdentity,PrimaryKey,IsIndex,ColObjective,ColumnIndex)
 		SELECT @TableId,'DocId',@TableName + ' - DocId',4,8,'N','Y','Y','N','This internal identity uniquely represents this document.',10
@@ -49122,7 +49133,7 @@ BEGIN
 	/* Create Workflow status history */
 	SELECT @Tbl = @TableName + 'H'
 	INSERT dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, VirtualTbl, TblObjective, ModifiedOn)
-		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow History', 'N', 'N', 'This table captures workflow status history.', getdate()
+		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow History', 'N', 'N', 'This table captures workflow status history.', GETUTCDATE()
 	SELECT @TableId = @@IDENTITY
 	INSERT dbo.DbColumn (TableId,ColumnName,ColumnDesc,DataType,ColumnLength,AllowNulls,ColumnIdentity,PrimaryKey,IsIndex,ColObjective,ColumnIndex)
 		SELECT @TableId,'StatusHId',@Tbl + ' - StatusHId',4,8,'N','Y','Y','N','This ID uniquely represents this workflow status history.',10
@@ -49144,7 +49155,7 @@ BEGIN
 	/* Create Workflow status table */
 	SELECT @Tbl = @TableName
 	INSERT dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, VirtualTbl, TblObjective, ModifiedOn)
-		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow', 'N', 'N', 'This table captures workflow statuses.', getdate()
+		SELECT @SystemId, @Tbl, @SystemAbbr + ' - ' + @Tbl + ' Workflow', 'N', 'N', 'This table captures workflow statuses.', GETUTCDATE()
 	SELECT @TableId = @@IDENTITY
 	INSERT dbo.DbColumn (TableId,ColumnName,ColumnDesc,DataType,ColumnLength,AllowNulls,ColumnIdentity,PrimaryKey,IsIndex,ColObjective,ColumnIndex)
 		SELECT @TableId,'StatusCd',@Tbl + ' - StatusCd',14,1,'N','N','Y','N','This code uniquely represents this workflow status.',10
@@ -50980,7 +50991,7 @@ DECLARE	 @ProcedureName	varchar(50)
 SET NOCOUNT ON
 SELECT @ProcedureName = ProcedureName FROM dbo.ServerRule WHERE ServerRuleId = @ServerRuleId
 SELECT @dbAppDatabase = dbAppDatabase FROM RODesign.dbo.Systems WHERE SystemId = @DbId
-UPDATE dbo.ServerRule SET LastGenDt = getdate() WHERE ServerRuleId = @ServerRuleId
+UPDATE dbo.ServerRule SET LastGenDt = GETUTCDATE() WHERE ServerRuleId = @ServerRuleId
 EXEC (@dbAppDatabase + '.dbo.MkStoredProcedure '' sp_helptext ' + @ProcedureName + '''')
 RETURN 0
 GO
@@ -51535,7 +51546,7 @@ r.ServerRuleId IS NULL
 INSERT INTO dbo.atServerRuleOvrd
            (ServerRuleOvrdDesc
            ,ServerRuleOvrdName
-          ,ServerRuleId
+       ,ServerRuleId
            ,Disable
            ,ServerRuleGuid
            ,ScreenId
@@ -52050,7 +52061,7 @@ DECLARE	 @ReportId		int
 		,@CompanyLs		varchar(1000)
 		,@AccessCd		char(1)
 SET NOCOUNT ON
-SELECT @Today = getdate(), @PIndent = 0.0
+SELECT @Today = GETUTCDATE(), @PIndent = 0.0
 SELECT @ProgramName = 'S' + right('0' + convert(varchar,@SystemId),2) + 'Rptwiz' + convert(varchar,@RptwizId)
 SELECT @DefCultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
 SELECT @ReportId = ReportId, @RptwizTypeCd = RptwizTypeCd
@@ -52338,7 +52349,7 @@ BEGIN
 		SELECT @RptMemFldId = @@IDENTITY
 	END
 	INSERT dbo.UtRptMemCri (RptMemFldId, RptMemCriName, ReportId, UsrId, InputBy, InputOn, CompanyLs)
-		SELECT @RptMemFldId, @RptwizName, @ReportId, CASE WHEN @AccessCd = 'P' THEN NULL ELSE @UsrId END, @UsrId, getdate(), @CompanyLs
+		SELECT @RptMemFldId, @RptwizName, @ReportId, CASE WHEN @AccessCd = 'P' THEN NULL ELSE @UsrId END, @UsrId, GETUTCDATE(), @CompanyLs
 	SELECT @RptMemCriId = @@IDENTITY
 	UPDATE dbo.UtRptMemCri SET RptMemCriLink = 'SqlReport.aspx?gen=Y&csy=' + convert(varchar,@SystemId) + '&typ=N&rpt=' + convert(varchar,@ReportId) + '&key=' + convert(varchar,@RptMemCriId)
 		WHERE RptMemCriId = @RptMemCriId
@@ -52458,7 +52469,7 @@ keep function call for things like GETUTCDATE()
 IF @TableId is null
 	SELECT @sClause = ' INSERT ' + @DesDb + '.dbo.DbTable (SystemId, TableName, TableDesc, MultiDesignDb, ModifiedBy, ModifiedOn)'
 	+ ' SELECT ' + convert(varchar,@SystemId) + ',''''' + @TableName + ''''',''''' + @TableDesc + ''''''
-	+ ',''''' + @MultiDesignDb + ''''',' + convert(varchar,@UsrId) + ',getdate() SELECT @Tid = @@IDENTITY'
+	+ ',''''' + @MultiDesignDb + ''''',' + convert(varchar,@UsrId) + ',GETUTCDATE() SELECT @Tid = @@IDENTITY'
 ELSE SELECT @sClause = ' SELECT @Tid = ' + convert(varchar,@TableId)
 /* Cannot return 1 from MkStoredProcedure. */
 SELECT @sClause = @sClause + ' IF EXISTS (SELECT 1 FROM #sync WHERE len(ColumnName) > 50)'
@@ -52482,7 +52493,7 @@ SELECT @sClause = @sClause + ' IF EXISTS (SELECT 1 FROM #sync WHERE len(ColumnNa
 + ' WHERE TableId = @Tid AND (ExternalTable is null OR ExternalTable = '''''''')'
 + ' AND ColumnName = #sync.ColumnName)'
 + ' END END DROP TABLE dbo.#sync SELECT @Tid'
-+ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = @Tid'
++ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = GETUTCDATE() WHERE TableId = @Tid'
 EXEC (@AppDb + '.dbo.MkStoredProcedure ''' + @dClause + ''', ''' + @sClause + '''')
 RETURN 0
 GO
@@ -52782,7 +52793,7 @@ SELECT @a5 = @a5 + ' SELECT @AppItemId = @@IDENTITY'
 + ' UPDATE ' + @DesDb + '.dbo.AppItem SET AppItemLink = ''''SearchLink("AdmAppItem.aspx?id=213&key='''' + convert(varchar,@AppItemId)'
 + ' + ''''&typ=N&sys=' + convert(varchar,@SystemId) + '","","",""); return false;'''' WHERE AppItemId = @AppItemId'
 + ' UPDATE ' + @DesDb + '.dbo.DbColumn SET PrevColName = null WHERE TableId = ' + convert(varchar,@TableId) + ' END'
-+ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = getdate() WHERE TableId = ' + convert(varchar,@TableId)
++ ' UPDATE ' + @DesDb + '.dbo.DbTable SET LastSyncDt = GETUTCDATE() WHERE TableId = ' + convert(varchar,@TableId)
 + '
 DECLARE cur5 CURSOR FAST_FORWARD FOR
 SELECT TableName, IndexName, [Cluster], [Unique], [CreateScript], [DropScript] FROM #idx

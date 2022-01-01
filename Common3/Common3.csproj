@@ -217,6 +217,7 @@
     </Compile>
     <Compile Include="Ethereum.cs" />
     <Compile Include="GoogleAuthenticator.cs" />
+    <Compile Include="GoX25519.cs" />
     <Compile Include="LunarCal.cs" />
     <Compile Include="PayPal.cs" />
     <Compile Include="Prometheus.cs" />

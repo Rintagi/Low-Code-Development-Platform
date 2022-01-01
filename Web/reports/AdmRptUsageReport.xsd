@@ -6,6 +6,7 @@
         <xs:element name="DtAdmRptUsage">
           <xs:complexType>
             <xs:sequence>
+              <xs:element name="ReportTime" type="xs:dateTime" minOccurs="0" />
               <xs:element name="AuthorityLevel" type="xs:string" minOccurs="0" />
               <xs:element name="Summary" type="xs:string" minOccurs="0" />
               <xs:element name="SystemName" type="xs:string" minOccurs="0" />
@@ -15,8 +16,10 @@
               <xs:element name="UsrGroupName" type="xs:string" minOccurs="0" />
               <xs:element name="UsrName" type="xs:string" minOccurs="0" />
               <xs:element name="UsageDt" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="UsageDtDfltTimeZone" type="xs:dateTime" minOccurs="0" />
               <xs:element name="UsageNote" type="xs:string" minOccurs="0" />
               <xs:element name="NumTimes" type="xs:int" minOccurs="0" />
+              <xs:element name="ReportTimeTzInfo" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

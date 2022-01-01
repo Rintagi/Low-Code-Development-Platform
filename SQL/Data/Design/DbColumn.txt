@@ -1572,3 +1572,8 @@
 7695~@~1329~@~10~@~~@~CompPrefId~@~CompPref - CompPrefId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
 7696~@~1329~@~40~@~~@~CompPrefDesc~@~CompPref - CompPrefDesc~@~11~@~200~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is company preference description.~@~
 7697~@~1329~@~50~@~~@~SystemLs~@~CompPref - SystemLs~@~15~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7698~@~1330~@~40~@~~@~current_utc_offset~@~VwTimeZoneInfo - current_utc_offset~@~11~@~6~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7699~@~1330~@~10~@~~@~id~@~VwTimeZoneInfo - id~@~4~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7700~@~1330~@~30~@~~@~name~@~VwTimeZoneInfo - name~@~11~@~150~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
+7701~@~1330~@~20~@~~@~tz_desc~@~VwTimeZoneInfo - tz_desc~@~11~@~250~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7702~@~45~@~250~@~~@~DfltTimezone~@~Systems - DfltTimezone~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~default time zone name~@~

@@ -473,12 +473,12 @@ namespace RO.Web
 					base.SetCriBehavior(cCheckBox, null, cLabel, dtCriHlp.Rows[ii]);
 					if (dt.Rows[ii]["LastCriteria"].ToString() != string.Empty) { cCheckBox.Checked = base.GetBool(dt.Rows[ii]["LastCriteria"].ToString()); }
 				}
-				else
-				{
-					cTextBox = (TextBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-					base.SetCriBehavior(cTextBox, null, cLabel, dtCriHlp.Rows[ii]);
-					cTextBox.Text = dt.Rows[ii]["LastCriteria"].ToString(); 
-				}
+                else
+                {
+                    cTextBox = (TextBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
+                    base.SetCriBehavior(cTextBox, null, cLabel, dtCriHlp.Rows[ii]);
+                    cTextBox.Text = dt.Rows[ii]["LastCriteria"].ToString();
+                }
 				ii = ii + 1;
 			}
 		}
@@ -904,6 +904,7 @@ namespace RO.Web
 		{
 			DataColumnCollection columns = dt.Columns;
 			DataView dvCri = GetSqlCriteria();
+            columns.Add("tzInfo",typeof(string));
 			foreach (DataRowView drv in dvCri)
 			{
 				if (drv["DataTypeSysName"].ToString() == "DateTime") { columns.Add(drv["ColumnName"].ToString(), typeof(DateTime)); }
@@ -933,6 +934,8 @@ namespace RO.Web
 			ds.Tables.Add(MakeColumns(new DataTable("DtSqlReportIn")));
 			DataRow dr = ds.Tables["DtSqlReportIn"].NewRow();
 			DataView dvCri = GetSqlCriteria();
+            TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
+            dr["tzInfo"] = tzinfo.StandardName;
 			foreach (DataRowView drv in dvCri)
 			{
 				if (drv["DisplayName"].ToString() == "ListBox")

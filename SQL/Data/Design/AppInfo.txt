@@ -2881,4 +2881,13 @@ may need to add the following to web.config for assembly redirection
 3. add asmx json value return for compatibility with browser range of 3rd party service(like chainlink)~@~~@~en-US~@~
 12693~@~  11. 256.11024~@~11~@~256~@~2021-10-24 00:00:00.000~@~~@~~@~1. minor change to ethereum helper support(assembly dependency of nethereum 4)
 2. create crystal report less community package~@~~@~en-US~@~
-12694~@~  11. 257~@~11~@~257~@~~@~~@~~@~~@~~@~~@~
+12694~@~  11. 257.11123~@~11~@~257~@~2021-11-23 00:00:00.000~@~~@~~@~1. add default timezone to system table(for datetime conversion in SP)
+2. change screen/report fields which should be time zone aware(i.e. treat stored data as UTC)~@~~@~en-US~@~
+12695~@~  11. 258.11231~@~11~@~258~@~2021-12-31 00:00:00.000~@~~@~~@~1. add ethereum function/constructor encode/decode
+2. improve ethereum helper estimateGas logic
+3. add solidity v2 abi encoding support(structure parameters)
+4. add x25519 support(for chainlink OCR encryption)
+5. update nethereum libs to 4.1.1
+6. more cleanup on UTC(time zone sensitive) used in screen and report
+7. add ethereum erc20 transfer event watcher(websocket instead of polling)~@~~@~en-US~@~
+12696~@~  11. 259~@~11~@~259~@~~@~~@~~@~~@~~@~~@~

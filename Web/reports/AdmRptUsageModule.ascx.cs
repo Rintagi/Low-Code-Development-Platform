@@ -30,6 +30,7 @@ namespace RO.Common3.Data
 		private DataTable MakeColumns(DataTable dt)
 		{
 			DataColumnCollection columns = dt.Columns;
+			columns.Add("tzInfo", typeof(string));
 			columns.Add("Summary", typeof(String));
 			columns.Add("SystemId", typeof(Byte));
 			columns.Add("FrDate", typeof(DateTime));
@@ -916,6 +917,9 @@ namespace RO.Web
 		{
 			DsAdmRptUsageIn ds = new DsAdmRptUsageIn();
 			DataRow dr = ds.Tables["DtAdmRptUsageIn"].NewRow();
+			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
+			dr["tzInfo"] = tzinfo.StandardName;
+
 			dr["Summary"] = base.SetBool(cSummary.Checked);
 			if (cSystemId.SelectedIndex >= 0 && cSystemId.SelectedValue != string.Empty) {dr["SystemId"] = cSystemId.SelectedValue;}
 			if (IsPostBack && cSystemId.SelectedValue == string.Empty) { throw new ApplicationException("Criteria column: SystemId should not be empty. Please rectify and try again.");};
@@ -1082,6 +1086,7 @@ namespace RO.Web
 				if (dt.Columns.Contains("UsageDt")) {sb.Append("UsageDt" + (char)9);}
 				if (dt.Columns.Contains("UsageNote")) {sb.Append("Usage Note" + (char)9);}
 				if (dt.Columns.Contains("NumTimes")) {sb.Append("# of Times" + (char)9);}
+				if (dt.Columns.Contains("ReportTimeTzInfo")) {sb.Append("Report Tz Info" + (char)9);}
 				sb.Append(Environment.NewLine);
 				DataView dv = new DataView(dt);
 				foreach (DataRowView drv in dv)
@@ -1098,6 +1103,7 @@ namespace RO.Web
 					if (dt.Columns.Contains("UsageDt")) {sb.Append(drv["UsageDt"].ToString() + (char)9);}
 					if (dt.Columns.Contains("UsageNote")) {sb.Append(drv["UsageNote"].ToString() + (char)9);}
 					if (dt.Columns.Contains("NumTimes")) {sb.Append(drv["NumTimes"].ToString() + (char)9);}
+					if (dt.Columns.Contains("ReportTimeTzInfo")) {sb.Append(drv["ReportTimeTzInfo"].ToString() + (char)9);}
 					sb.Append(Environment.NewLine);
 				}
 				ExportToStream(null, reportName + ".csv", sb.Insert(0, (Config.ExportExcelCSV ? "sep=\t\n": "")).Replace("\r\n","\n"), exportTo.TXT);

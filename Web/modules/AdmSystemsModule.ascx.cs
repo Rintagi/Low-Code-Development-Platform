@@ -67,6 +67,7 @@ namespace RO.Common3.Data
 			columns.Add("FromSystemId", typeof(string));
 			columns.Add("UpdBaseSystemId", typeof(string));
 			columns.Add("UpdRefSystemId", typeof(string));
+			columns.Add("DfltTimezone45", typeof(string));
 			return dt;
 		}
 	}
@@ -552,6 +553,7 @@ namespace RO.Web
 						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -580,6 +582,7 @@ namespace RO.Web
 						if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CustServPhone45"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["CustServFax45"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["WebAddress45"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DfltTimezone45"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmSystems.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
@@ -652,6 +655,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -685,6 +689,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[22]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[23]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[24]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[32]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -731,6 +736,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[22]["ColExport"].ToString() == "Y") {sb.Append(drv["CustServPhone45"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[23]["ColExport"].ToString() == "Y") {sb.Append(drv["CustServFax45"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[24]["ColExport"].ToString() == "Y") {sb.Append(drv["WebAddress45"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[32]["ColExport"].ToString() == "Y") {sb.Append(drv["DfltTimezone45"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1455,6 +1461,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				base.SetFoldBehavior(cFromSystemId, dtAuth.Rows[29], cFromSystemIdP1, cFromSystemIdLabel, cFromSystemIdP2, null, dtLabel.Rows[29], null, null, null);
 				base.SetFoldBehavior(cUpdBaseSystemId, dtAuth.Rows[30], cUpdBaseSystemIdP1, cUpdBaseSystemIdLabel, cUpdBaseSystemIdP2, null, dtLabel.Rows[30], null, null, null);
 				base.SetFoldBehavior(cUpdRefSystemId, dtAuth.Rows[31], cUpdRefSystemIdP1, cUpdRefSystemIdLabel, cUpdRefSystemIdP2, null, dtLabel.Rows[31], null, null, null);
+				base.SetFoldBehavior(cDfltTimezone45, dtAuth.Rows[32], cDfltTimezone45P1, cDfltTimezone45Label, cDfltTimezone45P2, null, dtLabel.Rows[32], null, null, null);
 			}
 			if ((cSystemId45.Attributes["OnChange"] == null || cSystemId45.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cSystemId45.Visible && !cSystemId45.ReadOnly) {cSystemId45.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cServerName45.Attributes["OnChange"] == null || cServerName45.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cServerName45.Visible && !cServerName45.ReadOnly) {cServerName45.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
@@ -1484,6 +1491,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if ((cFromSystemId.Attributes["OnChange"] == null || cFromSystemId.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cFromSystemId.Visible && !cFromSystemId.ReadOnly) {cFromSystemId.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 			if ((cUpdBaseSystemId.Attributes["OnClick"] == null || cUpdBaseSystemId.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cUpdBaseSystemId.Visible && cUpdBaseSystemId.Enabled) {cUpdBaseSystemId.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
 			if ((cUpdRefSystemId.Attributes["OnClick"] == null || cUpdRefSystemId.Attributes["OnClick"].IndexOf("ChkPgDirty") < 0) && cUpdRefSystemId.Visible && cUpdRefSystemId.Enabled) {cUpdRefSystemId.Attributes["OnClick"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty(); this.focus();";}
+			if ((cDfltTimezone45.Attributes["OnChange"] == null || cDfltTimezone45.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cDfltTimezone45.Visible && !cDfltTimezone45.ReadOnly) {cDfltTimezone45.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		private DataTable SetFunctionality(DataTable dt)
@@ -1567,6 +1575,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (dt.Rows[29]["ColVisible"].ToString() == "Y" && dt.Rows[29]["ColReadOnly"].ToString() != "Y") {cFromSystemId.Text = string.Empty;}
 			if (dt.Rows[30]["ColVisible"].ToString() == "Y" && dt.Rows[30]["ColReadOnly"].ToString() != "Y") {cUpdBaseSystemId.Checked = base.GetBool("N");}
 			if (dt.Rows[31]["ColVisible"].ToString() == "Y" && dt.Rows[31]["ColReadOnly"].ToString() != "Y") {cUpdRefSystemId.Checked = base.GetBool("N");}
+			if (dt.Rows[32]["ColVisible"].ToString() == "Y" && dt.Rows[32]["ColReadOnly"].ToString() != "Y") {cDfltTimezone45.Text = string.Empty;}
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 
@@ -1600,6 +1609,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cFromSystemId.Text = string.Empty;
 			cUpdBaseSystemId.Checked = base.GetBool("N");
 			cUpdRefSystemId.Checked = base.GetBool("N");
+			cDfltTimezone45.Text = string.Empty;
 			// *** Default Value (Folder) Web Rule starts here *** //
 		}
 		protected void cAdmSystems87List_TextChanged(object sender, System.EventArgs e)
@@ -1653,6 +1663,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cCustServPhone45.Text = dr["CustServPhone45"].ToString();} catch {cCustServPhone45.Text = string.Empty;}
 					try {cCustServFax45.Text = dr["CustServFax45"].ToString();} catch {cCustServFax45.Text = string.Empty;}
 					try {cWebAddress45.Text = dr["WebAddress45"].ToString();} catch {cWebAddress45.Text = string.Empty;}
+					try {cDfltTimezone45.Text = dr["DfltTimezone45"].ToString();} catch {cDfltTimezone45.Text = string.Empty;}
 				}
 			}
 			cButPanel.DataBind();
@@ -2385,6 +2396,8 @@ document.Rintagi = {{
 			drType["UpdBaseSystemId"] = string.Empty; drDisp["UpdBaseSystemId"] = "CheckBox";
 			try {dr["UpdRefSystemId"] = base.SetBool(cUpdRefSystemId.Checked);} catch {}
 			drType["UpdRefSystemId"] = string.Empty; drDisp["UpdRefSystemId"] = "CheckBox";
+			try {dr["DfltTimezone45"] = cDfltTimezone45.Text.Trim();} catch {}
+			drType["DfltTimezone45"] = "VarWChar"; drDisp["DfltTimezone45"] = "TextBox";
 			if (bAdd)
 			{
 			}

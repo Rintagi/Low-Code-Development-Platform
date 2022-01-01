@@ -192,8 +192,8 @@ namespace RO.Web
             drType["AllowSelect22"] = "Char"; drDisp["AllowSelect22"] = "CheckBox";
             try { dr["GenerateRp22"] = (mst["GenerateRp22"] ?? "").Trim().Left(1); } catch { }
             drType["GenerateRp22"] = "Char"; drDisp["GenerateRp22"] = "CheckBox";
-            try { dr["LastGenDt22"] = (mst["LastGenDt22"] ?? "").Trim().Left(9999999); } catch { }
-            drType["LastGenDt22"] = "DBTimeStamp"; drDisp["LastGenDt22"] = "TextBox";
+            try { dr["LastGenDt22"] = mst["LastGenDt22"]; } catch { }
+            drType["LastGenDt22"] = "DBTimeStamp"; drDisp["LastGenDt22"] = "ShortDateTimeUTC";
             try { dr["AuthRequired22"] = (mst["AuthRequired22"] ?? "").Trim().Left(1); } catch { }
             drType["AuthRequired22"] = "Char"; drDisp["AuthRequired22"] = "CheckBox";
             try { dr["WhereClause22"] = mst["WhereClause22"]; } catch { }

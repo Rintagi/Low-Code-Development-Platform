@@ -2487,12 +2487,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if (this.Application["TrnlStartTime"] == null) { this.Application.Add("TrnlStartTime", DateTime.Now.ToString("F")); } else { this.Application["TrnlStartTime"] = DateTime.Now.ToString("F"); }
 				string x = this.Application.GetHashCode().ToString();
 				System.Web.Caching.Cache c = Context.Cache;
-				DateTime now = DateTime.Now;
+				DateTime now = DateTime.Now.ToUniversalTime();
 				CacheHolder ch = new CacheHolder(c, now, 1);	// Every 1 second.
 				StartCountDown(ch);
 				bInfoNow.Value = "Y"; PreMsgPopup("Translation has started.  This translation engine requires internet connection and may take several hours.  Please check back later for status. Thank you for your patience.");
 			}
-
 			// *** WebRule End *** //
 		}
 

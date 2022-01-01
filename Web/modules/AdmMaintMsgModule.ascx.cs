@@ -515,7 +515,7 @@ namespace RO.Web
 						if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MaintMsgName233"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MaintMessage233"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["ShowOnLogin233"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
-						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastEmailDt233"].ToString(),base.LUser.Culture) + (char)9);}
+						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastEmailDt233"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmMaintMsg.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
@@ -609,7 +609,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[1]["ColExport"].ToString() == "Y") {sb.Append(drv["MaintMsgName233"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["MaintMessage233"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["ShowOnLogin233"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
-					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTime(drv["LastEmailDt233"].ToString(),base.LUser.Culture) + @"\cell ");}
+					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastEmailDt233"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1416,7 +1416,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					try {cMaintMsgName233.Text = dr["MaintMsgName233"].ToString();} catch {cMaintMsgName233.Text = string.Empty;}
 					try {cMaintMessage233.Text = dr["MaintMessage233"].ToString();} catch {cMaintMessage233.Text = string.Empty;}
 					try {cShowOnLogin233.Checked = base.GetBool(dr["ShowOnLogin233"].ToString());} catch {cShowOnLogin233.Checked = false;}
-					try {cLastEmailDt233.Text = RO.Common3.Utils.fmLongDateTime(dr["LastEmailDt233"].ToString(),base.LUser.Culture);} catch {cLastEmailDt233.Text = string.Empty;}
+					try {cLastEmailDt233.Text = RO.Common3.Utils.fmLongDateTimeUTC(dr["LastEmailDt233"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cLastEmailDt233.Text = string.Empty;}
 				}
 			}
 			cButPanel.DataBind();
@@ -1441,7 +1441,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
                     }
                     string from = base.SysCustServEmail(base.LCurr.SystemId);
                     base.SendEmail("System Maintenance Notification", cMaintMessage233.Text.Replace("\n", "<br />"), sb.ToString(), from, from, "System Maintenance Team", true);
-                    cLastEmailDt233.Text = DateTime.Now.ToLongDateString();
+                    cLastEmailDt233.Text = DateTime.Now.ToUniversalTime().ToLongDateString();
                 }
                 catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
             }
@@ -1622,8 +1622,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["MaintMessage233"] = "VarWChar"; drDisp["MaintMessage233"] = "MultiLine";
 			try {dr["ShowOnLogin233"] = base.SetBool(cShowOnLogin233.Checked);} catch {}
 			drType["ShowOnLogin233"] = "Char"; drDisp["ShowOnLogin233"] = "CheckBox";
-			try {dr["LastEmailDt233"] = base.ToIntDateTime(cLastEmailDt233.Text,false,true);} catch {}
-			drType["LastEmailDt233"] = "DBTimeStamp"; drDisp["LastEmailDt233"] = "LongDateTime";
+			try {dr["LastEmailDt233"] = base.ToIntDateTime(cLastEmailDt233.Text,true,true);} catch {}
+			drType["LastEmailDt233"] = "DBTimeStamp"; drDisp["LastEmailDt233"] = "LongDateTimeUTC";
 			if (bAdd)
 			{
 			}

@@ -199,8 +199,8 @@ namespace RO.Web
             drType["RowsToExamine"] = string.Empty; drDisp["RowsToExamine"] = "TextBox";
             try { dr["ModifiedBy3"] = mst["ModifiedBy3"]; } catch { }
             drType["ModifiedBy3"] = "Numeric"; drDisp["ModifiedBy3"] = "DropDownList";
-            try { dr["LastSyncDt3"] = (mst["LastSyncDt3"] ?? "").Trim().Left(9999999); } catch { }
-            drType["LastSyncDt3"] = "DBTimeStamp"; drDisp["LastSyncDt3"] = "TextBox";
+            try { dr["LastSyncDt3"] = mst["LastSyncDt3"]; } catch { }
+            drType["LastSyncDt3"] = "DBTimeStamp"; drDisp["LastSyncDt3"] = "ShortDateTimeUTC";
             try { dr["VirtualSql3"] = mst["VirtualSql3"]; } catch { }
             drType["VirtualSql3"] = "VarWChar"; drDisp["VirtualSql3"] = "MultiLine";
 

@@ -353,6 +353,14 @@
     	</div>
     </div></div></div>
     </div></div>
+    <div class="r-table rg-1-12"><div class="r-tr">
+    <div class="r-td rc-1-6"><div class="screen-tabfolder" runat="server"><div class="r-table">
+    	<div class="r-tr">
+    		<div id="cDfltTimezone45P1" class="r-td r-labelR" runat="server"><asp:Label id="cDfltTimezone45Label" CssClass="inp-lbl" runat="server" /></div>
+    		<div id="cDfltTimezone45P2" class="r-td r-content" runat="server"><asp:TextBox id="cDfltTimezone45" CssClass="inp-txt" MaxLength="150" runat="server" /></div>
+    	</div>
+    </div></div></div>
+    </div></div>
 </asp:Panel>
 <asp:label id="cFootLabel" CssClass="FootText" runat="server" />
 <input id="bUseCri" type="hidden" runat="server" />

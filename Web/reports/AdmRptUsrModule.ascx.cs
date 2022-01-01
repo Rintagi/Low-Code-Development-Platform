@@ -30,6 +30,7 @@ namespace RO.Common3.Data
 		private DataTable MakeColumns(DataTable dt)
 		{
 			DataColumnCollection columns = dt.Columns;
+			columns.Add("tzInfo", typeof(string));
 			columns.Add("Active", typeof(String));
 			columns.Add("UsrGroupId", typeof(Int32));
 			columns.Add("CompanyId", typeof(Int32));
@@ -399,6 +400,9 @@ namespace RO.Web
 		{
 			DsAdmRptUsrIn ds = new DsAdmRptUsrIn();
 			DataRow dr = ds.Tables["DtAdmRptUsrIn"].NewRow();
+			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
+			dr["tzInfo"] = tzinfo.StandardName;
+
 			if (cActive.SelectedIndex >= 0 && cActive.SelectedValue != string.Empty) {dr["Active"] = cActive.SelectedValue;}
 			if (IsPostBack && cActive.SelectedValue == string.Empty) { throw new ApplicationException("Criteria column: Active should not be empty. Please rectify and try again.");};
 			if (cUsrGroupId.SelectedIndex >= 0 && cUsrGroupId.SelectedValue != string.Empty) {dr["UsrGroupId"] = cUsrGroupId.SelectedValue;}

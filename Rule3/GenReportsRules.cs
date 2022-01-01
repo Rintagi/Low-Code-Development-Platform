@@ -1840,6 +1840,9 @@ namespace RO.Rule3
 			sb.Append("		{" + Environment.NewLine);
 			sb.Append("			Ds" + dw["ProgramName"].ToString() + "In ds = new Ds" + dw["ProgramName"].ToString() + "In();" + Environment.NewLine);
 			sb.Append("			DataRow dr = ds.Tables[\"Dt" + dw["ProgramName"].ToString() + "In\"].NewRow();" + Environment.NewLine);
+            sb.Append("			TimeZoneInfo tzinfo = Session[\"Cache:tzInfo\"] as TimeZoneInfo ?? TimeZoneInfo.Local;" + Environment.NewLine);
+            sb.Append("			dr[\"tzInfo\"] = tzinfo.StandardName;" + Environment.NewLine);
+            sb.Append(Environment.NewLine);
             bool hasMultiSelect = dvCri.Table.AsEnumerable().Where(dr => dr["DisplayName"].ToString() == "ListBox").Count() > 0;
             bool hasAutoListBox = dvCri.Table.AsEnumerable().Where(dr => dr["DisplayMode"].ToString() == "AutoListBox").Count() > 0;
             if (hasMultiSelect)
@@ -2857,7 +2860,8 @@ namespace RO.Rule3
 			sb.Append("		private DataTable MakeColumns(DataTable dt)" + Environment.NewLine);
 			sb.Append("		{" + Environment.NewLine);
 			sb.Append("			DataColumnCollection columns = dt.Columns;" + Environment.NewLine);
-			foreach (DataRowView drv in dvCri)
+            sb.Append("			columns.Add(\"tzInfo\", typeof(string));" + Environment.NewLine);
+            foreach (DataRowView drv in dvCri)
 			{
 				sb.Append("			columns.Add(\"" + drv["ColumnName"].ToString() + "\", typeof(" + drv["DataTypeSysName"].ToString() + "));" + Environment.NewLine);
 			}

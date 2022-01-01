@@ -123,7 +123,7 @@ namespace RO.Web
             try { dr["ShowOnLogin233"] = (mst["ShowOnLogin233"] ?? "").Trim().Left(1); } catch { }
             drType["ShowOnLogin233"] = "Char"; drDisp["ShowOnLogin233"] = "CheckBox";
             try { dr["LastEmailDt233"] = mst["LastEmailDt233"]; } catch { }
-            drType["LastEmailDt233"] = "DBTimeStamp"; drDisp["LastEmailDt233"] = "LongDateTime";
+            drType["LastEmailDt233"] = "DBTimeStamp"; drDisp["LastEmailDt233"] = "LongDateTimeUTC";
 
             if (dtl != null)
             {

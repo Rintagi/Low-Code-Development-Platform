@@ -17,6 +17,7 @@ using System.Numerics;
 using Newtonsoft.Json;
 using Nethereum.Contracts;
 using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.Util;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 using Nethereum.ABI.FunctionEncoding.AttributeEncoding;
 using Nethereum.JsonRpc.WebSocketStreamingClient;
@@ -79,6 +80,32 @@ namespace RO.Common3.Ethereum.RPC
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(TValue);
+        }
+    }
+    public class BytesToHexConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(byte[]);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.String)
+            {
+                var hex = serializer.Deserialize<string>(reader);
+                if (!string.IsNullOrEmpty(hex))
+                {
+                    return hex.HexToByteArray();
+                }
+            }
+            return Enumerable.Empty<byte>();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            var bytes = value as byte[];
+            serializer.Serialize(writer, bytes.ToHex(true));
         }
     }
     #endregion
@@ -913,12 +940,19 @@ namespace RO.Common3.Ethereum
             var parameterResults = DecodeOutput(output, orderedParameters);
 
             var idx = 0;
+            var resultCount = parameterResults.Count;
             foreach (var parameterResult in parameterResults)
             {
                 var parameter = (ParameterOutputProperty)parameterResult;
                 var propertyInfo = parameter.PropertyInfo;
                 var abiType = parameter.Parameter.Type;
-                var fieldName = string.IsNullOrEmpty(parameter.Parameter.Name) || !useAbiFieldName ? "p" + (idx).ToString() : parameter.Parameter.Name;
+                var fieldName = string.IsNullOrEmpty(parameter.Parameter.Name) || !useAbiFieldName 
+                    ? string.Format(resultCount > 9 ? "p{0:D2}" : "p{0}", idx) 
+                                        + (string.IsNullOrEmpty(parameter.Parameter.Name) 
+                                            ? "" 
+                                            : "(" + parameter.Parameter.Name + ")"
+                                          ) 
+                                    : parameter.Parameter.Name;
                 Func<List<Nethereum.ABI.FunctionEncoding.ParameterOutput>, Dictionary<string, object>> decodeTuple = null;
                 decodeTuple = ((List<Nethereum.ABI.FunctionEncoding.ParameterOutput> results) =>
                 {
@@ -927,9 +961,7 @@ namespace RO.Common3.Ethereum
                     {
                         if (v.Parameter.ABIType is Nethereum.ABI.TupleType)
                         {
-                            // FIXME, deep tuple is not handled
-                            //o[v.Parameter.Name] = decodeTuple((v.Parameter.ABIType as Nethereum.ABI.TupleType).Components);
-                            o[v.Parameter.Name] = v.Result;
+                            o[v.Parameter.Name] = decodeTuple(v.Result as List<Nethereum.ABI.FunctionEncoding.ParameterOutput>);
                         }
                         else
                         {
@@ -1084,8 +1116,14 @@ namespace RO.Common3.Ethereum
         public EthereumAccount nethereumAccount { get; private set; }
         public BigInteger gasBoost(BigInteger gasNeeded, bool hardLimit = false)
         {
-            // newer version of geth can be very wrong about estimate, double it
-            var gasBoosted = gasNeeded + (hardLimit ? (0) : gasNeeded / 1);
+            var gasBoosted = gasNeeded
+                            + (hardLimit
+                                ? (0)
+                                // > 4M gas, adding 1/10 is generally enough
+                                : (gasNeeded > 4000000 ? gasNeeded / 10
+                                // newer version of geth can be very wrong about estimate, double it
+                                : gasNeeded / 1
+                            ));
             return gasBoosted;
         }
         public readonly static BigInteger GWei = new BigInteger(1000000000);
@@ -1261,7 +1299,7 @@ namespace RO.Common3.Ethereum
             }
         }
 
-        public Ethereum(int callGas = 4000000, string from = null)
+        public Ethereum(int callGas = 8000000, string from = null)
         {
             nethereumAccount = new EthereumAccount();
             EthCallGas = callGas;
@@ -1826,7 +1864,7 @@ namespace RO.Common3.Ethereum
                                             , new Nethereum.Hex.HexTypes.HexBigInteger(ethInWei));
                     ;
                     gethAccount.TransactionManager.Client = web3.Client;
-                    if (nonce != null) txInput.Nonce = new HexBigInteger(nonce.Value);
+                    if (nonce != null) txInput.Nonce = new HexBigInteger(nonce.Value); 
                     if (!string.IsNullOrEmpty(gethAccount.Password))
                     {
                         return await gethAccount.TransactionManager.SendTransactionAsync(txInput);
@@ -2025,7 +2063,7 @@ namespace RO.Common3.Ethereum
         {
             return await web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(txHash);
         }
-        public async Task<string> GetTransactionInfoAsync(string txHash, Nethereum.Web3.Web3 web3, bool includeContractByteCode = false)
+        public async Task<string> GetTransactionInfoAsync(string txHash, Nethereum.Web3.Web3 web3, string contractAbi = null, bool includeContractByteCode = false)
         {
             var txReceiptRequest = GetTransactionReceiptAsync(txHash, web3);
             var txRequest = GetTransactionAsync(txHash, web3);
@@ -2034,30 +2072,46 @@ namespace RO.Common3.Ethereum
 
             if (tx == null && txReceipt == null) return null;
 
+            DateTime? timestamp = txReceipt != null
+                            ? await GetBlockTimestampAsync((ulong)txReceipt.BlockNumber.Value, web3)
+                            : (DateTime?)null;
+
             var txInfo = new
             {
                 TransactionHash = tx.TransactionHash,
                 To = tx.To,
                 From = tx.From,
-                Value = tx.Value,
+                Value = BigInteger.Parse(tx.Value.ToString()),
                 GasPrice = tx.GasPrice.Value,
+                MaxFeePerGas = tx.MaxFeePerGas != null ? BigInteger.Parse(tx.MaxFeePerGas.ToString()) : (BigInteger?)null,
+                MaxPriorityFeePerGas = tx.MaxFeePerGas != null ? BigInteger.Parse(tx.MaxPriorityFeePerGas.ToString()) : (BigInteger?)null,
+                TxType = tx.Type,
                 GasLimit = tx.Gas.Value,
                 Nounce = tx.Nonce.Value,
                 GasUsed = txReceipt != null ? txReceipt.GasUsed.Value : (BigInteger?)null,
                 BlockNumber = txReceipt != null ? txReceipt.BlockNumber.Value : (BigInteger?)null,
-                Status = txReceipt != null ? txReceipt.Status.Value : (BigInteger?)null,
-                ContractAddress = txReceipt != null ? txReceipt.ContractAddress : null,
-                Input = txReceipt != null && string.IsNullOrEmpty(txReceipt.ContractAddress) ? tx.Input : null,
+                Timestamp = timestamp,
+                Status = string.Format("{0}", txReceipt != null ? txReceipt.Status.Value : (BigInteger?)null),
+                ContractAddress = txReceipt != null && txReceipt.Status.Value > 0 ? txReceipt.ContractAddress : null,
+                Input = txReceipt != null && (string.IsNullOrEmpty(txReceipt.ContractAddress) || includeContractByteCode) ? tx.Input : null,
+                EffectiveGasPrice = txReceipt.EffectiveGasPrice != null ? BigInteger.Parse(txReceipt.EffectiveGasPrice.ToString()) : (BigInteger?)null,
+                Logs = DecodeEventLog(contractAbi,
+                    txReceipt.Logs.Select(evt => evt.ToObject<Nethereum.RPC.Eth.DTOs.FilterLog>()).ToArray()
+                    , (sha33Signature, name) =>
+                    {
+                        return GetEventInputDTO(contractAbi, name);
+                    }, true)
             };
+
             var txInfoJson = Newtonsoft.Json.JsonConvert.SerializeObject(txInfo);
             return txInfoJson;
         }
 
-        public string GetTransactionInfo(string txHash, Nethereum.Web3.Web3 web3)
+        public string GetTransactionInfo(string txHash, Nethereum.Web3.Web3 web3, string contractAbi = null, bool includeContractByteCode = false)
         {
             var result = System.Threading.Tasks.Task.Run(async () =>
             {
-                var ret = await GetTransactionInfoAsync(txHash, web3);
+                var ret = await GetTransactionInfoAsync(txHash, web3, contractAbi, includeContractByteCode);
                 return ret;
             }).Result;
             return result;
@@ -2065,12 +2119,13 @@ namespace RO.Common3.Ethereum
 
         public DateTime GetBlockTimestamp(ulong blockNumber, Nethereum.Web3.Web3 web3)
         {
-            var result = System.Threading.Tasks.Task.Run(async () =>
-            {
-                var ret = await GetBlockWithTransactionsAsync(web3, new BlockParameter(blockNumber));
-                return UnixTimeToDateTime(ret.Timestamp.ToUlong());
-            }).Result;
-            return result;
+            return GetBlockTimestampAsync(blockNumber, web3).Result;
+        }
+
+        public async Task<DateTime> GetBlockTimestampAsync(ulong blockNumber, Nethereum.Web3.Web3 web3)
+        {
+            var ret = await GetBlockWithTransactionsAsync(web3, new BlockParameter(blockNumber));
+            return UnixTimeToDateTime(ret.Timestamp.ToUlong());
         }
 
         public async Task<BigInteger> EstimateGasAsync(Nethereum.Web3.Web3 web3, Nethereum.RPC.Eth.DTOs.CallInput callInput)
@@ -2226,19 +2281,27 @@ namespace RO.Common3.Ethereum
 
         public static List<Dictionary<string, object>> DecodeEventLog<T>(string abiJson, Nethereum.RPC.Eth.DTOs.FilterLog[] eventLog, Func<string, string, T> memberTypeFactory, bool useAbiFieldName)
         {
-            var contract = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), null);
-            Dictionary<string, Nethereum.ABI.Model.EventABI> eventAbi = contract.ContractABI.Events.ToDictionary(abi => abi.Sha3Signature.EnsureHexPrefix(), x => x);
             var eventDecoder = new EventTopicDecoder();
             List<Dictionary<string, object>> output = new List<Dictionary<string, object>>();
+     
+            var contract = !string.IsNullOrEmpty(abiJson) ? new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), null) : null;
+            Dictionary<string, Nethereum.ABI.Model.EventABI> eventAbi = contract != null ? contract.ContractABI.Events.ToDictionary(abi => abi.Sha3Signature.EnsureHexPrefix(), x => x) : null;
             foreach (var log in eventLog)
             {
-                var abi = eventAbi[log.Topics[0] as string];
-                var memberTypeObject = memberTypeFactory(abi.Sha3Signature, abi.Name);
-                var paramAttributes = abi.InputParameters.Select<Nethereum.ABI.Model.Parameter, Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute>(
-                    x => new Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute(x.ABIType.Name, x.Name, x.Order, x.Indexed));
-                var result = eventDecoder.DecodeTopics(log.Topics, log.Data, memberTypeObject, paramAttributes, useAbiFieldName);
-                result.Add("_LogInfo", new { EventName = abi.Name, EventSha3Sig = abi.Sha3Signature, BlockNumber = log.BlockNumber.Value, TransactionHash = log.TransactionHash, Address = log.Address });
-                output.Add(result);
+                var abi = eventAbi != null && eventAbi.ContainsKey(log.Topics[0] as string) ?  eventAbi[log.Topics[0] as string] : null;
+                if (abi != null)
+                {
+                    var memberTypeObject = memberTypeFactory(abi.Sha3Signature, abi.Name);
+                    var paramAttributes = abi.InputParameters.Select<Nethereum.ABI.Model.Parameter, Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute>(
+                        x => new Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute(x.ABIType.Name, x.Name, x.Order, x.Indexed));
+                    var result = eventDecoder.DecodeTopics(log.Topics, log.Data, memberTypeObject, paramAttributes, useAbiFieldName);
+                    result.Add("_LogInfo", new { EventName = abi.Name, EventSha3Sig = abi.Sha3Signature, BlockNumber = log.BlockNumber.Value, TransactionHash = log.TransactionHash, Address = log.Address });
+                    output.Add(result);
+                }
+                else
+                {
+                    output.Add(new Dictionary<string, object>() {{ "_LogInfo", log }});
+                }
             }
             return output;
         }
@@ -2306,6 +2369,84 @@ namespace RO.Common3.Ethereum
             return result;
         }
 
+        public static Dictionary<string, object> DecodeFunctionInput<T>(string contractAbi, string functionName, string data, Func<T> memberTypeFactory)
+        {
+            if (functionName == "constructor") return DecodeConstructorInput(contractAbi, data, memberTypeFactory);
+
+            var contractBuilder = new Nethereum.Contracts.ContractBuilder(contractAbi, "0x0");
+            var functionBuilder = contractBuilder.GetFunctionBuilder(functionName);
+            dynamic input = Ethereum.GetFunctionInputDTO(contractAbi, functionName);
+            var functionInput = functionBuilder.DecodeInput(data);
+            var functionDecoder = new FunctionOutputDecoder();
+            
+            var paramAttributes = functionInput.Select<Nethereum.ABI.FunctionEncoding.ParameterOutput, Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute>(
+                o =>
+                {
+                    var x = o.Parameter;
+                    if (x.ABIType.CanonicalName == "tuple")
+                    {
+                        Nethereum.ABI.TupleType t = x.ABIType as Nethereum.ABI.TupleType;
+                        return new Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute(x.ABIType.Name, x.Name, x.Order);
+                    }
+                    else
+                    {
+                        var attribute = new Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute(x.ABIType.Name, x.Name, x.Order);
+                        return attribute;
+                    }
+                }
+                );
+            var inputParameters = functionInput.Select(o => o.Parameter);
+
+            var memberTypeObject = memberTypeFactory();
+
+            data = new Regex("^0x" + functionBuilder.FunctionABI.Sha3Signature, RegexOptions.IgnoreCase).Replace(data, "0x");
+            object[] revisedFunctParam = functionInput.Select(o => o.Result).ToArray();
+            var result = functionDecoder.DecodeFunctionOutput(data, memberTypeObject, paramAttributes, inputParameters, true);
+            return result;
+        }
+
+        public static Dictionary<string, object> DecodeConstructorInput<T>(string contractAbi, string data, Func<T> memberTypeFactory)
+        {
+            var contractBuilder = new Nethereum.Contracts.ContractBuilder(contractAbi, "0x0");
+            var constructorAbi = contractBuilder.ContractABI.Constructor;
+            var constructorBuilder = new Nethereum.ABI.FunctionEncoding.ConstructorCallDecoder();
+            var functionInput = constructorBuilder.DecodeDefaultData(data, constructorAbi.InputParameters);
+
+            dynamic input = Ethereum.GetFunctionInputDTO(contractAbi, "constructor");
+            var functionDecoder = new FunctionOutputDecoder();
+
+            var paramAttributes = functionInput.Select<Nethereum.ABI.FunctionEncoding.ParameterOutput, Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute>(
+                o =>
+                {
+                    var x = o.Parameter;
+                    if (x.ABIType.CanonicalName == "tuple")
+                    {
+                        Nethereum.ABI.TupleType t = x.ABIType as Nethereum.ABI.TupleType;
+                        return new Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute(x.ABIType.Name, x.Name, x.Order);
+                    }
+                    else
+                    {
+                        var attribute = new Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute(x.ABIType.Name, x.Name, x.Order);
+                        return attribute;
+                    }
+                }
+                );
+            var inputParameters = functionInput.Select(o => o.Parameter);
+
+            var memberTypeObject = memberTypeFactory();
+
+            var result = functionDecoder.DecodeFunctionOutput(data, memberTypeObject, paramAttributes, inputParameters, true);
+            return result;
+        }
+
+        public static string DecodeFunctionInput(string contractAbi, string functionName, string data)
+        {
+            var contractBuilder = new Nethereum.Contracts.ContractBuilder(contractAbi, "0x0");
+            dynamic input = Ethereum.GetFunctionInputDTO(contractAbi, functionName);
+            var result = DecodeFunctionInput(contractAbi, functionName, (data??"").Trim(), () => input);
+            var retValJson = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            return retValJson;
+        }
 
         public async Task<BigInteger> GetBalanceAsync(Nethereum.Web3.Web3 web3, string address)
         {
@@ -2769,52 +2910,64 @@ namespace RO.Common3.Ethereum
         {
             var contract = Ethereum.GetContractBuilder(AbiJSONTranslate(abiJson));
             //var sigEncoder = Ethereum.GetSignatureEncoder();
-            //var xx = new Nethereum.Util.Sha3Keccack();
+            var xx = new Nethereum.Util.Sha3Keccack();
+            Func<Nethereum.ABI.Model.Parameter, bool, string> decodeParam = (p, forSig) => {
+                string typeName = p.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                Func<Nethereum.ABI.Model.Parameter[], string> decodeTuple = null;
+                decodeTuple = ((Nethereum.ABI.Model.Parameter[] tuple_params) =>
+                {
+                    return string.Join(",", tuple_params.Select(pp =>
+                    {
+                        if (pp.ABIType is Nethereum.ABI.TupleType)
+                        {
+                            string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                            Nethereum.ABI.TupleType cc = pp.ABIType as Nethereum.ABI.TupleType;
+                            return ((forSig ? "" : ppTypeName) + "(" + decodeTuple(cc.Components) + ")" + (forSig ? "" : " " + pp.Name)).Trim();
+                        }
+                        else if (pp.ABIType.Name.StartsWith("tuple["))
+                        {
+                            // tuple array
+                            string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                            Nethereum.ABI.ArrayType a = pp.ABIType as Nethereum.ABI.ArrayType;
+                            FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                            Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
+                            return ((forSig ? "" : ppTypeName) + "(" + decodeTuple(elementType.Components) + ")" + (forSig ? "" : " " + pp.Name)).Trim();
+                        }
+                        else
+                            return (pp.ABIType.CanonicalName + (forSig ? "" : " " + pp.Name)).Trim();
+                    }).ToArray());
+                });
+                if (p.ABIType is Nethereum.ABI.TupleType)
+                {
+                    Nethereum.ABI.TupleType c = p.ABIType as Nethereum.ABI.TupleType;
+                    return ((forSig ? "" : typeName) + "(" + decodeTuple(c.Components) + ")" + (forSig ? "" : " " + p.Name)).Trim();
+                }
+                else if (p.ABIType.Name.StartsWith("tuple["))
+                {
+                    // tuple array
+                    Nethereum.ABI.ArrayType a = p.ABIType as Nethereum.ABI.ArrayType;
+                    FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
+                    return ((forSig ? "" : typeName) + "(" + decodeTuple(elementType.Components) + ")" + (forSig ? "" : " " + p.Name)).Trim();
+                }
+                else
+                    return (p.ABIType.CanonicalName + (forSig ? "" : " " + p.Name)).Trim();
+            };
+
+
             var functionDef = contract.ContractABI.Functions.Select(abi =>
             {
                 var sig = abi.Sha3Signature;
-                var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
-                var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + p.Name).Trim()).ToArray());
-                var returnInterface = string.Join(",", abi.OutputParameters.Select(p =>
-                {
-                    string typeName = p.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                    Func<Nethereum.ABI.Model.Parameter[], string> decodeTuple = null;
-                    decodeTuple = ((Nethereum.ABI.Model.Parameter[] tuple_params) =>
-                    {
-                        return string.Join(",", tuple_params.Select(pp =>
-                        {
-                            if (pp.ABIType is Nethereum.ABI.TupleType)
-                            {
-                                string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                                Nethereum.ABI.TupleType cc = pp.ABIType as Nethereum.ABI.TupleType;
-                                return (typeName + "(" + decodeTuple(cc.Components) + ")" + ' ' + p.Name).Trim();
-                            }
-                            else
-                                return (pp.ABIType.CanonicalName + ' ' + pp.Name).Trim();
-                        }).ToArray());
-                    });
-                    if (p.ABIType is Nethereum.ABI.TupleType)
-                    {
-                        Nethereum.ABI.TupleType c = p.ABIType as Nethereum.ABI.TupleType;
-                        return (typeName + "(" + decodeTuple(c.Components) + ")" + ' ' + p.Name).Trim();
-                    }
-                    else if (p.ABIType.Name.StartsWith("tuple["))
-                    {
-                        // tuple array
-                        Nethereum.ABI.ArrayType a = p.ABIType as Nethereum.ABI.ArrayType;
-                        FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                        Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
-                        return (typeName + "(" + decodeTuple(elementType.Components) + ")" + ' ' + p.Name).Trim();
-                    }
-                    else
-                        return (p.ABIType.CanonicalName + ' ' + p.Name).Trim();
-                }
-                        ).ToArray());
+                //var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
+                //var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + p.Name).Trim()).ToArray());
+                var callParamName = string.Join(",", abi.InputParameters.Select(p => decodeParam(p, true)).ToArray());
+                var callInterface = string.Join(",", abi.InputParameters.Select(p => decodeParam(p, false)).ToArray());
+                var returnInterface = string.Join(",", abi.OutputParameters.Select(p => decodeParam(p,false)).ToArray());
                 /* name format used to calc function sig(i.e. abi.Sha3Signature, keccak256(name).left(4bytes)), per ethereum spec */
                 var name = abi.Name + "(" + callParamName + ")";
                 /* function definition, for human */
                 var docName = abi.Name + "(" + callInterface + ")" + (!string.IsNullOrEmpty(returnInterface) ? " returns " + "(" + returnInterface + ")" : "");
-                //var yy = xx.CalculateHash(name).Substring(0, 4 * 2);
+                var yy = xx.CalculateHash(name).Substring(0, 4 * 2);
                 return new
                 {
                     functionName = docName,
@@ -2871,10 +3024,32 @@ namespace RO.Common3.Ethereum
 
         public static dynamic GetFunctionInputDTO(string abiJson, string functionName)
         {
+            if (functionName == "constructor") return GetConstructorInputDTO(abiJson);
+
             var contractBuilder = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), "0x0");
             var functionBuilder = contractBuilder.GetFunctionBuilder(functionName);
             dynamic functionInputDTO = new System.Dynamic.ExpandoObject();
             var inputParams = functionBuilder.FunctionABI.InputParameters;
+            IDictionary<string, object> eo = functionInputDTO as IDictionary<string, object>;
+
+            foreach (var p in inputParams)
+            {
+                var defaultType = p.ABIType.GetDefaultDecodingType();
+                eo.Add(p.Name, p.ABIType.Name == "string" || p.ABIType.Name == "address"
+                        ? (object)""
+                        : p.ABIType.Name.StartsWith("byte") ? (object)new byte[1]
+                        : (object)Activator.CreateInstance(defaultType)
+                        );
+            }
+            return functionInputDTO;
+        }
+
+        public static dynamic GetConstructorInputDTO(string abiJson)
+        {
+            var contractBuilder = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), "0x0");
+            var functionBuilder = contractBuilder.ContractABI.Constructor;
+            dynamic functionInputDTO = new System.Dynamic.ExpandoObject();
+            var inputParams = functionBuilder.InputParameters;
             IDictionary<string, object> eo = functionInputDTO as IDictionary<string, object>;
 
             foreach (var p in inputParams)
@@ -3019,6 +3194,12 @@ namespace RO.Common3.Ethereum
                 {
                     // no more input, do nothing
                 }
+                else if (p.ABIType.CanonicalName == "tuple")
+                {
+                    var data = inputs[idx] as List<object>;
+                    var translatedList = TranslateParamList((p.ABIType as Nethereum.ABI.TupleType).Components, data != null ? (object[])data.ToArray() : inputs[idx] as object[]);
+                    translated.Add(translatedList);
+                }
                 else if (inputs[idx] is string
                     && (inputs[idx] as string).StartsWith("0x")
                     && (p.ABIType.IsDynamic() && (p.ABIType.Name == "bytes" || p.ABIType.Name == "bytes1[]")
@@ -3031,13 +3212,16 @@ namespace RO.Common3.Ethereum
                 else if (inputs[idx] is string && (p.ABIType.Name.StartsWith("uint") || p.ABIType.Name.StartsWith("int") || p.ABIType.Name.StartsWith("ufixed") || p.ABIType.Name.StartsWith("fixed") || p.ABIType.Name.StartsWith("bytes")))
                 {
                     // force uint* into BigInteger if supplied as string
-                    System.Numerics.BigInteger x = BigInteger.Parse((p.ABIType.Name.StartsWith("uint") || p.ABIType.Name.StartsWith("ufixed") || p.ABIType.Name.StartsWith("bool") ? "00" : "") + (inputs[idx] as string).Replace("0x", ""), (inputs[idx] as string).StartsWith("0x") ? System.Globalization.NumberStyles.AllowHexSpecifier : 0);
+                    System.Numerics.BigInteger x = BigInteger.Parse(
+                                                    (p.ABIType.Name.StartsWith("uint") || p.ABIType.Name.StartsWith("ufixed") || p.ABIType.Name.StartsWith("bool") ? "00" : "")
+                                                    + (inputs[idx] as string).Replace("0x", "")
+                                                    , (inputs[idx] as string).StartsWith("0x") ? System.Globalization.NumberStyles.AllowHexSpecifier : System.Globalization.NumberStyles.AllowLeadingSign);
 
                     translated.Add(x);
                 }
                 else if (p.ABIType.Name.StartsWith("address") && inputs[idx] is string)
                 {
-                    translated.Add(string.IsNullOrEmpty(inputs[idx] as string) ? null : inputs[idx]);
+                    translated.Add(string.IsNullOrEmpty(inputs[idx] as string) ? null : (inputs[idx] as string).ConvertToEthereumChecksumAddress());
                 }
                 else if (p.ABIType.Name.StartsWith("string") && p.ABIType.Name != "string[]")
                 {
@@ -3121,18 +3305,31 @@ namespace RO.Common3.Ethereum
         }
         public string CreateFunctionCallData(string abiJson, string contractAddress, string functionName, object[] functionInput)
         {
+            if (functionName == "constructor") return CreateConstructorData(abiJson, contractAddress, functionInput);
+
             var contractBuilder = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), "0x0");
             var functionBuilder = contractBuilder.GetFunctionBuilder(functionName);
             var callData = functionBuilder.GetData(TranslateCallInput(AbiJSONTranslate(abiJson), functionName, functionInput));
             return callData;
         }
+        
+        public string CreateConstructorData(string abiJson, string contractAddress, object[] constructorInput)
+        {
+            var contract = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), "0x0");
+            var constructorAbi = contract.ContractABI.Constructor;
+            var contractBuilder = new Nethereum.Contracts.DeployContractTransactionBuilder();
+            var constructor = new Nethereum.ABI.FunctionEncoding.ConstructorCallEncoder();
+            var callData = constructor.EncodeParameters(constructorAbi.InputParameters, TranslateConstructorInput(AbiJSONTranslate(abiJson), constructorInput));
+            return callData.ToHex(true);
+        }
+
         public static Tuple<int, string, string> CompileContract(string codeOrPath, string compilerPath, string baseDir = null)
         {
             bool isCodePath = File.Exists(codeOrPath);
-            string workDirectory = isCodePath ? new FileInfo(codeOrPath).Directory.FullName : "";
+            string workDirectory = isCodePath ? (baseDir != null ? baseDir : new FileInfo(codeOrPath).Directory.FullName) : "";
             string rootDirectory = isCodePath ? new FileInfo(baseDir ?? workDirectory).Directory.FullName : null;
 
-            string cmd_arg = "--optimize" + (isCodePath ? (" --allow-paths \"" + rootDirectory + "\"") : "") + " --combined-json bin,bin-runtime,abi,hashes,interface,metadata,userdoc,devdoc " + (isCodePath ? codeOrPath : "-");
+            string cmd_arg = "--optimize" + (isCodePath ? (" --allow-paths \"" + rootDirectory + "\"") : "") + " --combined-json bin,bin-runtime,abi,hashes,metadata,userdoc,devdoc " + (isCodePath ? codeOrPath : "-");
             string er = "";
             string jsonResult = "";
             ProcessStartInfo psi = new ProcessStartInfo(compilerPath, cmd_arg);
@@ -3389,6 +3586,64 @@ namespace RO.Common3.Ethereum
                 throw;
             }
         }
+        public static async Task<Tuple<StreamingWebSocketClient, EthLogsObservableSubscription>> ERC20TransferWatcher(string contractAddress, string wsEndpoint, Action<Dictionary<string, string>> transferUpdater, Action<string> logger, Action<string> busyLogger)
+        {
+            try
+            {
+                var client = new StreamingWebSocketClient(wsEndpoint);
+                var newBlockSubscription = new Nethereum.RPC.Reactive.Eth.Subscriptions.EthNewBlockHeadersObservableSubscription(client);
+                var eventSubscription = new Nethereum.RPC.Reactive.Eth.Subscriptions.EthLogsObservableSubscription(client);
+                var tokenTransferred = Event<TransferEventDTO>.GetEventABI().CreateFilterInput(contractAddress);
+
+                eventSubscription.GetSubscriptionDataResponsesAsObservable().Subscribe(log =>
+                {
+                    var answer = log.DecodeEvent<TransferEventDTO>();
+                    transferUpdater(new Dictionary<string, string>() {
+                        {"from",answer.Event.From.ToString()},
+                        {"to", answer.Event.To.ToString()},
+                        {"value", answer.Event.Value.ToString()},
+                        {"blockNumber", answer.Log.BlockNumber.ToString()},
+                        {"txhash", answer.Log.TransactionHash.ToString()},
+                    });
+                    //logger(string.Format("{0}: {1} -> {2} - {3}", log.Address, answer.Event.RoundId, answer.Event.UpdatedAt, answer.Event.Current));
+                }, (e) =>
+                {
+                    logger(string.Format("event subscription exception {0}", e.Message));
+                }, () =>
+                {
+                    logger(string.Format("event subscription stopped"));
+                });
+
+                // this is a must to keep the websocket alive(effectively ping)
+                newBlockSubscription.GetSubscriptionDataResponsesAsObservable().Subscribe(b =>
+                {
+                    busyLogger(string.Format("new block {0}, {1}, {2}", b.Number, b.BaseFeePerGas, b.Timestamp));
+                }, (e) =>
+                {
+                    logger(string.Format("new block subscription exception {0}", e.Message));
+                }, () =>
+                {
+                    logger(string.Format("new block subscription stopped"));
+                });
+
+                client.Error += (sender, e) =>
+                {
+                    logger(string.Format("websocket client exception {0}, {1}", e, e.Message));
+                };
+
+                await client.StartAsync().ConfigureAwait(false);
+
+                await eventSubscription.SubscribeAsync(tokenTransferred).ConfigureAwait(false);
+                await newBlockSubscription.SubscribeAsync(2).ConfigureAwait(false);
+
+                return new Tuple<StreamingWebSocketClient, EthLogsObservableSubscription>(client, eventSubscription);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
     }
 
 

@@ -30,6 +30,7 @@ namespace RO.Common3.Data
 		private DataTable MakeColumns(DataTable dt)
 		{
 			DataColumnCollection columns = dt.Columns;
+			columns.Add("tzInfo", typeof(string));
 			columns.Add("CultureId", typeof(Int16));
 			columns.Add("SystemId", typeof(Byte));
 			return dt;
@@ -378,6 +379,9 @@ namespace RO.Web
 		{
 			DsAdmRptMsgIn ds = new DsAdmRptMsgIn();
 			DataRow dr = ds.Tables["DtAdmRptMsgIn"].NewRow();
+			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
+			dr["tzInfo"] = tzinfo.StandardName;
+
 			if (cCultureId.SelectedIndex >= 0 && cCultureId.SelectedValue != string.Empty) {dr["CultureId"] = cCultureId.SelectedValue;}
 			if (IsPostBack && cCultureId.SelectedValue == string.Empty) { throw new ApplicationException("Criteria column: CultureId should not be empty. Please rectify and try again.");};
 			if (cSystemId.SelectedIndex >= 0 && cSystemId.SelectedValue != string.Empty) {dr["SystemId"] = cSystemId.SelectedValue;}

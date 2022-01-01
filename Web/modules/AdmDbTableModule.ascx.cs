@@ -848,7 +848,7 @@ namespace RO.Web
 						if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["MultiDesignDb3"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy3"].ToString() + (char)9 + drv["ModifiedBy3Text"].ToString() + (char)9);}
 						if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn3"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
-						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["LastSyncDt3"].ToString() + (char)9);}
+						if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastSyncDt3"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + (char)9);}
 						if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["VirtualSql3"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ColumnId5"].ToString(),base.LUser.Culture) + (char)9);}
 						if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ColumnIndex5"].ToString(),base.LUser.Culture) + (char)9);}
@@ -1002,7 +1002,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[6]["ColExport"].ToString() == "Y") {sb.Append(drv["MultiDesignDb3"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[15]["ColExport"].ToString() == "Y") {sb.Append(drv["ModifiedBy3Text"].ToString() + @"\cell ");}
 					if (dtAu.Rows[16]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["ModifiedOn3"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
-					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(drv["LastSyncDt3"].ToString() + @"\cell ");}
+					if (dtAu.Rows[17]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmShortDateTimeUTC(drv["LastSyncDt3"].ToString(),base.LUser.Culture,CurrTimeZoneInfo()) + @"\cell ");}
 					if (dtAu.Rows[18]["ColExport"].ToString() == "Y") {sb.Append(drv["VirtualSql3"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[19]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ColumnId5"].ToString(),base.LUser.Culture) + @"\cell ");}
 					if (dtAu.Rows[20]["ColExport"].ToString() == "Y") {sb.Append(RO.Common3.Utils.fmNumeric("0",drv["ColumnIndex5"].ToString(),base.LUser.Culture) + @"\cell ");}
@@ -2200,7 +2200,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					cSyncToDb.ImageUrl = "~/images/custom/adm/SyncToDb.gif";
 					SetModifiedBy3(cModifiedBy3,dr["ModifiedBy3"].ToString());
 					try {cModifiedOn3.Text = RO.Common3.Utils.fmShortDateTimeUTC(dr["ModifiedOn3"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cModifiedOn3.Text = string.Empty;}
-					try {cLastSyncDt3.Text = dr["LastSyncDt3"].ToString();} catch {cLastSyncDt3.Text = string.Empty;}
+					try {cLastSyncDt3.Text = RO.Common3.Utils.fmShortDateTimeUTC(dr["LastSyncDt3"].ToString(),base.LUser.Culture,CurrTimeZoneInfo());} catch {cLastSyncDt3.Text = string.Empty;}
 					try {cVirtualSql3.Text = dr["VirtualSql3"].ToString();} catch {cVirtualSql3.Text = string.Empty;}
 				}
 			}
@@ -3541,8 +3541,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			drType["RowsToExamine"] = string.Empty; drDisp["RowsToExamine"] = "TextBox";
 			try {dr["ModifiedBy3"] = base.LUser.UsrId.ToString();} catch {};
 			drType["ModifiedBy3"] = "Numeric"; drDisp["ModifiedBy3"] = "DropDownList";
-			try {dr["LastSyncDt3"] = cLastSyncDt3.Text.Trim();} catch {}
-			drType["LastSyncDt3"] = "DBTimeStamp"; drDisp["LastSyncDt3"] = "TextBox";
+			try {dr["LastSyncDt3"] = base.ToIntDateTime(cLastSyncDt3.Text,true,true);} catch {}
+			drType["LastSyncDt3"] = "DBTimeStamp"; drDisp["LastSyncDt3"] = "ShortDateTimeUTC";
 			try {dr["VirtualSql3"] = cVirtualSql3.Text;} catch {}
 			drType["VirtualSql3"] = "VarWChar"; drDisp["VirtualSql3"] = "MultiLine";
 			if (dv != null)

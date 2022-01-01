@@ -66,6 +66,7 @@ namespace RO.Web
             columns.Add("FromSystemId", typeof(string));
             columns.Add("UpdBaseSystemId", typeof(string));
             columns.Add("UpdRefSystemId", typeof(string));
+            columns.Add("DfltTimezone45", typeof(string));
             return dt;
         }
 
@@ -190,6 +191,8 @@ namespace RO.Web
             drType["UpdBaseSystemId"] = string.Empty; drDisp["UpdBaseSystemId"] = "CheckBox";
             try { dr["UpdRefSystemId"] = (mst["UpdRefSystemId"] ?? "").Trim().Left(9999999); } catch { }
             drType["UpdRefSystemId"] = string.Empty; drDisp["UpdRefSystemId"] = "CheckBox";
+            try { dr["DfltTimezone45"] = (mst["DfltTimezone45"] ?? "").Trim().Left(150); } catch { }
+            drType["DfltTimezone45"] = "VarWChar"; drDisp["DfltTimezone45"] = "TextBox";
 
             if (dtl != null)
             {
@@ -262,6 +265,7 @@ namespace RO.Web
                 {"FromSystemId",""},
                 {"UpdBaseSystemId",""},
                 {"UpdRefSystemId",""},
+                {"DfltTimezone45",""},
 
             };
             /* AsmxRule: Init Master Table */

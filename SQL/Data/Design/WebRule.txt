@@ -169,12 +169,11 @@
 				if (this.Application["TrnlStartTime"] == null) { this.Application.Add("TrnlStartTime", DateTime.Now.ToString("F")); } else { this.Application["TrnlStartTime"] = DateTime.Now.ToString("F"); }
 				string x = this.Application.GetHashCode().ToString();
 				System.Web.Caching.Cache c = Context.Cache;
-				DateTime now = DateTime.Now;
+				DateTime now = DateTime.Now.ToUniversalTime();
 				CacheHolder ch = new CacheHolder(c, now, 1);	// Every 1 second.
 				StartCountDown(ch);
 				bInfoNow.Value = "Y"; PreMsgPopup("Translation has started.  This translation engine requires internet connection and may take several hours.  Please check back later for status. Thank you for your patience.");
-			}
-~@~~@~~@~~@~~@~~@~~@~~@~~@~
+			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 23~@~4~@~Add physical databases~@~Systems Maintenance: Add physical databases~@~Add physical application and design databases immediately~@~87~@~1450~@~~@~1~@~            if (!string.IsNullOrEmpty(cdbAppDatabase45.Text))
             {
                 RO.Rule3.Deploy deploy = new RO.Rule3.Deploy();
@@ -368,7 +367,7 @@
                     }
                     string from = base.SysCustServEmail(base.LCurr.SystemId);
                     base.SendEmail("System Maintenance Notification", cMaintMessage233.Text.Replace("\n", "<br />"), sb.ToString(), from, from, "System Maintenance Team", true);
-                    cLastEmailDt233.Text = DateTime.Now.ToLongDateString();
+                    cLastEmailDt233.Text = DateTime.Now.ToUniversalTime().ToLongDateString();
                 }
                 catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
             }~@~~@~~@~~@~~@~~@~~@~~@~~@~

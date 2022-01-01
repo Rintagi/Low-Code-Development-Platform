@@ -449,7 +449,7 @@ class MstRecord extends RintagiScreen {
                     cRowsToExamine: formatContent(RowsToExamine || '', 'TextBox'),
                     cModifiedBy3: ModifiedBy3List.filter(obj => { return obj.key === ModifiedBy3 })[0],
                     cModifiedOn3: ModifiedOn3 || new Date(),
-                    cLastSyncDt3: formatContent(LastSyncDt3 || '', 'TextBox'),
+                    cLastSyncDt3: LastSyncDt3 || new Date(),
                     cVirtualSql3: formatContent(VirtualSql3 || '', 'MultiLine'),
                   }}
                   validate={this.ValidatePage}
@@ -897,10 +897,13 @@ class MstRecord extends RintagiScreen {
                                     }
                                     {((true && this.constructor.ShowSpinner(AdmDbTableState)) && <Skeleton height='36px' />) ||
                                       <div className='form__form-group-field'>
-                                        <Field
-                                          type='text'
+                                        <DatePicker
                                           name='cLastSyncDt3'
-                                          disabled={(authCol.LastSyncDt3 || {}).readonly ? 'disabled' : ''} />
+                                          onChange={this.DateChange(setFieldValue, setFieldTouched, 'cLastSyncDt3', false)}
+                                          onBlur={this.DateChange(setFieldValue, setFieldTouched, 'cLastSyncDt3', true)}
+                                          value={values.cLastSyncDt3}
+                                          selected={values.cLastSyncDt3}
+                                          disabled={(authCol.LastSyncDt3 || {}).readonly ? true : false} />
                                       </div>
                                     }
                                     {errors.cLastSyncDt3 && touched.cLastSyncDt3 && <span className='form__form-group-error'>{errors.cLastSyncDt3}</span>}

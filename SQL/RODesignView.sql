@@ -37,7 +37,21 @@ ALTER VIEW [dbo].[VwClnAppItem] AS
 	SELECT a.AppInfoDesc, b.ItemOrder, b.ObjectTypeCd, b.AppItemName, b.AppItemCode
 	FROM dbo.AppInfo a INNER JOIN dbo.AppItem b ON a.AppInfoId = b.AppInfoId
 	WHERE a.VersionDt is not null AND b.ObjectTypeCd = 'C'
-	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
+-- full history
+--	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
+GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCompanyPref') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwCompanyPref AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwCompanyPref]
+AS
+select 
+c.CompanyId, c.CompanyLogo, c.CompPrefDesc
+, s.WebAddress
+, LogoUrl = REPLACE(c.CompanyLogo, '~/', ISNULL(s.WebAddress + '/',''))
+from
+dbo.CompPref c
+left outer join dbo.Systems s on s.SystemId = 3
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCompanyPref') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwCompanyPref AS SELECT DUMMY=1')
@@ -254,7 +268,8 @@ ALTER VIEW [dbo].[VwRulAppItem] AS
 	SELECT a.AppInfoDesc, b.ItemOrder, b.ObjectTypeCd, b.AppItemName, b.AppItemCode
 	FROM dbo.AppInfo a INNER JOIN dbo.AppItem b ON a.AppInfoId = b.AppInfoId
 	WHERE a.VersionDt is not null AND b.ObjectTypeCd = 'R'
-	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
+-- full history
+--	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwScrButton') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwScrButton AS SELECT DUMMY=1')
@@ -295,6 +310,17 @@ FROM
 ,('A', 'After Upstream', 2)
 ) 
 x (RunModeCd, RunModeDesc, SrtOrder)
+GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwTimeZoneInfo') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwTimeZoneInfo AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwTimeZoneInfo] AS 
+
+SELECT 
+id = ROW_NUMBER() OVER (ORDER BY current_utc_offset, name),
+tz_desc = name + ' (UTC ' + current_utc_offset + CASE WHEN tz.is_currently_dst = 1 THEN ' DST' ELSE '' END + ')', *
+FROM
+sys.time_zone_info tz
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwUsr') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwUsr AS SELECT DUMMY=1')
