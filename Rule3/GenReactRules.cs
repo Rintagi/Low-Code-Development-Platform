@@ -141,7 +141,8 @@ namespace RO.Rule3
             dbConnectionString = _dbConnectionString;
             dbPassword = _dbPassword;
             system = _system;
-            fileDirectory = _fileDirectory;
+            // normalize expected value
+            fileDirectory = _fileDirectory.EndsWith("\\") || _fileDirectory.EndsWith("/") ? _fileDirectory : _fileDirectory + "\\";
             DbId = _DbId;
         }
 
@@ -1697,7 +1698,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MstList))
 
                         }
 
-                        else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                        else if (DisplayMode.Contains("Date") || DisplayMode.Contains("Calendar")) //---------Date (Any type)
                         {
                             //validator
                             if (drv["RequiredValid"].ToString() == "Y")
@@ -3818,7 +3819,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(DtlList);
                             formikControlResults.Add(formikControlValue);
 
                         }
-                        else if (DisplayMode.Contains("Date")) //---------Date (Any type)
+                        else if (DisplayMode.Contains("Date") || DisplayMode.Contains("Calendar")) //---------Date (Any type)
                         {
                             //validator
                             if (drv["RequiredValid"].ToString() == "Y")
@@ -6335,6 +6336,11 @@ export function GetDocZipDownload(keyId, options, accessScope) {
                                       DisplayMode == "DataGridLink" || DisplayMode == "PlaceHolder") //---------Action Button / ImageButton / DataGridLink / PlaceHolder
                             {
                                 string MakeColRowValue = "";
+                                MakeColRowResults.Add(MakeColRowValue);
+                            }
+                            else if (DisplayMode.EndsWith("UTC"))
+                            {
+                                string MakeColRowValue = "dr[\"" + ColumnId + "\"] = convertISO8601(drv[\"" + ColumnId + "\"]);";
                                 MakeColRowResults.Add(MakeColRowValue);
                             }
                             else

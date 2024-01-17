@@ -114,7 +114,9 @@ namespace RO.Rule3
 		private void DeleteProgC(string programName, Int32 screenId, CurrPrj CPrj, string clientProgramPath, string clientFrwork)
 		{
 			FileInfo fi = null;
-			fi = new FileInfo(clientProgramPath + programName + ".aspx"); if (fi.Exists) {fi.Delete();}
+            // normalize expected value
+            clientProgramPath = clientProgramPath.EndsWith("\\") || clientProgramPath.EndsWith("/") ? clientProgramPath : clientProgramPath + "\\";
+            fi = new FileInfo(clientProgramPath + programName + ".aspx"); if (fi.Exists) { fi.Delete(); }
 			fi = new FileInfo(clientProgramPath + programName + ".aspx.cs"); if (fi.Exists) {fi.Delete();}
 			fi = new FileInfo(clientProgramPath + @"modules\" + programName + "Module.ascx"); if (fi.Exists) {fi.Delete();}
 			fi = new FileInfo(clientProgramPath + @"modules\" + programName + "Module.ascx.cs"); if (fi.Exists) {fi.Delete();}
@@ -366,6 +368,8 @@ namespace RO.Rule3
             StringBuilder sbAspxCs = MakeAspxCs(dw, screenTitle, CPrj, clientFrwork);
             StringBuilder sbAscx = MakeAscx(dw, screenId, screenTitle, dv, dvTab, dvCri, dvGroupCol, CPrj, CSrc, clientFrwork);
             StringBuilder sbAscxCs = MakeAscxCs(dw, screenId, screenTitle, dv, dvTab, dtLis, dtDtl, dvWRule, dvCri, dvGroupCol, dw["dbAppDatabase"].ToString(), dw["dbDesDatabase"].ToString(), CPrj, CSrc, clientFrwork);
+            // normalize expected value
+            clientProgramPath = clientProgramPath.EndsWith("\\") || clientProgramPath.EndsWith("/") ? clientProgramPath : clientProgramPath + "\\";
             if (dw["GenerateSc"].ToString() == "Y")
             {
                 //StreamWriter sw = new StreamWriter(clientProgramPath + dw["ProgramName"].ToString() + ".aspx",false,System.Text.Encoding.UTF8);
@@ -2090,6 +2094,10 @@ namespace RO.Rule3
 			}
             sb.Append("				SetClientRule(null,false);" + Environment.NewLine);
 			sb.Append("				IgnoreConfirm(); InitPreserve();" + Environment.NewLine);
+            if (dw["MultiDesignDb"].ToString() == "Y")
+            {
+                sb.Append("				cSystemId_SelectedIndexChanged(null, null);" + Environment.NewLine);
+            }
             //if ("I3".IndexOf(dw["ScreenTypeName"].ToString()) >= 0)
             //{
             //    sb.Append("				if (!string.IsNullOrEmpty(Request.QueryString[\"key\"]) && bUseCri.Value == string.Empty)" + Environment.NewLine);
@@ -2334,8 +2342,13 @@ namespace RO.Rule3
 			sb.Append(Environment.NewLine);
 			sb.Append("		private void CheckAuthentication(bool pageLoad)" + Environment.NewLine);
 			sb.Append("		{" + Environment.NewLine);
-            sb.Append("          if (IsCronInvoked()) AnonymousLogin();" + Environment.NewLine);
-            sb.Append("          else CheckAuthentication(pageLoad, " + (dw["AuthRequired"].ToString() == "N" ? "false" : "true") + ");" + Environment.NewLine);
+            sb.Append("			if (IsCronInvoked())" + Environment.NewLine);
+            sb.Append("			{" + Environment.NewLine);
+            sb.Append("				AnonymousLogin();" + Environment.NewLine);
+            sb.Append("				LCurr.SystemId = " + CSrc.SrcSystemId.ToString() + ";" + Environment.NewLine);
+            sb.Append("				LCurr.DbId = " + CSrc.SrcSystemId.ToString() + ";" + Environment.NewLine);
+            sb.Append("			}" + Environment.NewLine);
+            sb.Append("			else CheckAuthentication(pageLoad, " + (dw["AuthRequired"].ToString() == "N" ? "false" : "true") + ");" + Environment.NewLine);
 			sb.Append("		}" + Environment.NewLine);
 			sb.Append(Environment.NewLine);
 			sb.Append("		private void SetButtonHlp()" + Environment.NewLine);
@@ -4246,7 +4259,7 @@ namespace RO.Rule3
             sb.Append("			    else if (drv[\"DisplayName\"].ToString() == \"Calendar\")" + Environment.NewLine);
             sb.Append("			    {" + Environment.NewLine);
             sb.Append("					cCalendar = (System.Web.UI.WebControls.Calendar)cCriteria.FindControl(\"x\" + drv[\"ColumnName\"].ToString());" + Environment.NewLine);
-            sb.Append("					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse(\"0001-01-01\")) { dr[drv[\"ColumnName\"].ToString()] = cCalendar.SelectedDate; }" + Environment.NewLine);
+            sb.Append("					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse(\"0001-01-01\")) { dr[drv[\"ColumnName\"].ToString()] = drv[\"DisplayMode\"].ToString() == \"CalendarUTC\" ? base.SetDateTimeUTC(cCalendar.SelectedDate.ToString(\"yyyy/MM/dd\"), !bUpdate) : cCalendar.SelectedDate.ToString(\"yyyy/MM/dd\"); }" + Environment.NewLine);
             sb.Append("			    }" + Environment.NewLine);
             sb.Append("			    else if (drv[\"DisplayName\"].ToString() == \"ComboBox\")" + Environment.NewLine);
             sb.Append("			    {" + Environment.NewLine);
@@ -5044,8 +5057,7 @@ namespace RO.Rule3
                 sb.Append("			if (c" + dw["ProgramName"].ToString() + "Grid.EditIndex < 0 || (dt != null && UpdateGridRow(sender, new CommandEventArgs(\"Save\", \"\"))))" + Environment.NewLine);
 				sb.Append("			{" + Environment.NewLine);
 			}
-			sb.Append("				DataTable dtSystems = (DataTable)Session[KEY_dtSystems];" + Environment.NewLine);
-			sb.Append("				Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex][\"dbAppProvider\"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex][\"ServerName\"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex][\"dbDesDatabase\"].ToString(), \"\", dtSystems.Rows[cSystemId.SelectedIndex][\"dbAppUserId\"].ToString());" + Environment.NewLine);
+            sb.Append("				Session[KEY_sysConnectionString] = SysConnectStr(byte.Parse(cSystemId.SelectedValue));" + Environment.NewLine);
             sb.Append("				Session[KEY_sysConnectionString + \"Pwd\"] = base.AppPwd(base.LCurr.DbId);" + Environment.NewLine);
             dv.RowFilter = string.Empty;
 			foreach (DataRowView drv in dv)
@@ -6994,6 +7006,11 @@ namespace RO.Rule3
                 // bAllowNulls is not being used for now.
                 sb.Append("					if (!(bFound && bUnique) && MatchCd != \"1\") {drv[CNam] = \"Invalid>\" + drv[CNam].ToString(); bErrNow.Value = \"Y\"; PreMsgPopup(\"Import has invalid data, please check for \\\"Invalid>\\\", rectify and try again.\");}" + Environment.NewLine);
                 sb.Append("				}" + Environment.NewLine);
+                sb.Append("				if (!bFound && !string.IsNullOrEmpty(drv[CKey].ToString()))" + Environment.NewLine);
+                sb.Append("				{" + Environment.NewLine);
+                sb.Append("					drv[CNam] = \"Invalid>\" + drv[CKey].ToString(); bErrNow.Value = \"Y\"; PreMsgPopup(\"Import has invalid data, please check for \\\"Invalid>\\\", rectify and try again.\");" + Environment.NewLine);
+                sb.Append("				    drv[CKey] = null;" + Environment.NewLine);
+                sb.Append("				}" + Environment.NewLine);
                 sb.Append("			}" + Environment.NewLine);
                 sb.Append("		}" + Environment.NewLine);
                 sb.Append(Environment.NewLine);
@@ -7895,6 +7912,19 @@ namespace RO.Rule3
                             bHasImage = true;
                         }
                     }
+
+                    int idx = 0;
+                    DataView dvX = new DataView(dv.Table);
+                    foreach (DataRowView drv in dvX)
+                    {
+                        if (drv["DisplayName"].ToString().ToLower() == "button" && drv["MasterTable"].ToString() != "Y")
+                        {
+                            // setup tool tips for button(only grid)
+                            sb.Append("			SetGridButtonToolTip(e, \"" + drv["ColumnName"].ToString() + "\",ColumnToolTip(" + idx.ToString() + "));" + Environment.NewLine);
+                        }
+                        idx = idx + 1;
+                    }
+
                     sb.Append("			if (c" + dw["ProgramName"].ToString() + "Grid.EditIndex > -1 && GetDataItemIndex(c" + dw["ProgramName"].ToString() + "Grid.EditIndex) == e.Item.DataItemIndex)" + Environment.NewLine);
                     sb.Append("			{" + Environment.NewLine);
                     if (bHasImage) { sb.Append("			    ImageButton ImageGridDisplay;" + Environment.NewLine); }
@@ -7962,7 +7992,6 @@ namespace RO.Rule3
                         }
                     }
                     sb.Append("			}" + Environment.NewLine);
-
                     bWebRule = false;
 					foreach (DataRowView drvr in dvWRule)
 					{
@@ -9777,6 +9806,7 @@ namespace RO.Rule3
             sb.Append("		private void PreMsgPopup(string msg, RoboCoder.WebControls.ComboBox cb, WebControl wc)" + Environment.NewLine);
 			sb.Append("		{" + Environment.NewLine);
             sb.Append("		    if (string.IsNullOrEmpty(msg)) return;" + Environment.NewLine);
+            sb.Append("		    if (IsCronInvoked()) { ErrorTrace(new Exception(msg), bErrNow.Value == \"N\" ? \"warning\" : \"error\"); return; }" + Environment.NewLine);
             sb.Append("		    int MsgPos = msg.IndexOf(\"RO.SystemFramewk.ApplicationAssert\");" + Environment.NewLine);
             sb.Append("		    string iconUrl = \"images/warning.gif\";" + Environment.NewLine);    // Client-side no '~/'.
             sb.Append("		    string focusOnCloseId = cb != null ? cb.FocusID : (wc != null ? wc.ClientID : string.Empty);" + Environment.NewLine);

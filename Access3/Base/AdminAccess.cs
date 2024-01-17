@@ -81,6 +81,7 @@ namespace RO.Access3
         public abstract void MkGetScreenIn(string screenId, string screenCriId, string procedureName, string appDatabase, string sysDatabase, string multiDesignDb, string dbConnectionString, string dbPassword, bool reGen);
         public abstract void MkWfStatus(string ScreenObjId, string MasterTable, string appDatabase, string sysDatabase, string dbConnectionString, string dbPassword);
         public abstract DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans);
+        public abstract DataSet RunWrRuleEx(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans);
         public abstract string SetCult(int UsrId, Int16 CultureId);
         public abstract void UpdCronJob(int jobId, DateTime? lastRun, DateTime? nextRun, string dbConnectionString, string dbPassword);
         public abstract void UpdCronJobStatus(int jobId, string Error, string dbConnectionString, string dbPassword);

@@ -936,7 +936,7 @@ function PopDialog(iconUrl, msgContent, focusOnCloseId, yesno) {
                     newWin.focus();
                     newWin.print();
                     $('#printF').remove();
-                }, 100);
+                }, 500);
             }
 
         } : {
@@ -3111,6 +3111,224 @@ if (!String.prototype.startsWith) {
     };
 }
 
+/* web3/metamask integration helper, require web3.min.js/web3.js v1.0+ loaded  */
+function GetTransactionInfo(walletconnect, transactionHashClientId, resultClientId) {
+    //debugger;
+    var transactionHash = $("#" + transactionHashClientId).val();
+    var fnOK = function (postback) {
+        if (!postback || !postbackClientId) return; // no postback
+        NoConfirm();
+        __doPostBack(postbackClientId.replace(/_/g, '$'), '');
+    };
+
+    var web3 = null;
+    var provider = null;
+    connectWeb3(undefined, walletconnect)
+        .then(function (_web3) {
+            web3 = _web3.web3;
+            provider = _web3.provider;
+            return web3.eth.getAccounts();
+        })
+        .then(function (accounts) {
+            //console.log(accounts);
+            return web3.eth.getTransactionReceipt(transactionHash);
+        })
+        .then(function (txResult) {
+            return web3.eth.getTransaction(transactionHash).then(function (txInfo) { return Object.assign(txInfo || {}, txResult || {}); });;
+        })
+        .then(function (txResult) {
+            //console.log(txResult);
+            if (!txResult.to) {
+                txResult.input = "<skipped>";
+            }
+            $("#" + resultClientId).val(JSON.stringify(txResult));
+
+            if (provider.disconnect) {
+                provider.disconnect();
+            }
+        })
+        .catch(function (e) {
+            //console.log(e);
+            $('#' + resultClientId).val(JSON.stringify(e));
+        });
+    return false;
+}
+
+function SendTransaction(walletconnect, transactionClientId, resultClientId, postbackClientId, traceClientId) {
+    //debugger;
+    var transactionRequest = $("#" + transactionClientId).val();
+    var fnOK = function (postback) {
+        if (!postback || !postbackClientId) return; // no postback
+        NoConfirm();
+        __doPostBack(postbackClientId.replace(/_/g, '$'), '');
+    };
+
+    var web3 = null;
+    var provider = null;
+    var tx = JSON.parse(transactionRequest);
+    var to = tx.to;
+    var isCall = tx.isCall;
+    var _chainId = tx.chainId;
+    tx.isCall = undefined;
+    connectWeb3(undefined, walletconnect)
+        .then(function (_web3) {
+            web3 = _web3.web3;
+            provider = _web3.provider;
+            return web3.eth.getChainId();
+        })
+        .then(function (chainId) {
+            if (_chainId && chainId != _chainId) return Promise.reject({ message: 'chainId not match' });
+            return web3.eth.getAccounts();
+        })
+        .then(function (accounts) {
+            //console.log(accounts);
+            if (accounts && accounts.length > 0) {
+                tx.from = tx.from || accounts[0];
+                if (isCall)
+                    return web3.eth.call(tx);
+                else {
+                    return web3.eth.estimateGas(tx)
+                        .then(function (gas) {
+                            //console.log(gas);
+                            tx.gas = gas * (tx.gasBoost || 4);
+                            return web3.eth.sendTransaction(tx)
+                                .on('transactionHash', function (hash) {
+                                    if (postbackClientId) {
+                                        // show spinner, postback after metamask return will clear it
+                                        ShowProgress();
+                                        document.body.style.cursor = 'wait';
+                                    }
+                                });
+                        })
+                        .catch(function (e) {
+                            // estimate fail usually means logic error
+                            // we send it to metamask so something would popup
+                            // with metamask showing potential error
+                            if (postbackClientId) return Promise.reject(e);
+                            return web3.eth.sendTransaction(tx);
+                            // alternatively short circuit it to the final catch()
+                            // return Promise.reject(e);
+                        });
+                    ;
+                }
+            }
+        })
+        .then(function (txResult) {
+            //console.log(txResult);
+            var txHash = isCall ? null : txResult.transactionHash;
+            var contractAddress = txResult.contractAddress;
+
+            if (txHash) {
+                if (resultClientId) {
+                    $("#" + resultClientId).val(contractAddress && !to ? JSON.stringify({ txHash: txHash, contractAddress: contractAddress }) : txHash);
+                }
+                if (!tx.to && traceClientId) {
+                    $("#" + traceClientId).val(JSON.stringify(txResult));
+                }
+                fnOK(true);
+            }
+            else if (isCall) {
+                $("#" + resultClientId).val(txResult);
+                fnOK(isCall);
+            }
+            if (provider.disconnect) {
+                provider.disconnect();
+            }
+        })
+        .catch(function (e) {
+            console.log(e);
+            $('#' + (traceClientId || resultClientId)).val(e.message ? JSON.stringify({ message: e.message, sender: tx.from }) : JSON.stringify(e));
+            // postback?
+            fnOK(true);
+        });
+    return false;
+}
+
+function GetEventLogs(walletconnect, eventRequestClientId, resultClientId, postbackClientId, traceClientId) {
+    var eventRequest = $("#" + eventRequestClientId).val();
+    var fnOK = function (postback) {
+        if (!postback || !postbackClientId) return; // no postback
+        NoConfirm();
+        __doPostBack(postbackClientId.replace(/_/g, '$'), '');
+    };
+
+    var web3 = null;
+    var provider = null;
+    var eventObj = JSON.parse(eventRequest);
+    var _chainId = eventObj.chainId;
+    var limit = eventObj.limit || 500;
+    connectWeb3(undefined, walletconnect)
+        .then(function (_web3) {
+            web3 = _web3.web3;
+            provider = _web3.provider;
+            return web3.eth.getChainId();
+        })
+        .then(function (chainId) {
+            if (_chainId && chainId != _chainId) return Promise.reject({ message: 'chainId not match' });
+            return web3.eth.getBlock('latest');
+        })
+        .then(function (block) {
+            //console.log(block);
+            var fromBlock = +(eventObj.fromBlock) || (eventObj.toBlock || block.number) - limit;
+            eventObj.fromBlock = fromBlock > 0 ? fromBlock : 1;
+            return web3.eth.getPastLogs(eventObj);
+        })
+        .then(function (events) {
+            //console.log(events);
+            $("#" + resultClientId).val(JSON.stringify(events));
+            fnOK(true);
+            if (provider.disconnect) {
+                provider.disconnect();
+            }
+        })
+        .catch(function (e) {
+            //console.log(e);
+            $('#' + (traceClientId || resultClientId)).val(e.message || JSON.stringify(e));
+        });
+    return false;
+
+}
+
+function MakeEncryptionKey(walletconnect, signingMessageClientId, encryptionKeyClientId, postbackClientId) {
+    //debugger;
+    var signingRequest = $("#" + signingMessageClientId).val();
+    var fnOK = function () {
+        __doPostBack(postbackClientId.replace(/_/g, '$'), '');
+    };
+
+    var web3 = null;
+    var provider = null;
+    connectWeb3(undefined, walletconnect)
+        .then(function (_web3) {
+            web3 = _web3.web3;
+            provider = _web3.provider;
+            return web3.eth.getAccounts();
+        })
+        .then(function (accounts) {
+            //console.log(accounts);
+            if (accounts && accounts.length > 0) {
+                return web3.eth.personal.sign(signingRequest, accounts[0]);
+            }
+        })
+        .then(function (sig) {
+            //console.log(sig);
+            if (sig) {
+                $("#" + encryptionKeyClientId).val(sig);
+                if (provider.disconnect) {
+                    provider.disconnect();
+                }
+                fnOK();
+                return web3.eth.personal.ecRecover(assertionRequest, sig);
+            }
+        })
+        .then(function (addr) {
+            //console.log(addr);
+        })
+        .catch(function (e) {
+            console.log(e);
+        });
+    return false;
+}
 //function MouseOverEffect(e, i) { e.src = i; }
 
 //Retained for future reference:

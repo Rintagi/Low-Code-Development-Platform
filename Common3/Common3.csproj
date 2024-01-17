@@ -91,6 +91,7 @@
     <Reference Include="ExifLib">
       <HintPath>..\Lib\ExifLib.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NBitcoin">
       <HintPath>..\Lib\Nethereum4\NBitcoin.dll</HintPath>
     </Reference>
@@ -151,6 +152,10 @@
     <Reference Include="Nethereum.Web3">
       <HintPath>..\Lib\Nethereum4\Nethereum.Web3.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard">
+      <HintPath>..\Lib\netstandard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Newtonsoft.Json.dll</HintPath>
@@ -170,12 +175,15 @@
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Dynamic" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reactive">
       <HintPath>..\Lib\Nethereum4\System.Reactive.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Services" />
@@ -190,6 +198,7 @@
     <Compile Include="Config.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ContractDefinition\MultiSigWalletDefinition.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="Data\Credential.cs">
       <SubType>Code</SubType>
@@ -219,6 +228,388 @@
     <Compile Include="GoogleAuthenticator.cs" />
     <Compile Include="GoX25519.cs" />
     <Compile Include="LunarCal.cs" />
+    <Compile Include="MultiSigWalletService.cs" />
+    <Compile Include="OpenAI\Assistants\AssistantExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Assistants\AssistantFileResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Assistants\AssistantResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Assistants\AssistantsEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Assistants\CreateAssistantRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Audio\AudioEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Audio\AudioResponseFormat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Audio\AudioTranscriptionRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Audio\AudioTranslationRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Audio\SpeechRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Audio\SpeechResponseFormat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Audio\SpeechVoice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Authentication\AuthInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Authentication\OpenAIAuthentication.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Authentication\OpenAIClientSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\ChatEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\ChatRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\ChatResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\ChatResponseFormat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\Choice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\Content.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\Conversation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\Delta.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\FinishDetails.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\Message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Chat\ResponseFormat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\BaseEndPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\BaseResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\ContentType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\DeletedResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\Error.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\Event.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\EventResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\Function.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\IListResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\ImageDetail.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\ImageUrl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\ListQuery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\ListResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\Role.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\SortOrder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\Tool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Common\Usage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Completions\Choice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Completions\CompletionRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Completions\CompletionResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Completions\CompletionResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Completions\CompletionsEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Completions\LogProbabilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Edits\Choice.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Edits\EditRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Edits\EditResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Edits\EditsEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Embeddings\Datum.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Embeddings\EmbeddingsEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Embeddings\EmbeddingsRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Embeddings\EmbeddingsResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Extensions\JsonStringEnumConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Extensions\JsonStringEnumConverterFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Extensions\ResponseExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Extensions\SnakeCaseNamingPolicy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Extensions\StringExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Files\FileData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Files\FileResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Files\FilesEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Files\FileUploadRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\CreateFineTuneJobRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\EventList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\FineTuneJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\FineTuneJobList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\FineTuneJobResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\FineTuningEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\HyperParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\HyperParams.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\FineTuning\JobStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\AbstractBaseImageRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ImageEditRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ImageGenerationRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ImageResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ImagesEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ImageSize.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ImagesResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ImageVariationRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Images\ResponseFormat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Models\Model.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Models\ModelsEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Models\Permission.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Moderations\Categories.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Moderations\ModerationResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Moderations\ModerationsEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Moderations\ModerationsRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Moderations\ModerationsResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Moderations\Scores.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\OpenAIClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\Annotation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\AnnotationType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CodeInterpreter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CodeInterpreterImageOutput.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CodeInterpreterOutputs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CodeInterpreterOutputType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\Content.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\ContentText.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CreateMessageRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CreateRunRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CreateThreadAndRunRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\CreateThreadRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\FileCitation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\FilePath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\FunctionCall.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\Message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\MessageFileResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\MessageResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\RequiredAction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\RunResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\RunStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\RunStepMessageCreation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\RunStepResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\RunStepType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\StepDetails.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\SubmitToolOutputs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\SubmitToolOutputsRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\TextContent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\ThreadExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\ThreadResponse.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\ThreadsEndpoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\ToolCall.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OpenAI\Threads\ToolOutput.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PayPal.cs" />
     <Compile Include="Prometheus.cs" />
     <Compile Include="QRCoder.cs" />
@@ -290,6 +681,7 @@
     <Compile Include="XmlUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="OpenAI\Assets\OpenAI-DotNet-Icon.png" />
     <Content Include="ZipLib\License.txt" />
   </ItemGroup>
   <ItemGroup>

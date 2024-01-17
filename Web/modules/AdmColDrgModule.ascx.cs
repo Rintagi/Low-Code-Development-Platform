@@ -160,6 +160,7 @@ namespace RO.Web
 				cTitleLabel.Text = dtHlp.Rows[0]["ScreenTitle"].ToString();
 				SetClientRule(null,false);
 				IgnoreConfirm(); InitPreserve();
+				cSystemId_SelectedIndexChanged(null, null);
 				try
 				{
 					(new AdminSystem()).LogUsage(base.LUser.UsrId, string.Empty, dtHlp.Rows[0]["ScreenTitle"].ToString(), 1007, 0, 0, string.Empty, LcSysConnString, LcAppPw);
@@ -305,8 +306,13 @@ namespace RO.Web
 
 		private void CheckAuthentication(bool pageLoad)
 		{
-          if (IsCronInvoked()) AnonymousLogin();
-          else CheckAuthentication(pageLoad, true);
+			if (IsCronInvoked())
+			{
+				AnonymousLogin();
+				LCurr.SystemId = 3;
+				LCurr.DbId = 3;
+			}
+			else CheckAuthentication(pageLoad, true);
 		}
 
 		private void SetButtonHlp()
@@ -1317,7 +1323,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    else if (drv["DisplayName"].ToString() == "Calendar")
 			    {
 					cCalendar = (System.Web.UI.WebControls.Calendar)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = cCalendar.SelectedDate; }
+					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = drv["DisplayMode"].ToString() == "CalendarUTC" ? base.SetDateTimeUTC(cCalendar.SelectedDate.ToString("yyyy/MM/dd"), !bUpdate) : cCalendar.SelectedDate.ToString("yyyy/MM/dd"); }
 			    }
 			    else if (drv["DisplayName"].ToString() == "ComboBox")
 			    {
@@ -1764,8 +1770,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			DataTable dt = (DataTable)Session[KEY_dtAdmColDrgGrid];
 			if (cAdmColDrgGrid.EditIndex < 0 || (dt != null && UpdateGridRow(sender, new CommandEventArgs("Save", ""))))
 			{
-				DataTable dtSystems = (DataTable)Session[KEY_dtSystems];
-				Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
+				Session[KEY_sysConnectionString] = SysConnectStr(byte.Parse(cSystemId.SelectedValue));
 				Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
 				Session.Remove(KEY_dtScreenId14);
 				Session.Remove(KEY_dtGroupRowId14);
@@ -1963,6 +1968,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						}
 					}
 					if (!(bFound && bUnique) && MatchCd != "1") {drv[CNam] = "Invalid>" + drv[CNam].ToString(); bErrNow.Value = "Y"; PreMsgPopup("Import has invalid data, please check for \"Invalid>\", rectify and try again.");}
+				}
+				if (!bFound && !string.IsNullOrEmpty(drv[CKey].ToString()))
+				{
+					drv[CNam] = "Invalid>" + drv[CKey].ToString(); bErrNow.Value = "Y"; PreMsgPopup("Import has invalid data, please check for \"Invalid>\", rectify and try again.");
+				    drv[CKey] = null;
 				}
 			}
 		}
@@ -2892,6 +2902,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private void PreMsgPopup(string msg, RoboCoder.WebControls.ComboBox cb, WebControl wc)
 		{
 		    if (string.IsNullOrEmpty(msg)) return;
+		    if (IsCronInvoked()) { ErrorTrace(new Exception(msg), bErrNow.Value == "N" ? "warning" : "error"); return; }
 		    int MsgPos = msg.IndexOf("RO.SystemFramewk.ApplicationAssert");
 		    string iconUrl = "images/warning.gif";
 		    string focusOnCloseId = cb != null ? cb.FocusID : (wc != null ? wc.ClientID : string.Empty);

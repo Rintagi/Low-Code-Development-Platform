@@ -31,6 +31,7 @@ namespace RO.Common3.Data
 		{
 			DataColumnCollection columns = dt.Columns;
 			columns.Add("tzInfo", typeof(string));
+			columns.Add("tzUtcOffset", typeof(string));
 			columns.Add("Summary", typeof(String));
 			columns.Add("SystemId", typeof(Byte));
 			columns.Add("FrDate", typeof(DateTime));
@@ -919,6 +920,7 @@ namespace RO.Web
 			DataRow dr = ds.Tables["DtAdmRptUsageIn"].NewRow();
 			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
 			dr["tzInfo"] = tzinfo.StandardName;
+			dr["tzUtcOffset"] = string.Format("{0:+00;-00;+00}:{1:00}", tzinfo.BaseUtcOffset.Hours, tzinfo.BaseUtcOffset.Minutes);
 
 			dr["Summary"] = base.SetBool(cSummary.Checked);
 			if (cSystemId.SelectedIndex >= 0 && cSystemId.SelectedValue != string.Empty) {dr["SystemId"] = cSystemId.SelectedValue;}
@@ -1069,7 +1071,9 @@ namespace RO.Web
 			cViewer.ReportSource = rp;
 			if (cViewerWidth.Value != string.Empty) { cViewer.Width = Unit.Pixel(int.Parse(cViewerWidth.Value)); }
 			cViewer.Visible = true;
+#pragma warning disable 0612 // Type or member is obsolete
 			cViewer.DisplayGroupTree = false;
+#pragma warning restore 0612 // Type or member is obsolete
 			if (sendToPrinter) { rp.PrintToPrinter(1,false,0,0); }
 			if (eExport == exportTo.TXT)
 			{

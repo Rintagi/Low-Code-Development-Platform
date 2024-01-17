@@ -161,6 +161,7 @@ namespace RO.Web
 				cTab12.InnerText = dt.Rows[1]["TabFolderName"].ToString();
 				SetClientRule(null,false);
 				IgnoreConfirm(); InitPreserve();
+				cSystemId_SelectedIndexChanged(null, null);
 				try
 				{
 					(new AdminSystem()).LogUsage(base.LUser.UsrId, string.Empty, dtHlp.Rows[0]["ScreenTitle"].ToString(), 14, 0, 0, string.Empty, LcSysConnString, LcAppPw);
@@ -172,13 +173,14 @@ namespace RO.Web
 				cScreenId24Search_Script();
 				cCallingParams24Search_Script();
 				//WebRule: Prevent production access to stored procedure, also Rintai Paas Analyst
-if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled = false;}
+                if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled = false;}
 				else
 				{
 					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedure from the physical database for sure?');";}
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedure to physical database for sure?');";}
 				}
+
 				// *** WebRule End *** //
 			}
 			if (IsPostBack && !ScriptManager.GetCurrent(this.Page).IsInAsyncPostBack) {SetClientRule(null,false);};
@@ -260,8 +262,13 @@ if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled =
 
 		private void CheckAuthentication(bool pageLoad)
 		{
-          if (IsCronInvoked()) AnonymousLogin();
-          else CheckAuthentication(pageLoad, true);
+			if (IsCronInvoked())
+			{
+				AnonymousLogin();
+				LCurr.SystemId = 3;
+				LCurr.DbId = 3;
+			}
+			else CheckAuthentication(pageLoad, true);
 		}
 
 		private void SetButtonHlp()
@@ -1362,7 +1369,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    else if (drv["DisplayName"].ToString() == "Calendar")
 			    {
 					cCalendar = (System.Web.UI.WebControls.Calendar)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = cCalendar.SelectedDate; }
+					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = drv["DisplayMode"].ToString() == "CalendarUTC" ? base.SetDateTimeUTC(cCalendar.SelectedDate.ToString("yyyy/MM/dd"), !bUpdate) : cCalendar.SelectedDate.ToString("yyyy/MM/dd"); }
 			    }
 			    else if (drv["DisplayName"].ToString() == "ComboBox")
 			    {
@@ -1868,8 +1875,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cSystemId_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			base.LCurr.DbId = byte.Parse(cSystemId.SelectedValue);
-				DataTable dtSystems = (DataTable)Session[KEY_dtSystems];
-				Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
+				Session[KEY_sysConnectionString] = SysConnectStr(byte.Parse(cSystemId.SelectedValue));
 				Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
 				Session.Remove(KEY_dtRuleTypeId24);
 				Session.Remove(KEY_dtScreenId24);
@@ -2387,6 +2393,7 @@ string ss = string.Empty;
 		private void PreMsgPopup(string msg, RoboCoder.WebControls.ComboBox cb, WebControl wc)
 		{
 		    if (string.IsNullOrEmpty(msg)) return;
+		    if (IsCronInvoked()) { ErrorTrace(new Exception(msg), bErrNow.Value == "N" ? "warning" : "error"); return; }
 		    int MsgPos = msg.IndexOf("RO.SystemFramewk.ApplicationAssert");
 		    string iconUrl = "images/warning.gif";
 		    string focusOnCloseId = cb != null ? cb.FocusID : (wc != null ? wc.ClientID : string.Empty);

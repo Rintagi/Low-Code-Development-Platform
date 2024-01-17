@@ -429,6 +429,10 @@ namespace RO.Web
                         value.TarWsProgramPath = value.TarWsProgramPath.ReplaceInsensitive(redirect[0], redirect[1]);
                     }
                 }
+                value.SrcClientProgramPath = value.SrcClientProgramPath + (value.SrcClientProgramPath == null || value.SrcClientProgramPath.EndsWith("\\") || value.SrcClientProgramPath.EndsWith("\\") ? "" : "\\");
+                value.TarClientProgramPath = value.TarClientProgramPath + (value.TarClientProgramPath == null || value.TarClientProgramPath.EndsWith("\\") || value.TarClientProgramPath.EndsWith("\\") ? "" : "\\");
+                value.SrcRuleProgramPath = value.SrcRuleProgramPath + (value.SrcRuleProgramPath == null || value.SrcRuleProgramPath.EndsWith("\\") || value.SrcRuleProgramPath.EndsWith("\\") ? "" : "\\");
+                value.TarRuleProgramPath = value.TarRuleProgramPath + (value.TarRuleProgramPath == null || value.TarRuleProgramPath.EndsWith("\\") || value.TarRuleProgramPath.EndsWith("\\") ? "" : "\\");
             }
         }
 
@@ -934,6 +938,19 @@ namespace RO.Web
             return;
         }
 
+        protected void SetGridButtonToolTip(ListViewItemEventArgs e, string screenColumnName, string tooltip, string label = null)
+        {
+            (new List<string>() { "c" + screenColumnName, "c" + screenColumnName + "l" }).ForEach(n =>
+            {
+                var deactivateBtn = e.Item.FindControl(n) as Button;
+                if (deactivateBtn != null)
+                {
+                    deactivateBtn.ToolTip = tooltip;
+                    if (label != null) deactivateBtn.Text = label;
+                }
+            });
+        }
+
         // For backward compatibility only:
 		protected string GetExpression(string sFind, DataTable dtAuth, int initCnt)
 		{
@@ -1365,7 +1382,7 @@ namespace RO.Web
         {
             int jobId = int.Parse(Request.QueryString["jid"].ToString());
             string url = ResolveUrlCustom(Request.RawUrl, false, true);
-            (new AdminSystem()).UpdCronJobStatus(jobId, DateTime.Now.ToUniversalTime().ToString() + " - " + msg , LcSysConnString, LcAppPw);
+            (new AdminSystem()).UpdCronJobStatus(jobId, DateTime.Now.ToUniversalTime().ToString("o", System.Globalization.CultureInfo.InvariantCulture) + " - " + msg, LcSysConnString, LcAppPw);
             UpdCronStatus(jobId, LcSysConnString, LcAppPw);
         }
         protected Pair GetSSD()
@@ -2196,9 +2213,21 @@ namespace RO.Web
                 var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/tools/price-conversion");
                 var CmcAPIKey = Config.CMCAPIKey;
 
+                if (string.IsNullOrEmpty(CmcAPIKey)) throw new Exception("FxRate key has not been setup");
+
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
                 queryString["amount"] = "1";
-                queryString["symbol"] = FrISOCurrencySymbol;
+                if (FrISOCurrencySymbol == "FTX")
+                {
+                    // must use id as there are duplicates
+                    // use https://pro-api.coinmarketcap.com/v1/cryptocurrency/map 
+                    // to get the actual id
+                    queryString["id"] = "2667";
+                }
+                else
+                {
+                    queryString["symbol"] = FrISOCurrencySymbol;
+                }
                 queryString["convert"] = ToISOCurrencySymbol;
 
                 URL.Query = queryString.ToString();
@@ -2223,11 +2252,26 @@ namespace RO.Web
 
                 return price.ToString();
             }
-            // Cannot add "ex.Message" to the return statement; do not remove "ex"; need it here for debugging purpose.
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError)
+                {
+                    using (StreamReader r = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()))
+                    {
+                        string responseContent = r.ReadToEnd();
+                        string errDetail = string.Format("Error Detail : {0}\r\n{1}\r\n{2}\r\n",
+                            ((HttpWebResponse)ex.Response).StatusCode
+                            , ((HttpWebResponse)ex.Response).StatusDescription
+                            , r.ReadToEnd());
+                        ErrorTrace(new Exception(string.Format("failed to get FX Rate ({0}) - ({1})\r\n {2}", FrISOCurrencySymbol, ToISOCurrencySymbol, errDetail)), "error", null, Request);
+                    }
+                }
+                return string.Empty; 
+            }
             catch (Exception ex)
             {
-                if (ex != null) return string.Empty;
-                else return string.Empty;
+                ErrorTrace(new Exception(string.Format("failed to get FX Rate ({0}) - ({1})", FrISOCurrencySymbol, ToISOCurrencySymbol), ex), "error", null, Request);
+                return string.Empty; 
             }
         }
 
@@ -3339,7 +3383,7 @@ namespace RO.Web
         protected string ResolveUrlCustom(string relativeUrl, bool isInternal = false, bool withDomain = false)
         {
             var Request = Context.Request;
-            string url = ResolveUrl((relativeUrl.StartsWith("http:") || relativeUrl.StartsWith("~/") || relativeUrl.StartsWith("/") ? "" : "~/") + relativeUrl);
+            string url = System.Web.VirtualPathUtility.ToAbsolute((relativeUrl.StartsWith("http:") || relativeUrl.StartsWith("~/") || relativeUrl.StartsWith("/") ? "" : "~/") + relativeUrl);
             string extBasePath = Config.ExtBasePath;
             string extDomain = Config.ExtDomain;
             string extBaseUrl = Config.ExtBaseUrl;
@@ -3490,7 +3534,8 @@ namespace RO.Web
             if (Request != null) {
                 var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
                                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(s => s.Trim())
+                                .Where(s => !string.IsNullOrEmpty(s.Trim()))
+                                .Select(s => s.Trim().Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault())
                                 .Where(s => !string.IsNullOrEmpty(s))
                                 .ToArray();
                 // this is the closest to the browser being reported, can be internal if browser is fronted by proxy
@@ -3510,7 +3555,7 @@ namespace RO.Web
                     var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
                                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                     .Where(s => !string.IsNullOrEmpty((s ?? "").Trim()))
-                                    .Select(s => new { addr = s, isPrivate = Common3.Utils.IsPrivateIp(s) })
+                                    .Select(s => new { addr = s.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(), isPrivate = Common3.Utils.IsPrivateIp(s) })
                                     .Aggregate(new { ipChain = new List<string>(), startNonLocal = new bool[1] { false } }
                                         , (a, i) =>
                                         {
@@ -3529,6 +3574,18 @@ namespace RO.Web
             }
             return new List<string> { "unknown" };
         }
+        protected void SuppressBtnDirtyCheck(Button btn, HtmlControl bConfirm)
+        {
+            if (btn.Attributes["OnClick"] == null || btn.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { btn.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
+        }
+        protected void SuppressDirtyIndicator(WebControl ddl, HtmlControl bPgDirty)
+        {
+            if (ddl.Attributes["OnChange"] != null) ddl.Attributes["OnChange"] = ddl.Attributes["OnChange"].Replace("ChkPgDirty()", "").Replace("document.getElementById('" + bPgDirty.ClientID + "').value='Y'", "");
+        }
+        protected void SuppressCheckBoxDirtyIndicator(CheckBox ddl, HtmlControl bPgDirty)
+        {
+            if (ddl.Attributes["OnClick"] != null) ddl.Attributes["OnClick"] = ddl.Attributes["OnClick"].Replace("ChkPgDirty()", "").Replace("document.getElementById('" + bPgDirty.ClientID + "').value='Y'", "");
+        }
 
         protected void ResetCachePolicy()
         {
@@ -3536,7 +3593,7 @@ namespace RO.Web
             var cache = Response.Cache;
             typeof(HttpCachePolicy).InvokeMember("Reset", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod, null, cache, null);
         }
-        public static List<string> GetExceptionMessage(Exception ex)
+        public static List<string> GetExceptionMessage(Exception ex, bool withStackTrace = false)
         {
             List<string> msg = new List<string>();
             for (var x = ex; x != null; x = x.InnerException)
@@ -3546,12 +3603,12 @@ namespace RO.Web
                     if (((AggregateException)x).InnerExceptions.Count > 1)
                         foreach (var y in ((AggregateException)x).InnerExceptions)
                         {
-                            msg.Add(string.Join("\r\n", GetExceptionMessage(y).ToArray()));
+                            msg.Add(string.Join("\r\n", GetExceptionMessage(y, withStackTrace).ToArray()));
                         }
                 }
                 else
                 {
-                    msg.Add(x.Message);
+                    msg.Add(x.Message + (withStackTrace ? "\r\n" + x.StackTrace : ""));
                 }
             }
             return msg;
@@ -3939,6 +3996,57 @@ namespace RO.Web
         }
 
         #endregion
+        #region git helpers
+        protected void GitLoginSync(string loginName, string password)
+        {
+            /* sync git login with private repo, depends on ssh script execution on target with something like 'adduser loginName password' */
+            string sshTarget = System.Configuration.ConfigurationManager.AppSettings["GitSyncSshTarget"];
+            string sshKeyFile = System.Configuration.ConfigurationManager.AppSettings["GitSyncSshPrivateKeyLocation"];
+            string sshKeyFilePassword = System.Configuration.ConfigurationManager.AppSettings["GitSyncSshPrivateKeyPassword"];
+            string sshLoginName = System.Configuration.ConfigurationManager.AppSettings["GitSyncSshLogin"];
+            string gitSyncPath = System.Configuration.ConfigurationManager.AppSettings["GitSyncSshScriptLocation"];
+            string randomDirName = Path.GetRandomFileName();
+            string tempDirectory = Path.Combine(Config.PathTmpImport, randomDirName);
+            string syncScriptFile = tempDirectory + "/sync.sh";
+            
+            if (string.IsNullOrEmpty(sshTarget) || string.IsNullOrEmpty(gitSyncPath)) return;
+
+            try
+            {
+                Directory.CreateDirectory(tempDirectory);
+                using (StreamWriter sw = new StreamWriter(syncScriptFile, false))
+                {
+                    sw.WriteLine(string.Format("{0} {1} {2}", gitSyncPath, loginName, password));
+                    sw.Close();
+                }
+                var result = sshRemoteCmd(syncScriptFile, sshTarget, sshLoginName, sshKeyFile, sshKeyFilePassword);
+                if (result.Item1 == 0)
+                {
+                    ErrorTrace(new Exception(string.Format("git login synced {0} - {1}", loginName, result.Item2)), "info", null, Request);
+                }
+                else
+                {
+                    ErrorTrace(new Exception(string.Format("problem syncing git login {0} - {1}", loginName, result.Item2 + result.Item3)), "warning", null, Request);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorTrace(new Exception("problem for git sync login {0}" + loginName, ex), "warning", null, Request);
+            }
+            finally
+            {
+                try
+                {
+                    Directory.Delete(tempDirectory, true);
+                }
+                catch (Exception ex)
+                {
+                    ErrorTrace(new Exception("problem removing temp directory for git sync usage " + loginName, ex), "warning", null, Request);
+                }
+            }
+        }
+
+        #endregion
 
         private void LogToFile(HttpRequest request, Exception objErr, string url, string title, string message, Exception ex)
         {
@@ -4078,7 +4186,136 @@ namespace RO.Web
         }
 
         #region webhook/http helper
-        protected virtual string InvokeWebHook(string url, string method = "GET", Dictionary<string,string> headers = null, Dictionary<string,string> cookies = null) 
+        protected void storeCookie(HttpWebResponse resp, Dictionary<string, string> cookies)
+        {
+            if (cookies != null && resp != null)
+            {
+                foreach (Cookie c in resp.Cookies)
+                {
+                    var name = c.Name;
+                    var value = c.Value;
+                    cookies[name] = value;
+                }
+            }
+        }
+        protected async virtual Task<string> InvokeWebHookAsync(string url, string method = "GET", Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, List<int> ignoreErrorStatus = null)
+        {
+            var uri = new Uri(url);
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+
+            wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
+                new CookieContainer(),
+                (cookieContainer, kvp) =>
+                {
+                    cookieContainer.Add(new Uri(uri.GetLeftPart(UriPartial.Authority)), new Cookie(kvp.Key, kvp.Value));
+                    return cookieContainer;
+                });
+            ;
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
+                new WebHeaderCollection(),
+                (headerCollection, kvp) =>
+                {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                    else headerCollection[kvp.Key] = kvp.Value;
+                    return headerCollection;
+                });
+            if (headers != null)
+            {
+                headers.ToList().ForEach(kvp =>
+                {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                });
+            }
+            string result = null;
+
+            try
+            {
+                using (WebResponse resp = await wr.GetResponseAsync().ConfigureAwait(false))
+                {
+                    storeCookie(resp as HttpWebResponse, cookies);
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = await sr.ReadToEndAsync();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (HttpWebResponse resp = ex.Response as HttpWebResponse)
+                {
+                    if (resp != null)
+                    {
+                        int statusCode = (int)resp.StatusCode;
+                        storeCookie(resp, cookies);
+                        using (Stream stream = resp.GetResponseStream())
+                        {
+                            if (stream != null)
+                            {
+                                using (StreamReader sr = new StreamReader(stream))
+                                {
+                                    result = sr.ReadToEnd();
+                                    sr.Close();
+                                }
+                                stream.Close();
+                            }
+                        }
+                        resp.Close();
+                        if (ignoreErrorStatus == null || !ignoreErrorStatus.Contains(statusCode))
+                        {
+                            throw new WebException(string.Format("{0}\r\n{1}({2})", ex.Message, result, url));
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
+            }
+            return result;
+        }
+        protected virtual string InvokeWebHook(string url, string method = "GET", Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, List<int> ignoreErrorStatus = null)
         {
             var uri = new Uri(url);
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -4094,14 +4331,54 @@ namespace RO.Web
                 new WebHeaderCollection(),
                 (headerCollection, kvp) =>
                 {
-                    headerCollection[kvp.Key] = kvp.Value;
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                    else headerCollection[kvp.Key] = kvp.Value;
                     return headerCollection;
                 });
+            if (headers != null)
+            {
+                headers.ToList().ForEach(kvp => {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                });
+            }
             string result = null;
             try
             {
                 using (WebResponse resp = wr.GetResponse())
                 {
+                    storeCookie(resp as HttpWebResponse, cookies);
                     using (Stream stream = resp.GetResponseStream())
                     {
                         using (StreamReader sr = new StreamReader(stream))
@@ -4116,25 +4393,39 @@ namespace RO.Web
             }
             catch (WebException ex)
             {
-                using (WebResponse resp = ex.Response)
+                using (HttpWebResponse resp = ex.Response as HttpWebResponse)
                 {
-                    using (Stream stream = resp.GetResponseStream())
+                    if (resp != null)
                     {
-                        using (StreamReader sr = new StreamReader(stream))
+                        int statusCode = (int)resp.StatusCode;
+                        storeCookie(resp, cookies);
+                        using (Stream stream = resp.GetResponseStream())
                         {
-                            result = sr.ReadToEnd();
-                            sr.Close();
+                            if (stream != null)
+                            {
+                                using (StreamReader sr = new StreamReader(stream))
+                                {
+                                    result = sr.ReadToEnd();
+                                    sr.Close();
+                                }
+                                stream.Close();
+                            }
                         }
-                        stream.Close();
+                        resp.Close();
+                        if (ignoreErrorStatus == null || !ignoreErrorStatus.Contains(statusCode))
+                        {
+                            throw new WebException(string.Format("{0}\r\n{1}({2})", ex.Message, result, url));
+                        }
                     }
-                    resp.Close();
-                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                    else
+                    {
+                        throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
             }
             return result;
         }
@@ -4146,14 +4437,14 @@ namespace RO.Web
         {
             return HttpPostJSON(url, body, headers, cookies, "PUT");
         }
-        protected virtual string HttpdeleteJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        protected virtual string HttpDeleteJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
         {
             return HttpPostJSON(url, body, headers, cookies, "DELETE");
         }
-        protected virtual string HttpPostJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, string method = "POST")
+        protected virtual string HttpPostJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, string method = "POST", bool ignoreError = false)
         {
             var uri = new Uri(url);
-            byte[] bodyArray = System.Text.UTF8Encoding.UTF8.GetBytes(body);
+            byte[] bodyArray = body != null ? System.Text.UTF8Encoding.UTF8.GetBytes(body) : null;
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
             wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
                 new CookieContainer(),
@@ -4163,26 +4454,71 @@ namespace RO.Web
                     return cookieContainer;
                 });
             ;
-            wr.Headers = (headers ?? new Dictionary<string,string>()).Aggregate(
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
                 new WebHeaderCollection(),
-                (headerCollection, kvp)=>{
-                    headerCollection[kvp.Key] = kvp.Value;
+                (headerCollection, kvp) =>
+                {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                    else headerCollection[kvp.Key] = kvp.Value;
                     return headerCollection;
                 });
+            if (headers != null)
+            {
+                headers.ToList().ForEach(kvp =>
+                {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                });
+            }
             wr.ContentType = "application/json";
             wr.Method = method;
             string result = null;
             try
             {
-                wr.ContentLength = bodyArray.Length;
-                using (Stream ws = wr.GetRequestStream())
+                if (bodyArray != null)
                 {
-                    ws.Write(bodyArray, 0, bodyArray.Length);
-                    ws.Close();
+                    wr.ContentLength = bodyArray.Length;
+                    using (Stream ws = wr.GetRequestStream())
+                    {
+                        ws.Write(bodyArray, 0, bodyArray.Length);
+                        ws.Close();
+                    }
                 }
 
                 using (WebResponse resp = wr.GetResponse())
                 {
+                    storeCookie(resp as HttpWebResponse, cookies);
                     using (Stream stream = resp.GetResponseStream())
                     {
                         using (StreamReader sr = new StreamReader(stream))
@@ -4197,25 +4533,32 @@ namespace RO.Web
             }
             catch (WebException ex)
             {
-                using (WebResponse resp = ex.Response)
+                using (HttpWebResponse resp = ex.Response as HttpWebResponse)
                 {
-                    using (Stream stream = resp.GetResponseStream())
+                    storeCookie(resp, cookies);
+                    if (resp != null)
                     {
-                        using (StreamReader sr = new StreamReader(stream))
+                        using (Stream stream = resp.GetResponseStream())
                         {
-                            result = sr.ReadToEnd();
-                            sr.Close();
+                            if (stream != null)
+                            {
+                                using (StreamReader sr = new StreamReader(stream))
+                                {
+                                    result = sr.ReadToEnd();
+                                    sr.Close();
+                                }
+                                stream.Close();
+                            }
                         }
-                        stream.Close();
+                        resp.Close();
                     }
-                    resp.Close();
-                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                    if (!ignoreError)
+                        throw new WebException(string.Format("{0}\r\n{1}({2})", ex.Message, result, url));
                 }
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
             }
             return result;
         }
@@ -4236,9 +4579,49 @@ namespace RO.Web
                 new WebHeaderCollection(),
                 (headerCollection, kvp) =>
                 {
-                    headerCollection[kvp.Key] = kvp.Value;
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                    else headerCollection[kvp.Key] = kvp.Value;
                     return headerCollection;
                 });
+            if (headers != null)
+            {
+                headers.ToList().ForEach(kvp =>
+                {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                });
+            }
             wr.ContentType = "application/x-www-form-urlencoded";
             wr.Method = "POST";
             string result = null;
@@ -4253,6 +4636,7 @@ namespace RO.Web
 
                 using (WebResponse resp = wr.GetResponse())
                 {
+                    storeCookie(resp as HttpWebResponse, cookies);
                     using (Stream stream = resp.GetResponseStream())
                     {
                         using (StreamReader sr = new StreamReader(stream))
@@ -4269,6 +4653,7 @@ namespace RO.Web
             {
                 using (WebResponse resp = ex.Response)
                 {
+                    storeCookie(resp as HttpWebResponse, cookies);
                     using (Stream stream = resp.GetResponseStream())
                     {
                         using (StreamReader sr = new StreamReader(stream))
@@ -4284,8 +4669,7 @@ namespace RO.Web
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request faild on {0}", url), ex);
             }
             return result;
         }
@@ -4306,9 +4690,49 @@ namespace RO.Web
                 new WebHeaderCollection(),
                 (headerCollection, kvp) =>
                 {
-                    headerCollection[kvp.Key] = kvp.Value;
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                    else headerCollection[kvp.Key] = kvp.Value;
                     return headerCollection;
                 });
+            if (headers != null)
+            {
+                headers.ToList().ForEach(kvp =>
+                {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        wr.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        wr.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        wr.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        wr.Referer = kvp.Value;
+                    }
+                });
+            }
             wr.ContentType = string.IsNullOrEmpty(mimeType) ? "text/plain" : mimeType;
             wr.Method = "POST";
             string result = null;
@@ -4323,6 +4747,7 @@ namespace RO.Web
 
                 using (WebResponse resp = wr.GetResponse())
                 {
+                    storeCookie(resp as HttpWebResponse, cookies);
                     using (Stream stream = resp.GetResponseStream())
                     {
                         using (StreamReader sr = new StreamReader(stream))
@@ -4339,6 +4764,7 @@ namespace RO.Web
             {
                 using (WebResponse resp = ex.Response)
                 {
+                    storeCookie(resp as HttpWebResponse, cookies);
                     using (Stream stream = resp.GetResponseStream())
                     {
                         using (StreamReader sr = new StreamReader(stream))
@@ -4354,12 +4780,11 @@ namespace RO.Web
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request faild on {0}", url), ex);
             }
             return result;
         }
-        protected virtual Tuple<int, byte[], Dictionary<string, string>> HttpPostMultiPart(string url, Dictionary<string, string> data, List<Tuple<string, string, string, byte[]>> fileList, Dictionary<string, string> headers)
+        protected virtual Tuple<int, byte[], Dictionary<string, string>> HttpPostMultiPart(string url, Dictionary<string, string> data, List<Tuple<string, string, string, byte[]>> fileList, Dictionary<string, string> headers, Dictionary<string,string> cookies = null)
         {
             var uri = new Uri(url);
             string boundary = Guid.NewGuid().ToString().Replace("-", "");
@@ -4371,7 +4796,35 @@ namespace RO.Web
             webRequest.KeepAlive = true;
             foreach (string k in headers.Keys)
             {
-                webRequest.Headers.Add(k, headers[k]);
+                var key = k.ToLower();
+                if (key == "accept" || key == "content-type" || key == "user-agent" || key == "referer")
+                {
+                }
+                else 
+                    webRequest.Headers.Add(k, headers[k]);
+            }
+            if (headers != null)
+            {
+                headers.ToList().ForEach(kvp =>
+                {
+                    string key = kvp.Key.ToLower();
+                    if (key == "accept")
+                    {
+                        webRequest.Accept = kvp.Value;
+                    }
+                    else if (key == "content-type")
+                    {
+                        webRequest.ContentType = kvp.Value;
+                    }
+                    else if (key == "user-agent")
+                    {
+                        webRequest.UserAgent = kvp.Value;
+                    }
+                    else if (key == "referer")
+                    {
+                        webRequest.Referer = kvp.Value;
+                    }
+                });
             }
             //webRequest.ContentLength = header.Length + footer.Length + content.Length;
             Stream dataStream = webRequest.GetRequestStream();
@@ -4403,7 +4856,7 @@ namespace RO.Web
                 dataStream.Write(header, 0, header.Length);
                 if (content != null)
                 {
-                    dataStream.WriteAsync(System.Text.UTF8Encoding.UTF8.GetBytes(f.Value), 0, content.Length);
+                    dataStream.Write(System.Text.UTF8Encoding.UTF8.GetBytes(f.Value), 0, content.Length);
                 }
                 dataStream.Write(linBreak, 0, linBreak.Length);
             }
@@ -4415,6 +4868,7 @@ namespace RO.Web
             try
             {
                 var webResponse = (HttpWebResponse)webRequest.GetResponse();
+                storeCookie(webResponse as HttpWebResponse, cookies);
                 var responseStream = webResponse.GetResponseStream();
                 Dictionary<string, string> responseHeader = new Dictionary<string, string>();
                 foreach (string k in webResponse.Headers.AllKeys)
@@ -4434,6 +4888,7 @@ namespace RO.Web
                     if (response != null)
                     {
                         HttpWebResponse httpResponse = (HttpWebResponse)response;
+                        storeCookie(httpResponse as HttpWebResponse, cookies);
                         using (Stream responseStream = response.GetResponseStream())
                         {
                             Dictionary<string, string> responseHeader = new Dictionary<string, string>();
@@ -4451,6 +4906,10 @@ namespace RO.Web
                     else
                         return new Tuple<int, byte[], Dictionary<string, string>>((int)e.Status, System.Text.UTF8Encoding.UTF8.GetBytes(e.Message), null);
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
             }
         }
         #endregion
@@ -4580,6 +5039,12 @@ namespace RO.Web
                         (branch ?? "").Contains("/")
                         ? Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "diff --name-status master " + branch + " --", true, appRoot)
                         : Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", "status -s -uno", true, appRoot);
+                
+                // newer git check for ownership of directory which may fail as this is running under system account(network service etc.)
+                // but the creator of the directory is likely to be interfactive login
+                // require this to bypass that check(hopefully)
+                // if failed, this command needs to be run via interactive account and changed --global to --system, in admin mode
+                Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe", string.Format("--global --add safe.directory {0}", appRoot.Replace("\\","/")), true, appRoot);
 
                 // checkout, overwrite all local changes
                 var revertChangesRet = Utils.WinProc(@"C:\Program Files\Git\cmd\git.exe"
@@ -4645,7 +5110,7 @@ namespace RO.Web
                         return false;
                     };
                     var publishRet =
-                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/t:rebuild /v:n {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
+                        Utils.WinProc(@"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe", string.Format("/t:Rebuild /p:Configuration=Release /v:n /m {0}/{1}.sln", appRoot, Config.AppNameSpace), true, stdOutHandler, stdErrHandler, appRoot);
 
                 }
                 else

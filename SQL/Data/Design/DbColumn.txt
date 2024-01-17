@@ -60,8 +60,8 @@
 145~@~5~@~60~@~~@~ColumnDesc~@~DbColumn - ColumnDesc~@~15~@~100~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~The is the detail description of this data column.~@~
 146~@~15~@~50~@~~@~MasterTableId~@~Screen - MasterTableId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the master table for the screen to be developed.  It is mandatory for all screen types.~@~
 147~@~15~@~60~@~~@~DetailTableId~@~Screen - DetailTableId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the detail table for the screen to be developed.  It is only applicable for the “Tab-Folder with Grid” type.~@~
-148~@~18~@~10~@~~@~TypeId~@~CtDisplayType - TypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this display type.~@~
-149~@~18~@~30~@~~@~TypeDesc~@~CtDisplayType - TypeDesc~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the description of this display.~@~
+148~@~18~@~10~@~~@~TypeId~@~VwScDisplayType - TypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this display type.~@~
+149~@~18~@~30~@~~@~TypeDesc~@~VwScDisplayType - TypeDesc~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the description of this display.~@~
 150~@~19~@~10~@~~@~ScreenTabId~@~ScreenTab - ScreenTabId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID representing this screen tab folder.~@~
 153~@~19~@~40~@~~@~TabFolderName~@~ScreenTab - TabFolderName~@~11~@~30~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the unique name representing this tab folder.~@~
 154~@~20~@~10~@~~@~KeyId~@~DbKey - KeyId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this foreign key.~@~
@@ -104,7 +104,7 @@
 222~@~27~@~30~@~~@~InvestorName~@~Investor - InvestorName~@~11~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 272~@~1~@~150~@~~@~InvestorId~@~Usr - InvestorId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the investor this user has access to, empty means all.~@~
 311~@~8~@~40~@~~@~CultureDefault~@~CtCulture - CultureDefault~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this culture is the default culture.~@~
-312~@~18~@~50~@~~@~DisplayDefault~@~CtDisplayType - DisplayDefault~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this display is default.~@~
+312~@~18~@~50~@~~@~DisplayDefault~@~VwScDisplayType - DisplayDefault~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this display is default.~@~
 319~@~5~@~90~@~~@~ColumnScale~@~DbColumn - ColumnScale~@~1~@~1~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the number of decimal places for the decimal data type.~@~
 321~@~3~@~20~@~~@~SystemId~@~DbTable - SystemId~@~1~@~1~@~~@~~@~N~@~N~@~N~@~Y~@~N~@~This is the database this table is located.~@~
 322~@~39~@~10~@~~@~MenuId~@~Menu - MenuId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this menu item~@~
@@ -436,7 +436,7 @@
 1265~@~24~@~190~@~~@~ModifiedOn~@~ServerRule - ModifiedOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This captures the last update date and time for tracking purpose.~@~
 1266~@~5~@~30~@~~@~ColumnIndex~@~DbColumn - ColumnIndex~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the order of this column in the database table.~@~
 1267~@~5~@~100~@~~@~DefaultValue~@~DbColumn - DefaultValue~@~11~@~50~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the default value to be setup in the database; During data conversion (no default means 0 or empty string)~@~
-1294~@~18~@~20~@~~@~TypeName~@~CtDisplayType - TypeName~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the exact name of the display being used by Asp.Net.~@~
+1294~@~18~@~20~@~~@~TypeName~@~VwScDisplayType - TypeName~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the exact name of the display being used by Asp.Net.~@~
 1295~@~3~@~100~@~~@~PrevTblName~@~DbTable - PrevTblName~@~15~@~20~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is used internally to specify last table name being changed.~@~
 1296~@~5~@~170~@~~@~PrevColName~@~DbColumn - PrevColName~@~15~@~20~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is to keep track of previous column name internally for synchronization.~@~
 1297~@~6~@~60~@~~@~DataTypeDByteOle~@~CtDataType - DataTypeDByteOle~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the ole double byte equivalent of this data type.~@~
@@ -753,7 +753,7 @@
 1673~@~195~@~100~@~~@~PortBinPath~@~DataTier - PortBinPath~@~15~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the Binn program path of the above SQL Server.~@~
 1674~@~195~@~30~@~~@~EntityId~@~DataTier - EntityId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the entity this data tier belongs.~@~
 1675~@~195~@~120~@~~@~ScriptPath~@~DataTier - ScriptPath~@~15~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the path for temporary programs to use (Network Service must have read-write permission).~@~
-1676~@~195~@~50~@~~@~ServerName~@~DataTier - ServerName~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the NETBIOS name or IP address of the computer hosting the SQL Server.~@~
+1676~@~195~@~50~@~~@~ServerName~@~DataTier - ServerName~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the NETBIOS name or IP address of the computer hosting the SQL Server.~@~
 1677~@~193~@~20~@~~@~ReleaseTypeAbbr~@~CtReleaseType - ReleaseTypeAbbr~@~15~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 1678~@~196~@~60~@~~@~DevProgramPath~@~RuleTier - DevProgramPath~@~15~@~100~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the path for the programs of this rule tier.~@~
 1679~@~196~@~50~@~~@~FrameworkCd~@~RuleTier - FrameworkCd~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the framework used in this rule tier.~@~
@@ -1042,10 +1042,10 @@
 2100~@~256~@~10~@~~@~AndOrCd~@~CtAndOr - AndOrCd~@~14~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 2101~@~256~@~20~@~~@~AndOrName~@~CtAndOr - AndOrName~@~11~@~10~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 2102~@~14~@~480~@~~@~IgnoreConfirm~@~ScreenObj - IgnoreConfirm~@~14~@~1~@~~@~'Y'~@~N~@~N~@~N~@~N~@~N~@~Uncheck this to prompt the tooltips to confirm the postback action or not.~@~
-2105~@~258~@~10~@~~@~TypeId~@~VwDisplayType - TypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this display type.~@~
-2106~@~258~@~20~@~~@~TypeName~@~VwDisplayType - TypeName~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the exact name of the display being used by Asp.Net.~@~
-2107~@~258~@~30~@~~@~TypeDesc~@~VwDisplayType - TypeDesc~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the description of this display.~@~
-2108~@~258~@~40~@~~@~DisplayDefault~@~VwDisplayType - DisplayDefault~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this display is default.~@~
+2105~@~258~@~10~@~~@~TypeId~@~VwRpDisplayType - TypeId~@~1~@~1~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~This is the internal ID uniquely represents this display type.~@~
+2106~@~258~@~20~@~~@~TypeName~@~VwRpDisplayType - TypeName~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the exact name of the display being used by Asp.Net.~@~
+2107~@~258~@~30~@~~@~TypeDesc~@~VwRpDisplayType - TypeDesc~@~15~@~20~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the description of this display.~@~
+2108~@~258~@~40~@~~@~DisplayDefault~@~VwRpDisplayType - DisplayDefault~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is checked if this display is default.~@~
 2109~@~5~@~140~@~~@~IsIndexU~@~DbColumn - IsIndexU~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This is checked when this column is part of the unique non-clustered index.~@~
 2110~@~181~@~90~@~~@~SampleImage~@~RptwizCat - SampleImage~@~9~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the sample image of a report created using this data category.~@~
 2112~@~1~@~410~@~~@~PicMed~@~Usr - PicMed~@~9~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~Click the icon to upload your most recent picture.~@~
@@ -1064,7 +1064,7 @@
 2127~@~259~@~80~@~~@~StaticPgHtm~@~StaticPg - StaticPgHtm~@~11~@~0~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the HTML codes for this static page.~@~
 2128~@~259~@~90~@~~@~MasterPgFile~@~StaticPg - MasterPgFile~@~15~@~100~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This master page file will be used as MasterPageFile layout for this static page, if available.~@~
 2129~@~39~@~100~@~~@~StaticPgId~@~Menu - StaticPgId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the statisc page this menu item should invoke, if applicable.~@~
-2130~@~18~@~40~@~~@~DisplayDesc~@~CtDisplayType - DisplayDesc~@~11~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the detail description of this display.~@~
+2130~@~18~@~40~@~~@~DisplayDesc~@~VwScDisplayType - DisplayDesc~@~11~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the detail description of this display.~@~
 2131~@~194~@~120~@~~@~CombineAsm~@~ClientTier - CombineAsm~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~This is checked to combine assemblies provided performace is the highest concern and minor upgrade is infrequent.~@~
 2132~@~260~@~10~@~~@~StaticCsId~@~StaticCs - StaticCsId~@~2~@~2~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This uniquely identifies this shared CSS.~@~
 2133~@~260~@~30~@~~@~StyleDef~@~StaticCs - StyleDef~@~11~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the content for this shared CSS.~@~
@@ -1110,8 +1110,8 @@
 2178~@~268~@~10~@~~@~FxRateId~@~FxRate - FxRateId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
 2179~@~268~@~30~@~~@~ToCurrency~@~FxRate - ToCurrency~@~14~@~3~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 2180~@~268~@~40~@~~@~ToFxRate~@~FxRate - ToFxRate~@~18~@~12~@~4~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-2181~@~268~@~50~@~~@~ValidFr~@~FxRate - ValidFr~@~12~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-2182~@~268~@~60~@~~@~ValidTo~@~FxRate - ValidTo~@~12~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+2181~@~268~@~50~@~~@~ValidFr~@~FxRate - ValidFr~@~21~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+2182~@~268~@~60~@~~@~ValidTo~@~FxRate - ValidTo~@~21~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 2183~@~8~@~80~@~~@~CurrencyCd~@~CtCulture - CurrencyCd~@~14~@~3~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the three characters ISO 4217 currency code this culture represents.~@~
 2186~@~8~@~70~@~~@~CountryCd~@~CtCulture - CountryCd~@~14~@~3~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the ISO 3166 country code this culture represents.~@~
 2188~@~269~@~10~@~~@~CountryCd~@~CtCountry - CountryCd~@~14~@~3~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
@@ -1136,7 +1136,7 @@
 3214~@~272~@~20~@~~@~MemberId~@~SredTime - MemberId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the member performing the duty.~@~
 3215~@~272~@~80~@~~@~ModifiedBy~@~SredTime - ModifiedBy~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This was last modified by this user.~@~
 3216~@~272~@~90~@~~@~ModifiedOn~@~SredTime - ModifiedOn~@~12~@~8~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This was last modified on this date and time.~@~
-3217~@~272~@~30~@~~@~SredTimeDt~@~SredTime - SredTimeDt~@~12~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the date work is being done on the SR&ED project.~@~
+3217~@~272~@~30~@~~@~SredTimeDt~@~SredTime - SredTimeDt~@~21~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the date work is being done on the SR&ED project.~@~
 3218~@~272~@~10~@~~@~SredTimeId~@~SredTime - SredTimeId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This ID uniquely identify this time spent on the Rintagi project.~@~
 3220~@~126~@~50~@~~@~ClientScriptHelp~@~CtClientScript - ClientScriptHelp~@~11~@~1000~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the stock script user guide.~@~
 3221~@~273~@~50~@~~@~TtWorkHours~@~fSredTime - TtWorkHours~@~18~@~9~@~2~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
@@ -1227,11 +1227,11 @@
 5328~@~1287~@~20~@~~@~ItemOrder~@~VwAppItem - ItemOrder~@~2~@~2~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
 5329~@~1287~@~50~@~~@~MultiDesignDb~@~VwAppItem - MultiDesignDb~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 5330~@~1~@~380~@~~@~PwdNoRepeat~@~Usr - PwdNoRepeat~@~2~@~2~@~~@~1~@~N~@~N~@~N~@~N~@~N~@~This is the number of passwords used in the past that the user password cannot be repeated; one means cannot change password to the same as the current password.~@~
-5331~@~1288~@~10~@~~@~AttemptDt~@~VwUsrAudit - AttemptDt~@~15~@~50~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
-5332~@~1288~@~20~@~~@~IpAddress~@~VwUsrAudit - IpAddress~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-5333~@~1288~@~30~@~~@~LoginName~@~VwUsrAudit - LoginName~@~11~@~32~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-5334~@~1288~@~50~@~~@~LoginSuccess~@~VwUsrAudit - LoginSuccess~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-5335~@~1288~@~40~@~~@~ValidUser~@~VwUsrAudit - ValidUser~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+5331~@~1288~@~20~@~~@~AttemptDt~@~VwUsrAudit - AttemptDt~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+5332~@~1288~@~30~@~~@~IpAddress~@~VwUsrAudit - IpAddress~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+5333~@~1288~@~40~@~~@~LoginName~@~VwUsrAudit - LoginName~@~11~@~32~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+5334~@~1288~@~60~@~~@~LoginSuccess~@~VwUsrAudit - LoginSuccess~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+5335~@~1288~@~50~@~~@~ValidUser~@~VwUsrAudit - ValidUser~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 5336~@~1~@~370~@~~@~IPAlert~@~Usr - IPAlert~@~14~@~1~@~~@~'N'~@~N~@~N~@~N~@~N~@~N~@~When this is checked, user will receive an email alert every time the IP from a successful login cannot be found on the IP-safe-list.~@~
 5337~@~95~@~80~@~~@~SignOff~@~UsrImpr - SignOff~@~9~@~0~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~This is the sign-off signature.~@~
 5338~@~19~@~30~@~~@~ScreenId~@~ScreenTab - ScreenId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the screen using this tab folder.~@~
@@ -1577,3 +1577,16 @@
 7700~@~1330~@~30~@~~@~name~@~VwTimeZoneInfo - name~@~11~@~150~@~~@~~@~N~@~N~@~Y~@~N~@~N~@~~@~
 7701~@~1330~@~20~@~~@~tz_desc~@~VwTimeZoneInfo - tz_desc~@~11~@~250~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 7702~@~45~@~250~@~~@~DfltTimezone~@~Systems - DfltTimezone~@~11~@~150~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~default time zone name~@~
+7703~@~1331~@~50~@~~@~PermId~@~TemplatePrm - PermId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the entity to which this report template is to be used.~@~
+7704~@~1331~@~40~@~~@~PermKeyId~@~TemplatePrm - PermKeyId~@~2~@~2~@~~@~~@~N~@~N~@~N~@~N~@~N~@~This is the entity to which this report template is to be used.~@~
+7705~@~1331~@~20~@~~@~TemplateId~@~TemplatePrm - TemplateId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7706~@~1331~@~10~@~~@~TemplatePrmId~@~TemplatePrm - TemplatePrmId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~This is the internal ID uniquely representing this menu permission.~@~
+7707~@~1331~@~30~@~~@~GrantDeny~@~TemplatePrm - GrantDeny~@~14~@~1~@~~@~'G'~@~N~@~N~@~N~@~N~@~N~@~Keep all rows empty if everyone should has access to this menu item.~@~
+7713~@~1333~@~20~@~~@~AttemptDt~@~UsrAudit - AttemptDt~@~12~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7714~@~1333~@~50~@~~@~IpAddress~@~UsrAudit - IpAddress~@~15~@~50~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7715~@~1333~@~30~@~~@~LoginName~@~UsrAudit - LoginName~@~11~@~32~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7717~@~1333~@~60~@~~@~LoginSuccess~@~UsrAudit - LoginSuccess~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+7718~@~1333~@~40~@~~@~UsrId~@~UsrAudit - UsrId~@~3~@~4~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~~@~
+7719~@~1333~@~10~@~~@~UsrAuditId~@~UsrAudit - UsrAuditId~@~4~@~8~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7720~@~1288~@~10~@~~@~UsrAuditId~@~VwUsrAudit - UsrAuditId~@~4~@~8~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
+7721~@~199~@~60~@~~@~LicenseFile~@~Entity - LicenseFile~@~15~@~512~@~~@~~@~Y~@~N~@~N~@~N~@~N~@~location of license file to be used for installer~@~

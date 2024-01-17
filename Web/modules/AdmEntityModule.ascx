@@ -239,6 +239,10 @@
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' runat="server">
 			<asp:LinkButton id="cDeployPath199hl" CssClass="GrdHead" onClick="cDeployPath199hl_Click" runat="server" /><asp:Image id="cDeployPath199hi" runat="server" />
 		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' runat="server">
+			<asp:LinkButton id="cLicenseFile199hl" CssClass="GrdHead" onClick="cLicenseFile199hl_Click" runat="server" /><asp:Image id="cLicenseFile199hi" runat="server" />
+		</div></div>
     </td>
     <td><asp:linkbutton id="cDeleteAllButton" CssClass="GrdDelAll" tooltip="DELETE ALL" onclick="cDeleteAllButton_Click" runat="server" onclientclick='GridDelete()' /></td>
 	</tr>
@@ -268,6 +272,10 @@
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' runat="server">
 		    <asp:Label id="cDeployPath199fl" class='GrdFoot' runat="server" />
 		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' runat="server">
+		    <asp:Label id="cLicenseFile199fl" class='GrdFoot' runat="server" />
+		</div></div>
     </td>
     <td>&nbsp;</td>
 	</tr></table></LayoutTemplate>
@@ -296,6 +304,10 @@
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' visible="<%# GridColumnVisible(4) %>" onclick='GridEdit("DeployPath199")' runat="server">
 			<asp:Label id="cDeployPath199l" Text='<%# DataBinder.Eval(Container.DataItem,"DeployPath199").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdTxtLb" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(5) %>" onclick='GridEdit("LicenseFile199")' runat="server">
+			<asp:Label id="cLicenseFile199l" Text='<%# DataBinder.Eval(Container.DataItem,"LicenseFile199").ToString().Replace("\r\n","<br />").Replace("\r","<br />").Replace("\n","<br />").Replace("  ",HtmlSpace()) %>' CssClass="GrdNwrLb" runat="server" />
 		</div></div>
     </td>
 	<td>
@@ -333,6 +345,10 @@
     <td>
 		<div class='GrdOuter' runat="server"><div class='GrdInner' style='max-width:500px;text-align:left;' visible="<%# GridColumnVisible(4) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cDeployPath199ml" runat="server" /></div>
 		    <asp:TextBox id="cDeployPath199" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"DeployPath199").ToString() %>' MaxLength="100" runat="server" /><asp:RequiredFieldValidator id="cRFVDeployPath199" ControlToValidate="cDeployPath199" display="none" runat="server" />
+		</div></div>
+		<div></div>
+		<div class='GrdOuter' runat="server"><div class='GrdInner' style='text-align:left;' visible="<%# GridColumnVisible(5) %>" runat="server"><div class="GrdEdtLabelText"><asp:label id="cLicenseFile199ml" runat="server" /></div>
+		    <asp:TextBox id="cLicenseFile199" CssClass="GrdTxt" Text='<%# DataBinder.Eval(Container.DataItem,"LicenseFile199").ToString() %>' MaxLength="512" runat="server" />
 		</div></div>
     </td>
 	<td>

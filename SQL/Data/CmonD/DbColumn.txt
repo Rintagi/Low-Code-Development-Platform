@@ -47,8 +47,8 @@
 53~@~10~@~10~@~~@~FxRateId~@~FxRate - FxRateId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~
 54~@~10~@~30~@~~@~ToCurrency~@~FxRate - ToCurrency~@~14~@~3~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 55~@~10~@~40~@~~@~ToFxRate~@~FxRate - ToFxRate~@~18~@~12~@~4~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-56~@~10~@~50~@~~@~ValidFr~@~FxRate - ValidFr~@~12~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
-57~@~10~@~60~@~~@~ValidTo~@~FxRate - ValidTo~@~12~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+56~@~10~@~50~@~~@~ValidFr~@~FxRate - ValidFr~@~21~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
+57~@~10~@~60~@~~@~ValidTo~@~FxRate - ValidTo~@~21~@~8~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 58~@~11~@~70~@~~@~Active~@~Investor - Active~@~14~@~1~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 59~@~11~@~20~@~~@~FirmId~@~Investor - FirmId~@~3~@~4~@~~@~~@~N~@~N~@~N~@~N~@~N~@~~@~
 60~@~11~@~10~@~~@~InvestorId~@~Investor - InvestorId~@~3~@~4~@~~@~~@~N~@~Y~@~Y~@~N~@~N~@~~@~

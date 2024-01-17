@@ -32,7 +32,7 @@
 41~@~TextBox~@~LongDateTimeUTC~@~Stores DateTime as Coordinated Universal Time. A long datetime in the format specified by the culture will be displayed and captured.~@~N
 42~@~TextBox~@~ShortDateTimeUTC~@~Stores DateTime as Coordinated Universal Time. A short datetime in the format specified by the culture will be displayed and captured.~@~N
 43~@~TextBox~@~DateTimeUTC~@~Stores DateTime as Coordinated Universal Time. The format “d-MMM-yyyy hh:mm” will be displayed.~@~N
-44~@~TextBox~@~DateUTC~@~Date only. Stores as Coordinated Universal Time wihtout the time portion. The format “d-MMM-yyyy” will be displayed.~@~N
+44~@~TextBox~@~DateUTC~@~Criteria for screen/report only on ..DateTimeUTC data storage; The format “d-MMM-yyyy” will be displayed.~@~N
 48~@~TextBox~@~TokenInput~@~Text phrases entered will be delimited by commas but displayed as tokens.~@~N
 49~@~Label~@~Label~@~Column Header is displayed as content and cannot be updated.~@~N
 50~@~Signature~@~Signature~@~E-signature captured on screen and stored as varbinary; min-height is 168px and width is 100%.~@~N
@@ -40,3 +40,4 @@
 52~@~ListBox~@~AutoListBox~@~Enable multiple selection of a list with huge selection choices (searcheable); Underlying data type should be varchar. Keys are enclosed in brackets () comma delimited.~@~N
 53~@~DropDownList~@~WorkflowStatus~@~Underlying data type is char(1). A pair of tables created: 1. same name as column to capture workflow status; 2. same name with suffix "H" to capture history of status changes.~@~N
 54~@~TextBox~@~OTPTextBox~@~TOTP(Google Authenticator) Verification box~@~N
+55~@~Calendar~@~CalendarUTC~@~Criteria for screen/report only on ..DateTimeUTC data storage; The calendar format will be displayed.~@~N

@@ -12,11 +12,11 @@ namespace RO.Facade3
 		{
 			if ((Config.DesProvider  ?? "").ToLower() != "odbc")
 			{
-				return new SqlReportAccess();
+				return new SqlReportAccess(CommandTimeout);
 			}
 			else
 			{
-				return new RO.Access3.Odbc.SqlReportAccess();
+				return new RO.Access3.Odbc.SqlReportAccess(CommandTimeout);
 			}
 		}
 

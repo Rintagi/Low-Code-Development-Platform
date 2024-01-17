@@ -242,6 +242,7 @@ namespace RO.Web
 				cTab32.InnerText = dt.Rows[4]["TabFolderName"].ToString();
 				SetClientRule(null,false);
 				IgnoreConfirm(); InitPreserve();
+				cSystemId_SelectedIndexChanged(null, null);
 				try
 				{
 					(new AdminSystem()).LogUsage(base.LUser.UsrId, string.Empty, dtHlp.Rows[0]["ScreenTitle"].ToString(), 67, 0, 0, string.Empty, LcSysConnString, LcAppPw);
@@ -252,13 +253,14 @@ namespace RO.Web
 				PopAdmReport67List(sender, e, true, null);
 				if (cAuditButton.Attributes["OnClick"] == null || cAuditButton.Attributes["OnClick"].IndexOf("AdmScrAudit.aspx") < 0) { cAuditButton.Attributes["OnClick"] += "SearchLink('AdmScrAudit.aspx?cri0=67&typ=N&sys=3','','',''); return false;"; }
 				//WebRule: Prevent production access to stored procedure
-if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled = false; cUpdCode22.Enabled = false; cXlsCode22.Enabled = false;}
+                if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled = false; cUpdCode22.Enabled = false; cXlsCode22.Enabled = false;}
 				else
 				{
 					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedures from the physical database for sure?');";}
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedures to physical database for sure?');";}
 				}
+
 				// *** WebRule End *** //
 				cBrowse.Attributes.Add("OnChange", "__doPostBack('" + cBrowseButton.ClientID.Replace("_", "$") + "','')");
 				DataTable dtLabel = (new AdminSystem()).GetLabels(base.LUser.CultureId, "cGrid", null, null, null);
@@ -375,8 +377,13 @@ if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled 
 
 		private void CheckAuthentication(bool pageLoad)
 		{
-          if (IsCronInvoked()) AnonymousLogin();
-          else CheckAuthentication(pageLoad, true);
+			if (IsCronInvoked())
+			{
+				AnonymousLogin();
+				LCurr.SystemId = 3;
+				LCurr.DbId = 3;
+			}
+			else CheckAuthentication(pageLoad, true);
 		}
 
 		private void SetButtonHlp()
@@ -1584,7 +1591,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    else if (drv["DisplayName"].ToString() == "Calendar")
 			    {
 					cCalendar = (System.Web.UI.WebControls.Calendar)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = cCalendar.SelectedDate; }
+					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = drv["DisplayMode"].ToString() == "CalendarUTC" ? base.SetDateTimeUTC(cCalendar.SelectedDate.ToString("yyyy/MM/dd"), !bUpdate) : cCalendar.SelectedDate.ToString("yyyy/MM/dd"); }
 			    }
 			    else if (drv["DisplayName"].ToString() == "ComboBox")
 			    {
@@ -2200,8 +2207,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			DataTable dt = (DataTable)Session[KEY_dtAdmReportGrid];
 			if (cAdmReportGrid.EditIndex < 0 || (dt != null && UpdateGridRow(sender, new CommandEventArgs("Save", ""))))
 			{
-				DataTable dtSystems = (DataTable)Session[KEY_dtSystems];
-				Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
+				Session[KEY_sysConnectionString] = SysConnectStr(byte.Parse(cSystemId.SelectedValue));
 				Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
 				Session.Remove(KEY_dtReportTypeCd22);
 				Session.Remove(KEY_dtOrientationCd22);
@@ -2700,6 +2706,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						}
 					}
 					if (!(bFound && bUnique) && MatchCd != "1") {drv[CNam] = "Invalid>" + drv[CNam].ToString(); bErrNow.Value = "Y"; PreMsgPopup("Import has invalid data, please check for \"Invalid>\", rectify and try again.");}
+				}
+				if (!bFound && !string.IsNullOrEmpty(drv[CKey].ToString()))
+				{
+					drv[CNam] = "Invalid>" + drv[CKey].ToString(); bErrNow.Value = "Y"; PreMsgPopup("Import has invalid data, please check for \"Invalid>\", rectify and try again.");
+				    drv[CKey] = null;
 				}
 			}
 		}
@@ -3674,6 +3685,7 @@ bool bRegenNeeded = false;
 		private void PreMsgPopup(string msg, RoboCoder.WebControls.ComboBox cb, WebControl wc)
 		{
 		    if (string.IsNullOrEmpty(msg)) return;
+		    if (IsCronInvoked()) { ErrorTrace(new Exception(msg), bErrNow.Value == "N" ? "warning" : "error"); return; }
 		    int MsgPos = msg.IndexOf("RO.SystemFramewk.ApplicationAssert");
 		    string iconUrl = "images/warning.gif";
 		    string focusOnCloseId = cb != null ? cb.FocusID : (wc != null ? wc.ClientID : string.Empty);

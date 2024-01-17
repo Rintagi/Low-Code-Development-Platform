@@ -60,3 +60,6 @@
 127~@~8~@~~@~~@~114~@~56~@~Statut de la traduction~@~~@~Cliquez ici pour vérifier l'état du moteur de traduction.~@~Y~@~N~@~N~@~N
 128~@~8~@~~@~~@~114~@~57~@~Remplir le tableau des taux d'effets~@~~@~Cliquez ici pour remplir le tableau des taux de change pour cette devise culturelle.~@~Y~@~N~@~N~@~N
 129~@~1019~@~~@~~@~114~@~4~@~PURGE~@~~@~Appuyez sur ce bouton pour purger toutes les pistes d'audit de plus de six (6) ans.~@~Y~@~N~@~N~@~N
+130~@~8~@~~@~~@~2~@~51~@~Traduire~@~~@~Cliquez ici pour traduire tous les éléments non encore traduits de la culture par défaut vers la culture sélectionnée.~@~Y~@~N~@~N~@~N
+131~@~8~@~~@~~@~2~@~56~@~Statut de la traduction~@~~@~Cliquez ici pour vérifier l'état du moteur de traduction.~@~Y~@~N~@~N~@~N
+132~@~1019~@~~@~~@~2~@~4~@~PURGE~@~~@~Appuyez sur cette touche pour purger toutes les pistes d'audit de plus de six (6) ans.~@~Y~@~N~@~N~@~N

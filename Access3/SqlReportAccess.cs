@@ -15,7 +15,7 @@ namespace RO.Access3
 		public SqlReportAccess(int CommandTimeOut = 1800)
 		{
 			da = new OleDbDataAdapter();
-            _CommandTimeOut = 1800;
+            _CommandTimeOut = CommandTimeOut;
 		}
 
 		public override void Dispose()
@@ -84,7 +84,9 @@ namespace RO.Access3
                 setupCmd.ExecuteNonQuery();
                 if (dr != null && ds.Tables[0].Columns.Contains("tzInfo"))
                 {
-                    setupCmd.CommandText = string.Format("INSERT INTO #ReportTemp VALUES ('{0}','{1}')", "TZInfo", dr["tzInfo"].ToString().Replace("'", "''"));
+                    setupCmd.CommandText = string.Format("INSERT INTO #ReportTemp VALUES ('{0}','{1}')", "TZInfo", dr["tzInfo"].ToString().Replace("'", "''"))
+                                            + (dr.Table.Columns.Contains("tzUtcOffset") ? string.Format(" INSERT INTO #ReportTemp VALUES ('{0}','{1}')", "TZUtcOffset", dr["tzUtcOffset"].ToString().Replace("'", "''")) : "")
+                                            ;
                     setupCmd.ExecuteNonQuery();
                 }
                 setupCmd.Dispose();

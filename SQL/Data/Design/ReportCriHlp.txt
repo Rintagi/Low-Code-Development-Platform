@@ -355,3 +355,24 @@
 412~@~~@~58~@~114~@~Emprunteur
 413~@~~@~59~@~114~@~Garant
 414~@~~@~60~@~114~@~Prêteur
+415~@~~@~30~@~2~@~Fin du mois
+416~@~~@~32~@~2~@~Pour # de mois
+417~@~~@~33~@~2~@~Fin du mois
+418~@~~@~34~@~2~@~Pour # de mois
+419~@~~@~35~@~2~@~Membre
+420~@~~@~36~@~2~@~Mois De (>=)
+421~@~~@~37~@~2~@~Mois à (<=)
+422~@~~@~42~@~2~@~Nom de la table
+423~@~~@~44~@~2~@~Nom de colonne
+424~@~~@~45~@~2~@~Langage humain
+425~@~~@~46~@~2~@~Système
+426~@~~@~51~@~2~@~Utilisateur actif uniquement
+427~@~~@~52~@~2~@~Couronné de succès
+428~@~~@~53~@~2~@~Utilisateur valide
+429~@~~@~54~@~2~@~Identifiant
+430~@~~@~55~@~2~@~Partir de la date
+431~@~~@~56~@~2~@~À ce jour
+432~@~~@~57~@~2~@~Contient
+433~@~~@~58~@~2~@~Emprunteur
+434~@~~@~59~@~2~@~Garant
+435~@~~@~60~@~2~@~Prêteur

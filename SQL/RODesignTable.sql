@@ -19,9 +19,6 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwCultureLbl') AND type='V')
 DROP VIEW dbo.VwCultureLbl
 GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwDisplayType') AND type='V')
-DROP VIEW dbo.VwDisplayType
-GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwIntUsr') AND type='V')
 DROP VIEW dbo.VwIntUsr
 GO
@@ -55,8 +52,14 @@ GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwRowAuth') AND type='V')
 DROP VIEW dbo.VwRowAuth
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwRpDisplayType') AND type='V')
+DROP VIEW dbo.VwRpDisplayType
+GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwRulAppItem') AND type='V')
 DROP VIEW dbo.VwRulAppItem
+GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwScDisplayType') AND type='V')
+DROP VIEW dbo.VwScDisplayType
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwScrButton') AND type='V')
 DROP VIEW dbo.VwScrButton
@@ -69,9 +72,6 @@ DROP VIEW dbo.VwScreenObjHlp
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwServerRuleRunMode') AND type='V')
 DROP VIEW dbo.VwServerRuleRunMode
-GO
-IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwTimeZoneInfo') AND type='V')
-DROP VIEW dbo.VwTimeZoneInfo
 GO
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.VwUsr') AND type='V')
 DROP VIEW dbo.VwUsr
@@ -1339,7 +1339,7 @@ DataTierId tinyint IDENTITY(1,1) NOT NULL ,
 DataTierName nvarchar (50) NOT NULL ,
 EntityId int NOT NULL ,
 DbProviderCd char (1) NOT NULL ,
-ServerName varchar (20) NOT NULL ,
+ServerName varchar (50) NOT NULL ,
 DesServer varchar (20) NOT NULL ,
 DesDatabase varchar (20) NOT NULL ,
 DesUserId varchar (50) NOT NULL ,
@@ -1468,6 +1468,7 @@ EntityImg varbinary (max) NULL ,
 EntityName nvarchar (100) NOT NULL ,
 EntityCode varchar (10) NOT NULL ,
 DeployPath varchar (100) NOT NULL ,
+LicenseFile varchar (512) NULL ,
 CONSTRAINT PK_Entity PRIMARY KEY CLUSTERED (
 EntityId
 )
@@ -3148,6 +3149,20 @@ TemplateId
 END
 
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.TemplatePrm') AND type='U')
+DROP TABLE dbo.TemplatePrm
+CREATE TABLE TemplatePrm ( 
+TemplatePrmId int IDENTITY(1,1) NOT NULL ,
+TemplateId int NOT NULL ,
+GrantDeny char (1) NOT NULL CONSTRAINT DF_TemplatePrm_GrantDeny DEFAULT ('G'),
+PermKeyId smallint NOT NULL ,
+PermId int NOT NULL ,
+CONSTRAINT PK_TemplatePrm PRIMARY KEY CLUSTERED (
+TemplatePrmId
+)
+)
+
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usage') and type='U')
 BEGIN
 IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_Usage_UsrId' AND o.name = 'Usage')
@@ -3171,6 +3186,8 @@ IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usr') and
 BEGIN
 IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IU_Usr' AND o.name = 'Usr')
 DROP INDEX Usr.IU_Usr 
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_LoginName' AND o.name = 'Usr')
+DROP INDEX Usr.IX_LoginName 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usr') AND type='U')
 DROP TABLE dbo.Usr
 CREATE TABLE Usr ( 
@@ -3227,18 +3244,17 @@ END
 GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrAudit') and type='U')
 BEGIN
-IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_UsrAudit' AND o.name = 'UsrAudit')
-DROP INDEX UsrAudit.IX_UsrAudit 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.UsrAudit') AND type='U')
 DROP TABLE dbo.UsrAudit
 CREATE TABLE UsrAudit ( 
+UsrAuditId bigint IDENTITY(1,1) NOT NULL ,
 AttemptDt datetime NOT NULL ,
 LoginName nvarchar (32) NOT NULL ,
 UsrId int NULL ,
 IpAddress varchar (50) NOT NULL ,
 LoginSuccess char (1) NOT NULL ,
 CONSTRAINT PK_UsrAudit PRIMARY KEY CLUSTERED (
-AttemptDt
+UsrAuditId
 )
 )
 END

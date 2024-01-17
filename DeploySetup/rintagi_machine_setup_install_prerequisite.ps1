@@ -1,3 +1,6 @@
+Write-Output "Setup TLS 1.0/1.1/1.2"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls11 -bor [Net.SecurityProtocolType]::Tls
+
 Write-Output "Install chocolatey"
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
@@ -140,15 +143,9 @@ choco install reportviewer2012 --ignore-checksums -y
 Write-Output "choco install ms-reportviewer2015 -y"
 choco install ms-reportviewer2015 --ignore-checksums -y
 
-# crystal report viewer runtime(this take a long time as it is a full VS package for both 32/64 bit)
-# source url
-# https://wiki.scn.sap.com/wiki/display/BOBJ/Crystal+Reports%2C+Developer+for+Visual+Studio+Downloads
-# as of 2021.5.31, download is no longer possible via choco(or auto means)
-# must go to https://www.crystalreports.com/download/
-# and register(free) to get the runtime
-Write-Output "choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'""
-choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'"
-Write-Output "go to https://www.crystalreports.com/download/ to download manually"
+#Write-Output "choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'""
+#choco install crystalreports-for-visualstudio -y --install-arguments="'UPGRADE=1'"
+#Write-Output "go to https://www.crystalreports.com/download/ to download manually"
 
 # IIS urlrewrite module
 # source url
@@ -168,3 +165,42 @@ choco install iis-arr  --ignore-checksums -y
 # https://dotnet.microsoft.com/download/dotnet-framework/net48
 Write-Output "choco install netfx-4.8-devpack -y"
 choco install netfx-4.8-devpack -y
+
+# crystal report viewer runtime(this take a long time as it is a full VS package for both 32/64 bit)
+# below are the 'main site' 
+# https://origin.softwaredownloads.sap.com/public/site/index.html
+# 64 bit runtime (SP 33)
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000001649962022
+# 32 bit runtime (SP 33)
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000001649922022
+# 32 bit  for VS(VS2019 or lower) must have VS installed
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000001649932022
+# 64 bit for VS(VS2022 only) must have VS installed
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000001649972022
+# all version should have 13.0.4000.0 as the assembly version if required in web.config
+#
+Write-Output "installing Crystal Report 64 bit runtime for .NET(SP33), if fails follow instruction to do it manually"
+Write-Output "use browser and go to https://origin-az.softwaredownloads.sap.com/public/file/0020000001649962022 to download crystal report runtime(64 bit, SP33)"
+Write-Output "then run the msi"
+Write-Output "the assembly version number is 13.0.4000.0"
+Write-Output "or visit https://origin.softwaredownloads.sap.com/public/site/index.html if above fails(and find correct version, must be under crystal report for visual studio)"
+Write-Output "must reboot to have the installation take effect"
+# below may fail
+# trial install and run
+Invoke-WebRequest "https://origin-az.softwaredownloads.sap.com/public/file/0020000001649962022" -OutFile ./cr64SP33.msi
+# this may fail
+./cr64SP33.msi 
+
+# this may be required for building production package(which is using 32 bit environment)
+Write-Output "installing Crystal Report 32 bit runtime for .NET(SP33), if fails follow instruction to do it manually"
+Write-Output "may need to do this if running 32 bit VS studio or need to use designer in VS studio(even 64 bit, VS 2022)"
+Write-Output "use browser and go to https://origin-az.softwaredownloads.sap.com/public/file/0020000001649922022 to download crystal report runtime(32 bit, SP33)"
+Write-Output "then run the msi"
+Write-Output "the assembly version number is 13.0.4000.0"
+Write-Output "or visit https://origin.softwaredownloads.sap.com/public/site/index.html if above fails(and find correct version, must be under crystal report for visual studio)"
+Write-Output "must reboot to have the installation take effect"
+# below may fail
+# trial install and run
+# Invoke-WebRequest "https://origin-az.softwaredownloads.sap.com/public/file/0020000001649922022" -OutFile ./cr32SP33.msi
+# this may fail
+#./cr32SP33.msi 

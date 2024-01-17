@@ -8,6 +8,7 @@ SELECT UsrId, UsrTitle = LoginName + ISNULL(' [' + UsrName + ']','') + CASE WHEN
 , UsrEmail
 , PicMed, ExtPassword
 , CultureId, UsrGroupLs, CompanyLs, ProjectLs, InvestorId, CustomerId, VendorId, AgentId, BrokerId, MemberId, LenderId, BorrowerId, GuarantorId, Active
+, LastSuccessDt
 FROM dbo.Usr
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwAppItem') and OBJECTPROPERTY(id, N'IsView') = 1)
@@ -53,19 +54,6 @@ from
 dbo.CompPref c
 left outer join dbo.Systems s on s.SystemId = 3
 GO
-if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCompanyPref') and OBJECTPROPERTY(id, N'IsView') = 1)
-EXEC('CREATE VIEW dbo.VwCompanyPref AS SELECT DUMMY=1')
-GO
-ALTER VIEW [dbo].[VwCompanyPref]
-AS
-select 
-c.CompanyId, c.CompanyLogo, c.CompPrefDesc
-, s.WebAddress
-, LogoUrl = REPLACE(c.CompanyLogo, '~/', ISNULL(s.WebAddress + '/',''))
-from
-dbo.CompPref c
-left outer join dbo.Systems s on s.SystemId = 3
-GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwCulture') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwCulture AS SELECT DUMMY=1')
 GO
@@ -80,11 +68,6 @@ GO
 ALTER VIEW [dbo].[VwCultureLbl] AS
 	SELECT a.CultureLblId, a.CultureTypeId, a.CultureId, a.CultureTypeLabel, b.CultureTypeName, b.CountryCd, b.CurrencyCd
 	FROM dbo.CtCultureLbl a INNER JOIN dbo.CtCulture b ON a.CultureTypeId = b.CultureTypeId
-GO
-if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwDisplayType') and OBJECTPROPERTY(id, N'IsView') = 1)
-EXEC('CREATE VIEW dbo.VwDisplayType AS SELECT DUMMY=1')
-GO
-ALTER VIEW [dbo].[VwDisplayType] AS SELECT TypeId, TypeName, TypeDesc, DisplayDefault FROM dbo.CtDisplayType WHERE TypeId IN (1,3,4,5,17,18,20,33,35,38,40,44,52)
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwIntUsr') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwIntUsr AS SELECT DUMMY=1')
@@ -261,6 +244,12 @@ ALTER VIEW [dbo].[VwRowAuth] AS
 	SELECT RowAuthId, RowAuthName, AllowSel, AllowAdd, AllowUpd, AllowDel, SysAdmin, OvrideId
 	FROM dbo.AtRowAuth
 GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwRpDisplayType') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwRpDisplayType AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwRpDisplayType] AS
+SELECT TypeId, TypeName, TypeDesc, DisplayDefault FROM dbo.CtDisplayType WHERE TypeId IN (1,3,4,5,17,18,20,33,35,38,40,44,52,55)
+GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwRulAppItem') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwRulAppItem AS SELECT DUMMY=1')
 GO
@@ -270,6 +259,12 @@ ALTER VIEW [dbo].[VwRulAppItem] AS
 	WHERE a.VersionDt is not null AND b.ObjectTypeCd = 'R'
 -- full history
 --	AND a.VersionDt > dateadd(mm,-120,convert(datetime,convert(varchar,getdate(),102)))
+GO
+if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwScDisplayType') and OBJECTPROPERTY(id, N'IsView') = 1)
+EXEC('CREATE VIEW dbo.VwScDisplayType AS SELECT DUMMY=1')
+GO
+ALTER VIEW [dbo].[VwScDisplayType] AS SELECT TypeId, TypeName, TypeDesc, DisplayDesc, DisplayDefault 
+FROM dbo.CtDisplayType WHERE TypeId NOT IN (44,55)
 GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwScrButton') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwScrButton AS SELECT DUMMY=1')
@@ -311,17 +306,6 @@ FROM
 ) 
 x (RunModeCd, RunModeDesc, SrtOrder)
 GO
-if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwTimeZoneInfo') and OBJECTPROPERTY(id, N'IsView') = 1)
-EXEC('CREATE VIEW dbo.VwTimeZoneInfo AS SELECT DUMMY=1')
-GO
-ALTER VIEW [dbo].[VwTimeZoneInfo] AS 
-
-SELECT 
-id = ROW_NUMBER() OVER (ORDER BY current_utc_offset, name),
-tz_desc = name + ' (UTC ' + current_utc_offset + CASE WHEN tz.is_currently_dst = 1 THEN ' DST' ELSE '' END + ')', *
-FROM
-sys.time_zone_info tz
-GO
 if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwUsr') and OBJECTPROPERTY(id, N'IsView') = 1)
 EXEC('CREATE VIEW dbo.VwUsr AS SELECT DUMMY=1')
 GO
@@ -332,5 +316,5 @@ if not exists (select * from dbo.sysobjects where id = object_id(N'dbo.VwUsrAUdi
 EXEC('CREATE VIEW dbo.VwUsrAUdit AS SELECT DUMMY=1')
 GO
 ALTER VIEW [dbo].[VwUsrAUdit] AS
-SELECT AttemptDt, IpAddress, LoginName, ValidUser = CASE WHEN UsrId is NULL THEN 'N' ELSE 'Y' END, LoginSuccess FROM dbo.UsrAudit
+SELECT UsrAuditId, AttemptDt, IpAddress, LoginName, ValidUser = CASE WHEN UsrId is NULL THEN 'N' ELSE 'Y' END, LoginSuccess FROM dbo.UsrAudit
 GO

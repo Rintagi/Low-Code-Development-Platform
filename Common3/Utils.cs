@@ -14,11 +14,70 @@
     using System.Security.Principal;
     using System.DirectoryServices;
     using System.Management;
+    using System.Reflection;
+    using System.Reflection.Emit;
     using System.Security.Cryptography.X509Certificates;
+    using System.Threading.Tasks;
     using System.Text.RegularExpressions;
     using System.Xml;
     using System.Xml.Serialization;
     using ExifLib;
+
+    public static class ReflectionHelper
+    {
+        private static PropertyInfo GetPropertyInfo(Type type, string propertyName)
+        {
+            PropertyInfo propInfo = null;
+            do
+            {
+
+                propInfo = type.GetProperty(propertyName,
+                       BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                type = type.BaseType;
+            }
+            while (propInfo == null && type != null);
+            return propInfo;
+        }
+
+        private static FieldInfo GetFieldInfo(Type type, string fieldName)
+        {
+            FieldInfo fieldInfo = null;
+            do
+            {
+
+                fieldInfo = type.GetField(fieldName,
+                       BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                type = type.BaseType;
+            }
+            while (fieldInfo == null && type != null);
+            return fieldInfo;
+        }
+
+        public static object GetPropertyValue(this object obj, string propertyName)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+            Type objType = obj.GetType();
+            PropertyInfo propInfo = GetPropertyInfo(objType, propertyName);
+            FieldInfo fieldInfo = GetFieldInfo(objType, propertyName);
+            if (propInfo == null && fieldInfo == null)
+                throw new ArgumentOutOfRangeException("propertyName",
+                  string.Format("Couldn't find property {0} in type {1}", propertyName, objType.FullName));
+            return propInfo != null ? propInfo.GetValue(obj, null) : fieldInfo.GetValue(obj);
+        }
+
+        public static void SetPropertyValue(this object obj, string propertyName, object val)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("obj");
+            Type objType = obj.GetType();
+            PropertyInfo propInfo = GetPropertyInfo(objType, propertyName);
+            if (propInfo == null)
+                throw new ArgumentOutOfRangeException("propertyName",
+                  string.Format("Couldn't find property {0} in type {1}", propertyName, objType.FullName));
+            propInfo.SetValue(obj, val, null);
+        }
+    }
 
     public static class StringExtensions
     {
@@ -750,35 +809,6 @@
 
             if (ss.Equals(string.Empty)) { return ss; }
             else { return fmDateTime(DateTimeUtcToTz(ss, tzInfo), culture); }
-        }
-        public static string fmLongDateUTC(string ss, string culture, TimeZoneInfo tzInfo)
-        {
-            if (ss.Equals(string.Empty)) { return ss; }
-            else { return fmLongDate(DateTimeUtcToTz(ss, tzInfo), culture); }
-        }
-        public static string fmLongDateUTC(string ss, string culture, string patLongDate, TimeZoneInfo tzInfo)
-        {
-            if (ss.Equals(string.Empty)) { return ss; }
-            else
-            {
-                return fmLongDate(DateTimeUtcToTz(ss, tzInfo), culture, patLongDate);
-            }
-        }
-        public static string fmShortDateUTC(string ss, string culture, TimeZoneInfo tzInfo)
-        {
-            if (ss.Equals(string.Empty)) { return ss; }
-            else
-            {
-                return fmShortDate(DateTimeUtcToTz(ss, tzInfo), culture);
-            }
-        }
-        public static string fmShortDateZfUTC(string ss, string culture, TimeZoneInfo tzInfo)
-        {
-            if (ss.Equals(string.Empty)) { return ss; }
-            else
-            {
-                return fmShortDateZf(DateTimeUtcToTz(ss, tzInfo), culture);
-            }
         }
         public static string fmDateUTC(string ss, string culture, TimeZoneInfo tzInfo)
         {
@@ -1924,14 +1954,14 @@
             securePassword.MakeReadOnly();
             return securePassword;
         }
-        public static int ToUnixTime(DateTime time)
+        public static int ToUnixTime(DateTime time, DateTimeKind kind = DateTimeKind.Utc)
         {
-            var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            return (int)DateTime.SpecifyKind(time, DateTimeKind.Utc).Subtract(utc0).TotalSeconds;
+            var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, kind);
+            return (int)DateTime.SpecifyKind(time, kind).Subtract(utc0).TotalSeconds;
         }
-        public static DateTime FromUnixTime(int SecSince1970)
+        public static DateTime FromUnixTime(int SecSince1970, DateTimeKind kind = DateTimeKind.Utc)
         {
-            var utc = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(SecSince1970);
+            var utc = new DateTime(1970, 1, 1, 0, 0, 0, 0, kind).AddSeconds(SecSince1970);
             return utc;
         }
         public static void NeverThrow(Exception ex)
@@ -1969,9 +1999,11 @@
             {
                 if (string.IsNullOrEmpty(testIp)) return false;
                 if (testIp == "localhost") return true;
+                if (testIp == "::1") return true;
 
+                testIp = testIp.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
                 var addr = IPAddress.Parse(testIp);
-                if (testIp == "::1" || addr.IsIPv6LinkLocal || addr.IsIPv6SiteLocal) return true;
+                if (addr.IsIPv6LinkLocal || addr.IsIPv6SiteLocal) return true;
 
                 byte[] ip = IPAddress.Parse(testIp).GetAddressBytes();
                 switch (ip[0])
@@ -2037,7 +2069,19 @@
                 throw new Exception(string.Format("{0} is not Array or Object byt {1}, not valid json source", c, c.GetType()));
             }
         }
+        public static TResult RunAsyncTask<TResult>(Func<Task<TResult>> t)
+        {
+            try
+            {
+                return System.Threading.Tasks.Task.Run(t).Result;
+            }
+            catch (Exception ex)
+            {
+                if (ex is AggregateException) throw ex.InnerException;
+                else throw;
+            }
 
+        }
         // Should only execute this on the client tier:
         //public static System.Collections.ArrayList GetSheetNames(string fileFullName)
         //{

@@ -81,6 +81,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="netstandard">
+      <HintPath>..\Lib\netstandard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Numbers">
       <HintPath>..\Lib\Numbers.dll</HintPath>
     </Reference>
@@ -88,7 +92,6 @@
       <Name>System</Name>
     </Reference>
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>

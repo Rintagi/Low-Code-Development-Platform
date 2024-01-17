@@ -147,6 +147,20 @@ namespace RO.Access3
 			return dt;
 		}
 
+        public override DataTable ExecSP(string spName, CurrSrc CSrc)
+        {
+            if (da == null)
+            {
+                throw new System.ObjectDisposedException(GetType().FullName);
+            }
+            OleDbCommand cmd = new OleDbCommand(spName, new OleDbConnection(CSrc.SrcConnectionString + DecryptString(CSrc.SrcDbPassword)));
+            cmd.CommandType = CommandType.StoredProcedure;
+            da.SelectCommand = cmd;
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+
 		public override object ExecScript(string DataTier, string CmdName, string IsqlFile, bool IsFrSource, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword, Func<object, string, bool> processResult)
 		{
 			if (da == null)

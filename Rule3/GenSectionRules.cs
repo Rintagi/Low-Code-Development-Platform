@@ -406,8 +406,11 @@
             sb.Append("    public partial class " + SectionNm + "Module : RO.Web.ModuleBase" + Environment.NewLine);
             sb.Append("    {" + Environment.NewLine);
             sb.Append("        private const string KEY_" + SectionNm + "Generated = \"Cache:" + SectionNm + "Generated\";" + Environment.NewLine);
-            sb.Append("        private string LcAppConnString;" + Environment.NewLine);
-            sb.Append("        private string LcAppPw;" + Environment.NewLine + Environment.NewLine);
+            if (SectionCd != "D")
+            {
+                sb.Append("        private string LcAppConnString=\"\";" + Environment.NewLine);
+                sb.Append("        private string LcAppPw=\"\";" + Environment.NewLine + Environment.NewLine);
+            }
             sb.Append("        public " + SectionNm + "Module()" + Environment.NewLine);
             sb.Append("        {" + Environment.NewLine);
             sb.Append("            this.Init += new System.EventHandler(Page_Init);" + Environment.NewLine);

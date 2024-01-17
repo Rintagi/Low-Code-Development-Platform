@@ -61,7 +61,7 @@ public partial class AdminWs : WebService
 
     public struct ScreenColListResponse
     {
-        public List<Dictionary<string, string>> screenObjList;
+        public List<SerializableDictionary<string,string>> screenObjList;
         public string status;
         public string errorMsg;
     }
@@ -548,7 +548,7 @@ public partial class AdminWs : WebService
     public ScreenColListResponse WrGetScreenObj(string ScreenId, byte SysId)
     {
         //System.Web.Script.Serialization.JavaScriptSerializer jss = new System.Web.Script.Serialization.JavaScriptSerializer();
-        //Dictionary<string, string> context = jss.Deserialize<Dictionary<string, string>>(contextStr);
+        //SerializableDictionary<string,string> context = jss.Deserialize<SerializableDictionary<string,string>>(contextStr);
 
         HttpContext Context = HttpContext.Current;
         HttpSessionState Session = HttpContext.Current.Session;
@@ -556,17 +556,17 @@ public partial class AdminWs : WebService
 
         LoginUsr usr = (LoginUsr)Session[KEY_CacheLUser];
         UsrCurr uc = (UsrCurr)Session[KEY_CacheLCurr];
-        List<Dictionary<string, string>> screenObjList = new List<Dictionary<string, string>>();
+        List<SerializableDictionary<string,string>> screenObjList = new List<SerializableDictionary<string,string>>();
         try
         {
-            Dictionary<byte, Dictionary<string, string>> dSysList = (Dictionary<byte, Dictionary<string, string>>)Session[KEY_SystemsDict];
-            Dictionary<string, string> dSys = dSysList[SysId];
+            SerializableDictionary<byte, SerializableDictionary<string,string>> dSysList = (SerializableDictionary<byte, SerializableDictionary<string,string>>)Session[KEY_SystemsDict];
+            SerializableDictionary<string,string> dSys = dSysList[SysId];
 
             DataTable dtItms = (new RO.WebRules.WebRule()).WrGetScreenObj(ScreenId, usr.CultureId, null, dSys[KEY_SysConnectStr], dSys[KEY_AppPwd]);
 
             foreach (DataRow dr in dtItms.Rows)
             {
-                Dictionary<string, string> d = new Dictionary<string, string>{
+                SerializableDictionary<string,string> d = new SerializableDictionary<string,string>{
                     {"ScreenTabId",dr["ScreenTabId"].ToString()}
                     ,{"TabFolderName",dr["TabFolderName"].ToString()}
                     ,{"TabFolderOrder",dr["TabFolderOrder"].ToString()}
@@ -1106,11 +1106,17 @@ public partial class AdminWs : WebService
     }
     [WebMethod(EnableSession = true)]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json, XmlSerializeString = false, UseHttpGet = false)]
-    public Dictionary<string, List<string>> HasRegenWaiting()
+    public SerializableDictionary<string, string> HasRegenWaiting()
     {
         string dbConnectionString = Config.GetConnStr(Config.DesProvider, Config.DesServer, Config.DesDatabase, "", Config.DesUserId);
         string dbPassword = Config.DesPassword;
-        return new AdminSystem().HasOutstandRegen(Config.AppNameSpace, dbConnectionString, dbPassword);
+        var d = new AdminSystem().HasOutstandRegen(Config.AppNameSpace, dbConnectionString, dbPassword); 
+        var x = new SerializableDictionary<string, string>();
+        foreach (System.Collections.Generic.KeyValuePair<string, List<string>> v in d)
+        {
+            x.Add(v.Key, string.Join(",", v.Value.ToArray()));
+        }
+        return x;
     }
     [WebMethod(EnableSession = true)]
     [ScriptMethod(ResponseFormat = ResponseFormat.Json, XmlSerializeString = false, UseHttpGet = false)]
@@ -1186,7 +1192,7 @@ public partial class AdminWs : WebService
                 var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
                                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                 .Where(s => !string.IsNullOrEmpty((s ?? "").Trim()))
-                                .Select(s => new { addr = s, isPrivate = RO.Common3.Utils.IsPrivateIp(s) })
+                                .Select(s => new { addr = s.Split(new char[]{':'},StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(), isPrivate = RO.Common3.Utils.IsPrivateIp(s) })
                                 .Aggregate(new { ipChain = new List<string>(), startNonLocal = new bool[1] { false } }
                                     , (a, i) =>
                                     {
@@ -1368,7 +1374,7 @@ public partial class AdminWs : WebService
     }
 
     [WebMethod]
-    public Dictionary<string, string> GetLicenseDetail(string installID, string appID, string moduleName)
+    public SerializableDictionary<string,string> GetLicenseDetail(string installID, string appID, string moduleName)
     {
         /* old, not used */
         string SysId = Config.LicenseModule ?? "3";
@@ -1376,16 +1382,16 @@ public partial class AdminWs : WebService
                                              where dr["SystemId"].ToString() == SysId
                                              select new KeyValuePair<string, string>(Config.GetConnStr(dr["dbAppProvider"].ToString(), dr["ServerName"].ToString(), dr["dbAppDatabase"].ToString(), "", dr["dbAppUserId"].ToString()), dr["dbAppPassword"].ToString())).First();
         UsrImpr impr = new UsrImpr("1", "11", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-        Dictionary<string, string> license = new Dictionary<string, string>();
+        SerializableDictionary<string,string> license = new SerializableDictionary<string,string>();
         string installDtl = "<Params>"
                 + "<installID>" + installID + "</installID>"
                 + "<appID>" + appID + "</appID>"
                 + "<moduleName>" + moduleName + "</moduleName>"
                 + "</Params>";
         DataTable dt = new AdminSystem().RunWrRule(1234, "WrGetLicenseDetail", conn.Key, conn.Value, installDtl, impr, new UsrCurr());
-        List<Dictionary<string, string>> result =
+        List<SerializableDictionary<string,string>> result =
             (from dr in dt.AsEnumerable()
-             select new Dictionary<string, string>
+             select new SerializableDictionary<string,string>
             {
                 { "InstallID", dr["InstallID"].ToString()},
                 { "AppID", dr["AppID"].ToString()},
@@ -1565,14 +1571,14 @@ public partial class AdminWs : WebService
     }
 
     [WebMethod(EnableSession = true)]
-    public Dictionary<string, string> GetCurrentUsrInfo(string Scope)
+    public SerializableDictionary<string,string> GetCurrentUsrInfo(string Scope)
     {
         HttpContext Context = HttpContext.Current;
         HttpSessionState Session = HttpContext.Current.Session;
         LoginUsr User = (LoginUsr)Session[KEY_CacheLUser];
         UsrCurr Curr = (UsrCurr)Session[KEY_CacheLCurr];
         UsrImpr Impr = (UsrImpr)Session[KEY_CacheLImpr];
-        Dictionary<string, string> usrInfo = new Dictionary<string, string>();
+        SerializableDictionary<string,string> usrInfo = new SerializableDictionary<string,string>();
         usrInfo["UsrId"] = User == null ? "1" : User.UsrId.ToString();
         usrInfo["UsrGroup"] = Impr == null ? "" : Impr.UsrGroups;
         return usrInfo;

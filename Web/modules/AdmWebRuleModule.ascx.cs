@@ -172,6 +172,7 @@ namespace RO.Web
 				cTab128.InnerText = dt.Rows[4]["TabFolderName"].ToString();
 				SetClientRule(null,false);
 				IgnoreConfirm(); InitPreserve();
+				cSystemId_SelectedIndexChanged(null, null);
 				try
 				{
 					(new AdminSystem()).LogUsage(base.LUser.UsrId, string.Empty, dtHlp.Rows[0]["ScreenTitle"].ToString(), 80, 0, 0, string.Empty, LcSysConnString, LcAppPw);
@@ -212,7 +213,8 @@ namespace RO.Web
 			// *** Page Init (Front of) Web Rule starts here *** //
 			InitializeComponent();
 			//WebRule: Prevent web rule from being accessed
-if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionally blocked from you for the time being. Please contact administrator if you have any questions."); }
+            if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionally blocked from you for the time being. Please contact administrator if you have any questions."); }
+
 			// *** WebRule End *** //
 		}
 
@@ -265,8 +267,13 @@ if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionall
 
 		private void CheckAuthentication(bool pageLoad)
 		{
-          if (IsCronInvoked()) AnonymousLogin();
-          else CheckAuthentication(pageLoad, true);
+			if (IsCronInvoked())
+			{
+				AnonymousLogin();
+				LCurr.SystemId = 3;
+				LCurr.DbId = 3;
+			}
+			else CheckAuthentication(pageLoad, true);
 		}
 
 		private void SetButtonHlp()
@@ -1347,7 +1354,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    else if (drv["DisplayName"].ToString() == "Calendar")
 			    {
 					cCalendar = (System.Web.UI.WebControls.Calendar)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = cCalendar.SelectedDate; }
+					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = drv["DisplayMode"].ToString() == "CalendarUTC" ? base.SetDateTimeUTC(cCalendar.SelectedDate.ToString("yyyy/MM/dd"), !bUpdate) : cCalendar.SelectedDate.ToString("yyyy/MM/dd"); }
 			    }
 			    else if (drv["DisplayName"].ToString() == "ComboBox")
 			    {
@@ -2115,8 +2122,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		protected void cSystemId_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
 			base.LCurr.DbId = byte.Parse(cSystemId.SelectedValue);
-				DataTable dtSystems = (DataTable)Session[KEY_dtSystems];
-				Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
+				Session[KEY_sysConnectionString] = SysConnectStr(byte.Parse(cSystemId.SelectedValue));
 				Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
 				Session.Remove(KEY_dtRuleTypeId128);
 				Session.Remove(KEY_dtScreenId128);
@@ -2662,6 +2668,7 @@ if ("1".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"1");
 		private void PreMsgPopup(string msg, RoboCoder.WebControls.ComboBox cb, WebControl wc)
 		{
 		    if (string.IsNullOrEmpty(msg)) return;
+		    if (IsCronInvoked()) { ErrorTrace(new Exception(msg), bErrNow.Value == "N" ? "warning" : "error"); return; }
 		    int MsgPos = msg.IndexOf("RO.SystemFramewk.ApplicationAssert");
 		    string iconUrl = "images/warning.gif";
 		    string focusOnCloseId = cb != null ? cb.FocusID : (wc != null ? wc.ClientID : string.Empty);

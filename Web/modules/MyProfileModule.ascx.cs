@@ -252,6 +252,10 @@ namespace RO.Web
             }
             else base.LCurr.ProjectId = 0;
             SwitchCmpPrj();
+            if (LUser != null)
+            {
+                LImpr = null; SetImpersonation(LUser.UsrId);
+            }
             this.Redirect(Request.RawUrl);
         }
 
@@ -274,6 +278,10 @@ namespace RO.Web
             }
             else { base.LCurr.ProjectId = 0; }
             SwitchCmpPrj();
+            if (LUser != null)
+            {
+                LImpr = null; SetImpersonation(LUser.UsrId);
+            }
             this.Redirect(Request.RawUrl);
         }
 

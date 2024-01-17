@@ -532,3 +532,22 @@
 660~@~114~@~75~@~Maître~@~Fiche maître~@~Appuyez sur ce bouton pour afficher un enregistrement principal
 661~@~114~@~76~@~Liste détaillée~@~Liste détaillée~@~Appuyez sur ce bouton pour afficher une liste des enregistrements détaillés
 662~@~114~@~77~@~Détail~@~Enregistrement détaillé~@~Appuyez sur ce bouton pour afficher un enregistrement détaillé
+670~@~2~@~51~@~Enregistrer&Nouveau~@~Enregistrer&Nouveau~@~Appuyez sur ceci pour enregistrer cet enregistrement de manière permanente et effacer ce formulaire pour un nouvel enregistrement avec des valeurs par défaut
+671~@~2~@~55~@~Ajouter~@~Insérer une ligne~@~Appuyez dessus pour insérer une nouvelle ligne au début de la grille.
+672~@~2~@~56~@~Enregistrer et copier~@~Enregistrer et copier~@~Appuyez dessus pour enregistrer cet enregistrement de manière permanente et copier le contenu actuel dans un nouveau formulaire
+673~@~2~@~63~@~Suite~@~Suite~@~Appuyez dessus pour afficher plus de boutons d'action sur mobile
+674~@~2~@~64~@~Toutes les données~@~Toutes les données~@~Appuyez dessus pour afficher tous les autres enregistrements et les modifier si vous y êtes autorisé.
+675~@~2~@~65~@~Sauvegarder et fermer~@~Sauvegarder et fermer~@~Appuyez dessus pour enregistrer cet enregistrement de manière permanente et fermer cette boîte de dialogue
+676~@~2~@~66~@~Audit~@~Audit~@~Appuyez dessus pour inspecter les modifications historiques et accéder aux détails de l'audit.
+677~@~2~@~67~@~Effacer~@~Supprimer la ligne~@~Appuyez dessus pour supprimer la ligne sélectionnée
+678~@~2~@~68~@~Copie~@~Copier la ligne~@~Appuyez dessus pour dupliquer la ligne sélectionnée
+679~@~2~@~69~@~Éditer~@~Modifier la ligne~@~Appuyez dessus pour afficher/modifier la ligne sélectionnée
+680~@~2~@~70~@~Éditer~@~Modifier l'en-tête~@~Appuyez dessus pour afficher/modifier l'enregistrement d'en-tête sélectionné
+681~@~2~@~71~@~Regarder l'objet~@~Liste détaillée~@~Appuyez dessus pour accéder à la liste détaillée
+682~@~2~@~72~@~Filtre~@~Filtre~@~Appuyez dessus pour filtrer les enregistrements maîtres
+683~@~2~@~73~@~Aider~@~Aider~@~Appuyez dessus pour obtenir de l'aide
+684~@~2~@~74~@~Liste principale~@~Liste principale~@~Appuyez dessus pour afficher une liste des enregistrements maîtres
+685~@~2~@~75~@~Maître~@~Enregistrement principal~@~Appuyez dessus pour afficher un enregistrement principal
+686~@~2~@~76~@~Liste détaillée~@~Liste détaillée~@~Appuyez dessus pour afficher une liste d'enregistrements détaillés
+687~@~2~@~77~@~Détail~@~Enregistrement détaillé~@~Appuyez dessus pour afficher un enregistrement détaillé
+688~@~1~@~78~@~XML~@~XML~@~Press this to view results in a Xml file

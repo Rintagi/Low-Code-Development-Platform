@@ -124,6 +124,8 @@ namespace RO.Common3
         private static string wEnableCryptoWallet;
         private static string wEnforceGitCommit;
         private static string wBrokenARRProxy;
+        private static bool wImportDashIsNull = false;
+
         static Config()
 		{
             wConverterUrl = ConfigurationManager.AppSettings["WsConverterUrl"];
@@ -284,6 +286,13 @@ namespace RO.Common3
             wEnableCryptoWallet = System.Configuration.ConfigurationManager.AppSettings["EnableCryptoWallet"];
             wEnforceGitCommit = System.Configuration.ConfigurationManager.AppSettings["EnforceGitCommit"];
             wBrokenARRProxy = System.Configuration.ConfigurationManager.AppSettings["BrokenARRProxy"];
+
+            try
+            {
+                wImportDashIsNull = (ConfigurationManager.AppSettings["ImportDashIsNull"] ?? "").ToUpper() == "Y";
+            }
+            catch { }
+
         }
         
         public static string WsConverterUrl { get { return wConverterUrl; } }
@@ -474,6 +483,8 @@ namespace RO.Common3
         public static bool EnableCryptoWallet { get { return (wEnableCryptoWallet ?? "N").ToUpper() == "Y"; } }
         public static bool EnforceGitCommit { get { return (wEnforceGitCommit ?? "N").ToUpper() == "Y"; } }
         public static bool BrokenARRProxy { get { return (wBrokenARRProxy ?? "N").ToUpper() == "Y"; } }
+        public static bool ImportDashIsNull { get { return wImportDashIsNull; } }
+
         public static string RintagiLicense
         { 
             get { return wLicense; } 

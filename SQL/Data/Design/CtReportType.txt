@@ -2,6 +2,7 @@ B~@~Dashboard Gauge
 C~@~Crystal Reporting
 E~@~Excel Document Merging
 G~@~Global Criteria
+M~@~XML Document Merging
 R~@~RTF Document Merging
 S~@~Sql Reporting Service
 T~@~TXT Document Merging

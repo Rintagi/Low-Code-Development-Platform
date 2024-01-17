@@ -226,6 +226,7 @@ namespace RO.Web
                 SetClientRule(null);
                 IgnoreConfirm();
                 //InitPreserve();
+                cSystemId_SelectedIndexChanged(null, null);
                 try
                 {
                     (new AdminSystem()).LogUsage(base.LUser.UsrId, string.Empty, dtHlp.Rows[0]["ScreenTitle"].ToString(), 95, 0, 0, string.Empty, LcSysConnString, LcAppPw);
@@ -3304,6 +3305,7 @@ namespace RO.Web
                 DataTable dts = (DataTable)Session[KEY_dtSystems];
                 base.CSrc = new CurrSrc(true, dts.Rows[cSystemId.SelectedIndex]);
                 base.CTar = new CurrTar(true, dts.Rows[cSystemId.SelectedIndex]);
+
                 AdmRptWiz95 ds = PrepAdmRptWizData(null, cRptwizId183.Text == string.Empty);
                 WebRule wr = new WebRule();
                 if (string.IsNullOrEmpty(cAdmRptWiz95List.SelectedValue))	// Add
@@ -3323,7 +3325,11 @@ namespace RO.Web
                         if (Config.PromptMsg) { bInfoNow.Value = "Y"; PreMsgPopup(GetScreenHlp().Rows[0]["AddMsg"].ToString()); }
 					}
 				}
-				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				catch (Exception err) { 
+                    bErrNow.Value = "Y"; 
+                    PreMsgPopup(err.Message); 
+                    return; 
+                }
 				else try
 				{
 					bool bValid7 = false;
@@ -3338,7 +3344,11 @@ namespace RO.Web
                         if (Config.PromptMsg) { bInfoNow.Value = "Y"; PreMsgPopup(GetScreenHlp().Rows[0]["UpdMsg"].ToString()); }
 					}
 				}
-				catch (Exception err) { bErrNow.Value = "Y"; PreMsgPopup(err.Message); return; }
+				catch (Exception err) { 
+                    bErrNow.Value = "Y"; 
+                    PreMsgPopup(err.Message); 
+                    return; 
+                }
 			}
 		}
 
@@ -3699,7 +3709,7 @@ namespace RO.Web
 		    else if (bInfoNow.Value == "Y") { iconUrl = "images/info.gif"; bInfoNow.Value = "N"; }
 			string script =
 			@"<script type='text/javascript' language='javascript'>
-			PopDialog('" + iconUrl + "','" + msgContent.Replace("'", @"\'") + "','" + focusOnCloseId + @"');
+			PopDialog('" + iconUrl + "','" + msgContent.Replace("\\", "/").Replace("'", @"\'") + "','" + focusOnCloseId + @"');
 			</script>";
 			ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "Popup", script, false);
 		}

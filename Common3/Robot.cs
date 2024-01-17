@@ -107,10 +107,7 @@ namespace RO.Common3
 		{
 			switch (DisplayMode)
 			{
-                case "ShortDateUTC":
-                    if (bPrefix) { return "RO.Common3.Utils.fm" + DisplayMode + ZeroFilled + "("; } else { return ",base.LUser.Culture,CurrTimeZoneInfo())"; }
                 case "DateUTC":
-                case "LongDateUTC":
                 case "DateTimeUTC":
                 case "LongDateTimeUTC":
                 case "ShortDateTimeUTC":

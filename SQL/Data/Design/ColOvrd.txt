@@ -211,3 +211,8 @@
 1291~@~AdmCompPref [   10] Main: CompPrefId   100 [Default]~@~4430~@~1029~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
 1292~@~AdmCompPref [   40] Main: CompPrefDesc   100 [Default]~@~4433~@~1029~@~N~@~N~@~Y~@~~@~~@~~@~~@~~@~100~@~
 1293~@~AdmFlowchart [   30] Main: ChartDesc   100 [Default]~@~4380~@~1027~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1295~@~AdmTemplatePerm [   10] Main: TemplateId   100 [Default]~@~4441~@~1030~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1296~@~AdmTemplatePerm [   60] Main: TemplatePrmId   100 [Default]~@~4446~@~1030~@~N~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1297~@~AdmTemplatePerm [   20] Main: TemplateName   100 [Default]~@~4442~@~1030~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1298~@~AdmTemplatePerm [   30] Main: TmplPrefix   100 [Default]~@~4443~@~1030~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~
+1299~@~AdmTemplatePerm [   40] Main: TmplDefault   100 [Default]~@~4444~@~1030~@~Y~@~Y~@~Y~@~~@~~@~~@~~@~~@~100~@~

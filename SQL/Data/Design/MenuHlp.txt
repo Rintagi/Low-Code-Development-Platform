@@ -1221,3 +1221,31 @@
 3029~@~1378~@~1~@~Flowchart IDE
 3030~@~1379~@~1~@~Rintagi Postman
 3031~@~1380~@~1~@~Company Preference
+3032~@~1381~@~1~@~Report Template Permission
+3033~@~20~@~2~@~Autorisation d'objet
+3034~@~21~@~2~@~Autorisation de ligne
+3035~@~303~@~2~@~Mode d'emploi
+3036~@~317~@~2~@~Membre pour la RS&DE
+3037~@~318~@~2~@~Demandes RS&DE
+3038~@~319~@~2~@~Suivi du temps RS&DE
+3039~@~320~@~2~@~Versement RS&DE
+3040~@~322~@~2~@~Rapport de temps RS&DE
+3041~@~323~@~2~@~Statistique RS&DE
+3042~@~324~@~2~@~Objet de section
+3043~@~326~@~2~@~Style de ligne de section
+3044~@~327~@~2~@~Style de colonne de section
+3045~@~342~@~2~@~INVISIBLE
+3046~@~343~@~2~@~Élément du menu
+3047~@~346~@~2~@~Liste des autorisations
+3048~@~347~@~2~@~Rapport d'audit de connexion
+3049~@~1348~@~2~@~Étiquette d'objet d'écran
+3050~@~1349~@~2~@~EDI d'objet
+3051~@~1373~@~2~@~En-tête de piste d'audit
+3052~@~1374~@~2~@~Détail de l'audit de l'écran
+3053~@~1375~@~2~@~Exemple de paiement PayPal
+3054~@~1376~@~2~@~Installation Rintagi
+3055~@~1377~@~2~@~Remplacement de la règle du se
+3056~@~1378~@~2~@~IDE d'organigramme
+3057~@~1379~@~2~@~Facteur Rintagi
+3058~@~1380~@~2~@~Préférence de l'entreprise
+3059~@~1381~@~2~@~Autorisation du modèle de rapp

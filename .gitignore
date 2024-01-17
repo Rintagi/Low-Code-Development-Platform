@@ -85,4 +85,5 @@ npm
 *.suo
 *.cache
 .eslintcache
+**/venv*/*
 Thumbs.db

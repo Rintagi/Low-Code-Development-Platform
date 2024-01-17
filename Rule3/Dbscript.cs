@@ -626,7 +626,7 @@ ORDER BY so1.name"
 				foreach (DataRow dr2 in dtVw.Rows) {sbView.Append(dr2[0].ToString());}
 				if (!sbView.ToString().Equals(""))
 				{
-                    Regex rx = new Regex("(CREATE VIEW)(\\s+.*)((\\[)?" + dr[0].ToString() + "(\\])?)(.*\\s+AS)",RegexOptions.IgnoreCase);
+                    Regex rx = new Regex("(CREATE\\s+VIEW)(\\s+.*)((\\[)?" + dr[0].ToString() + "(\\])?)(.*\\s+AS)",RegexOptions.IgnoreCase);
                     //sbCrea.Append("if exists (select * from dbo.sysobjects where id = object_id(N'dbo." + dr[0].ToString() + "') and OBJECTPROPERTY(id, N'IsView') = 1)\r\n");
                     //sbCrea.Append("drop view dbo." + dr[0].ToString() + "\r\n");
                     //sbCrea.Append("GO\r\n");
@@ -645,6 +645,14 @@ ORDER BY so1.name"
 			}
 			return sbCrea.ToString();
 		}
+
+        public DataTable ExecSP(string spName, CurrSrc CSrc)
+        {
+            using (DbScriptAccessBase dac = GetDbScriptAccess())
+            {
+                return dac.ExecSP(spName, CSrc);
+            }
+        }
 
 		public string ScriptSProcedures(string SrcDbProviderCd, string TarDbProviderCd, bool IsFrSource, CurrSrc CSrc, CurrTar CTar)
 		{

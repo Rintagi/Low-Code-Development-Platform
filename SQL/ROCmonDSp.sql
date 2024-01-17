@@ -531,6 +531,2500 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1006D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1006D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1006D
+ @ScreenObjHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(max)
+		,@OToolTip		NVarChar(1000)
+		,@OErrMessage		NVarChar(1000)
+		,@OTbHint		NVarChar(1000)
+SELECT @SearchCol=ScreenObjHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader,@OToolTip=ToolTip,@OErrMessage=ErrMessage,@OTbHint=TbHint FROM dbo.ScreenObjHlp WHERE ScreenObjHlpId=@ScreenObjHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1006,'N',21,@ScreenObjHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3255,'Culture',163,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3256,'Column Header',164,'ColumnHeader',@OColumnHeader,NULL
+IF @OToolTip IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3257,'Tool Tips',165,'ToolTip',@OToolTip,NULL
+IF @OErrMessage IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3258,'Error Message',166,'ErrMessage',@OErrMessage,NULL
+IF @OTbHint IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3259,'Watermark',2160,'TbHint',@OTbHint,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1006M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1006M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1006M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=ScreenObjId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1006,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1007M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1007M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1007M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OGroupRowId		SmallInt
+		,@OGroupColId		SmallInt
+		,@OColumnName		VarChar(50)
+		,@OTabFolderId		Int
+		,@OTabIndex		SmallInt
+		,@OMasterTable		Char(1)
+SELECT @SearchCol=ScreenObjId,@OScreenId=ScreenId,@OGroupRowId=GroupRowId,@OGroupColId=GroupColId,@OColumnName=ColumnName,@OTabFolderId=TabFolderId,@OTabIndex=TabIndex,@OMasterTable=MasterTable FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1007,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3261,'Screen ID',934,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OGroupRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3263,'Group Row',5279,'GroupRowId',CONVERT(varchar(100),@OGroupRowId),NULL
+IF @OGroupColId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3264,'Group Col',1016,'GroupColId',CONVERT(varchar(100),@OGroupColId),NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3269,'ColumnName',110,'ColumnName',@OColumnName,NULL
+IF @OTabFolderId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3291,'Tab Folder',119,'TabFolderId',CONVERT(varchar(100),@OTabFolderId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3292,'TabIndex',120,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3359,'Master Table',108,'MasterTable',@OMasterTable,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add100M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add100M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add100M
+ @RptChaId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptCtrId		Int
+		,@OReportId		Int
+		,@ORptChaTypeCd		Char(2)
+		,@OThreeD		Char(1)
+		,@OCategoryGrp		Int
+		,@OChartData		NVarChar(1000)
+		,@OSeriesGrp		Int
+SELECT @SearchCol=RptChaId,@ORptCtrId=RptCtrId,@OReportId=ReportId,@ORptChaTypeCd=RptChaTypeCd,@OThreeD=ThreeD,@OCategoryGrp=CategoryGrp,@OChartData=ChartData,@OSeriesGrp=SeriesGrp FROM dbo.RptCha WHERE RptChaId=@RptChaId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',100,'Y',206,@RptChaId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptCtrId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1732,'Control',1723,'RptCtrId',CONVERT(varchar(100),@ORptCtrId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1733,'Report',1724,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @ORptChaTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1734,'Chart Type',1725,'RptChaTypeCd',@ORptChaTypeCd,NULL
+IF @OThreeD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1735,'3D',1726,'ThreeD',@OThreeD,NULL
+IF @OCategoryGrp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1736,'Category',1727,'CategoryGrp',CONVERT(varchar(100),@OCategoryGrp),NULL
+IF @OChartData IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1737,'Value',1728,'ChartData',@OChartData,NULL
+IF @OSeriesGrp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1738,'Series',1729,'SeriesGrp',CONVERT(varchar(100),@OSeriesGrp),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1019M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1019M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1019M
+ @ScrAuditId		BigInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCudAction		Char(1)
+		,@OScreenId		Int
+		,@OMasterTable		Char(1)
+		,@OTableId		Int
+		,@ORowId		BigInt
+		,@ORowDesc		NVarChar(max)
+		,@OChangedBy		Int
+		,@OChangedOn		DateTime
+SELECT @SearchCol=ScrAuditId,@OCudAction=CudAction,@OScreenId=ScreenId,@OMasterTable=MasterTable,@OTableId=TableId,@ORowId=RowId,@ORowDesc=RowDesc,@OChangedBy=ChangedBy,@OChangedOn=ChangedOn FROM dbo.ScrAudit WHERE ScrAuditId=@ScrAuditId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1019,'Y',1300,@ScrAuditId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCudAction IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4106,'Action',7420,'CudAction',@OCudAction,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4107,'Screen',7425,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4108,'Master',7421,'MasterTable',@OMasterTable,NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4109,'TableId',7426,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @ORowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4110,'Row ID',7423,'RowId',CONVERT(varchar(100),@ORowId),NULL
+IF @ORowDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4111,'Row Description',7422,'RowDesc',@ORowDesc,NULL
+IF @OChangedBy IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4112,'Changed By',7418,'ChangedBy',CONVERT(varchar(100),@OChangedBy),NULL
+IF @OChangedOn IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4113,'Changed On',7419,'ChangedOn',CONVERT(varchar(10),@OChangedOn,102),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1020M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1020M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1020M
+ @ScrAuditDtlId		BigInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScrAuditId		BigInt
+		,@OScreenObjId		Int
+		,@OScreenObjDesc		NVarChar(max)
+		,@OColumnId		Int
+		,@OColumnDesc		NVarChar(max)
+		,@OChangedFr		NVarChar(max)
+		,@OChangedTo		NVarChar(max)
+SELECT @SearchCol=ScrAuditDtlId,@OScrAuditId=ScrAuditId,@OScreenObjId=ScreenObjId,@OScreenObjDesc=ScreenObjDesc,@OColumnId=ColumnId,@OColumnDesc=ColumnDesc,@OChangedFr=ChangedFr,@OChangedTo=ChangedTo FROM dbo.ScrAuditDtl WHERE ScrAuditDtlId=@ScrAuditDtlId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1020,'Y',1301,@ScrAuditDtlId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScrAuditId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4115,'Audit ID',7432,'ScrAuditId',CONVERT(varchar(100),@OScrAuditId),NULL
+IF @OScreenObjId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4116,'Field ID',7434,'ScreenObjId',CONVERT(varchar(100),@OScreenObjId),NULL
+IF @OScreenObjDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4117,'Field Description',7433,'ScreenObjDesc',@OScreenObjDesc,NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4118,'Column ID',7430,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OColumnDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4119,'Column Name',7429,'ColumnDesc',@OColumnDesc,NULL
+IF @OChangedFr IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4120,'Changed From',7427,'ChangedFr',@OChangedFr,NULL
+IF @OChangedTo IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4121,'Changed To',7428,'ChangedTo',@OChangedTo,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1026D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1026D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1026D
+ @ServerRuledOvrdPrmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OAndCondition		Char(1)
+		,@OPermKeyRowId		Int
+		,@OMatch		Char(1)
+SELECT @SearchCol=ServerRuledOvrdPrmId,@OPermKeyId=PermKeyId,@OAndCondition=AndCondition,@OPermKeyRowId=PermKeyRowId,@OMatch=Match FROM dbo.AtServerRuleOvrdPrm WHERE ServerRuledOvrdPrmId=@ServerRuledOvrdPrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1026,'N',1321,@ServerRuledOvrdPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4363,'Entity Type',7618,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OAndCondition IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4364,'AndCondition',7617,'AndCondition',@OAndCondition,NULL
+IF @OPermKeyRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4369,'Entity',7635,'PermKeyRowId',CONVERT(varchar(100),@OPermKeyRowId),NULL
+IF @OMatch IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4371,'Match',7634,'Match',@OMatch,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1026M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1026M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1026M
+ @AtServerRuleOvrdId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OServerRuleOvrdDesc		VarChar(1000)
+		,@OServerRuleOvrdName		VarChar(500)
+		,@OServerRuleId		Int
+		,@ODisable		Char(1)
+		,@OPriority		SmallInt
+		,@OScreenId		Int
+		,@ORunMode		Char(1)
+SELECT @SearchCol=AtServerRuleOvrdId,@OServerRuleOvrdDesc=ServerRuleOvrdDesc,@OServerRuleOvrdName=ServerRuleOvrdName,@OServerRuleId=ServerRuleId,@ODisable=Disable,@OPriority=Priority,@OScreenId=ScreenId,@ORunMode=RunMode FROM dbo.AtServerRuleOvrd WHERE AtServerRuleOvrdId=@AtServerRuleOvrdId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1026,'Y',1322,@AtServerRuleOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OServerRuleOvrdDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4357,'ServerRuleOvrdDesc',7625,'ServerRuleOvrdDesc',@OServerRuleOvrdDesc,NULL
+IF @OServerRuleOvrdName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4358,'ServerRuleOvrdName',7626,'ServerRuleOvrdName',@OServerRuleOvrdName,NULL
+IF @OServerRuleId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4359,'ServerRuleId',7624,'ServerRuleId',CONVERT(varchar(100),@OServerRuleId),NULL
+IF @ODisable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4360,'Disable',7623,'Disable',@ODisable,NULL
+IF @OPriority IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4366,'Priority',7631,'Priority',CONVERT(varchar(100),@OPriority),NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4367,'Screen',7630,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ORunMode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4373,'Run Mode',7640,'RunMode',@ORunMode,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1030D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1030D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1030D
+ @TemplatePrmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OGrantDeny		Char(1)
+		,@OPermKeyId		SmallInt
+		,@OPermId		Int
+SELECT @SearchCol=TemplatePrmId,@OGrantDeny=GrantDeny,@OPermKeyId=PermKeyId,@OPermId=PermId FROM dbo.TemplatePrm WHERE TemplatePrmId=@TemplatePrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1030,'N',1331,@TemplatePrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OGrantDeny IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4448,'Grant/Deny',7707,'GrantDeny',@OGrantDeny,NULL
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4449,'Entity Type',7704,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OPermId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4450,'Entity',7703,'PermId',CONVERT(varchar(100),@OPermId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add1030M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add1030M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add1030M
+ @TemplateId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTemplateName		NVarChar(30)
+		,@OTmplPrefix		VarChar(10)
+		,@OTmplDefault		Char(1)
+SELECT @SearchCol=TemplateId,@OTemplateName=TemplateName,@OTmplPrefix=TmplPrefix,@OTmplDefault=TmplDefault FROM dbo.Template WHERE TemplateId=@TemplateId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',1030,'Y',79,@TemplateId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTemplateName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4442,'Template Name',609,'TemplateName',@OTemplateName,NULL
+IF @OTmplPrefix IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4443,'Template Prefix',610,'TmplPrefix',@OTmplPrefix,NULL
+IF @OTmplDefault IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4444,'Default',611,'TmplDefault',@OTmplDefault,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add10M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add10M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add10M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMasterTable		Char(1)
+		,@OColumnId		Int
+		,@OColumnName		VarChar(50)
+		,@ODefaultValue		NVarChar(200)
+		,@OSystemValue		NVarChar(200)
+		,@OColumnSize		SmallInt
+		,@OColumnHeight		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ODdlKeyColumnId		Int
+		,@ODdlRefColumnId		Int
+		,@ORequiredValid		Char(1)
+		,@OMaskValid		VarChar(100)
+		,@ORangeValidType		VarChar(50)
+		,@ORangeValidMax		VarChar(50)
+		,@ORangeValidMin		VarChar(50)
+		,@OGenerateSp		Char(1)
+		,@OSortOrder		SmallInt
+		,@OColumnWrap		Char(1)
+		,@OGroupColId		SmallInt
+		,@OColumnLink		VarChar(1000)
+		,@OAggregateCd		Char(1)
+		,@OScreenId		Int
+		,@ODdlSrtColumnId		Int
+		,@ORefreshOnCUD		Char(1)
+		,@ODdlAdnColumnId		Int
+		,@ODdlFtrColumnId		Int
+		,@OColumnJustify		Char(1)
+		,@OTrimOnEntry		Char(1)
+		,@OMatchCd		Char(1)
+		,@OLabelCss		VarChar(1000)
+		,@OContentCss		VarChar(1000)
+		,@OIgnoreConfirm		Char(1)
+		,@OGridGrpCd		Char(1)
+		,@ODefAfter		Char(1)
+		,@ODefAlways		Char(1)
+		,@OLabelVertical		Char(1)
+		,@OHyperLinkUrl		NVarChar(200)
+		,@OGroupRowId		SmallInt
+		,@OHideOnTablet		Char(1)
+		,@OHideOnMobile		Char(1)
+		,@OResizeWidth		SmallInt
+		,@OResizeHeight		SmallInt
+		,@ODtlLstPosId		TinyInt
+SELECT @SearchCol=ScreenObjId,@OMasterTable=MasterTable,@OColumnId=ColumnId,@OColumnName=ColumnName,@ODefaultValue=DefaultValue,@OSystemValue=SystemValue,@OColumnSize=ColumnSize,@OColumnHeight=ColumnHeight,@ODisplayModeId=DisplayModeId,@ODdlKeyColumnId=DdlKeyColumnId,@ODdlRefColumnId=DdlRefColumnId,@ORequiredValid=RequiredValid,@OMaskValid=MaskValid,@ORangeValidType=RangeValidType,@ORangeValidMax=RangeValidMax,@ORangeValidMin=RangeValidMin,@OGenerateSp=GenerateSp,@OSortOrder=SortOrder,@OColumnWrap=ColumnWrap,@OGroupColId=GroupColId,@OColumnLink=ColumnLink,@OAggregateCd=AggregateCd,@OScreenId=ScreenId,@ODdlSrtColumnId=DdlSrtColumnId,@ORefreshOnCUD=RefreshOnCUD,@ODdlAdnColumnId=DdlAdnColumnId,@ODdlFtrColumnId=DdlFtrColumnId,@OColumnJustify=ColumnJustify,@OTrimOnEntry=TrimOnEntry,@OMatchCd=MatchCd,@OLabelCss=LabelCss,@OContentCss=ContentCss,@OIgnoreConfirm=IgnoreConfirm,@OGridGrpCd=GridGrpCd,@ODefAfter=DefAfter,@ODefAlways=DefAlways,@OLabelVertical=LabelVertical,@OHyperLinkUrl=HyperLinkUrl,@OGroupRowId=GroupRowId,@OHideOnTablet=HideOnTablet,@OHideOnMobile=HideOnMobile,@OResizeWidth=ResizeWidth,@OResizeHeight=ResizeHeight,@ODtlLstPosId=DtlLstPosId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',10,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,73,'Master Table',108,'MasterTable',@OMasterTable,NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,74,'Database Column',109,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,75,'Column Name',110,'ColumnName',@OColumnName,NULL
+IF @ODefaultValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,76,'Default Value',111,'DefaultValue',@ODefaultValue,NULL
+IF @OSystemValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,77,'System Value',112,'SystemValue',@OSystemValue,NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,79,'Display Width',114,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @OColumnHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,80,'Display Height',115,'ColumnHeight',CONVERT(varchar(100),@OColumnHeight),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,81,'Display Mode',116,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @ODdlKeyColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,82,'Key Column',117,'DdlKeyColumnId',CONVERT(varchar(100),@ODdlKeyColumnId),NULL
+IF @ODdlRefColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,83,'Reference Column',118,'DdlRefColumnId',CONVERT(varchar(100),@ODdlRefColumnId),NULL
+IF @ORequiredValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,86,'Mandatory',121,'RequiredValid',@ORequiredValid,NULL
+IF @OMaskValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,87,'Input Mask',122,'MaskValid',@OMaskValid,NULL
+IF @ORangeValidType IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,88,'Range Type',123,'RangeValidType',@ORangeValidType,NULL
+IF @ORangeValidMax IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,89,'Range Max',124,'RangeValidMax',@ORangeValidMax,NULL
+IF @ORangeValidMin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,90,'Range Min',125,'RangeValidMin',@ORangeValidMin,NULL
+IF @OGenerateSp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,572,'Generate',467,'GenerateSp',@OGenerateSp,NULL
+IF @OSortOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,723,'Sort Order',623,'SortOrder',CONVERT(varchar(100),@OSortOrder),NULL
+IF @OColumnWrap IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1203,'Content Wrap',1012,'ColumnWrap',@OColumnWrap,NULL
+IF @OGroupColId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1204,'Column Group',1016,'GroupColId',CONVERT(varchar(100),@OGroupColId),NULL
+IF @OColumnLink IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1220,'Search Link',1053,'ColumnLink',@OColumnLink,NULL
+IF @OAggregateCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1238,'Aggregate',1082,'AggregateCd',@OAggregateCd,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1268,'Screen',934,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ODdlSrtColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1269,'Sort Column',1119,'DdlSrtColumnId',CONVERT(varchar(100),@ODdlSrtColumnId),NULL
+IF @ORefreshOnCUD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1280,'Refresh on CUD',1122,'RefreshOnCUD',@ORefreshOnCUD,NULL
+IF @ODdlAdnColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1281,'Additional Column',1123,'DdlAdnColumnId',CONVERT(varchar(100),@ODdlAdnColumnId),NULL
+IF @ODdlFtrColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1282,'= Screen Filter Column',1124,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),NULL
+IF @OColumnJustify IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1422,'Justify',1365,'ColumnJustify',@OColumnJustify,NULL
+IF @OTrimOnEntry IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1483,'Trim On Entry',1482,'TrimOnEntry',@OTrimOnEntry,NULL
+IF @OMatchCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1806,'Import Match',1849,'MatchCd',@OMatchCd,NULL
+IF @OLabelCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1857,'Label Style',1894,'LabelCss',@OLabelCss,NULL
+IF @OContentCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1858,'Content Style',1893,'ContentCss',@OContentCss,NULL
+IF @OIgnoreConfirm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1982,'Ignore Confirm',2102,'IgnoreConfirm',@OIgnoreConfirm,NULL
+IF @OGridGrpCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2016,'Grid Grouping',2145,'GridGrpCd',@OGridGrpCd,NULL
+IF @ODefAfter IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2033,'Default After',2163,'DefAfter',@ODefAfter,NULL
+IF @ODefAlways IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2034,'Default Always',2162,'DefAlways',@ODefAlways,NULL
+IF @OLabelVertical IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3104,'Label On Top',4248,'LabelVertical',@OLabelVertical,NULL
+IF @OHyperLinkUrl IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3110,'Static Link URL',4249,'HyperLinkUrl',@OHyperLinkUrl,NULL
+IF @OGroupRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3136,'Row Group',5279,'GroupRowId',CONVERT(varchar(100),@OGroupRowId),NULL
+IF @OHideOnTablet IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3155,'Hide On Tablet',5304,'HideOnTablet',@OHideOnTablet,NULL
+IF @OHideOnMobile IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3156,'Hide On Mobile',5303,'HideOnMobile',@OHideOnMobile,NULL
+IF @OResizeWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4166,'Resize Width',7481,'ResizeWidth',CONVERT(varchar(100),@OResizeWidth),NULL
+IF @OResizeHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4167,'Resize Height',7480,'ResizeHeight',CONVERT(varchar(100),@OResizeHeight),NULL
+IF @ODtlLstPosId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4206,'Mobile Search Position',7542,'DtlLstPosId',CONVERT(varchar(100),@ODtlLstPosId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add112M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add112M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add112M
+ @LabelId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OLabelCat		VarChar(50)
+		,@OLabelKey		VarChar(50)
+		,@OLabelText		NVarChar(max)
+		,@OCompanyId		Int
+		,@OSortOrder		SmallInt
+SELECT @SearchCol=LabelId,@OCultureId=CultureId,@OLabelCat=LabelCat,@OLabelKey=LabelKey,@OLabelText=LabelText,@OCompanyId=CompanyId,@OSortOrder=SortOrder FROM dbo.Label WHERE LabelId=@LabelId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',112,'Y',215,@LabelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1967,'Culture',1796,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OLabelCat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1968,'Category',1794,'LabelCat',@OLabelCat,NULL
+IF @OLabelKey IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1969,'Key',1795,'LabelKey',@OLabelKey,NULL
+IF @OLabelText IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1970,'Label Text',1798,'LabelText',@OLabelText,NULL
+IF @OCompanyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1971,'Company',1797,'CompanyId',CONVERT(varchar(100),@OCompanyId),NULL
+IF @OSortOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1972,'Sort Order',2030,'SortOrder',CONVERT(varchar(100),@OSortOrder),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add113M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add113M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add113M
+ @TbdRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OTbdRuleName		NVarChar(100)
+		,@OTbdRuleDesc		NVarChar(max)
+SELECT @SearchCol=TbdRuleId,@OScreenId=ScreenId,@OTbdRuleName=TbdRuleName,@OTbdRuleDesc=TbdRuleDesc FROM dbo.TbdRule WHERE TbdRuleId=@TbdRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',113,'Y',254,@TbdRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1977,'Screen',2082,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OTbdRuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1978,'Rule Name',2084,'TbdRuleName',@OTbdRuleName,NULL
+IF @OTbdRuleDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1979,'Description',2083,'TbdRuleDesc',@OTbdRuleDesc,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add114M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add114M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add114M
+ @StaticPgId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticPgTitle		NVarChar(100)
+		,@OStaticPgCss		NVarChar(max)
+		,@OMasterPgFile		VarChar(100)
+		,@OStaticPgJs		NVarChar(max)
+		,@OStaticCsId		SmallInt
+		,@OStaticJsId		SmallInt
+		,@OStaticPgNm		VarChar(50)
+		,@OStaticMeta		NVarChar(1000)
+SELECT @SearchCol=StaticPgId,@OStaticPgTitle=StaticPgTitle,@OStaticPgCss=StaticPgCss,@OMasterPgFile=MasterPgFile,@OStaticPgJs=StaticPgJs,@OStaticCsId=StaticCsId,@OStaticJsId=StaticJsId,@OStaticPgNm=StaticPgNm,@OStaticMeta=StaticMeta FROM dbo.StaticPg WHERE StaticPgId=@StaticPgId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',114,'Y',259,@StaticPgId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticPgTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1994,'Page Title',2125,'StaticPgTitle',@OStaticPgTitle,NULL
+IF @OStaticPgCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1995,'',2126,'StaticPgCss',@OStaticPgCss,NULL
+IF @OMasterPgFile IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1997,'Master Page File',2128,'MasterPgFile',@OMasterPgFile,NULL
+IF @OStaticPgJs IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2009,'',2142,'StaticPgJs',@OStaticPgJs,NULL
+IF @OStaticCsId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2011,'Shared CSS',2140,'StaticCsId',CONVERT(varchar(100),@OStaticCsId),NULL
+IF @OStaticJsId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2012,'Shared Javascript',2141,'StaticJsId',CONVERT(varchar(100),@OStaticJsId),NULL
+IF @OStaticPgNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2013,'Page Name',2143,'StaticPgNm',@OStaticPgNm,NULL
+IF @OStaticMeta IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2032,'Description',2161,'StaticMeta',@OStaticMeta,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add115M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add115M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add115M
+ @StaticCsId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticCsNm		NVarChar(200)
+		,@OStyleDef		NVarChar(max)
+SELECT @SearchCol=StaticCsId,@OStaticCsNm=StaticCsNm,@OStyleDef=StyleDef FROM dbo.StaticCs WHERE StaticCsId=@StaticCsId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',115,'Y',260,@StaticCsId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticCsNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2002,'CSS Name',2134,'StaticCsNm',@OStaticCsNm,NULL
+IF @OStyleDef IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2003,'Definition',2133,'StyleDef',@OStyleDef,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add116M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add116M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add116M
+ @StaticJsId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticJsNm		NVarChar(200)
+		,@OScriptDef		NVarChar(max)
+SELECT @SearchCol=StaticJsId,@OStaticJsNm=StaticJsNm,@OScriptDef=ScriptDef FROM dbo.StaticJs WHERE StaticJsId=@StaticJsId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',116,'Y',261,@StaticJsId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticJsNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2005,'Javascript Name',2136,'StaticJsNm',@OStaticJsNm,NULL
+IF @OScriptDef IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2006,'Definition',2137,'ScriptDef',@OScriptDef,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add117M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add117M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add117M
+ @StaticFiId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticFiUrl		NVarChar(200)
+SELECT @SearchCol=StaticFiId,@OStaticFiUrl=StaticFiUrl FROM dbo.StaticFi WHERE StaticFiId=@StaticFiId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',117,'Y',262,@StaticFiId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticFiUrl IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2008,'File/Image URL',2139,'StaticFiUrl',@OStaticFiUrl,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add118M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add118M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add118M
+ @CronJobId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCronJobName		NVarChar(200)
+		,@OYear		SmallInt
+		,@OMonth		TinyInt
+		,@ODay		TinyInt
+		,@OHour		TinyInt
+		,@OMinute		TinyInt
+		,@ODayOfWeek		TinyInt
+		,@OLastRun		DateTime
+		,@ONextRun		DateTime
+		,@OJobLink		VarChar(200)
+		,@OLastStatus		NVarChar(500)
+SELECT @SearchCol=CronJobId,@OCronJobName=CronJobName,@OYear=Year,@OMonth=Month,@ODay=Day,@OHour=Hour,@OMinute=Minute,@ODayOfWeek=DayOfWeek,@OLastRun=LastRun,@ONextRun=NextRun,@OJobLink=JobLink,@OLastStatus=LastStatus FROM dbo.CronJob WHERE CronJobId=@CronJobId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',118,'Y',264,@CronJobId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCronJobName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2020,'Job Name',2159,'CronJobName',@OCronJobName,NULL
+IF @OYear IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2021,'Year',2158,'Year',CONVERT(varchar(100),@OYear),NULL
+IF @OMonth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2022,'Month',2156,'Month',CONVERT(varchar(100),@OMonth),NULL
+IF @ODay IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2023,'Day',2149,'Day',CONVERT(varchar(100),@ODay),NULL
+IF @OHour IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2024,'Hour',2151,'Hour',CONVERT(varchar(100),@OHour),NULL
+IF @OMinute IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2025,'Minute',2155,'Minute',CONVERT(varchar(100),@OMinute),NULL
+IF @ODayOfWeek IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2026,'Day-of-Week',2150,'DayOfWeek',CONVERT(varchar(100),@ODayOfWeek),NULL
+IF @OLastRun IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2027,'Last Run',2153,'LastRun',CONVERT(varchar(10),@OLastRun,102),NULL
+IF @ONextRun IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2028,'Next Run',2157,'NextRun',CONVERT(varchar(10),@ONextRun,102),NULL
+IF @OJobLink IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2029,'Job Link',2152,'JobLink',@OJobLink,NULL
+IF @OLastStatus IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2030,'Status',2154,'LastStatus',@OLastStatus,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add119M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add119M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add119M
+ @LabelId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OLabelCat		VarChar(50)
+		,@OLabelKey		VarChar(50)
+		,@OLabelText		NVarChar(max)
+		,@OSortOrder		SmallInt
+SELECT @SearchCol=LabelId,@OCultureId=CultureId,@OLabelCat=LabelCat,@OLabelKey=LabelKey,@OLabelText=LabelText,@OSortOrder=SortOrder FROM dbo.VwLabel WHERE LabelId=@LabelId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',119,'Y',265,@LabelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2037,'Culture ID',2165,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OLabelCat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2038,'Category',2166,'LabelCat',@OLabelCat,NULL
+IF @OLabelKey IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2039,'Key',2167,'LabelKey',@OLabelKey,NULL
+IF @OLabelText IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2040,'Label Text',2168,'LabelText',@OLabelText,NULL
+IF @OSortOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2042,'Sort Order',2169,'SortOrder',CONVERT(varchar(100),@OSortOrder),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add121M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add121M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add121M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMenuIndex		SmallInt
+		,@OParentId		Int
+SELECT @SearchCol=MenuId,@OMenuIndex=MenuIndex,@OParentId=ParentId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',121,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OMenuIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2056,'MenuIndex',324,'MenuIndex',CONVERT(varchar(100),@OMenuIndex),NULL
+IF @OParentId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2060,'ParentId',323,'ParentId',CONVERT(varchar(100),@OParentId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add13D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add13D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add13D
+ @ReportObjHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+		,@OHeaderWidth		SmallInt
+SELECT @SearchCol=ReportObjHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader,@OHeaderWidth=HeaderWidth FROM dbo.ReportObjHlp WHERE ReportObjHlpId=@ReportObjHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',13,'N',99,@ReportObjHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1276,'Culture',930,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1277,'Column Header',931,'ColumnHeader',@OColumnHeader,NULL
+IF @OHeaderWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1338,'Width',1193,'HeaderWidth',CONVERT(varchar(100),@OHeaderWidth),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add13M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add13M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add13M
+ @ReportObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OColumnName		VarChar(50)
+		,@ODataTypeId		TinyInt
+		,@OTabIndex		SmallInt
+		,@OColumnFormat		VarChar(20)
+		,@OPaddSize		TinyInt
+		,@OOperatorId		TinyInt
+		,@OReportCriId		Int
+		,@OPaddChar		NChar(1)
+		,@ORptObjTypeCd		Char(1)
+SELECT @SearchCol=ReportObjId,@OReportId=ReportId,@OColumnName=ColumnName,@ODataTypeId=DataTypeId,@OTabIndex=TabIndex,@OColumnFormat=ColumnFormat,@OPaddSize=PaddSize,@OOperatorId=OperatorId,@OReportCriId=ReportCriId,@OPaddChar=PaddChar,@ORptObjTypeCd=RptObjTypeCd FROM dbo.ReportObj WHERE ReportObjId=@ReportObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',13,'Y',23,@ReportObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,121,'Report',870,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,130,'Column Name',176,'ColumnName',@OColumnName,NULL
+IF @ODataTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,133,'Data Type',179,'DataTypeId',CONVERT(varchar(100),@ODataTypeId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,138,'Tab Order',184,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @OColumnFormat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,690,'Column Format',598,'ColumnFormat',@OColumnFormat,NULL
+IF @OPaddSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,985,'Padding Size',888,'PaddSize',CONVERT(varchar(100),@OPaddSize),NULL
+IF @OOperatorId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1024,'Criteria Operator',925,'OperatorId',CONVERT(varchar(100),@OOperatorId),NULL
+IF @OReportCriId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1025,'Criteria Column',926,'ReportCriId',CONVERT(varchar(100),@OReportCriId),NULL
+IF @OPaddChar IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1456,'With Character',1377,'PaddChar',@OPaddChar,NULL
+IF @ORptObjTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1469,'Column Type',1403,'RptObjTypeCd',@ORptObjTypeCd,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add14M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add14M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add14M
+ @ServerRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@ORuleTypeId		TinyInt
+		,@OMasterTable		Char(1)
+		,@ORuleName		NVarChar(100)
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleOrder		SmallInt
+		,@OProcedureName		VarChar(50)
+		,@OParameterNames		VarChar(max)
+		,@OParameterTypes		VarChar(max)
+		,@OCallingParams		VarChar(max)
+		,@OOnAdd		Char(1)
+		,@OOnUpd		Char(1)
+		,@OOnDel		Char(1)
+		,@OBeforeCRUD		Char(1)
+		,@ORuleCode		NVarChar(max)
+		,@OLastGenDt		DateTime
+		,@ORunMode		Char(1)
+		,@OSrcNS		VarChar(30)
+SELECT @SearchCol=ServerRuleId,@OScreenId=ScreenId,@ORuleTypeId=RuleTypeId,@OMasterTable=MasterTable,@ORuleName=RuleName,@ORuleDescription=RuleDescription,@ORuleOrder=RuleOrder,@OProcedureName=ProcedureName,@OParameterNames=ParameterNames,@OParameterTypes=ParameterTypes,@OCallingParams=CallingParams,@OOnAdd=OnAdd,@OOnUpd=OnUpd,@OOnDel=OnDel,@OBeforeCRUD=BeforeCRUD,@ORuleCode=RuleCode,@OLastGenDt=LastGenDt,@ORunMode=RunMode,@OSrcNS=SrcNS FROM dbo.ServerRule WHERE ServerRuleId=@ServerRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',14,'Y',24,@ServerRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,139,'Screen',1140,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,151,'Rule Type',188,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,152,'Master Table',189,'MasterTable',@OMasterTable,NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,153,'Rule Name',190,'RuleName',@ORuleName,NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,154,'Description',191,'RuleDescription',@ORuleDescription,NULL
+IF @ORuleOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,155,'Exec Order',192,'RuleOrder',CONVERT(varchar(100),@ORuleOrder),NULL
+IF @OProcedureName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,156,'Procedure Name',193,'ProcedureName',@OProcedureName,NULL
+IF @OParameterNames IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,157,'Parameter Names',194,'ParameterNames',@OParameterNames,NULL
+IF @OParameterTypes IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,158,'Parameter Types',195,'ParameterTypes',@OParameterTypes,NULL
+IF @OCallingParams IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,159,'Calling Parameters',196,'CallingParams',@OCallingParams,NULL
+IF @OOnAdd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,160,'On Add',197,'OnAdd',@OOnAdd,NULL
+IF @OOnUpd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,161,'On Update',198,'OnUpd',@OOnUpd,NULL
+IF @OOnDel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,162,'On Delete',199,'OnDel',@OOnDel,NULL
+IF @OBeforeCRUD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,163,'CRUD',200,'BeforeCRUD',@OBeforeCRUD,NULL
+IF @ORuleCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1396,'S.Procedure',1263,'RuleCode',@ORuleCode,NULL
+IF @OLastGenDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1419,'Last Applied',1355,'LastGenDt',CONVERT(varchar(10),@OLastGenDt,102),NULL
+IF @ORunMode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4354,'Run Mode',7589,'RunMode',@ORunMode,NULL
+IF @OSrcNS IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4355,'Source NS',7612,'SrcNS',@OSrcNS,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add15M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add15M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add15M
+ @KeyId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OKeyName		VarChar(50)
+		,@OTableId		Int
+		,@OColumnId		Int
+		,@ORefTableId		Int
+		,@ORefColumnId		Int
+SELECT @SearchCol=KeyId,@OKeyName=KeyName,@OTableId=TableId,@OColumnId=ColumnId,@ORefTableId=RefTableId,@ORefColumnId=RefColumnId FROM dbo.DbKey WHERE KeyId=@KeyId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',15,'Y',20,@KeyId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OKeyName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,165,'Foreign Key Name',155,'KeyName',@OKeyName,NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,166,'FK Table',156,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,167,'FK Column',157,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @ORefTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,168,'PK Table',158,'RefTableId',CONVERT(varchar(100),@ORefTableId),NULL
+IF @ORefColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,169,'PK Column',159,'RefColumnId',CONVERT(varchar(100),@ORefColumnId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add16D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add16D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add16D
+ @ColOvrdId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OPriority		SmallInt
+		,@OColVisible		Char(1)
+		,@OColReadOnly		Char(1)
+		,@OColExport		Char(1)
+		,@OToolTip		NVarChar(200)
+		,@OColumnHeader		NVarChar(50)
+		,@OErrMessage		NVarChar(300)
+		,@OPermKeyRowId		Int
+SELECT @SearchCol=ColOvrdId,@OPermKeyId=PermKeyId,@OPriority=Priority,@OColVisible=ColVisible,@OColReadOnly=ColReadOnly,@OColExport=ColExport,@OToolTip=ToolTip,@OColumnHeader=ColumnHeader,@OErrMessage=ErrMessage,@OPermKeyRowId=PermKeyRowId FROM dbo.ColOvrd WHERE ColOvrdId=@ColOvrdId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',16,'N',241,@ColOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,182,'Entity Type',1971,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OPriority IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,184,'Priority',1964,'Priority',CONVERT(varchar(100),@OPriority),NULL
+IF @OColVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,185,'Visible',1965,'ColVisible',@OColVisible,NULL
+IF @OColReadOnly IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,186,'Read Only',1966,'ColReadOnly',@OColReadOnly,NULL
+IF @OColExport IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1331,'Exportable',1967,'ColExport',@OColExport,NULL
+IF @OToolTip IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1884,'Tool Tips',1969,'ToolTip',@OToolTip,NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1885,'Label Override',1968,'ColumnHeader',@OColumnHeader,NULL
+IF @OErrMessage IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1886,'Error Message',1970,'ErrMessage',@OErrMessage,NULL
+IF @OPermKeyRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1887,'Entity Value',7414,'PermKeyRowId',CONVERT(varchar(100),@OPermKeyRowId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add16M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add16M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add16M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=ScreenObjId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',16,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add17D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add17D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add17D
+ @RowOvrdPrmId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OSelLevel		Char(1)
+		,@OPermKeyId		SmallInt
+		,@OAndCondition		Char(1)
+SELECT @SearchCol=RowOvrdPrmId,@OSelLevel=SelLevel,@OPermKeyId=PermKeyId,@OAndCondition=AndCondition FROM dbo.RowOvrdPrm WHERE RowOvrdPrmId=@RowOvrdPrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',17,'N',239,@RowOvrdPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OSelLevel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1308,'Allow Select',1951,'SelLevel',@OSelLevel,NULL
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1882,'Entity Type',1950,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OAndCondition IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1981,'Condition',2099,'AndCondition',@OAndCondition,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add17M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add17M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add17M
+ @RowOvrdId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@ORowAuthId		SmallInt
+		,@OAllowSel		Char(1)
+		,@OAllowAdd		Char(1)
+		,@OAllowUpd		Char(1)
+		,@OAllowDel		Char(1)
+		,@OReportId		Int
+SELECT @SearchCol=RowOvrdId,@OScreenId=ScreenId,@ORowAuthId=RowAuthId,@OAllowSel=AllowSel,@OAllowAdd=AllowAdd,@OAllowUpd=AllowUpd,@OAllowDel=AllowDel,@OReportId=ReportId FROM dbo.RowOvrd WHERE RowOvrdId=@RowOvrdId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',17,'Y',238,@RowOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,188,'Screen',1940,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ORowAuthId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,200,'Row Authority',1942,'RowAuthId',CONVERT(varchar(100),@ORowAuthId),NULL
+IF @OAllowSel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,201,'Allow Select',1943,'AllowSel',@OAllowSel,NULL
+IF @OAllowAdd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,202,'Allow Add',1944,'AllowAdd',@OAllowAdd,NULL
+IF @OAllowUpd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,203,'Allow Update',1945,'AllowUpd',@OAllowUpd,NULL
+IF @OAllowDel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,204,'Allow Delete',1946,'AllowDel',@OAllowDel,NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1750,'Report',1941,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add2D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add2D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add2D
+ @ColumnId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnName		VarChar(50)
+		,@ODataType		TinyInt
+		,@OColumnLength		SmallInt
+		,@OAllowNulls		Char(1)
+		,@OColumnIdentity		Char(1)
+		,@OPrimaryKey		Char(1)
+		,@OColumnScale		TinyInt
+		,@OExternalTable		VarChar(50)
+		,@OColObjective		NVarChar(200)
+		,@OColumnIndex		SmallInt
+		,@ODefaultValue		NVarChar(50)
+		,@OIsIndex		Char(1)
+		,@OIsIndexU		Char(1)
+SELECT @SearchCol=ColumnId,@OColumnName=ColumnName,@ODataType=DataType,@OColumnLength=ColumnLength,@OAllowNulls=AllowNulls,@OColumnIdentity=ColumnIdentity,@OPrimaryKey=PrimaryKey,@OColumnScale=ColumnScale,@OExternalTable=ExternalTable,@OColObjective=ColObjective,@OColumnIndex=ColumnIndex,@ODefaultValue=DefaultValue,@OIsIndex=IsIndex,@OIsIndexU=IsIndexU FROM dbo.DbColumn WHERE ColumnId=@ColumnId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',2,'N',5,@ColumnId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,16,'Column Name',35,'ColumnName',@OColumnName,NULL
+IF @ODataType IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,17,'Data Type',36,'DataType',CONVERT(varchar(100),@ODataType),NULL
+IF @OColumnLength IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,19,'Length',34,'ColumnLength',CONVERT(varchar(100),@OColumnLength),NULL
+IF @OAllowNulls IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,20,'Nullable',32,'AllowNulls',@OAllowNulls,NULL
+IF @OColumnIdentity IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,21,'Identity',33,'ColumnIdentity',@OColumnIdentity,NULL
+IF @OPrimaryKey IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,22,'Primary Key',37,'PrimaryKey',@OPrimaryKey,NULL
+IF @OColumnScale IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,428,'Decimal',319,'ColumnScale',CONVERT(varchar(100),@OColumnScale),NULL
+IF @OExternalTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1198,'External Table',1007,'ExternalTable',@OExternalTable,NULL
+IF @OColObjective IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1334,'Column Objective',1192,'ColObjective',@OColObjective,NULL
+IF @OColumnIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1400,'Order',1266,'ColumnIndex',CONVERT(varchar(100),@OColumnIndex),NULL
+IF @ODefaultValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1401,'Default',1267,'DefaultValue',@ODefaultValue,NULL
+IF @OIsIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1774,'N/U-Index',1806,'IsIndex',@OIsIndex,NULL
+IF @OIsIndexU IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1983,'Unique Index',2109,'IsIndexU',@OIsIndexU,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add2M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add2M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add2M
+ @TableId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTableName		VarChar(500)
+		,@OTableDesc		NVarChar(100)
+		,@OSystemId		TinyInt
+		,@OMultiDesignDb		Char(1)
+		,@OTblObjective		NVarChar(500)
+		,@OLastSyncDt		DateTime
+		,@OVirtualTbl		Char(1)
+		,@OVirtualSql		NVarChar(max)
+SELECT @SearchCol=TableId,@OTableName=TableName,@OTableDesc=TableDesc,@OSystemId=SystemId,@OMultiDesignDb=MultiDesignDb,@OTblObjective=TblObjective,@OLastSyncDt=LastSyncDt,@OVirtualTbl=VirtualTbl,@OVirtualSql=VirtualSql FROM dbo.DbTable WHERE TableId=@TableId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',2,'Y',3,@TableId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTableName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,12,'Table Name',12,'TableName',@OTableName,NULL
+IF @OTableDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,13,'Description',13,'TableDesc',@OTableDesc,NULL
+IF @OSystemId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,430,'Database',321,'SystemId',CONVERT(varchar(100),@OSystemId),NULL
+IF @OMultiDesignDb IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,933,'Multi-design DB',823,'MultiDesignDb',@OMultiDesignDb,NULL
+IF @OTblObjective IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1332,'',1190,'TblObjective',@OTblObjective,NULL
+IF @OLastSyncDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1452,'Synchronized on',1374,'LastSyncDt',CONVERT(varchar(10),@OLastSyncDt,102),NULL
+IF @OVirtualTbl IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1753,'Virtual',1778,'VirtualTbl',@OVirtualTbl,NULL
+IF @OVirtualSql IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1757,'Function',1779,'VirtualSql',@OVirtualSql,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add35M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add35M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add35M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OParentId		Int
+		,@OMenuIndex		SmallInt
+		,@OScreenId		Int
+		,@OReportId		Int
+		,@OMiscellaneous		VarChar(1000)
+		,@OWizardId		Int
+		,@OStaticPgId		Int
+		,@OPopup		Char(1)
+		,@OReactQuickMenu		Char(1)
+SELECT @SearchCol=MenuId,@OParentId=ParentId,@OMenuIndex=MenuIndex,@OScreenId=ScreenId,@OReportId=ReportId,@OMiscellaneous=Miscellaneous,@OWizardId=WizardId,@OStaticPgId=StaticPgId,@OPopup=Popup,@OReactQuickMenu=ReactQuickMenu FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',35,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OParentId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,432,'Parent Item',323,'ParentId',CONVERT(varchar(100),@OParentId),NULL
+IF @OMenuIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,433,'Order',324,'MenuIndex',CONVERT(varchar(100),@OMenuIndex),NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,435,'Screen',326,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,436,'Report',327,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OMiscellaneous IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,437,'Miscellaneous',328,'Miscellaneous',@OMiscellaneous,NULL
+IF @OWizardId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,839,'Wizard',538,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+IF @OStaticPgId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1998,'Static Page',2129,'StaticPgId',CONVERT(varchar(100),@OStaticPgId),NULL
+IF @OPopup IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4139,'Popup',7438,'Popup',@OPopup,NULL
+IF @OReactQuickMenu IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4353,'React Quick Menu',7587,'ReactQuickMenu',@OReactQuickMenu,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add36D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add36D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add36D
+ @MenuHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OMenuText		NVarChar(50)
+SELECT @SearchCol=MenuHlpId,@OCultureId=CultureId,@OMenuText=MenuText FROM dbo.MenuHlp WHERE MenuHlpId=@MenuHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',36,'N',40,@MenuHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,448,'Culture',1304,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OMenuText IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,450,'Menu Label',332,'MenuText',@OMenuText,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add36M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add36M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add36M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=MenuId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',36,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add49D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add49D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add49D
+ @WizardObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnId		Int
+		,@OTabIndex		SmallInt
+SELECT @SearchCol=WizardObjId,@OColumnId=ColumnId,@OTabIndex=TabIndex FROM dbo.WizardObj WHERE WizardObjId=@WizardObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',49,'N',72,@WizardObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,642,'Column',551,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,644,'Tab Index',553,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add49M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add49M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add49M
+ @WizardId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OWizardTypeId		TinyInt
+		,@OMasterTableId		Int
+		,@OWizardTitle		NVarChar(50)
+		,@OProgramName		VarChar(50)
+		,@ODefWorkSheet		NVarChar(50)
+		,@ODefStartRow		SmallInt
+		,@ODefOverwrite		Char(1)
+		,@OOvwrReadonly		Char(1)
+		,@OAuthRequired		Char(1)
+		,@ONoTrans		Char(1)
+		,@OCommandTimeOut		SmallInt
+SELECT @SearchCol=WizardId,@OWizardTypeId=WizardTypeId,@OMasterTableId=MasterTableId,@OWizardTitle=WizardTitle,@OProgramName=ProgramName,@ODefWorkSheet=DefWorkSheet,@ODefStartRow=DefStartRow,@ODefOverwrite=DefOverwrite,@OOvwrReadonly=OvwrReadonly,@OAuthRequired=AuthRequired,@ONoTrans=NoTrans,@OCommandTimeOut=CommandTimeOut FROM dbo.Wizard WHERE WizardId=@WizardId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',49,'Y',71,@WizardId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OWizardTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,634,'Wizard Type',543,'WizardTypeId',CONVERT(varchar(100),@OWizardTypeId),NULL
+IF @OMasterTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,635,'Master Table',544,'MasterTableId',CONVERT(varchar(100),@OMasterTableId),NULL
+IF @OWizardTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,636,'Wizard Title',545,'WizardTitle',@OWizardTitle,NULL
+IF @OProgramName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,637,'Program Name',546,'ProgramName',@OProgramName,NULL
+IF @ODefWorkSheet IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1218,'Default WorkSheet',1051,'DefWorkSheet',@ODefWorkSheet,NULL
+IF @ODefStartRow IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1219,'Default Start Row',1052,'DefStartRow',CONVERT(varchar(100),@ODefStartRow),NULL
+IF @ODefOverwrite IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1328,'Default Overwrite',1187,'DefOverwrite',@ODefOverwrite,NULL
+IF @OOvwrReadonly IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1329,'Overwrite Readonly',1188,'OvwrReadonly',@OOvwrReadonly,NULL
+IF @OAuthRequired IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1992,'Authentication',2121,'AuthRequired',@OAuthRequired,NULL
+IF @ONoTrans IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4374,'No Transaction Wrap!!',7660,'NoTrans',@ONoTrans,NULL
+IF @OCommandTimeOut IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4375,'Command Timeout(sec)',7661,'CommandTimeOut',CONVERT(varchar(100),@OCommandTimeOut),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add50M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add50M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add50M
+ @WizardRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OWizardId		Int
+		,@ORuleTypeId		TinyInt
+		,@ORuleName		NVarChar(100)
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleOrder		SmallInt
+		,@OProcedureName		VarChar(50)
+		,@OBeforeCRUD		Char(1)
+SELECT @SearchCol=WizardRuleId,@OWizardId=WizardId,@ORuleTypeId=RuleTypeId,@ORuleName=RuleName,@ORuleDescription=RuleDescription,@ORuleOrder=RuleOrder,@OProcedureName=ProcedureName,@OBeforeCRUD=BeforeCRUD FROM dbo.WizardRule WHERE WizardRuleId=@WizardRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',50,'Y',73,@WizardRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OWizardId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,645,'Wizard',1141,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,654,'Rule Type',556,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,655,'Rule Name',557,'RuleName',@ORuleName,NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,656,'Description',558,'RuleDescription',@ORuleDescription,NULL
+IF @ORuleOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,657,'Exec Order',559,'RuleOrder',CONVERT(varchar(100),@ORuleOrder),NULL
+IF @OProcedureName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,658,'Procedure Name',560,'ProcedureName',@OProcedureName,NULL
+IF @OBeforeCRUD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,659,'Before CRUD',561,'BeforeCRUD',@OBeforeCRUD,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add53M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add53M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add53M
+ @TemplateId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTemplateName		NVarChar(30)
+		,@OTmplPrefix		VarChar(10)
+		,@OTmplDefault		Char(1)
+SELECT @SearchCol=TemplateId,@OTemplateName=TemplateName,@OTmplPrefix=TmplPrefix,@OTmplDefault=TmplDefault FROM dbo.Template WHERE TemplateId=@TemplateId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',53,'Y',79,@TemplateId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTemplateName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,707,'Template Name',609,'TemplateName',@OTemplateName,NULL
+IF @OTmplPrefix IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,708,'Template Prefix',610,'TmplPrefix',@OTmplPrefix,NULL
+IF @OTmplDefault IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,709,'Default',611,'TmplDefault',@OTmplDefault,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add54D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add54D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add54D
+ @ScreenTabHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OTabFolderName		NVarChar(50)
+SELECT @SearchCol=ScreenTabHlpId,@OCultureId=CultureId,@OTabFolderName=TabFolderName FROM dbo.ScreenTabHlp WHERE ScreenTabHlpId=@ScreenTabHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',54,'N',80,@ScreenTabHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,721,'Culture',621,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OTabFolderName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,722,'Tab Display Name',622,'TabFolderName',@OTabFolderName,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add54M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add54M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add54M
+ @ScreenTabId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTabFolderName		NVarChar(30)
+		,@OTabFolderOrder		TinyInt
+		,@OScreenId		Int
+SELECT @SearchCol=ScreenTabId,@OTabFolderName=TabFolderName,@OTabFolderOrder=TabFolderOrder,@OScreenId=ScreenId FROM dbo.ScreenTab WHERE ScreenTabId=@ScreenTabId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',54,'Y',19,@ScreenTabId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTabFolderName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,717,'Tab Folder Name',153,'TabFolderName',@OTabFolderName,NULL
+IF @OTabFolderOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,718,'Tab Folder Order',618,'TabFolderOrder',CONVERT(varchar(100),@OTabFolderOrder),NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3162,'Screen',5338,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add58D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add58D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add58D
+ @MenuPrmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OGrantDeny		Char(1)
+		,@OPermId		Int
+SELECT @SearchCol=MenuPrmId,@OPermKeyId=PermKeyId,@OGrantDeny=GrantDeny,@OPermId=PermId FROM dbo.MenuPrm WHERE MenuPrmId=@MenuPrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',58,'N',231,@MenuPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,833,'Entity Type',1887,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OGrantDeny IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,838,'Grant/Deny',1892,'GrantDeny',@OGrantDeny,NULL
+IF @OPermId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1751,'Entity',1888,'PermId',CONVERT(varchar(100),@OPermId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add58M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add58M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add58M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=MenuId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',58,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add59D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add59D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add59D
+ @ScreenFilterHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OFilterName		NVarChar(50)
+SELECT @SearchCol=ScreenFilterHlpId,@OCultureId=CultureId,@OFilterName=FilterName FROM dbo.ScreenFilterHlp WHERE ScreenFilterHlpId=@ScreenFilterHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',59,'N',87,@ScreenFilterHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,848,'Culture',730,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OFilterName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,849,'Filter Header',731,'FilterName',@OFilterName,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add59M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add59M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add59M
+ @ScreenFilterId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OScreenFilterName		VarChar(50)
+		,@OFilterClause		VarChar(1500)
+		,@OFilterOrder		TinyInt
+		,@OApplyToMst		Char(1)
+SELECT @SearchCol=ScreenFilterId,@OScreenId=ScreenId,@OScreenFilterName=ScreenFilterName,@OFilterClause=FilterClause,@OFilterOrder=FilterOrder,@OApplyToMst=ApplyToMst FROM dbo.ScreenFilter WHERE ScreenFilterId=@ScreenFilterId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',59,'Y',86,@ScreenFilterId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,841,'Screen',723,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OScreenFilterName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,842,'Filter Name',724,'ScreenFilterName',@OScreenFilterName,NULL
+IF @OFilterClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,844,'Filter Clause',726,'FilterClause',@OFilterClause,NULL
+IF @OFilterOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,845,'Filter Order',727,'FilterOrder',CONVERT(varchar(100),@OFilterOrder),NULL
+IF @OApplyToMst IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1807,'Master Table',1856,'ApplyToMst',@OApplyToMst,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add65M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add65M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add65M
+ @ReportGrpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OReportGrpName		NVarChar(50)
+		,@OContentVertical		Char(1)
+		,@OLabelVertical		Char(1)
+		,@OParentGrpId		Int
+		,@OReportGrpIndex		VarChar(20)
+		,@OBorderWidth		TinyInt
+		,@OGrpStyle		VarChar(200)
+SELECT @SearchCol=ReportGrpId,@OReportId=ReportId,@OReportGrpName=ReportGrpName,@OContentVertical=ContentVertical,@OLabelVertical=LabelVertical,@OParentGrpId=ParentGrpId,@OReportGrpIndex=ReportGrpIndex,@OBorderWidth=BorderWidth,@OGrpStyle=GrpStyle FROM dbo.ReportGrp WHERE ReportGrpId=@ReportGrpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',65,'Y',94,@ReportGrpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,967,'Report',882,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OReportGrpName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,978,'Group Name',874,'ReportGrpName',@OReportGrpName,NULL
+IF @OContentVertical IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,979,'Content Vertical',876,'ContentVertical',@OContentVertical,NULL
+IF @OLabelVertical IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,980,'Label Vertical',877,'LabelVertical',@OLabelVertical,NULL
+IF @OParentGrpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,982,'Parent Group',885,'ParentGrpId',CONVERT(varchar(100),@OParentGrpId),NULL
+IF @OReportGrpIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,983,'Group Index',886,'ReportGrpIndex',@OReportGrpIndex,NULL
+IF @OBorderWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,984,'Border Width',887,'BorderWidth',CONVERT(varchar(100),@OBorderWidth),NULL
+IF @OGrpStyle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1453,'Override Style',1375,'GrpStyle',@OGrpStyle,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add67D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add67D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add67D
+ @ReportHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OReportTitle		NVarChar(50)
+		,@ODefaultHlpMsg		NVarChar(max)
+SELECT @SearchCol=ReportHlpId,@OCultureId=CultureId,@OReportTitle=ReportTitle,@ODefaultHlpMsg=DefaultHlpMsg FROM dbo.ReportHlp WHERE ReportHlpId=@ReportHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',67,'N',96,@ReportHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1022,'Culture',899,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OReportTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1023,'Report Title',900,'ReportTitle',@OReportTitle,NULL
+IF @ODefaultHlpMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1156,'Default Help Message',967,'DefaultHlpMsg',@ODefaultHlpMsg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add67M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add67M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add67M
+ @ReportId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OProgramName		VarChar(20)
+		,@OOrientationCd		Char(1)
+		,@OCopyReportId		Int
+		,@OTemplateName		VarChar(50)
+		,@OWhereClause		VarChar(1000)
+		,@ORegClause		VarChar(400)
+		,@OUpdClause		VarChar(200)
+		,@OXlsClause		VarChar(200)
+		,@OGenerateRp		Char(1)
+		,@OLastGenDt		DateTime
+		,@ORegCode		NVarChar(max)
+		,@OValCode		NVarChar(max)
+		,@OXlsCode		NVarChar(max)
+		,@OUpdCode		NVarChar(max)
+		,@OValClause		VarChar(400)
+		,@OUnitCd		Char(2)
+		,@OTopMargin		Decimal(8,2)
+		,@OBottomMargin		Decimal(8,2)
+		,@OLeftMargin		Decimal(8,2)
+		,@ORightMargin		Decimal(8,2)
+		,@OPageWidth		Decimal(8,2)
+		,@OPageHeight		Decimal(8,2)
+		,@OReportTypeCd		Char(1)
+		,@OAllowSelect		Char(1)
+		,@OAuthRequired		Char(1)
+		,@OCommandTimeOut		SmallInt
+SELECT @SearchCol=ReportId,@OProgramName=ProgramName,@OOrientationCd=OrientationCd,@OCopyReportId=CopyReportId,@OTemplateName=TemplateName,@OWhereClause=WhereClause,@ORegClause=RegClause,@OUpdClause=UpdClause,@OXlsClause=XlsClause,@OGenerateRp=GenerateRp,@OLastGenDt=LastGenDt,@ORegCode=RegCode,@OValCode=ValCode,@OXlsCode=XlsCode,@OUpdCode=UpdCode,@OValClause=ValClause,@OUnitCd=UnitCd,@OTopMargin=TopMargin,@OBottomMargin=BottomMargin,@OLeftMargin=LeftMargin,@ORightMargin=RightMargin,@OPageWidth=PageWidth,@OPageHeight=PageHeight,@OReportTypeCd=ReportTypeCd,@OAllowSelect=AllowSelect,@OAuthRequired=AuthRequired,@OCommandTimeOut=CommandTimeOut FROM dbo.Report WHERE ReportId=@ReportId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',67,'Y',22,@ReportId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OProgramName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1009,'Program Name',169,'ProgramName',@OProgramName,NULL
+IF @OOrientationCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1010,'Orientation',172,'OrientationCd',@OOrientationCd,NULL
+IF @OCopyReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1012,'Copy from Report',483,'CopyReportId',CONVERT(varchar(100),@OCopyReportId),NULL
+IF @OTemplateName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1013,'Template Name',596,'TemplateName',@OTemplateName,NULL
+IF @OWhereClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1017,'Where Clause',894,'WhereClause',@OWhereClause,NULL
+IF @ORegClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1018,'Regular Field Clause',895,'RegClause',@ORegClause,NULL
+IF @OUpdClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1019,'Txt Update Clause',896,'UpdClause',@OUpdClause,NULL
+IF @OXlsClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1099,'Formatted Xls Clause',937,'XlsClause',@OXlsClause,NULL
+IF @OGenerateRp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1307,'Generate',1166,'GenerateRp',@OGenerateRp,NULL
+IF @OLastGenDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1472,'Last Generated',1412,'LastGenDt',CONVERT(varchar(10),@OLastGenDt,102),NULL
+IF @ORegCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1475,'S.Procedure',1406,'RegCode',@ORegCode,NULL
+IF @OValCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1476,'S.Procedure',1407,'ValCode',@OValCode,NULL
+IF @OXlsCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1477,'S.Procedure',1409,'XlsCode',@OXlsCode,NULL
+IF @OUpdCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1478,'S.Procedure',1408,'UpdCode',@OUpdCode,NULL
+IF @OValClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1480,'Parameter Clause',1405,'ValClause',@OValClause,NULL
+IF @OUnitCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1525,'Unit',1487,'UnitCd',@OUnitCd,NULL
+IF @OTopMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1527,'Top Margin',1492,'TopMargin',CONVERT(varchar(100),@OTopMargin),NULL
+IF @OBottomMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1528,'Bottom Margin',1491,'BottomMargin',CONVERT(varchar(100),@OBottomMargin),NULL
+IF @OLeftMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1529,'Left Margin',1490,'LeftMargin',CONVERT(varchar(100),@OLeftMargin),NULL
+IF @ORightMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1530,'Right Margin',1493,'RightMargin',CONVERT(varchar(100),@ORightMargin),NULL
+IF @OPageWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1531,'Page Width',1488,'PageWidth',CONVERT(varchar(100),@OPageWidth),NULL
+IF @OPageHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1532,'Page Height',1489,'PageHeight',CONVERT(varchar(100),@OPageHeight),NULL
+IF @OReportTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1729,'Report Type',1718,'ReportTypeCd',@OReportTypeCd,NULL
+IF @OAllowSelect IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1773,'Allow Columns Selection',1792,'AllowSelect',@OAllowSelect,NULL
+IF @OAuthRequired IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1991,'Authentication',2120,'AuthRequired',@OAuthRequired,NULL
+IF @OCommandTimeOut IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4376,'Command Time Out(sec)',7662,'CommandTimeOut',CONVERT(varchar(100),@OCommandTimeOut),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add69D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add69D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add69D
+ @ReportCriHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+SELECT @SearchCol=ReportCriHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader FROM dbo.ReportCriHlp WHERE ReportCriHlpId=@ReportCriHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',69,'N',98,@ReportCriHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1097,'Culture',923,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1098,'Column Label',924,'ColumnHeader',@OColumnHeader,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add69M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add69M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add69M
+ @ReportCriId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OReportGrpId		Int
+		,@OTableId		Int
+		,@OTableAbbr		VarChar(10)
+		,@OColumnName		VarChar(50)
+		,@OTabIndex		SmallInt
+		,@ODataTypeId		TinyInt
+		,@ODataTypeSize		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ORowSize		SmallInt
+		,@ODdlKeyColumnName		VarChar(50)
+		,@ODdlRefColumnName		VarChar(50)
+		,@ORequiredValid		Char(1)
+		,@OWhereClause		VarChar(1000)
+		,@ORegClause		VarChar(400)
+		,@OColumnSize		SmallInt
+		,@ODdlSrtColumnName		VarChar(50)
+		,@OLabelCss		VarChar(100)
+		,@OContentCss		VarChar(100)
+		,@ODefaultValue		NVarChar(100)
+		,@ODdlFtrColumnId		Int
+SELECT @SearchCol=ReportCriId,@OReportId=ReportId,@OReportGrpId=ReportGrpId,@OTableId=TableId,@OTableAbbr=TableAbbr,@OColumnName=ColumnName,@OTabIndex=TabIndex,@ODataTypeId=DataTypeId,@ODataTypeSize=DataTypeSize,@ODisplayModeId=DisplayModeId,@ORowSize=RowSize,@ODdlKeyColumnName=DdlKeyColumnName,@ODdlRefColumnName=DdlRefColumnName,@ORequiredValid=RequiredValid,@OWhereClause=WhereClause,@ORegClause=RegClause,@OColumnSize=ColumnSize,@ODdlSrtColumnName=DdlSrtColumnName,@OLabelCss=LabelCss,@OContentCss=ContentCss,@ODefaultValue=DefaultValue,@ODdlFtrColumnId=DdlFtrColumnId FROM dbo.ReportCri WHERE ReportCriId=@ReportCriId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',69,'Y',97,@ReportCriId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1075,'Report',902,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OReportGrpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1076,'Report Group',903,'ReportGrpId',CONVERT(varchar(100),@OReportGrpId),NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1077,'Permission Table',904,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @OTableAbbr IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1078,'Table Abbreviation',905,'TableAbbr',@OTableAbbr,NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1079,'Column Name',906,'ColumnName',@OColumnName,NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1080,'Tab Index',907,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @ODataTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1081,'Data Type',908,'DataTypeId',CONVERT(varchar(100),@ODataTypeId),NULL
+IF @ODataTypeSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1082,'Data Type Size',909,'DataTypeSize',CONVERT(varchar(100),@ODataTypeSize),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1083,'Display Mode',910,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @ORowSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1084,'List Row Size',911,'RowSize',CONVERT(varchar(100),@ORowSize),NULL
+IF @ODdlKeyColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1085,'DropDown Key Column',912,'DdlKeyColumnName',@ODdlKeyColumnName,NULL
+IF @ODdlRefColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1086,'DropDown Ref Column',913,'DdlRefColumnName',@ODdlRefColumnName,NULL
+IF @ORequiredValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1087,'Require Validation',914,'RequiredValid',@ORequiredValid,NULL
+IF @OWhereClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1090,'Where Clause',917,'WhereClause',@OWhereClause,NULL
+IF @ORegClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1091,'Regular Criteria Clause',918,'RegClause',@ORegClause,NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1158,'Column Size (px)',969,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @ODdlSrtColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1279,'DropDown Sort Column',1121,'DdlSrtColumnName',@ODdlSrtColumnName,NULL
+IF @OLabelCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1861,'Label Style',1898,'LabelCss',@OLabelCss,NULL
+IF @OContentCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1862,'Content Style',1897,'ContentCss',@OContentCss,NULL
+IF @ODefaultValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1986,'Default Value',2118,'DefaultValue',@ODefaultValue,NULL
+IF @ODdlFtrColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3367,'DropDown Filter Column',5360,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add73D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add73D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add73D
+ @ScreenCriHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+SELECT @SearchCol=ScreenCriHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader FROM dbo.ScreenCriHlp WHERE ScreenCriHlpId=@ScreenCriHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',73,'N',105,@ScreenCriHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1191,'Culture',990,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1192,'Column Label',991,'ColumnHeader',@OColumnHeader,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add73M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add73M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add73M
+ @ScreenCriId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OColumnId		Int
+		,@OTabIndex		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ORowSize		SmallInt
+		,@ODdlKeyColumnId		Int
+		,@ODdlRefColumnId		Int
+		,@ORequiredValid		Char(1)
+		,@OColumnSize		SmallInt
+		,@ODdlSrtColumnId		Int
+		,@OColumnJustify		Char(1)
+		,@OLabelCss		VarChar(100)
+		,@OContentCss		VarChar(100)
+		,@OOperatorId		TinyInt
+		,@ODdlFtrColumnId		Int
+SELECT @SearchCol=ScreenCriId,@OScreenId=ScreenId,@OColumnId=ColumnId,@OTabIndex=TabIndex,@ODisplayModeId=DisplayModeId,@ORowSize=RowSize,@ODdlKeyColumnId=DdlKeyColumnId,@ODdlRefColumnId=DdlRefColumnId,@ORequiredValid=RequiredValid,@OColumnSize=ColumnSize,@ODdlSrtColumnId=DdlSrtColumnId,@OColumnJustify=ColumnJustify,@OLabelCss=LabelCss,@OContentCss=ContentCss,@OOperatorId=OperatorId,@ODdlFtrColumnId=DdlFtrColumnId FROM dbo.ScreenCri WHERE ScreenCriId=@ScreenCriId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',73,'Y',104,@ScreenCriId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1179,'Screen',971,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1181,'Database Column',975,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1182,'Tab Index',976,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1183,'Display Mode',979,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @ORowSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1184,'List Row Size',980,'RowSize',CONVERT(varchar(100),@ORowSize),NULL
+IF @ODdlKeyColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1185,'DropDown Key Column',981,'DdlKeyColumnId',CONVERT(varchar(100),@ODdlKeyColumnId),NULL
+IF @ODdlRefColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1186,'DropDown Ref Column',982,'DdlRefColumnId',CONVERT(varchar(100),@ODdlRefColumnId),NULL
+IF @ORequiredValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1187,'Require Validation',983,'RequiredValid',@ORequiredValid,NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1188,'Column Size (px)',987,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @ODdlSrtColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1278,'DropDown Sort Column',1120,'DdlSrtColumnId',CONVERT(varchar(100),@ODdlSrtColumnId),NULL
+IF @OColumnJustify IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1425,'Justify',1371,'ColumnJustify',@OColumnJustify,NULL
+IF @OLabelCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1859,'Label Style',1896,'LabelCss',@OLabelCss,NULL
+IF @OContentCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1860,'Content Style',1895,'ContentCss',@OContentCss,NULL
+IF @OOperatorId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3305,'Operator',5340,'OperatorId',CONVERT(varchar(100),@OOperatorId),NULL
+IF @ODdlFtrColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3365,'DropDown Filter Column',5361,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add76M') AND type='P')
 EXEC('CREATE PROCEDURE dbo.Audit_Add76M AS SELECT 1')
 GO
@@ -540,11 +3034,11 @@ SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE dbo.Audit_Add76M
  @ButtonHlpId		Int
-,@UserId		int
+,@_UserId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-DECLARE	 @ScrAuditId		bigint
+DECLARE	 @_ScrAuditId		bigint
 		,@SearchCol		nvarchar(2000)
 		,@OScreenId		Int
 		,@OCultureId		SmallInt
@@ -560,44 +3054,3698 @@ DECLARE	 @ScrAuditId		bigint
 		,@OBotVisible		Char(1)
 SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId,@OButtonLongNm=ButtonLongNm,@ORowVisible=RowVisible,@OTopVisible=TopVisible,@OBotVisible=BotVisible FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
-	SELECT 'A',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@UserId,getutcdate()
-SELECT @ScrAuditId = @@IDENTITY
+	SELECT 'A',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
 IF @OScreenId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1208,'Screen',1021,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+	SELECT @_ScrAuditId,1208,'Screen',1021,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
 IF @OCultureId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1209,'Culture',1022,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+	SELECT @_ScrAuditId,1209,'Culture',1022,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
 IF @OButtonTypeId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1210,'Button Type',1023,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),NULL
+	SELECT @_ScrAuditId,1210,'Button Type',1023,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),NULL
 IF @OButtonName IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1211,'Alternate Name',1024,'ButtonName',@OButtonName,NULL
+	SELECT @_ScrAuditId,1211,'Alternate Name',1024,'ButtonName',@OButtonName,NULL
 IF @OButtonToolTip IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,NULL
+	SELECT @_ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,NULL
 IF @OButtonVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,NULL
+	SELECT @_ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,NULL
 IF @OReportId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+	SELECT @_ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(100),@OReportId),NULL
 IF @OWizardId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+	SELECT @_ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
 IF @OButtonLongNm IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,NULL
+	SELECT @_ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,NULL
 IF @ORowVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,NULL
+	SELECT @_ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,NULL
 IF @OTopVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,NULL
+	SELECT @_ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,NULL
 IF @OBotVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
-	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
+	SELECT @_ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add79M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add79M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add79M
+ @ClientRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OCultureId		SmallInt
+		,@OScreenObjHlpId		Int
+		,@OClientScript		SmallInt
+		,@OUserScriptEvent		VarChar(50)
+		,@OUserScriptName		NVarChar(1000)
+		,@OScriptParam		NVarChar(500)
+		,@OReportId		Int
+		,@OScreenCriHlpId		Int
+		,@OReportCriHlpId		Int
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleTypeId		TinyInt
+		,@ORuleName		NVarChar(100)
+		,@ORuleMethodId		TinyInt
+		,@ORuleCntTypeId		TinyInt
+		,@OClientRuleProg		NVarChar(max)
+SELECT @SearchCol=ClientRuleId,@OScreenId=ScreenId,@OCultureId=CultureId,@OScreenObjHlpId=ScreenObjHlpId,@OClientScript=ClientScript,@OUserScriptEvent=UserScriptEvent,@OUserScriptName=UserScriptName,@OScriptParam=ScriptParam,@OReportId=ReportId,@OScreenCriHlpId=ScreenCriHlpId,@OReportCriHlpId=ReportCriHlpId,@ORuleDescription=RuleDescription,@ORuleTypeId=RuleTypeId,@ORuleName=RuleName,@ORuleMethodId=RuleMethodId,@ORuleCntTypeId=RuleCntTypeId,@OClientRuleProg=ClientRuleProg FROM dbo.ClientRule WHERE ClientRuleId=@ClientRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',79,'Y',127,@ClientRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1258,'Screen',1103,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1259,'Culture',1104,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OScreenObjHlpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1260,'Object',1105,'ScreenObjHlpId',CONVERT(varchar(100),@OScreenObjHlpId),NULL
+IF @OClientScript IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1261,'Stock Script',1106,'ClientScript',CONVERT(varchar(100),@OClientScript),NULL
+IF @OUserScriptEvent IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1262,'Event Override',1107,'UserScriptEvent',@OUserScriptEvent,NULL
+IF @OUserScriptName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1263,'Script Override',1108,'UserScriptName',@OUserScriptName,NULL
+IF @OScriptParam IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1264,'Parameters',1109,'ScriptParam',@OScriptParam,NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1265,'Report',1112,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OScreenCriHlpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1266,'Criteria',1113,'ScreenCriHlpId',CONVERT(varchar(100),@OScreenCriHlpId),NULL
+IF @OReportCriHlpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1267,'Criteria',1114,'ReportCriHlpId',CONVERT(varchar(100),@OReportCriHlpId),NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1292,'Description',1138,'RuleDescription',@ORuleDescription,NULL
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1293,'Rule Type',1139,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1294,'Rule Name',1111,'RuleName',@ORuleName,NULL
+IF @ORuleMethodId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4073,'Rule Method',7378,'RuleMethodId',CONVERT(varchar(100),@ORuleMethodId),NULL
+IF @ORuleCntTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4075,'Embedded CSS/JS',7377,'RuleCntTypeId',CONVERT(varchar(100),@ORuleCntTypeId),NULL
+IF @OClientRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4077,'Rule Content',6368,'ClientRuleProg',@OClientRuleProg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add80M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add80M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add80M
+ @WebRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORuleTypeId		TinyInt
+		,@ORuleDescription		NVarChar(500)
+		,@OScreenId		Int
+		,@OScreenObjId		Int
+		,@OButtonTypeId		TinyInt
+		,@OEventId		TinyInt
+		,@OWebRuleProg		NVarChar(max)
+		,@ORuleName		NVarChar(100)
+		,@OReactEventId		TinyInt
+		,@OReactRuleProg		NVarChar(max)
+		,@OReduxEventId		TinyInt
+		,@OReduxRuleProg		NVarChar(max)
+		,@OServiceEventId		TinyInt
+		,@OServiceRuleProg		NVarChar(max)
+		,@OAsmxEventId		TinyInt
+		,@OAsmxRuleProg		NVarChar(max)
+		,@OForCompanyId		Int
+SELECT @SearchCol=WebRuleId,@ORuleTypeId=RuleTypeId,@ORuleDescription=RuleDescription,@OScreenId=ScreenId,@OScreenObjId=ScreenObjId,@OButtonTypeId=ButtonTypeId,@OEventId=EventId,@OWebRuleProg=WebRuleProg,@ORuleName=RuleName,@OReactEventId=ReactEventId,@OReactRuleProg=ReactRuleProg,@OReduxEventId=ReduxEventId,@OReduxRuleProg=ReduxRuleProg,@OServiceEventId=ServiceEventId,@OServiceRuleProg=ServiceRuleProg,@OAsmxEventId=AsmxEventId,@OAsmxRuleProg=AsmxRuleProg,@OForCompanyId=ForCompanyId FROM dbo.WebRule WHERE WebRuleId=@WebRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',80,'Y',128,@WebRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1284,'Rule Type',1127,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1285,'Description',1128,'RuleDescription',@ORuleDescription,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1286,'Screen',1129,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OScreenObjId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1287,'Screen Column',1130,'ScreenObjId',CONVERT(varchar(100),@OScreenObjId),NULL
+IF @OButtonTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1288,'System Button',1131,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),NULL
+IF @OEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1289,'Event',1132,'EventId',CONVERT(varchar(100),@OEventId),NULL
+IF @OWebRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1290,'C# Business Rule',1133,'WebRuleProg',@OWebRuleProg,NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1291,'Rule Name',1137,'RuleName',@ORuleName,NULL
+IF @OReactEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4207,'React Event/Type',7552,'ReactEventId',CONVERT(varchar(100),@OReactEventId),NULL
+IF @OReactRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4208,'React Business Rule',7551,'ReactRuleProg',@OReactRuleProg,NULL
+IF @OReduxEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4210,'Redux Event/Type',7550,'ReduxEventId',CONVERT(varchar(100),@OReduxEventId),NULL
+IF @OReduxRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4211,'Redux Business Rule',7549,'ReduxRuleProg',@OReduxRuleProg,NULL
+IF @OServiceEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4212,'Service Event/Rule',7548,'ServiceEventId',CONVERT(varchar(100),@OServiceEventId),NULL
+IF @OServiceRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4213,'Service Business Rule',7547,'ServiceRuleProg',@OServiceRuleProg,NULL
+IF @OAsmxEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4214,'ASMX Event/Type',7546,'AsmxEventId',CONVERT(varchar(100),@OAsmxEventId),NULL
+IF @OAsmxRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4215,'ASMX Business Rule',7545,'AsmxRuleProg',@OAsmxRuleProg,NULL
+IF @OForCompanyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4427,'For Company',7689,'ForCompanyId',CONVERT(varchar(100),@OForCompanyId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add82M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add82M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add82M
+ @AppInfoId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OVersionMa		SmallInt
+		,@OVersionMi		SmallInt
+		,@OVersionDt		DateTime
+		,@OPrerequisite		NVarChar(max)
+		,@OReadme		NVarChar(max)
+		,@OVersionValue		Money
+SELECT @SearchCol=AppInfoId,@OVersionMa=VersionMa,@OVersionMi=VersionMi,@OVersionDt=VersionDt,@OPrerequisite=Prerequisite,@OReadme=Readme,@OVersionValue=VersionValue FROM dbo.AppInfo WHERE AppInfoId=@AppInfoId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',82,'Y',135,@AppInfoId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OVersionMa IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1342,'Major Version #',1214,'VersionMa',CONVERT(varchar(100),@OVersionMa),NULL
+IF @OVersionMi IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1343,'Minor Version #',1215,'VersionMi',CONVERT(varchar(100),@OVersionMi),NULL
+IF @OVersionDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1344,'Release Date',1216,'VersionDt',CONVERT(varchar(10),@OVersionDt,102),NULL
+IF @OPrerequisite IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1345,'Prerequisite',1217,'Prerequisite',@OPrerequisite,NULL
+IF @OReadme IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1348,'Read Me',1218,'Readme',@OReadme,NULL
+IF @OVersionValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,2073,'Value of Release',2190,'VersionValue',CONVERT(varchar(100),@OVersionValue),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add83M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add83M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add83M
+ @AppItemId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OAppInfoId		Int
+		,@OItemOrder		SmallInt
+		,@OObjectTypeCd		Char(1)
+		,@OLanguageCd		Char(1)
+		,@OFrameworkCd		Char(1)
+		,@ODbProviderCd		Char(1)
+		,@ORelativePath		VarChar(100)
+		,@OMultiDesignDb		Char(1)
+		,@OAppItemName		VarChar(50)
+		,@OAppItemCode		NVarChar(max)
+		,@ORemoveItem		Char(1)
+		,@OScreenId		Int
+		,@OReportId		Int
+		,@OWizardId		Int
+		,@OCustomId		Int
+SELECT @SearchCol=AppItemId,@OAppInfoId=AppInfoId,@OItemOrder=ItemOrder,@OObjectTypeCd=ObjectTypeCd,@OLanguageCd=LanguageCd,@OFrameworkCd=FrameworkCd,@ODbProviderCd=DbProviderCd,@ORelativePath=RelativePath,@OMultiDesignDb=MultiDesignDb,@OAppItemName=AppItemName,@OAppItemCode=AppItemCode,@ORemoveItem=RemoveItem,@OScreenId=ScreenId,@OReportId=ReportId,@OWizardId=WizardId,@OCustomId=CustomId FROM dbo.AppItem WHERE AppItemId=@AppItemId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',83,'Y',136,@AppItemId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OAppInfoId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1352,'Version',1222,'AppInfoId',CONVERT(varchar(100),@OAppInfoId),NULL
+IF @OItemOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1353,'Order',1223,'ItemOrder',CONVERT(varchar(100),@OItemOrder),NULL
+IF @OObjectTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1354,'Tier',1224,'ObjectTypeCd',@OObjectTypeCd,NULL
+IF @OLanguageCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1355,'Language',1225,'LanguageCd',@OLanguageCd,NULL
+IF @OFrameworkCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1356,'Framework',1226,'FrameworkCd',@OFrameworkCd,NULL
+IF @ODbProviderCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1357,'db Provider',1227,'DbProviderCd',@ODbProviderCd,NULL
+IF @ORelativePath IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1358,'Relative Path',1228,'RelativePath',@ORelativePath,NULL
+IF @OMultiDesignDb IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1359,'Multi Design db',1229,'MultiDesignDb',@OMultiDesignDb,NULL
+IF @OAppItemName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1360,'Item Name',1230,'AppItemName',@OAppItemName,NULL
+IF @OAppItemCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1361,'',1231,'AppItemCode',@OAppItemCode,NULL
+IF @ORemoveItem IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1363,'Remove',1233,'RemoveItem',@ORemoveItem,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1364,'Screen',1234,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1365,'Report',1235,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OWizardId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1366,'Wizard',1236,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+IF @OCustomId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1367,'Custom',1237,'CustomId',CONVERT(varchar(100),@OCustomId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add86D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add86D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add86D
+ @MsgCenterId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OMsg		NVarChar(800)
+SELECT @SearchCol=MsgCenterId,@OCultureId=CultureId,@OMsg=Msg FROM dbo.MsgCenter WHERE MsgCenterId=@MsgCenterId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',86,'N',147,@MsgCenterId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1414,'Culture',1312,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1415,'Message',1313,'Msg',@OMsg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add86M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add86M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add86M
+ @MsgId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMsgTypeCd		Char(1)
+		,@OMsgSource		VarChar(50)
+SELECT @SearchCol=MsgId,@OMsgTypeCd=MsgTypeCd,@OMsgSource=MsgSource FROM dbo.Msg WHERE MsgId=@MsgId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',86,'Y',146,@MsgId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OMsgTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1409,'Message Type',1311,'MsgTypeCd',@OMsgTypeCd,NULL
+IF @OMsgSource IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1410,'Source',1310,'MsgSource',@OMsgSource,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add89M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add89M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add89M
+ @RptStyleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptStyleDesc		NVarChar(300)
+		,@OBorderColorD		VarChar(100)
+		,@OBorderColorL		VarChar(100)
+		,@OBorderColorR		VarChar(100)
+		,@OBorderColorT		VarChar(100)
+		,@OBorderColorB		VarChar(100)
+		,@OBorderStyleD		TinyInt
+		,@OBorderStyleL		TinyInt
+		,@OBorderStyleR		TinyInt
+		,@OBorderStyleT		TinyInt
+		,@OBorderStyleB		TinyInt
+		,@OBorderWidthD		TinyInt
+		,@OBorderWidthL		TinyInt
+		,@OBorderWidthR		TinyInt
+		,@OBorderWidthT		TinyInt
+		,@OBorderWidthB		TinyInt
+		,@OBgColor		VarChar(100)
+		,@OBgGradType		TinyInt
+		,@OBgGradColor		VarChar(100)
+		,@OBgImage		VarChar(200)
+		,@OFontStyle		Char(1)
+		,@OFontFamily		VarChar(100)
+		,@OFontSize		TinyInt
+		,@OFontWeight		TinyInt
+		,@OFormat		VarChar(100)
+		,@OTextDecor		Char(1)
+		,@OTextAlign		Char(1)
+		,@OVerticalAlign		Char(1)
+		,@OColor		VarChar(100)
+		,@OPadLeft		SmallInt
+		,@OPadRight		SmallInt
+		,@OPadTop		SmallInt
+		,@OPadBottom		SmallInt
+		,@OLineHeight		SmallInt
+		,@ODirection		Char(1)
+		,@OWritingMode		Char(1)
+		,@ODefaultCd		Char(2)
+SELECT @SearchCol=RptStyleId,@ORptStyleDesc=RptStyleDesc,@OBorderColorD=BorderColorD,@OBorderColorL=BorderColorL,@OBorderColorR=BorderColorR,@OBorderColorT=BorderColorT,@OBorderColorB=BorderColorB,@OBorderStyleD=BorderStyleD,@OBorderStyleL=BorderStyleL,@OBorderStyleR=BorderStyleR,@OBorderStyleT=BorderStyleT,@OBorderStyleB=BorderStyleB,@OBorderWidthD=BorderWidthD,@OBorderWidthL=BorderWidthL,@OBorderWidthR=BorderWidthR,@OBorderWidthT=BorderWidthT,@OBorderWidthB=BorderWidthB,@OBgColor=BgColor,@OBgGradType=BgGradType,@OBgGradColor=BgGradColor,@OBgImage=BgImage,@OFontStyle=FontStyle,@OFontFamily=FontFamily,@OFontSize=FontSize,@OFontWeight=FontWeight,@OFormat=Format,@OTextDecor=TextDecor,@OTextAlign=TextAlign,@OVerticalAlign=VerticalAlign,@OColor=Color,@OPadLeft=PadLeft,@OPadRight=PadRight,@OPadTop=PadTop,@OPadBottom=PadBottom,@OLineHeight=LineHeight,@ODirection=Direction,@OWritingMode=WritingMode,@ODefaultCd=DefaultCd FROM dbo.RptStyle WHERE RptStyleId=@RptStyleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',89,'Y',167,@RptStyleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptStyleDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1534,'Description',1495,'RptStyleDesc',@ORptStyleDesc,NULL
+IF @OBorderColorD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1535,'Border Color Default',1496,'BorderColorD',@OBorderColorD,NULL
+IF @OBorderColorL IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1536,'Border Color Left',1497,'BorderColorL',@OBorderColorL,NULL
+IF @OBorderColorR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1537,'Border Color Right',1498,'BorderColorR',@OBorderColorR,NULL
+IF @OBorderColorT IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1538,'Border Color Top',1499,'BorderColorT',@OBorderColorT,NULL
+IF @OBorderColorB IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1539,'Border Color Bottom',1500,'BorderColorB',@OBorderColorB,NULL
+IF @OBorderStyleD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1540,'Border Style Default',1501,'BorderStyleD',CONVERT(varchar(100),@OBorderStyleD),NULL
+IF @OBorderStyleL IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1541,'Border Style Left',1502,'BorderStyleL',CONVERT(varchar(100),@OBorderStyleL),NULL
+IF @OBorderStyleR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1542,'Border Style Right',1503,'BorderStyleR',CONVERT(varchar(100),@OBorderStyleR),NULL
+IF @OBorderStyleT IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1543,'Border Style Top',1504,'BorderStyleT',CONVERT(varchar(100),@OBorderStyleT),NULL
+IF @OBorderStyleB IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1544,'Border Style Bottom',1505,'BorderStyleB',CONVERT(varchar(100),@OBorderStyleB),NULL
+IF @OBorderWidthD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1545,'Border Width Default (pt)',1506,'BorderWidthD',CONVERT(varchar(100),@OBorderWidthD),NULL
+IF @OBorderWidthL IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1546,'Border Width Left (pt)',1507,'BorderWidthL',CONVERT(varchar(100),@OBorderWidthL),NULL
+IF @OBorderWidthR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1547,'Border Width Right (pt)',1508,'BorderWidthR',CONVERT(varchar(100),@OBorderWidthR),NULL
+IF @OBorderWidthT IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1548,'Border Width Top (pt)',1509,'BorderWidthT',CONVERT(varchar(100),@OBorderWidthT),NULL
+IF @OBorderWidthB IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1549,'Border Width Bottom (pt)',1510,'BorderWidthB',CONVERT(varchar(100),@OBorderWidthB),NULL
+IF @OBgColor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1550,'Background Color',1515,'BgColor',@OBgColor,NULL
+IF @OBgGradType IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1551,'Background Gradient',1516,'BgGradType',CONVERT(varchar(100),@OBgGradType),NULL
+IF @OBgGradColor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1552,'Background End Color',1517,'BgGradColor',@OBgGradColor,NULL
+IF @OBgImage IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1553,'Background Image',1518,'BgImage',@OBgImage,NULL
+IF @OFontStyle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1554,'Font Style',1519,'FontStyle',@OFontStyle,NULL
+IF @OFontFamily IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1555,'Font Family',1520,'FontFamily',@OFontFamily,NULL
+IF @OFontSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1556,'Font Size (pt)',1521,'FontSize',CONVERT(varchar(100),@OFontSize),NULL
+IF @OFontWeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1557,'Font Weight',1522,'FontWeight',CONVERT(varchar(100),@OFontWeight),NULL
+IF @OFormat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1558,'Format',1529,'Format',@OFormat,NULL
+IF @OTextDecor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1559,'Text Decoration',1530,'TextDecor',@OTextDecor,NULL
+IF @OTextAlign IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1560,'Text Alignment',1531,'TextAlign',@OTextAlign,NULL
+IF @OVerticalAlign IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1561,'Vertical Alignment',1532,'VerticalAlign',@OVerticalAlign,NULL
+IF @OColor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1562,'Foreground Color',1533,'Color',@OColor,NULL
+IF @OPadLeft IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1563,'Padding Left (pt)',1534,'PadLeft',CONVERT(varchar(100),@OPadLeft),NULL
+IF @OPadRight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1564,'Padding Right (pt)',1535,'PadRight',CONVERT(varchar(100),@OPadRight),NULL
+IF @OPadTop IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1565,'Padding Top (pt)',1536,'PadTop',CONVERT(varchar(100),@OPadTop),NULL
+IF @OPadBottom IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1566,'Padding Bottom (pt)',1537,'PadBottom',CONVERT(varchar(100),@OPadBottom),NULL
+IF @OLineHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1567,'Line Height (pt)',1538,'LineHeight',CONVERT(varchar(100),@OLineHeight),NULL
+IF @ODirection IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1568,'Direction',1539,'Direction',@ODirection,NULL
+IF @OWritingMode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1569,'Writing Mode',1540,'WritingMode',@OWritingMode,NULL
+IF @ODefaultCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1571,'Default',1556,'DefaultCd',@ODefaultCd,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add90M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add90M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add90M
+ @RptCtrId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPRptCtrId		Int
+		,@ORptElmId		Int
+		,@ORptCelId		Int
+		,@OReportId		Int
+		,@ORptCtrTypeCd		Char(1)
+		,@ORptCtrName		NVarChar(100)
+		,@ORptStyleId		Int
+		,@OCtrTop		Decimal(8,2)
+		,@OCtrLeft		Decimal(8,2)
+		,@OCtrHeight		Decimal(8,2)
+		,@OCtrWidth		Decimal(8,2)
+		,@OCtrZIndex		SmallInt
+		,@OCtrAction		VarChar(500)
+		,@OCtrVisibility		Char(1)
+		,@OCtrToolTip		NVarChar(200)
+		,@OCtrPgBrStart		Char(1)
+		,@OCtrPgBrEnd		Char(1)
+		,@OCtrValue		NVarChar(1000)
+		,@OCtrCanGrow		Char(1)
+		,@OCtrCanShrink		Char(1)
+		,@OCtrTogether		Char(1)
+		,@OCtrGrouping		Int
+		,@OCtrToggle		Int
+SELECT @SearchCol=RptCtrId,@OPRptCtrId=PRptCtrId,@ORptElmId=RptElmId,@ORptCelId=RptCelId,@OReportId=ReportId,@ORptCtrTypeCd=RptCtrTypeCd,@ORptCtrName=RptCtrName,@ORptStyleId=RptStyleId,@OCtrTop=CtrTop,@OCtrLeft=CtrLeft,@OCtrHeight=CtrHeight,@OCtrWidth=CtrWidth,@OCtrZIndex=CtrZIndex,@OCtrAction=CtrAction,@OCtrVisibility=CtrVisibility,@OCtrToolTip=CtrToolTip,@OCtrPgBrStart=CtrPgBrStart,@OCtrPgBrEnd=CtrPgBrEnd,@OCtrValue=CtrValue,@OCtrCanGrow=CtrCanGrow,@OCtrCanShrink=CtrCanShrink,@OCtrTogether=CtrTogether,@OCtrGrouping=CtrGrouping,@OCtrToggle=CtrToggle FROM dbo.RptCtr WHERE RptCtrId=@RptCtrId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',90,'Y',161,@RptCtrId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPRptCtrId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1574,'Parent Control',1430,'PRptCtrId',CONVERT(varchar(100),@OPRptCtrId),NULL
+IF @ORptElmId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1575,'Report Element',1429,'RptElmId',CONVERT(varchar(100),@ORptElmId),NULL
+IF @ORptCelId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1576,'Table Cell',1431,'RptCelId',CONVERT(varchar(100),@ORptCelId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1577,'Report',1467,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @ORptCtrTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1578,'Control Type',1432,'RptCtrTypeCd',@ORptCtrTypeCd,NULL
+IF @ORptCtrName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1579,'Control Name',1446,'RptCtrName',@ORptCtrName,NULL
+IF @ORptStyleId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1580,'Control Style',1447,'RptStyleId',CONVERT(varchar(100),@ORptStyleId),NULL
+IF @OCtrTop IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1581,'Top',1448,'CtrTop',CONVERT(varchar(100),@OCtrTop),NULL
+IF @OCtrLeft IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1582,'Left',1449,'CtrLeft',CONVERT(varchar(100),@OCtrLeft),NULL
+IF @OCtrHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1583,'Height',1450,'CtrHeight',CONVERT(varchar(100),@OCtrHeight),NULL
+IF @OCtrWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1584,'Width',1451,'CtrWidth',CONVERT(varchar(100),@OCtrWidth),NULL
+IF @OCtrZIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1585,'ZIndex',1455,'CtrZIndex',CONVERT(varchar(100),@OCtrZIndex),NULL
+IF @OCtrAction IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1586,'Hyperlink',1452,'CtrAction',@OCtrAction,NULL
+IF @OCtrVisibility IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1587,'Hidden',1453,'CtrVisibility',@OCtrVisibility,NULL
+IF @OCtrToolTip IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1588,'Tool Tip',1454,'CtrToolTip',@OCtrToolTip,NULL
+IF @OCtrPgBrStart IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1589,'Page Break at Start',1456,'CtrPgBrStart',@OCtrPgBrStart,NULL
+IF @OCtrPgBrEnd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1590,'Page Break at End',1457,'CtrPgBrEnd',@OCtrPgBrEnd,NULL
+IF @OCtrValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1591,'Value',1458,'CtrValue',@OCtrValue,NULL
+IF @OCtrCanGrow IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1592,'Can Grow',1459,'CtrCanGrow',@OCtrCanGrow,NULL
+IF @OCtrCanShrink IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1593,'Can Shrink',1460,'CtrCanShrink',@OCtrCanShrink,NULL
+IF @OCtrTogether IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1594,'Keep Together',1461,'CtrTogether',@OCtrTogether,NULL
+IF @OCtrGrouping IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1595,'Grouping',1463,'CtrGrouping',CONVERT(varchar(100),@OCtrGrouping),NULL
+IF @OCtrToggle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1697,'Toggle Item',1623,'CtrToggle',CONVERT(varchar(100),@OCtrToggle),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add91M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add91M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add91M
+ @RptElmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@ORptElmTypeCd		Char(1)
+		,@ORptStyleId		Int
+		,@OElmHeight		Decimal(8,2)
+		,@OElmColumns		SmallInt
+		,@OElmColSpacing		Decimal(8,2)
+		,@OElmPrintFirst		Char(1)
+		,@OElmPrintLast		Char(1)
+SELECT @SearchCol=RptElmId,@OReportId=ReportId,@ORptElmTypeCd=RptElmTypeCd,@ORptStyleId=RptStyleId,@OElmHeight=ElmHeight,@OElmColumns=ElmColumns,@OElmColSpacing=ElmColSpacing,@OElmPrintFirst=ElmPrintFirst,@OElmPrintLast=ElmPrintLast FROM dbo.RptElm WHERE RptElmId=@RptElmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',91,'Y',160,@RptElmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1599,'Report',1420,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @ORptElmTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1600,'Element Type',1421,'RptElmTypeCd',@ORptElmTypeCd,NULL
+IF @ORptStyleId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1601,'Style',1422,'RptStyleId',CONVERT(varchar(100),@ORptStyleId),NULL
+IF @OElmHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1602,'Height',1423,'ElmHeight',CONVERT(varchar(100),@OElmHeight),NULL
+IF @OElmColumns IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1603,'Columns',1424,'ElmColumns',CONVERT(varchar(100),@OElmColumns),NULL
+IF @OElmColSpacing IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1604,'Column Spacing',1425,'ElmColSpacing',CONVERT(varchar(100),@OElmColSpacing),NULL
+IF @OElmPrintFirst IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1605,'Print on First',1426,'ElmPrintFirst',@OElmPrintFirst,NULL
+IF @OElmPrintLast IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1606,'Print on Last',1427,'ElmPrintLast',@OElmPrintLast,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add92D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add92D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add92D
+ @RptCelId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORowNum		SmallInt
+		,@ORowHeight		Decimal(8,2)
+		,@ORowVisibility		VarChar(1000)
+		,@OCelNum		Int
+		,@OCelColSpan		SmallInt
+SELECT @SearchCol=RptCelId,@ORowNum=RowNum,@ORowHeight=RowHeight,@ORowVisibility=RowVisibility,@OCelNum=CelNum,@OCelColSpan=CelColSpan FROM dbo.RptCel WHERE RptCelId=@RptCelId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',92,'N',164,@RptCelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORowNum IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1621,'Row#',1475,'RowNum',CONVERT(varchar(100),@ORowNum),NULL
+IF @ORowHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1622,'Row Height',1476,'RowHeight',CONVERT(varchar(100),@ORowHeight),NULL
+IF @ORowVisibility IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1623,'Visibility',1479,'RowVisibility',@ORowVisibility,NULL
+IF @OCelNum IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1624,'Table Column',1477,'CelNum',CONVERT(varchar(100),@OCelNum),NULL
+IF @OCelColSpan IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1625,'Column Span',1478,'CelColSpan',CONVERT(varchar(100),@OCelColSpan),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add92M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add92M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add92M
+ @RptTblId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OParentId		Int
+		,@ORptCtrId		Int
+		,@ORptTblTypeCd		Char(1)
+		,@OTblRepeatNew		Char(1)
+		,@OTblOrder		SmallInt
+		,@OColWidth		Decimal(8,2)
+		,@OTblGrouping		Int
+		,@OTblVisibility		Char(1)
+		,@OReportId		Int
+		,@OTblToggle		Int
+SELECT @SearchCol=RptTblId,@OParentId=ParentId,@ORptCtrId=RptCtrId,@ORptTblTypeCd=RptTblTypeCd,@OTblRepeatNew=TblRepeatNew,@OTblOrder=TblOrder,@OColWidth=ColWidth,@OTblGrouping=TblGrouping,@OTblVisibility=TblVisibility,@OReportId=ReportId,@OTblToggle=TblToggle FROM dbo.RptTbl WHERE RptTblId=@RptTblId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',92,'Y',162,@RptTblId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OParentId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1609,'Parent',1486,'ParentId',CONVERT(varchar(100),@OParentId),NULL
+IF @ORptCtrId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1610,'Control',1436,'RptCtrId',CONVERT(varchar(100),@ORptCtrId),NULL
+IF @ORptTblTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1611,'Table Type',1434,'RptTblTypeCd',@ORptTblTypeCd,NULL
+IF @OTblRepeatNew IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1612,'Repeat on New Page',1435,'TblRepeatNew',@OTblRepeatNew,NULL
+IF @OTblOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1613,'Order',1480,'TblOrder',CONVERT(varchar(100),@OTblOrder),NULL
+IF @OColWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1614,'Width',1439,'ColWidth',CONVERT(varchar(100),@OColWidth),NULL
+IF @OTblGrouping IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1615,'Grouping',1437,'TblGrouping',CONVERT(varchar(100),@OTblGrouping),NULL
+IF @OTblVisibility IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1617,'Hidden',1440,'TblVisibility',@OTblVisibility,NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1695,'Report',1621,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OTblToggle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1696,'Toggle Item',1622,'TblToggle',CONVERT(varchar(100),@OTblToggle),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add96D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add96D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add96D
+ @RptwizCatDtlId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnId		Int
+		,@ODisplayModeId		TinyInt
+		,@OColumnSize		SmallInt
+		,@ORowSize		SmallInt
+		,@ORegClause		VarChar(400)
+		,@OStoredProc		VarChar(max)
+		,@ODdlKeyColNm		VarChar(50)
+		,@ODdlRefColNm		VarChar(50)
+SELECT @SearchCol=RptwizCatDtlId,@OColumnId=ColumnId,@ODisplayModeId=DisplayModeId,@OColumnSize=ColumnSize,@ORowSize=RowSize,@ORegClause=RegClause,@OStoredProc=StoredProc,@ODdlKeyColNm=DdlKeyColNm,@ODdlRefColNm=DdlRefColNm FROM dbo.RptwizCatDtl WHERE RptwizCatDtlId=@RptwizCatDtlId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',96,'N',182,@RptwizCatDtlId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1667,'Column',1579,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1843,'Display Mode',1865,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1844,'Width',1600,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @ORowSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1845,'#Rows',1866,'RowSize',CONVERT(varchar(100),@ORowSize),NULL
+IF @ORegClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1846,'Calling Clause',1867,'RegClause',@ORegClause,NULL
+IF @OStoredProc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1847,'Stored Procedure',1868,'StoredProc',@OStoredProc,NULL
+IF @ODdlKeyColNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1848,'Key Name',1869,'DdlKeyColNm',@ODdlKeyColNm,NULL
+IF @ODdlRefColNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1849,'Ref Name',1870,'DdlRefColNm',@ODdlRefColNm,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add96M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add96M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add96M
+ @RptwizCatId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptwizCatName		NVarChar(100)
+		,@OCatDescription		NVarChar(400)
+		,@OTableId		Int
+		,@ORptwizTypId		SmallInt
+SELECT @SearchCol=RptwizCatId,@ORptwizCatName=RptwizCatName,@OCatDescription=CatDescription,@OTableId=TableId,@ORptwizTypId=RptwizTypId FROM dbo.RptwizCat WHERE RptwizCatId=@RptwizCatId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',96,'Y',181,@RptwizCatId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptwizCatName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1658,'Category Name',1576,'RptwizCatName',@ORptwizCatName,NULL
+IF @OCatDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1659,'Description',1573,'CatDescription',@OCatDescription,NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1663,'Relevant Table',1864,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @ORptwizTypId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1671,'Data Type',1604,'RptwizTypId',CONVERT(varchar(100),@ORptwizTypId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add97M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add97M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add97M
+ @RptwizTypId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptwizTypName		NVarChar(100)
+SELECT @SearchCol=RptwizTypId,@ORptwizTypName=RptwizTypName FROM dbo.RptwizTyp WHERE RptwizTypId=@RptwizTypId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',97,'Y',185,@RptwizTypId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptwizTypName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1669,'Report Data Type Name',1602,'RptwizTypName',@ORptwizTypName,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add9D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add9D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add9D
+ @ScreenHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@ODefaultHlpMsg		NVarChar(max)
+		,@OScreenTitle		NVarChar(50)
+		,@OAddMsg		NVarChar(100)
+		,@OUpdMsg		NVarChar(100)
+		,@ODelMsg		NVarChar(100)
+		,@OFootNote		NVarChar(400)
+		,@OMasterLstTitle		NVarChar(100)
+		,@ODetailLstTitle		NVarChar(100)
+		,@OMasterLstSubtitle		NVarChar(100)
+		,@ODetailLstSubtitle		NVarChar(100)
+		,@OMasterRecTitle		NVarChar(100)
+		,@ODetailRecTitle		NVarChar(100)
+		,@OMasterRecSubtitle		NVarChar(100)
+		,@ODetailRecSubtitle		NVarChar(100)
+		,@OIncrementMsg		NVarChar(100)
+		,@OMasterFoundMsg		NVarChar(100)
+		,@ODetailFoundMsg		NVarChar(100)
+		,@ONoMasterMsg		NVarChar(100)
+		,@ONoDetailMsg		NVarChar(100)
+		,@OAddMasterMsg		NVarChar(100)
+		,@OAddDetailMsg		NVarChar(100)
+SELECT @SearchCol=ScreenHlpId,@OCultureId=CultureId,@ODefaultHlpMsg=DefaultHlpMsg,@OScreenTitle=ScreenTitle,@OAddMsg=AddMsg,@OUpdMsg=UpdMsg,@ODelMsg=DelMsg,@OFootNote=FootNote,@OMasterLstTitle=MasterLstTitle,@ODetailLstTitle=DetailLstTitle,@OMasterLstSubtitle=MasterLstSubtitle,@ODetailLstSubtitle=DetailLstSubtitle,@OMasterRecTitle=MasterRecTitle,@ODetailRecTitle=DetailRecTitle,@OMasterRecSubtitle=MasterRecSubtitle,@ODetailRecSubtitle=DetailRecSubtitle,@OIncrementMsg=IncrementMsg,@OMasterFoundMsg=MasterFoundMsg,@ODetailFoundMsg=DetailFoundMsg,@ONoMasterMsg=NoMasterMsg,@ONoDetailMsg=NoDetailMsg,@OAddMasterMsg=AddMasterMsg,@OAddDetailMsg=AddDetailMsg FROM dbo.ScreenHlp WHERE ScreenHlpId=@ScreenHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',9,'N',16,@ScreenHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,53,'Culture',136,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @ODefaultHlpMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,54,'Help Message',137,'DefaultHlpMsg',@ODefaultHlpMsg,NULL
+IF @OScreenTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,55,'Screen Title',138,'ScreenTitle',@OScreenTitle,NULL
+IF @OAddMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,56,'Add Message',139,'AddMsg',@OAddMsg,NULL
+IF @OUpdMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,57,'Update Message',140,'UpdMsg',@OUpdMsg,NULL
+IF @ODelMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,58,'Delete Message',141,'DelMsg',@ODelMsg,NULL
+IF @OFootNote IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1370,'Foot Note',1248,'FootNote',@OFootNote,NULL
+IF @OMasterLstTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4168,'Master List Title',7489,'MasterLstTitle',@OMasterLstTitle,NULL
+IF @ODetailLstTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4170,'Detail List Title',7485,'DetailLstTitle',@ODetailLstTitle,NULL
+IF @OMasterLstSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4171,'Master List Subtitle',7488,'MasterLstSubtitle',@OMasterLstSubtitle,NULL
+IF @ODetailLstSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4172,'Detail List Subtitle',7484,'DetailLstSubtitle',@ODetailLstSubtitle,NULL
+IF @OMasterRecTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4173,'Master Record Title',7487,'MasterRecTitle',@OMasterRecTitle,NULL
+IF @ODetailRecTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4174,'Detail Record Title',7483,'DetailRecTitle',@ODetailRecTitle,NULL
+IF @OMasterRecSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4175,'Master Record Subtitle',7486,'MasterRecSubtitle',@OMasterRecSubtitle,NULL
+IF @ODetailRecSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4176,'Detail Record Subtitle',7482,'DetailRecSubtitle',@ODetailRecSubtitle,NULL
+IF @OIncrementMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4177,'Increment',7490,'IncrementMsg',@OIncrementMsg,NULL
+IF @OMasterFoundMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4179,'Master Records Found',7495,'MasterFoundMsg',@OMasterFoundMsg,NULL
+IF @ODetailFoundMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4180,'Detail Records Found',7496,'DetailFoundMsg',@ODetailFoundMsg,NULL
+IF @ONoMasterMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4181,'No Master Message',7491,'NoMasterMsg',@ONoMasterMsg,NULL
+IF @ONoDetailMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4182,'No Detail Message',7492,'NoDetailMsg',@ONoDetailMsg,NULL
+IF @OAddMasterMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4183,'Add Master Message',7493,'AddMasterMsg',@OAddMasterMsg,NULL
+IF @OAddDetailMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4184,'Add Detail Message',7494,'AddDetailMsg',@OAddDetailMsg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Add9M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Add9M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Add9M
+ @ScreenId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenTypeId		TinyInt
+		,@OSearchId		Int
+		,@OGridRows		TinyInt
+		,@OProgramName		VarChar(20)
+		,@OMasterTableId		Int
+		,@ODetailTableId		Int
+		,@OSearchAscending		Char(1)
+		,@OGenerateSc		Char(1)
+		,@OHasDeleteAll		Char(1)
+		,@OValidateReq		Char(1)
+		,@ODeferError		Char(1)
+		,@OGenerateSr		Char(1)
+		,@OAuthRequired		Char(1)
+		,@OShowGridHead		Char(1)
+		,@OViewOnly		Char(1)
+		,@OGenAudit		Char(1)
+		,@OSearchTableId		Int
+		,@OSearchImgId		Int
+		,@OSearchUrlId		Int
+		,@OSearchDtlId		Int
+		,@OSearchIdR		Int
+		,@OSearchDtlIdR		Int
+SELECT @SearchCol=ScreenId,@OScreenTypeId=ScreenTypeId,@OSearchId=SearchId,@OGridRows=GridRows,@OProgramName=ProgramName,@OMasterTableId=MasterTableId,@ODetailTableId=DetailTableId,@OSearchAscending=SearchAscending,@OGenerateSc=GenerateSc,@OHasDeleteAll=HasDeleteAll,@OValidateReq=ValidateReq,@ODeferError=DeferError,@OGenerateSr=GenerateSr,@OAuthRequired=AuthRequired,@OShowGridHead=ShowGridHead,@OViewOnly=ViewOnly,@OGenAudit=GenAudit,@OSearchTableId=SearchTableId,@OSearchImgId=SearchImgId,@OSearchUrlId=SearchUrlId,@OSearchDtlId=SearchDtlId,@OSearchIdR=SearchIdR,@OSearchDtlIdR=SearchDtlIdR FROM dbo.Screen WHERE ScreenId=@ScreenId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'A',9,'Y',15,@ScreenId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,45,'Screen Type',127,'ScreenTypeId',CONVERT(varchar(100),@OScreenTypeId),NULL
+IF @OSearchId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,46,'Search Title L',128,'SearchId',CONVERT(varchar(100),@OSearchId),NULL
+IF @OGridRows IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,48,'Rows for Grid',130,'GridRows',CONVERT(varchar(100),@OGridRows),NULL
+IF @OProgramName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,49,'Program Name',131,'ProgramName',@OProgramName,NULL
+IF @OMasterTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,59,'Master Table',146,'MasterTableId',CONVERT(varchar(100),@OMasterTableId),NULL
+IF @ODetailTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,60,'Detail Table',147,'DetailTableId',CONVERT(varchar(100),@ODetailTableId),NULL
+IF @OSearchAscending IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,494,'Ascending Order',363,'SearchAscending',@OSearchAscending,NULL
+IF @OGenerateSc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1247,'Generate CLN',1093,'GenerateSc',@OGenerateSc,NULL
+IF @OHasDeleteAll IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1301,'DeleteAll Visible',1155,'HasDeleteAll',@OHasDeleteAll,NULL
+IF @OValidateReq IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1371,'Validate Request',1249,'ValidateReq',@OValidateReq,NULL
+IF @ODeferError IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1868,'Defer Error',1905,'DeferError',@ODeferError,NULL
+IF @OGenerateSr IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1959,'Generate SRV',2045,'GenerateSr',@OGenerateSr,NULL
+IF @OAuthRequired IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,1989,'Authentication',2119,'AuthRequired',@OAuthRequired,NULL
+IF @OShowGridHead IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3101,'Show Grid Header',3227,'ShowGridHead',@OShowGridHead,NULL
+IF @OViewOnly IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,3103,'View Only',3245,'ViewOnly',@OViewOnly,NULL
+IF @OGenAudit IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4104,'Audit Trail',7435,'GenAudit',@OGenAudit,NULL
+IF @OSearchTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4145,'Search Table',7451,'SearchTableId',CONVERT(varchar(100),@OSearchTableId),NULL
+IF @OSearchImgId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4146,'Image Content',7448,'SearchImgId',CONVERT(varchar(100),@OSearchImgId),NULL
+IF @OSearchUrlId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4147,'Image URL',7449,'SearchUrlId',CONVERT(varchar(100),@OSearchUrlId),NULL
+IF @OSearchDtlId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4148,'Search Subtitle L',7450,'SearchDtlId',CONVERT(varchar(100),@OSearchDtlId),NULL
+IF @OSearchIdR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4164,'Search Title R',7478,'SearchIdR',CONVERT(varchar(100),@OSearchIdR),NULL
+IF @OSearchDtlIdR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedTo,ChangedFr)
+	SELECT @_ScrAuditId,4165,'Search Subtitle R',7479,'SearchDtlIdR',CONVERT(varchar(100),@OSearchDtlIdR),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1006D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1006D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1006D
+ @ScreenObjHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(max)
+		,@OToolTip		NVarChar(1000)
+		,@OErrMessage		NVarChar(1000)
+		,@OTbHint		NVarChar(1000)
+SELECT @SearchCol=ScreenObjHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader,@OToolTip=ToolTip,@OErrMessage=ErrMessage,@OTbHint=TbHint FROM dbo.ScreenObjHlp WHERE ScreenObjHlpId=@ScreenObjHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1006,'N',21,@ScreenObjHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3255,'Culture',163,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3256,'Column Header',164,'ColumnHeader',@OColumnHeader,NULL
+IF @OToolTip IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3257,'Tool Tips',165,'ToolTip',@OToolTip,NULL
+IF @OErrMessage IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3258,'Error Message',166,'ErrMessage',@OErrMessage,NULL
+IF @OTbHint IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3259,'Watermark',2160,'TbHint',@OTbHint,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1006M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1006M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1006M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=ScreenObjId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1006,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1007M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1007M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1007M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OGroupRowId		SmallInt
+		,@OGroupColId		SmallInt
+		,@OColumnName		VarChar(50)
+		,@OTabFolderId		Int
+		,@OTabIndex		SmallInt
+		,@OMasterTable		Char(1)
+SELECT @SearchCol=ScreenObjId,@OScreenId=ScreenId,@OGroupRowId=GroupRowId,@OGroupColId=GroupColId,@OColumnName=ColumnName,@OTabFolderId=TabFolderId,@OTabIndex=TabIndex,@OMasterTable=MasterTable FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1007,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3261,'Screen ID',934,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OGroupRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3263,'Group Row',5279,'GroupRowId',CONVERT(varchar(100),@OGroupRowId),NULL
+IF @OGroupColId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3264,'Group Col',1016,'GroupColId',CONVERT(varchar(100),@OGroupColId),NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3269,'ColumnName',110,'ColumnName',@OColumnName,NULL
+IF @OTabFolderId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3291,'Tab Folder',119,'TabFolderId',CONVERT(varchar(100),@OTabFolderId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3292,'TabIndex',120,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3359,'Master Table',108,'MasterTable',@OMasterTable,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del100M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del100M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del100M
+ @RptChaId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptCtrId		Int
+		,@OReportId		Int
+		,@ORptChaTypeCd		Char(2)
+		,@OThreeD		Char(1)
+		,@OCategoryGrp		Int
+		,@OChartData		NVarChar(1000)
+		,@OSeriesGrp		Int
+SELECT @SearchCol=RptChaId,@ORptCtrId=RptCtrId,@OReportId=ReportId,@ORptChaTypeCd=RptChaTypeCd,@OThreeD=ThreeD,@OCategoryGrp=CategoryGrp,@OChartData=ChartData,@OSeriesGrp=SeriesGrp FROM dbo.RptCha WHERE RptChaId=@RptChaId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',100,'Y',206,@RptChaId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptCtrId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1732,'Control',1723,'RptCtrId',CONVERT(varchar(100),@ORptCtrId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1733,'Report',1724,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @ORptChaTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1734,'Chart Type',1725,'RptChaTypeCd',@ORptChaTypeCd,NULL
+IF @OThreeD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1735,'3D',1726,'ThreeD',@OThreeD,NULL
+IF @OCategoryGrp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1736,'Category',1727,'CategoryGrp',CONVERT(varchar(100),@OCategoryGrp),NULL
+IF @OChartData IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1737,'Value',1728,'ChartData',@OChartData,NULL
+IF @OSeriesGrp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1738,'Series',1729,'SeriesGrp',CONVERT(varchar(100),@OSeriesGrp),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1019M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1019M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1019M
+ @ScrAuditId		BigInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCudAction		Char(1)
+		,@OScreenId		Int
+		,@OMasterTable		Char(1)
+		,@OTableId		Int
+		,@ORowId		BigInt
+		,@ORowDesc		NVarChar(max)
+		,@OChangedBy		Int
+		,@OChangedOn		DateTime
+SELECT @SearchCol=ScrAuditId,@OCudAction=CudAction,@OScreenId=ScreenId,@OMasterTable=MasterTable,@OTableId=TableId,@ORowId=RowId,@ORowDesc=RowDesc,@OChangedBy=ChangedBy,@OChangedOn=ChangedOn FROM dbo.ScrAudit WHERE ScrAuditId=@ScrAuditId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1019,'Y',1300,@ScrAuditId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCudAction IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4106,'Action',7420,'CudAction',@OCudAction,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4107,'Screen',7425,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4108,'Master',7421,'MasterTable',@OMasterTable,NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4109,'TableId',7426,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @ORowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4110,'Row ID',7423,'RowId',CONVERT(varchar(100),@ORowId),NULL
+IF @ORowDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4111,'Row Description',7422,'RowDesc',@ORowDesc,NULL
+IF @OChangedBy IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4112,'Changed By',7418,'ChangedBy',CONVERT(varchar(100),@OChangedBy),NULL
+IF @OChangedOn IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4113,'Changed On',7419,'ChangedOn',CONVERT(varchar(10),@OChangedOn,102),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1020M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1020M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1020M
+ @ScrAuditDtlId		BigInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScrAuditId		BigInt
+		,@OScreenObjId		Int
+		,@OScreenObjDesc		NVarChar(max)
+		,@OColumnId		Int
+		,@OColumnDesc		NVarChar(max)
+		,@OChangedFr		NVarChar(max)
+		,@OChangedTo		NVarChar(max)
+SELECT @SearchCol=ScrAuditDtlId,@OScrAuditId=ScrAuditId,@OScreenObjId=ScreenObjId,@OScreenObjDesc=ScreenObjDesc,@OColumnId=ColumnId,@OColumnDesc=ColumnDesc,@OChangedFr=ChangedFr,@OChangedTo=ChangedTo FROM dbo.ScrAuditDtl WHERE ScrAuditDtlId=@ScrAuditDtlId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1020,'Y',1301,@ScrAuditDtlId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScrAuditId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4115,'Audit ID',7432,'ScrAuditId',CONVERT(varchar(100),@OScrAuditId),NULL
+IF @OScreenObjId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4116,'Field ID',7434,'ScreenObjId',CONVERT(varchar(100),@OScreenObjId),NULL
+IF @OScreenObjDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4117,'Field Description',7433,'ScreenObjDesc',@OScreenObjDesc,NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4118,'Column ID',7430,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OColumnDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4119,'Column Name',7429,'ColumnDesc',@OColumnDesc,NULL
+IF @OChangedFr IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4120,'Changed From',7427,'ChangedFr',@OChangedFr,NULL
+IF @OChangedTo IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4121,'Changed To',7428,'ChangedTo',@OChangedTo,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1026D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1026D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1026D
+ @ServerRuledOvrdPrmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OAndCondition		Char(1)
+		,@OPermKeyRowId		Int
+		,@OMatch		Char(1)
+SELECT @SearchCol=ServerRuledOvrdPrmId,@OPermKeyId=PermKeyId,@OAndCondition=AndCondition,@OPermKeyRowId=PermKeyRowId,@OMatch=Match FROM dbo.AtServerRuleOvrdPrm WHERE ServerRuledOvrdPrmId=@ServerRuledOvrdPrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1026,'N',1321,@ServerRuledOvrdPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4363,'Entity Type',7618,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OAndCondition IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4364,'AndCondition',7617,'AndCondition',@OAndCondition,NULL
+IF @OPermKeyRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4369,'Entity',7635,'PermKeyRowId',CONVERT(varchar(100),@OPermKeyRowId),NULL
+IF @OMatch IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4371,'Match',7634,'Match',@OMatch,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1026M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1026M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1026M
+ @AtServerRuleOvrdId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OServerRuleOvrdDesc		VarChar(1000)
+		,@OServerRuleOvrdName		VarChar(500)
+		,@OServerRuleId		Int
+		,@ODisable		Char(1)
+		,@OPriority		SmallInt
+		,@OScreenId		Int
+		,@ORunMode		Char(1)
+SELECT @SearchCol=AtServerRuleOvrdId,@OServerRuleOvrdDesc=ServerRuleOvrdDesc,@OServerRuleOvrdName=ServerRuleOvrdName,@OServerRuleId=ServerRuleId,@ODisable=Disable,@OPriority=Priority,@OScreenId=ScreenId,@ORunMode=RunMode FROM dbo.AtServerRuleOvrd WHERE AtServerRuleOvrdId=@AtServerRuleOvrdId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1026,'Y',1322,@AtServerRuleOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OServerRuleOvrdDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4357,'ServerRuleOvrdDesc',7625,'ServerRuleOvrdDesc',@OServerRuleOvrdDesc,NULL
+IF @OServerRuleOvrdName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4358,'ServerRuleOvrdName',7626,'ServerRuleOvrdName',@OServerRuleOvrdName,NULL
+IF @OServerRuleId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4359,'ServerRuleId',7624,'ServerRuleId',CONVERT(varchar(100),@OServerRuleId),NULL
+IF @ODisable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4360,'Disable',7623,'Disable',@ODisable,NULL
+IF @OPriority IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4366,'Priority',7631,'Priority',CONVERT(varchar(100),@OPriority),NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4367,'Screen',7630,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ORunMode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4373,'Run Mode',7640,'RunMode',@ORunMode,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1030D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1030D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1030D
+ @TemplatePrmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OGrantDeny		Char(1)
+		,@OPermKeyId		SmallInt
+		,@OPermId		Int
+SELECT @SearchCol=TemplatePrmId,@OGrantDeny=GrantDeny,@OPermKeyId=PermKeyId,@OPermId=PermId FROM dbo.TemplatePrm WHERE TemplatePrmId=@TemplatePrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1030,'N',1331,@TemplatePrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OGrantDeny IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4448,'Grant/Deny',7707,'GrantDeny',@OGrantDeny,NULL
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4449,'Entity Type',7704,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OPermId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4450,'Entity',7703,'PermId',CONVERT(varchar(100),@OPermId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del1030M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del1030M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del1030M
+ @TemplateId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTemplateName		NVarChar(30)
+		,@OTmplPrefix		VarChar(10)
+		,@OTmplDefault		Char(1)
+SELECT @SearchCol=TemplateId,@OTemplateName=TemplateName,@OTmplPrefix=TmplPrefix,@OTmplDefault=TmplDefault FROM dbo.Template WHERE TemplateId=@TemplateId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',1030,'Y',79,@TemplateId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTemplateName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4442,'Template Name',609,'TemplateName',@OTemplateName,NULL
+IF @OTmplPrefix IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4443,'Template Prefix',610,'TmplPrefix',@OTmplPrefix,NULL
+IF @OTmplDefault IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4444,'Default',611,'TmplDefault',@OTmplDefault,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del10M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del10M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del10M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMasterTable		Char(1)
+		,@OColumnId		Int
+		,@OColumnName		VarChar(50)
+		,@ODefaultValue		NVarChar(200)
+		,@OSystemValue		NVarChar(200)
+		,@OColumnSize		SmallInt
+		,@OColumnHeight		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ODdlKeyColumnId		Int
+		,@ODdlRefColumnId		Int
+		,@ORequiredValid		Char(1)
+		,@OMaskValid		VarChar(100)
+		,@ORangeValidType		VarChar(50)
+		,@ORangeValidMax		VarChar(50)
+		,@ORangeValidMin		VarChar(50)
+		,@OGenerateSp		Char(1)
+		,@OSortOrder		SmallInt
+		,@OColumnWrap		Char(1)
+		,@OGroupColId		SmallInt
+		,@OColumnLink		VarChar(1000)
+		,@OAggregateCd		Char(1)
+		,@OScreenId		Int
+		,@ODdlSrtColumnId		Int
+		,@ORefreshOnCUD		Char(1)
+		,@ODdlAdnColumnId		Int
+		,@ODdlFtrColumnId		Int
+		,@OColumnJustify		Char(1)
+		,@OTrimOnEntry		Char(1)
+		,@OMatchCd		Char(1)
+		,@OLabelCss		VarChar(1000)
+		,@OContentCss		VarChar(1000)
+		,@OIgnoreConfirm		Char(1)
+		,@OGridGrpCd		Char(1)
+		,@ODefAfter		Char(1)
+		,@ODefAlways		Char(1)
+		,@OLabelVertical		Char(1)
+		,@OHyperLinkUrl		NVarChar(200)
+		,@OGroupRowId		SmallInt
+		,@OHideOnTablet		Char(1)
+		,@OHideOnMobile		Char(1)
+		,@OResizeWidth		SmallInt
+		,@OResizeHeight		SmallInt
+		,@ODtlLstPosId		TinyInt
+SELECT @SearchCol=ScreenObjId,@OMasterTable=MasterTable,@OColumnId=ColumnId,@OColumnName=ColumnName,@ODefaultValue=DefaultValue,@OSystemValue=SystemValue,@OColumnSize=ColumnSize,@OColumnHeight=ColumnHeight,@ODisplayModeId=DisplayModeId,@ODdlKeyColumnId=DdlKeyColumnId,@ODdlRefColumnId=DdlRefColumnId,@ORequiredValid=RequiredValid,@OMaskValid=MaskValid,@ORangeValidType=RangeValidType,@ORangeValidMax=RangeValidMax,@ORangeValidMin=RangeValidMin,@OGenerateSp=GenerateSp,@OSortOrder=SortOrder,@OColumnWrap=ColumnWrap,@OGroupColId=GroupColId,@OColumnLink=ColumnLink,@OAggregateCd=AggregateCd,@OScreenId=ScreenId,@ODdlSrtColumnId=DdlSrtColumnId,@ORefreshOnCUD=RefreshOnCUD,@ODdlAdnColumnId=DdlAdnColumnId,@ODdlFtrColumnId=DdlFtrColumnId,@OColumnJustify=ColumnJustify,@OTrimOnEntry=TrimOnEntry,@OMatchCd=MatchCd,@OLabelCss=LabelCss,@OContentCss=ContentCss,@OIgnoreConfirm=IgnoreConfirm,@OGridGrpCd=GridGrpCd,@ODefAfter=DefAfter,@ODefAlways=DefAlways,@OLabelVertical=LabelVertical,@OHyperLinkUrl=HyperLinkUrl,@OGroupRowId=GroupRowId,@OHideOnTablet=HideOnTablet,@OHideOnMobile=HideOnMobile,@OResizeWidth=ResizeWidth,@OResizeHeight=ResizeHeight,@ODtlLstPosId=DtlLstPosId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',10,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,73,'Master Table',108,'MasterTable',@OMasterTable,NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,74,'Database Column',109,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,75,'Column Name',110,'ColumnName',@OColumnName,NULL
+IF @ODefaultValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,76,'Default Value',111,'DefaultValue',@ODefaultValue,NULL
+IF @OSystemValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,77,'System Value',112,'SystemValue',@OSystemValue,NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,79,'Display Width',114,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @OColumnHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,80,'Display Height',115,'ColumnHeight',CONVERT(varchar(100),@OColumnHeight),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,81,'Display Mode',116,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @ODdlKeyColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,82,'Key Column',117,'DdlKeyColumnId',CONVERT(varchar(100),@ODdlKeyColumnId),NULL
+IF @ODdlRefColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,83,'Reference Column',118,'DdlRefColumnId',CONVERT(varchar(100),@ODdlRefColumnId),NULL
+IF @ORequiredValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,86,'Mandatory',121,'RequiredValid',@ORequiredValid,NULL
+IF @OMaskValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,87,'Input Mask',122,'MaskValid',@OMaskValid,NULL
+IF @ORangeValidType IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,88,'Range Type',123,'RangeValidType',@ORangeValidType,NULL
+IF @ORangeValidMax IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,89,'Range Max',124,'RangeValidMax',@ORangeValidMax,NULL
+IF @ORangeValidMin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,90,'Range Min',125,'RangeValidMin',@ORangeValidMin,NULL
+IF @OGenerateSp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,572,'Generate',467,'GenerateSp',@OGenerateSp,NULL
+IF @OSortOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,723,'Sort Order',623,'SortOrder',CONVERT(varchar(100),@OSortOrder),NULL
+IF @OColumnWrap IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1203,'Content Wrap',1012,'ColumnWrap',@OColumnWrap,NULL
+IF @OGroupColId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1204,'Column Group',1016,'GroupColId',CONVERT(varchar(100),@OGroupColId),NULL
+IF @OColumnLink IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1220,'Search Link',1053,'ColumnLink',@OColumnLink,NULL
+IF @OAggregateCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1238,'Aggregate',1082,'AggregateCd',@OAggregateCd,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1268,'Screen',934,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ODdlSrtColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1269,'Sort Column',1119,'DdlSrtColumnId',CONVERT(varchar(100),@ODdlSrtColumnId),NULL
+IF @ORefreshOnCUD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1280,'Refresh on CUD',1122,'RefreshOnCUD',@ORefreshOnCUD,NULL
+IF @ODdlAdnColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1281,'Additional Column',1123,'DdlAdnColumnId',CONVERT(varchar(100),@ODdlAdnColumnId),NULL
+IF @ODdlFtrColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1282,'= Screen Filter Column',1124,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),NULL
+IF @OColumnJustify IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1422,'Justify',1365,'ColumnJustify',@OColumnJustify,NULL
+IF @OTrimOnEntry IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1483,'Trim On Entry',1482,'TrimOnEntry',@OTrimOnEntry,NULL
+IF @OMatchCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1806,'Import Match',1849,'MatchCd',@OMatchCd,NULL
+IF @OLabelCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1857,'Label Style',1894,'LabelCss',@OLabelCss,NULL
+IF @OContentCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1858,'Content Style',1893,'ContentCss',@OContentCss,NULL
+IF @OIgnoreConfirm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1982,'Ignore Confirm',2102,'IgnoreConfirm',@OIgnoreConfirm,NULL
+IF @OGridGrpCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2016,'Grid Grouping',2145,'GridGrpCd',@OGridGrpCd,NULL
+IF @ODefAfter IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2033,'Default After',2163,'DefAfter',@ODefAfter,NULL
+IF @ODefAlways IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2034,'Default Always',2162,'DefAlways',@ODefAlways,NULL
+IF @OLabelVertical IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3104,'Label On Top',4248,'LabelVertical',@OLabelVertical,NULL
+IF @OHyperLinkUrl IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3110,'Static Link URL',4249,'HyperLinkUrl',@OHyperLinkUrl,NULL
+IF @OGroupRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3136,'Row Group',5279,'GroupRowId',CONVERT(varchar(100),@OGroupRowId),NULL
+IF @OHideOnTablet IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3155,'Hide On Tablet',5304,'HideOnTablet',@OHideOnTablet,NULL
+IF @OHideOnMobile IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3156,'Hide On Mobile',5303,'HideOnMobile',@OHideOnMobile,NULL
+IF @OResizeWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4166,'Resize Width',7481,'ResizeWidth',CONVERT(varchar(100),@OResizeWidth),NULL
+IF @OResizeHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4167,'Resize Height',7480,'ResizeHeight',CONVERT(varchar(100),@OResizeHeight),NULL
+IF @ODtlLstPosId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4206,'Mobile Search Position',7542,'DtlLstPosId',CONVERT(varchar(100),@ODtlLstPosId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del112M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del112M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del112M
+ @LabelId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OLabelCat		VarChar(50)
+		,@OLabelKey		VarChar(50)
+		,@OLabelText		NVarChar(max)
+		,@OCompanyId		Int
+		,@OSortOrder		SmallInt
+SELECT @SearchCol=LabelId,@OCultureId=CultureId,@OLabelCat=LabelCat,@OLabelKey=LabelKey,@OLabelText=LabelText,@OCompanyId=CompanyId,@OSortOrder=SortOrder FROM dbo.Label WHERE LabelId=@LabelId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',112,'Y',215,@LabelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1967,'Culture',1796,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OLabelCat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1968,'Category',1794,'LabelCat',@OLabelCat,NULL
+IF @OLabelKey IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1969,'Key',1795,'LabelKey',@OLabelKey,NULL
+IF @OLabelText IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1970,'Label Text',1798,'LabelText',@OLabelText,NULL
+IF @OCompanyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1971,'Company',1797,'CompanyId',CONVERT(varchar(100),@OCompanyId),NULL
+IF @OSortOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1972,'Sort Order',2030,'SortOrder',CONVERT(varchar(100),@OSortOrder),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del113M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del113M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del113M
+ @TbdRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OTbdRuleName		NVarChar(100)
+		,@OTbdRuleDesc		NVarChar(max)
+SELECT @SearchCol=TbdRuleId,@OScreenId=ScreenId,@OTbdRuleName=TbdRuleName,@OTbdRuleDesc=TbdRuleDesc FROM dbo.TbdRule WHERE TbdRuleId=@TbdRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',113,'Y',254,@TbdRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1977,'Screen',2082,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OTbdRuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1978,'Rule Name',2084,'TbdRuleName',@OTbdRuleName,NULL
+IF @OTbdRuleDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1979,'Description',2083,'TbdRuleDesc',@OTbdRuleDesc,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del114M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del114M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del114M
+ @StaticPgId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticPgTitle		NVarChar(100)
+		,@OStaticPgCss		NVarChar(max)
+		,@OMasterPgFile		VarChar(100)
+		,@OStaticPgJs		NVarChar(max)
+		,@OStaticCsId		SmallInt
+		,@OStaticJsId		SmallInt
+		,@OStaticPgNm		VarChar(50)
+		,@OStaticMeta		NVarChar(1000)
+SELECT @SearchCol=StaticPgId,@OStaticPgTitle=StaticPgTitle,@OStaticPgCss=StaticPgCss,@OMasterPgFile=MasterPgFile,@OStaticPgJs=StaticPgJs,@OStaticCsId=StaticCsId,@OStaticJsId=StaticJsId,@OStaticPgNm=StaticPgNm,@OStaticMeta=StaticMeta FROM dbo.StaticPg WHERE StaticPgId=@StaticPgId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',114,'Y',259,@StaticPgId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticPgTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1994,'Page Title',2125,'StaticPgTitle',@OStaticPgTitle,NULL
+IF @OStaticPgCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1995,'',2126,'StaticPgCss',@OStaticPgCss,NULL
+IF @OMasterPgFile IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1997,'Master Page File',2128,'MasterPgFile',@OMasterPgFile,NULL
+IF @OStaticPgJs IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2009,'',2142,'StaticPgJs',@OStaticPgJs,NULL
+IF @OStaticCsId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2011,'Shared CSS',2140,'StaticCsId',CONVERT(varchar(100),@OStaticCsId),NULL
+IF @OStaticJsId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2012,'Shared Javascript',2141,'StaticJsId',CONVERT(varchar(100),@OStaticJsId),NULL
+IF @OStaticPgNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2013,'Page Name',2143,'StaticPgNm',@OStaticPgNm,NULL
+IF @OStaticMeta IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2032,'Description',2161,'StaticMeta',@OStaticMeta,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del115M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del115M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del115M
+ @StaticCsId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticCsNm		NVarChar(200)
+		,@OStyleDef		NVarChar(max)
+SELECT @SearchCol=StaticCsId,@OStaticCsNm=StaticCsNm,@OStyleDef=StyleDef FROM dbo.StaticCs WHERE StaticCsId=@StaticCsId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',115,'Y',260,@StaticCsId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticCsNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2002,'CSS Name',2134,'StaticCsNm',@OStaticCsNm,NULL
+IF @OStyleDef IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2003,'Definition',2133,'StyleDef',@OStyleDef,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del116M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del116M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del116M
+ @StaticJsId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticJsNm		NVarChar(200)
+		,@OScriptDef		NVarChar(max)
+SELECT @SearchCol=StaticJsId,@OStaticJsNm=StaticJsNm,@OScriptDef=ScriptDef FROM dbo.StaticJs WHERE StaticJsId=@StaticJsId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',116,'Y',261,@StaticJsId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticJsNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2005,'Javascript Name',2136,'StaticJsNm',@OStaticJsNm,NULL
+IF @OScriptDef IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2006,'Definition',2137,'ScriptDef',@OScriptDef,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del117M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del117M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del117M
+ @StaticFiId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticFiUrl		NVarChar(200)
+SELECT @SearchCol=StaticFiId,@OStaticFiUrl=StaticFiUrl FROM dbo.StaticFi WHERE StaticFiId=@StaticFiId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',117,'Y',262,@StaticFiId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OStaticFiUrl IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2008,'File/Image URL',2139,'StaticFiUrl',@OStaticFiUrl,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del118M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del118M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del118M
+ @CronJobId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCronJobName		NVarChar(200)
+		,@OYear		SmallInt
+		,@OMonth		TinyInt
+		,@ODay		TinyInt
+		,@OHour		TinyInt
+		,@OMinute		TinyInt
+		,@ODayOfWeek		TinyInt
+		,@OLastRun		DateTime
+		,@ONextRun		DateTime
+		,@OJobLink		VarChar(200)
+		,@OLastStatus		NVarChar(500)
+SELECT @SearchCol=CronJobId,@OCronJobName=CronJobName,@OYear=Year,@OMonth=Month,@ODay=Day,@OHour=Hour,@OMinute=Minute,@ODayOfWeek=DayOfWeek,@OLastRun=LastRun,@ONextRun=NextRun,@OJobLink=JobLink,@OLastStatus=LastStatus FROM dbo.CronJob WHERE CronJobId=@CronJobId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',118,'Y',264,@CronJobId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCronJobName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2020,'Job Name',2159,'CronJobName',@OCronJobName,NULL
+IF @OYear IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2021,'Year',2158,'Year',CONVERT(varchar(100),@OYear),NULL
+IF @OMonth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2022,'Month',2156,'Month',CONVERT(varchar(100),@OMonth),NULL
+IF @ODay IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2023,'Day',2149,'Day',CONVERT(varchar(100),@ODay),NULL
+IF @OHour IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2024,'Hour',2151,'Hour',CONVERT(varchar(100),@OHour),NULL
+IF @OMinute IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2025,'Minute',2155,'Minute',CONVERT(varchar(100),@OMinute),NULL
+IF @ODayOfWeek IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2026,'Day-of-Week',2150,'DayOfWeek',CONVERT(varchar(100),@ODayOfWeek),NULL
+IF @OLastRun IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2027,'Last Run',2153,'LastRun',CONVERT(varchar(10),@OLastRun,102),NULL
+IF @ONextRun IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2028,'Next Run',2157,'NextRun',CONVERT(varchar(10),@ONextRun,102),NULL
+IF @OJobLink IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2029,'Job Link',2152,'JobLink',@OJobLink,NULL
+IF @OLastStatus IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2030,'Status',2154,'LastStatus',@OLastStatus,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del119M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del119M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del119M
+ @LabelId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OLabelCat		VarChar(50)
+		,@OLabelKey		VarChar(50)
+		,@OLabelText		NVarChar(max)
+		,@OSortOrder		SmallInt
+SELECT @SearchCol=LabelId,@OCultureId=CultureId,@OLabelCat=LabelCat,@OLabelKey=LabelKey,@OLabelText=LabelText,@OSortOrder=SortOrder FROM dbo.VwLabel WHERE LabelId=@LabelId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',119,'Y',265,@LabelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2037,'Culture ID',2165,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OLabelCat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2038,'Category',2166,'LabelCat',@OLabelCat,NULL
+IF @OLabelKey IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2039,'Key',2167,'LabelKey',@OLabelKey,NULL
+IF @OLabelText IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2040,'Label Text',2168,'LabelText',@OLabelText,NULL
+IF @OSortOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2042,'Sort Order',2169,'SortOrder',CONVERT(varchar(100),@OSortOrder),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del121M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del121M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del121M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMenuIndex		SmallInt
+		,@OParentId		Int
+SELECT @SearchCol=MenuId,@OMenuIndex=MenuIndex,@OParentId=ParentId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',121,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OMenuIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2056,'MenuIndex',324,'MenuIndex',CONVERT(varchar(100),@OMenuIndex),NULL
+IF @OParentId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2060,'ParentId',323,'ParentId',CONVERT(varchar(100),@OParentId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del13D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del13D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del13D
+ @ReportObjHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+		,@OHeaderWidth		SmallInt
+SELECT @SearchCol=ReportObjHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader,@OHeaderWidth=HeaderWidth FROM dbo.ReportObjHlp WHERE ReportObjHlpId=@ReportObjHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',13,'N',99,@ReportObjHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1276,'Culture',930,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1277,'Column Header',931,'ColumnHeader',@OColumnHeader,NULL
+IF @OHeaderWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1338,'Width',1193,'HeaderWidth',CONVERT(varchar(100),@OHeaderWidth),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del13M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del13M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del13M
+ @ReportObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OColumnName		VarChar(50)
+		,@ODataTypeId		TinyInt
+		,@OTabIndex		SmallInt
+		,@OColumnFormat		VarChar(20)
+		,@OPaddSize		TinyInt
+		,@OOperatorId		TinyInt
+		,@OReportCriId		Int
+		,@OPaddChar		NChar(1)
+		,@ORptObjTypeCd		Char(1)
+SELECT @SearchCol=ReportObjId,@OReportId=ReportId,@OColumnName=ColumnName,@ODataTypeId=DataTypeId,@OTabIndex=TabIndex,@OColumnFormat=ColumnFormat,@OPaddSize=PaddSize,@OOperatorId=OperatorId,@OReportCriId=ReportCriId,@OPaddChar=PaddChar,@ORptObjTypeCd=RptObjTypeCd FROM dbo.ReportObj WHERE ReportObjId=@ReportObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',13,'Y',23,@ReportObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,121,'Report',870,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,130,'Column Name',176,'ColumnName',@OColumnName,NULL
+IF @ODataTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,133,'Data Type',179,'DataTypeId',CONVERT(varchar(100),@ODataTypeId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,138,'Tab Order',184,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @OColumnFormat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,690,'Column Format',598,'ColumnFormat',@OColumnFormat,NULL
+IF @OPaddSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,985,'Padding Size',888,'PaddSize',CONVERT(varchar(100),@OPaddSize),NULL
+IF @OOperatorId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1024,'Criteria Operator',925,'OperatorId',CONVERT(varchar(100),@OOperatorId),NULL
+IF @OReportCriId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1025,'Criteria Column',926,'ReportCriId',CONVERT(varchar(100),@OReportCriId),NULL
+IF @OPaddChar IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1456,'With Character',1377,'PaddChar',@OPaddChar,NULL
+IF @ORptObjTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1469,'Column Type',1403,'RptObjTypeCd',@ORptObjTypeCd,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del14M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del14M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del14M
+ @ServerRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@ORuleTypeId		TinyInt
+		,@OMasterTable		Char(1)
+		,@ORuleName		NVarChar(100)
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleOrder		SmallInt
+		,@OProcedureName		VarChar(50)
+		,@OParameterNames		VarChar(max)
+		,@OParameterTypes		VarChar(max)
+		,@OCallingParams		VarChar(max)
+		,@OOnAdd		Char(1)
+		,@OOnUpd		Char(1)
+		,@OOnDel		Char(1)
+		,@OBeforeCRUD		Char(1)
+		,@ORuleCode		NVarChar(max)
+		,@OLastGenDt		DateTime
+		,@ORunMode		Char(1)
+		,@OSrcNS		VarChar(30)
+SELECT @SearchCol=ServerRuleId,@OScreenId=ScreenId,@ORuleTypeId=RuleTypeId,@OMasterTable=MasterTable,@ORuleName=RuleName,@ORuleDescription=RuleDescription,@ORuleOrder=RuleOrder,@OProcedureName=ProcedureName,@OParameterNames=ParameterNames,@OParameterTypes=ParameterTypes,@OCallingParams=CallingParams,@OOnAdd=OnAdd,@OOnUpd=OnUpd,@OOnDel=OnDel,@OBeforeCRUD=BeforeCRUD,@ORuleCode=RuleCode,@OLastGenDt=LastGenDt,@ORunMode=RunMode,@OSrcNS=SrcNS FROM dbo.ServerRule WHERE ServerRuleId=@ServerRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',14,'Y',24,@ServerRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,139,'Screen',1140,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,151,'Rule Type',188,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @OMasterTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,152,'Master Table',189,'MasterTable',@OMasterTable,NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,153,'Rule Name',190,'RuleName',@ORuleName,NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,154,'Description',191,'RuleDescription',@ORuleDescription,NULL
+IF @ORuleOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,155,'Exec Order',192,'RuleOrder',CONVERT(varchar(100),@ORuleOrder),NULL
+IF @OProcedureName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,156,'Procedure Name',193,'ProcedureName',@OProcedureName,NULL
+IF @OParameterNames IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,157,'Parameter Names',194,'ParameterNames',@OParameterNames,NULL
+IF @OParameterTypes IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,158,'Parameter Types',195,'ParameterTypes',@OParameterTypes,NULL
+IF @OCallingParams IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,159,'Calling Parameters',196,'CallingParams',@OCallingParams,NULL
+IF @OOnAdd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,160,'On Add',197,'OnAdd',@OOnAdd,NULL
+IF @OOnUpd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,161,'On Update',198,'OnUpd',@OOnUpd,NULL
+IF @OOnDel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,162,'On Delete',199,'OnDel',@OOnDel,NULL
+IF @OBeforeCRUD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,163,'CRUD',200,'BeforeCRUD',@OBeforeCRUD,NULL
+IF @ORuleCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1396,'S.Procedure',1263,'RuleCode',@ORuleCode,NULL
+IF @OLastGenDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1419,'Last Applied',1355,'LastGenDt',CONVERT(varchar(10),@OLastGenDt,102),NULL
+IF @ORunMode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4354,'Run Mode',7589,'RunMode',@ORunMode,NULL
+IF @OSrcNS IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4355,'Source NS',7612,'SrcNS',@OSrcNS,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del15M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del15M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del15M
+ @KeyId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OKeyName		VarChar(50)
+		,@OTableId		Int
+		,@OColumnId		Int
+		,@ORefTableId		Int
+		,@ORefColumnId		Int
+SELECT @SearchCol=KeyId,@OKeyName=KeyName,@OTableId=TableId,@OColumnId=ColumnId,@ORefTableId=RefTableId,@ORefColumnId=RefColumnId FROM dbo.DbKey WHERE KeyId=@KeyId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',15,'Y',20,@KeyId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OKeyName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,165,'Foreign Key Name',155,'KeyName',@OKeyName,NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,166,'FK Table',156,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,167,'FK Column',157,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @ORefTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,168,'PK Table',158,'RefTableId',CONVERT(varchar(100),@ORefTableId),NULL
+IF @ORefColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,169,'PK Column',159,'RefColumnId',CONVERT(varchar(100),@ORefColumnId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del16D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del16D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del16D
+ @ColOvrdId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OPriority		SmallInt
+		,@OColVisible		Char(1)
+		,@OColReadOnly		Char(1)
+		,@OColExport		Char(1)
+		,@OToolTip		NVarChar(200)
+		,@OColumnHeader		NVarChar(50)
+		,@OErrMessage		NVarChar(300)
+		,@OPermKeyRowId		Int
+SELECT @SearchCol=ColOvrdId,@OPermKeyId=PermKeyId,@OPriority=Priority,@OColVisible=ColVisible,@OColReadOnly=ColReadOnly,@OColExport=ColExport,@OToolTip=ToolTip,@OColumnHeader=ColumnHeader,@OErrMessage=ErrMessage,@OPermKeyRowId=PermKeyRowId FROM dbo.ColOvrd WHERE ColOvrdId=@ColOvrdId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',16,'N',241,@ColOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,182,'Entity Type',1971,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OPriority IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,184,'Priority',1964,'Priority',CONVERT(varchar(100),@OPriority),NULL
+IF @OColVisible IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,185,'Visible',1965,'ColVisible',@OColVisible,NULL
+IF @OColReadOnly IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,186,'Read Only',1966,'ColReadOnly',@OColReadOnly,NULL
+IF @OColExport IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1331,'Exportable',1967,'ColExport',@OColExport,NULL
+IF @OToolTip IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1884,'Tool Tips',1969,'ToolTip',@OToolTip,NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1885,'Label Override',1968,'ColumnHeader',@OColumnHeader,NULL
+IF @OErrMessage IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1886,'Error Message',1970,'ErrMessage',@OErrMessage,NULL
+IF @OPermKeyRowId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1887,'Entity Value',7414,'PermKeyRowId',CONVERT(varchar(100),@OPermKeyRowId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del16M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del16M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del16M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=ScreenObjId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',16,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del17D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del17D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del17D
+ @RowOvrdPrmId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OSelLevel		Char(1)
+		,@OPermKeyId		SmallInt
+		,@OAndCondition		Char(1)
+SELECT @SearchCol=RowOvrdPrmId,@OSelLevel=SelLevel,@OPermKeyId=PermKeyId,@OAndCondition=AndCondition FROM dbo.RowOvrdPrm WHERE RowOvrdPrmId=@RowOvrdPrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',17,'N',239,@RowOvrdPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OSelLevel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1308,'Allow Select',1951,'SelLevel',@OSelLevel,NULL
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1882,'Entity Type',1950,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OAndCondition IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1981,'Condition',2099,'AndCondition',@OAndCondition,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del17M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del17M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del17M
+ @RowOvrdId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@ORowAuthId		SmallInt
+		,@OAllowSel		Char(1)
+		,@OAllowAdd		Char(1)
+		,@OAllowUpd		Char(1)
+		,@OAllowDel		Char(1)
+		,@OReportId		Int
+SELECT @SearchCol=RowOvrdId,@OScreenId=ScreenId,@ORowAuthId=RowAuthId,@OAllowSel=AllowSel,@OAllowAdd=AllowAdd,@OAllowUpd=AllowUpd,@OAllowDel=AllowDel,@OReportId=ReportId FROM dbo.RowOvrd WHERE RowOvrdId=@RowOvrdId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',17,'Y',238,@RowOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,188,'Screen',1940,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @ORowAuthId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,200,'Row Authority',1942,'RowAuthId',CONVERT(varchar(100),@ORowAuthId),NULL
+IF @OAllowSel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,201,'Allow Select',1943,'AllowSel',@OAllowSel,NULL
+IF @OAllowAdd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,202,'Allow Add',1944,'AllowAdd',@OAllowAdd,NULL
+IF @OAllowUpd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,203,'Allow Update',1945,'AllowUpd',@OAllowUpd,NULL
+IF @OAllowDel IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,204,'Allow Delete',1946,'AllowDel',@OAllowDel,NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1750,'Report',1941,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del2D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del2D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del2D
+ @ColumnId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnName		VarChar(50)
+		,@ODataType		TinyInt
+		,@OColumnLength		SmallInt
+		,@OAllowNulls		Char(1)
+		,@OColumnIdentity		Char(1)
+		,@OPrimaryKey		Char(1)
+		,@OColumnScale		TinyInt
+		,@OExternalTable		VarChar(50)
+		,@OColObjective		NVarChar(200)
+		,@OColumnIndex		SmallInt
+		,@ODefaultValue		NVarChar(50)
+		,@OIsIndex		Char(1)
+		,@OIsIndexU		Char(1)
+SELECT @SearchCol=ColumnId,@OColumnName=ColumnName,@ODataType=DataType,@OColumnLength=ColumnLength,@OAllowNulls=AllowNulls,@OColumnIdentity=ColumnIdentity,@OPrimaryKey=PrimaryKey,@OColumnScale=ColumnScale,@OExternalTable=ExternalTable,@OColObjective=ColObjective,@OColumnIndex=ColumnIndex,@ODefaultValue=DefaultValue,@OIsIndex=IsIndex,@OIsIndexU=IsIndexU FROM dbo.DbColumn WHERE ColumnId=@ColumnId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',2,'N',5,@ColumnId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,16,'Column Name',35,'ColumnName',@OColumnName,NULL
+IF @ODataType IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,17,'Data Type',36,'DataType',CONVERT(varchar(100),@ODataType),NULL
+IF @OColumnLength IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,19,'Length',34,'ColumnLength',CONVERT(varchar(100),@OColumnLength),NULL
+IF @OAllowNulls IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,20,'Nullable',32,'AllowNulls',@OAllowNulls,NULL
+IF @OColumnIdentity IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,21,'Identity',33,'ColumnIdentity',@OColumnIdentity,NULL
+IF @OPrimaryKey IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,22,'Primary Key',37,'PrimaryKey',@OPrimaryKey,NULL
+IF @OColumnScale IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,428,'Decimal',319,'ColumnScale',CONVERT(varchar(100),@OColumnScale),NULL
+IF @OExternalTable IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1198,'External Table',1007,'ExternalTable',@OExternalTable,NULL
+IF @OColObjective IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1334,'Column Objective',1192,'ColObjective',@OColObjective,NULL
+IF @OColumnIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1400,'Order',1266,'ColumnIndex',CONVERT(varchar(100),@OColumnIndex),NULL
+IF @ODefaultValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1401,'Default',1267,'DefaultValue',@ODefaultValue,NULL
+IF @OIsIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1774,'N/U-Index',1806,'IsIndex',@OIsIndex,NULL
+IF @OIsIndexU IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1983,'Unique Index',2109,'IsIndexU',@OIsIndexU,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del2M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del2M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del2M
+ @TableId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTableName		VarChar(500)
+		,@OTableDesc		NVarChar(100)
+		,@OSystemId		TinyInt
+		,@OMultiDesignDb		Char(1)
+		,@OTblObjective		NVarChar(500)
+		,@OLastSyncDt		DateTime
+		,@OVirtualTbl		Char(1)
+		,@OVirtualSql		NVarChar(max)
+SELECT @SearchCol=TableId,@OTableName=TableName,@OTableDesc=TableDesc,@OSystemId=SystemId,@OMultiDesignDb=MultiDesignDb,@OTblObjective=TblObjective,@OLastSyncDt=LastSyncDt,@OVirtualTbl=VirtualTbl,@OVirtualSql=VirtualSql FROM dbo.DbTable WHERE TableId=@TableId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',2,'Y',3,@TableId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTableName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,12,'Table Name',12,'TableName',@OTableName,NULL
+IF @OTableDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,13,'Description',13,'TableDesc',@OTableDesc,NULL
+IF @OSystemId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,430,'Database',321,'SystemId',CONVERT(varchar(100),@OSystemId),NULL
+IF @OMultiDesignDb IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,933,'Multi-design DB',823,'MultiDesignDb',@OMultiDesignDb,NULL
+IF @OTblObjective IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1332,'',1190,'TblObjective',@OTblObjective,NULL
+IF @OLastSyncDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1452,'Synchronized on',1374,'LastSyncDt',CONVERT(varchar(10),@OLastSyncDt,102),NULL
+IF @OVirtualTbl IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1753,'Virtual',1778,'VirtualTbl',@OVirtualTbl,NULL
+IF @OVirtualSql IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1757,'Function',1779,'VirtualSql',@OVirtualSql,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del35M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del35M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del35M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OParentId		Int
+		,@OMenuIndex		SmallInt
+		,@OScreenId		Int
+		,@OReportId		Int
+		,@OMiscellaneous		VarChar(1000)
+		,@OWizardId		Int
+		,@OStaticPgId		Int
+		,@OPopup		Char(1)
+		,@OReactQuickMenu		Char(1)
+SELECT @SearchCol=MenuId,@OParentId=ParentId,@OMenuIndex=MenuIndex,@OScreenId=ScreenId,@OReportId=ReportId,@OMiscellaneous=Miscellaneous,@OWizardId=WizardId,@OStaticPgId=StaticPgId,@OPopup=Popup,@OReactQuickMenu=ReactQuickMenu FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',35,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OParentId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,432,'Parent Item',323,'ParentId',CONVERT(varchar(100),@OParentId),NULL
+IF @OMenuIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,433,'Order',324,'MenuIndex',CONVERT(varchar(100),@OMenuIndex),NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,435,'Screen',326,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,436,'Report',327,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OMiscellaneous IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,437,'Miscellaneous',328,'Miscellaneous',@OMiscellaneous,NULL
+IF @OWizardId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,839,'Wizard',538,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+IF @OStaticPgId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1998,'Static Page',2129,'StaticPgId',CONVERT(varchar(100),@OStaticPgId),NULL
+IF @OPopup IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4139,'Popup',7438,'Popup',@OPopup,NULL
+IF @OReactQuickMenu IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4353,'React Quick Menu',7587,'ReactQuickMenu',@OReactQuickMenu,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del36D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del36D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del36D
+ @MenuHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OMenuText		NVarChar(50)
+SELECT @SearchCol=MenuHlpId,@OCultureId=CultureId,@OMenuText=MenuText FROM dbo.MenuHlp WHERE MenuHlpId=@MenuHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',36,'N',40,@MenuHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,448,'Culture',1304,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OMenuText IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,450,'Menu Label',332,'MenuText',@OMenuText,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del36M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del36M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del36M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=MenuId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',36,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del49D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del49D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del49D
+ @WizardObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnId		Int
+		,@OTabIndex		SmallInt
+SELECT @SearchCol=WizardObjId,@OColumnId=ColumnId,@OTabIndex=TabIndex FROM dbo.WizardObj WHERE WizardObjId=@WizardObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',49,'N',72,@WizardObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,642,'Column',551,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,644,'Tab Index',553,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del49M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del49M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del49M
+ @WizardId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OWizardTypeId		TinyInt
+		,@OMasterTableId		Int
+		,@OWizardTitle		NVarChar(50)
+		,@OProgramName		VarChar(50)
+		,@ODefWorkSheet		NVarChar(50)
+		,@ODefStartRow		SmallInt
+		,@ODefOverwrite		Char(1)
+		,@OOvwrReadonly		Char(1)
+		,@OAuthRequired		Char(1)
+		,@ONoTrans		Char(1)
+		,@OCommandTimeOut		SmallInt
+SELECT @SearchCol=WizardId,@OWizardTypeId=WizardTypeId,@OMasterTableId=MasterTableId,@OWizardTitle=WizardTitle,@OProgramName=ProgramName,@ODefWorkSheet=DefWorkSheet,@ODefStartRow=DefStartRow,@ODefOverwrite=DefOverwrite,@OOvwrReadonly=OvwrReadonly,@OAuthRequired=AuthRequired,@ONoTrans=NoTrans,@OCommandTimeOut=CommandTimeOut FROM dbo.Wizard WHERE WizardId=@WizardId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',49,'Y',71,@WizardId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OWizardTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,634,'Wizard Type',543,'WizardTypeId',CONVERT(varchar(100),@OWizardTypeId),NULL
+IF @OMasterTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,635,'Master Table',544,'MasterTableId',CONVERT(varchar(100),@OMasterTableId),NULL
+IF @OWizardTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,636,'Wizard Title',545,'WizardTitle',@OWizardTitle,NULL
+IF @OProgramName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,637,'Program Name',546,'ProgramName',@OProgramName,NULL
+IF @ODefWorkSheet IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1218,'Default WorkSheet',1051,'DefWorkSheet',@ODefWorkSheet,NULL
+IF @ODefStartRow IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1219,'Default Start Row',1052,'DefStartRow',CONVERT(varchar(100),@ODefStartRow),NULL
+IF @ODefOverwrite IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1328,'Default Overwrite',1187,'DefOverwrite',@ODefOverwrite,NULL
+IF @OOvwrReadonly IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1329,'Overwrite Readonly',1188,'OvwrReadonly',@OOvwrReadonly,NULL
+IF @OAuthRequired IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1992,'Authentication',2121,'AuthRequired',@OAuthRequired,NULL
+IF @ONoTrans IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4374,'No Transaction Wrap!!',7660,'NoTrans',@ONoTrans,NULL
+IF @OCommandTimeOut IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4375,'Command Timeout(sec)',7661,'CommandTimeOut',CONVERT(varchar(100),@OCommandTimeOut),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del50M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del50M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del50M
+ @WizardRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OWizardId		Int
+		,@ORuleTypeId		TinyInt
+		,@ORuleName		NVarChar(100)
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleOrder		SmallInt
+		,@OProcedureName		VarChar(50)
+		,@OBeforeCRUD		Char(1)
+SELECT @SearchCol=WizardRuleId,@OWizardId=WizardId,@ORuleTypeId=RuleTypeId,@ORuleName=RuleName,@ORuleDescription=RuleDescription,@ORuleOrder=RuleOrder,@OProcedureName=ProcedureName,@OBeforeCRUD=BeforeCRUD FROM dbo.WizardRule WHERE WizardRuleId=@WizardRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',50,'Y',73,@WizardRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OWizardId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,645,'Wizard',1141,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,654,'Rule Type',556,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,655,'Rule Name',557,'RuleName',@ORuleName,NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,656,'Description',558,'RuleDescription',@ORuleDescription,NULL
+IF @ORuleOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,657,'Exec Order',559,'RuleOrder',CONVERT(varchar(100),@ORuleOrder),NULL
+IF @OProcedureName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,658,'Procedure Name',560,'ProcedureName',@OProcedureName,NULL
+IF @OBeforeCRUD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,659,'Before CRUD',561,'BeforeCRUD',@OBeforeCRUD,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del53M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del53M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del53M
+ @TemplateId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTemplateName		NVarChar(30)
+		,@OTmplPrefix		VarChar(10)
+		,@OTmplDefault		Char(1)
+SELECT @SearchCol=TemplateId,@OTemplateName=TemplateName,@OTmplPrefix=TmplPrefix,@OTmplDefault=TmplDefault FROM dbo.Template WHERE TemplateId=@TemplateId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',53,'Y',79,@TemplateId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTemplateName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,707,'Template Name',609,'TemplateName',@OTemplateName,NULL
+IF @OTmplPrefix IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,708,'Template Prefix',610,'TmplPrefix',@OTmplPrefix,NULL
+IF @OTmplDefault IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,709,'Default',611,'TmplDefault',@OTmplDefault,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del54D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del54D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del54D
+ @ScreenTabHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OTabFolderName		NVarChar(50)
+SELECT @SearchCol=ScreenTabHlpId,@OCultureId=CultureId,@OTabFolderName=TabFolderName FROM dbo.ScreenTabHlp WHERE ScreenTabHlpId=@ScreenTabHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',54,'N',80,@ScreenTabHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,721,'Culture',621,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OTabFolderName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,722,'Tab Display Name',622,'TabFolderName',@OTabFolderName,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del54M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del54M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del54M
+ @ScreenTabId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTabFolderName		NVarChar(30)
+		,@OTabFolderOrder		TinyInt
+		,@OScreenId		Int
+SELECT @SearchCol=ScreenTabId,@OTabFolderName=TabFolderName,@OTabFolderOrder=TabFolderOrder,@OScreenId=ScreenId FROM dbo.ScreenTab WHERE ScreenTabId=@ScreenTabId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',54,'Y',19,@ScreenTabId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OTabFolderName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,717,'Tab Folder Name',153,'TabFolderName',@OTabFolderName,NULL
+IF @OTabFolderOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,718,'Tab Folder Order',618,'TabFolderOrder',CONVERT(varchar(100),@OTabFolderOrder),NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3162,'Screen',5338,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del58D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del58D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del58D
+ @MenuPrmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OGrantDeny		Char(1)
+		,@OPermId		Int
+SELECT @SearchCol=MenuPrmId,@OPermKeyId=PermKeyId,@OGrantDeny=GrantDeny,@OPermId=PermId FROM dbo.MenuPrm WHERE MenuPrmId=@MenuPrmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',58,'N',231,@MenuPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPermKeyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,833,'Entity Type',1887,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),NULL
+IF @OGrantDeny IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,838,'Grant/Deny',1892,'GrantDeny',@OGrantDeny,NULL
+IF @OPermId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1751,'Entity',1888,'PermId',CONVERT(varchar(100),@OPermId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del58M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del58M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del58M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=MenuId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',58,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del59D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del59D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del59D
+ @ScreenFilterHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OFilterName		NVarChar(50)
+SELECT @SearchCol=ScreenFilterHlpId,@OCultureId=CultureId,@OFilterName=FilterName FROM dbo.ScreenFilterHlp WHERE ScreenFilterHlpId=@ScreenFilterHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',59,'N',87,@ScreenFilterHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,848,'Culture',730,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OFilterName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,849,'Filter Header',731,'FilterName',@OFilterName,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del59M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del59M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del59M
+ @ScreenFilterId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OScreenFilterName		VarChar(50)
+		,@OFilterClause		VarChar(1500)
+		,@OFilterOrder		TinyInt
+		,@OApplyToMst		Char(1)
+SELECT @SearchCol=ScreenFilterId,@OScreenId=ScreenId,@OScreenFilterName=ScreenFilterName,@OFilterClause=FilterClause,@OFilterOrder=FilterOrder,@OApplyToMst=ApplyToMst FROM dbo.ScreenFilter WHERE ScreenFilterId=@ScreenFilterId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',59,'Y',86,@ScreenFilterId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,841,'Screen',723,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OScreenFilterName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,842,'Filter Name',724,'ScreenFilterName',@OScreenFilterName,NULL
+IF @OFilterClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,844,'Filter Clause',726,'FilterClause',@OFilterClause,NULL
+IF @OFilterOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,845,'Filter Order',727,'FilterOrder',CONVERT(varchar(100),@OFilterOrder),NULL
+IF @OApplyToMst IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1807,'Master Table',1856,'ApplyToMst',@OApplyToMst,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del65M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del65M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del65M
+ @ReportGrpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OReportGrpName		NVarChar(50)
+		,@OContentVertical		Char(1)
+		,@OLabelVertical		Char(1)
+		,@OParentGrpId		Int
+		,@OReportGrpIndex		VarChar(20)
+		,@OBorderWidth		TinyInt
+		,@OGrpStyle		VarChar(200)
+SELECT @SearchCol=ReportGrpId,@OReportId=ReportId,@OReportGrpName=ReportGrpName,@OContentVertical=ContentVertical,@OLabelVertical=LabelVertical,@OParentGrpId=ParentGrpId,@OReportGrpIndex=ReportGrpIndex,@OBorderWidth=BorderWidth,@OGrpStyle=GrpStyle FROM dbo.ReportGrp WHERE ReportGrpId=@ReportGrpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',65,'Y',94,@ReportGrpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,967,'Report',882,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OReportGrpName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,978,'Group Name',874,'ReportGrpName',@OReportGrpName,NULL
+IF @OContentVertical IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,979,'Content Vertical',876,'ContentVertical',@OContentVertical,NULL
+IF @OLabelVertical IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,980,'Label Vertical',877,'LabelVertical',@OLabelVertical,NULL
+IF @OParentGrpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,982,'Parent Group',885,'ParentGrpId',CONVERT(varchar(100),@OParentGrpId),NULL
+IF @OReportGrpIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,983,'Group Index',886,'ReportGrpIndex',@OReportGrpIndex,NULL
+IF @OBorderWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,984,'Border Width',887,'BorderWidth',CONVERT(varchar(100),@OBorderWidth),NULL
+IF @OGrpStyle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1453,'Override Style',1375,'GrpStyle',@OGrpStyle,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del67D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del67D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del67D
+ @ReportHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OReportTitle		NVarChar(50)
+		,@ODefaultHlpMsg		NVarChar(max)
+SELECT @SearchCol=ReportHlpId,@OCultureId=CultureId,@OReportTitle=ReportTitle,@ODefaultHlpMsg=DefaultHlpMsg FROM dbo.ReportHlp WHERE ReportHlpId=@ReportHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',67,'N',96,@ReportHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1022,'Culture',899,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OReportTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1023,'Report Title',900,'ReportTitle',@OReportTitle,NULL
+IF @ODefaultHlpMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1156,'Default Help Message',967,'DefaultHlpMsg',@ODefaultHlpMsg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del67M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del67M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del67M
+ @ReportId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OProgramName		VarChar(20)
+		,@OOrientationCd		Char(1)
+		,@OCopyReportId		Int
+		,@OTemplateName		VarChar(50)
+		,@OWhereClause		VarChar(1000)
+		,@ORegClause		VarChar(400)
+		,@OUpdClause		VarChar(200)
+		,@OXlsClause		VarChar(200)
+		,@OGenerateRp		Char(1)
+		,@OLastGenDt		DateTime
+		,@ORegCode		NVarChar(max)
+		,@OValCode		NVarChar(max)
+		,@OXlsCode		NVarChar(max)
+		,@OUpdCode		NVarChar(max)
+		,@OValClause		VarChar(400)
+		,@OUnitCd		Char(2)
+		,@OTopMargin		Decimal(8,2)
+		,@OBottomMargin		Decimal(8,2)
+		,@OLeftMargin		Decimal(8,2)
+		,@ORightMargin		Decimal(8,2)
+		,@OPageWidth		Decimal(8,2)
+		,@OPageHeight		Decimal(8,2)
+		,@OReportTypeCd		Char(1)
+		,@OAllowSelect		Char(1)
+		,@OAuthRequired		Char(1)
+		,@OCommandTimeOut		SmallInt
+SELECT @SearchCol=ReportId,@OProgramName=ProgramName,@OOrientationCd=OrientationCd,@OCopyReportId=CopyReportId,@OTemplateName=TemplateName,@OWhereClause=WhereClause,@ORegClause=RegClause,@OUpdClause=UpdClause,@OXlsClause=XlsClause,@OGenerateRp=GenerateRp,@OLastGenDt=LastGenDt,@ORegCode=RegCode,@OValCode=ValCode,@OXlsCode=XlsCode,@OUpdCode=UpdCode,@OValClause=ValClause,@OUnitCd=UnitCd,@OTopMargin=TopMargin,@OBottomMargin=BottomMargin,@OLeftMargin=LeftMargin,@ORightMargin=RightMargin,@OPageWidth=PageWidth,@OPageHeight=PageHeight,@OReportTypeCd=ReportTypeCd,@OAllowSelect=AllowSelect,@OAuthRequired=AuthRequired,@OCommandTimeOut=CommandTimeOut FROM dbo.Report WHERE ReportId=@ReportId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',67,'Y',22,@ReportId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OProgramName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1009,'Program Name',169,'ProgramName',@OProgramName,NULL
+IF @OOrientationCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1010,'Orientation',172,'OrientationCd',@OOrientationCd,NULL
+IF @OCopyReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1012,'Copy from Report',483,'CopyReportId',CONVERT(varchar(100),@OCopyReportId),NULL
+IF @OTemplateName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1013,'Template Name',596,'TemplateName',@OTemplateName,NULL
+IF @OWhereClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1017,'Where Clause',894,'WhereClause',@OWhereClause,NULL
+IF @ORegClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1018,'Regular Field Clause',895,'RegClause',@ORegClause,NULL
+IF @OUpdClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1019,'Txt Update Clause',896,'UpdClause',@OUpdClause,NULL
+IF @OXlsClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1099,'Formatted Xls Clause',937,'XlsClause',@OXlsClause,NULL
+IF @OGenerateRp IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1307,'Generate',1166,'GenerateRp',@OGenerateRp,NULL
+IF @OLastGenDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1472,'Last Generated',1412,'LastGenDt',CONVERT(varchar(10),@OLastGenDt,102),NULL
+IF @ORegCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1475,'S.Procedure',1406,'RegCode',@ORegCode,NULL
+IF @OValCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1476,'S.Procedure',1407,'ValCode',@OValCode,NULL
+IF @OXlsCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1477,'S.Procedure',1409,'XlsCode',@OXlsCode,NULL
+IF @OUpdCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1478,'S.Procedure',1408,'UpdCode',@OUpdCode,NULL
+IF @OValClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1480,'Parameter Clause',1405,'ValClause',@OValClause,NULL
+IF @OUnitCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1525,'Unit',1487,'UnitCd',@OUnitCd,NULL
+IF @OTopMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1527,'Top Margin',1492,'TopMargin',CONVERT(varchar(100),@OTopMargin),NULL
+IF @OBottomMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1528,'Bottom Margin',1491,'BottomMargin',CONVERT(varchar(100),@OBottomMargin),NULL
+IF @OLeftMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1529,'Left Margin',1490,'LeftMargin',CONVERT(varchar(100),@OLeftMargin),NULL
+IF @ORightMargin IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1530,'Right Margin',1493,'RightMargin',CONVERT(varchar(100),@ORightMargin),NULL
+IF @OPageWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1531,'Page Width',1488,'PageWidth',CONVERT(varchar(100),@OPageWidth),NULL
+IF @OPageHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1532,'Page Height',1489,'PageHeight',CONVERT(varchar(100),@OPageHeight),NULL
+IF @OReportTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1729,'Report Type',1718,'ReportTypeCd',@OReportTypeCd,NULL
+IF @OAllowSelect IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1773,'Allow Columns Selection',1792,'AllowSelect',@OAllowSelect,NULL
+IF @OAuthRequired IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1991,'Authentication',2120,'AuthRequired',@OAuthRequired,NULL
+IF @OCommandTimeOut IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4376,'Command Time Out(sec)',7662,'CommandTimeOut',CONVERT(varchar(100),@OCommandTimeOut),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del69D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del69D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del69D
+ @ReportCriHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+SELECT @SearchCol=ReportCriHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader FROM dbo.ReportCriHlp WHERE ReportCriHlpId=@ReportCriHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',69,'N',98,@ReportCriHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1097,'Culture',923,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1098,'Column Label',924,'ColumnHeader',@OColumnHeader,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del69M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del69M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del69M
+ @ReportCriId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OReportGrpId		Int
+		,@OTableId		Int
+		,@OTableAbbr		VarChar(10)
+		,@OColumnName		VarChar(50)
+		,@OTabIndex		SmallInt
+		,@ODataTypeId		TinyInt
+		,@ODataTypeSize		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ORowSize		SmallInt
+		,@ODdlKeyColumnName		VarChar(50)
+		,@ODdlRefColumnName		VarChar(50)
+		,@ORequiredValid		Char(1)
+		,@OWhereClause		VarChar(1000)
+		,@ORegClause		VarChar(400)
+		,@OColumnSize		SmallInt
+		,@ODdlSrtColumnName		VarChar(50)
+		,@OLabelCss		VarChar(100)
+		,@OContentCss		VarChar(100)
+		,@ODefaultValue		NVarChar(100)
+		,@ODdlFtrColumnId		Int
+SELECT @SearchCol=ReportCriId,@OReportId=ReportId,@OReportGrpId=ReportGrpId,@OTableId=TableId,@OTableAbbr=TableAbbr,@OColumnName=ColumnName,@OTabIndex=TabIndex,@ODataTypeId=DataTypeId,@ODataTypeSize=DataTypeSize,@ODisplayModeId=DisplayModeId,@ORowSize=RowSize,@ODdlKeyColumnName=DdlKeyColumnName,@ODdlRefColumnName=DdlRefColumnName,@ORequiredValid=RequiredValid,@OWhereClause=WhereClause,@ORegClause=RegClause,@OColumnSize=ColumnSize,@ODdlSrtColumnName=DdlSrtColumnName,@OLabelCss=LabelCss,@OContentCss=ContentCss,@ODefaultValue=DefaultValue,@ODdlFtrColumnId=DdlFtrColumnId FROM dbo.ReportCri WHERE ReportCriId=@ReportCriId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',69,'Y',97,@ReportCriId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1075,'Report',902,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OReportGrpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1076,'Report Group',903,'ReportGrpId',CONVERT(varchar(100),@OReportGrpId),NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1077,'Permission Table',904,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @OTableAbbr IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1078,'Table Abbreviation',905,'TableAbbr',@OTableAbbr,NULL
+IF @OColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1079,'Column Name',906,'ColumnName',@OColumnName,NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1080,'Tab Index',907,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @ODataTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1081,'Data Type',908,'DataTypeId',CONVERT(varchar(100),@ODataTypeId),NULL
+IF @ODataTypeSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1082,'Data Type Size',909,'DataTypeSize',CONVERT(varchar(100),@ODataTypeSize),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1083,'Display Mode',910,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @ORowSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1084,'List Row Size',911,'RowSize',CONVERT(varchar(100),@ORowSize),NULL
+IF @ODdlKeyColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1085,'DropDown Key Column',912,'DdlKeyColumnName',@ODdlKeyColumnName,NULL
+IF @ODdlRefColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1086,'DropDown Ref Column',913,'DdlRefColumnName',@ODdlRefColumnName,NULL
+IF @ORequiredValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1087,'Require Validation',914,'RequiredValid',@ORequiredValid,NULL
+IF @OWhereClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1090,'Where Clause',917,'WhereClause',@OWhereClause,NULL
+IF @ORegClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1091,'Regular Criteria Clause',918,'RegClause',@ORegClause,NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1158,'Column Size (px)',969,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @ODdlSrtColumnName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1279,'DropDown Sort Column',1121,'DdlSrtColumnName',@ODdlSrtColumnName,NULL
+IF @OLabelCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1861,'Label Style',1898,'LabelCss',@OLabelCss,NULL
+IF @OContentCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1862,'Content Style',1897,'ContentCss',@OContentCss,NULL
+IF @ODefaultValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1986,'Default Value',2118,'DefaultValue',@ODefaultValue,NULL
+IF @ODdlFtrColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3367,'DropDown Filter Column',5360,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del73D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del73D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del73D
+ @ScreenCriHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+SELECT @SearchCol=ScreenCriHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader FROM dbo.ScreenCriHlp WHERE ScreenCriHlpId=@ScreenCriHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',73,'N',105,@ScreenCriHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1191,'Culture',990,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OColumnHeader IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1192,'Column Label',991,'ColumnHeader',@OColumnHeader,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del73M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del73M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del73M
+ @ScreenCriId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OColumnId		Int
+		,@OTabIndex		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ORowSize		SmallInt
+		,@ODdlKeyColumnId		Int
+		,@ODdlRefColumnId		Int
+		,@ORequiredValid		Char(1)
+		,@OColumnSize		SmallInt
+		,@ODdlSrtColumnId		Int
+		,@OColumnJustify		Char(1)
+		,@OLabelCss		VarChar(100)
+		,@OContentCss		VarChar(100)
+		,@OOperatorId		TinyInt
+		,@ODdlFtrColumnId		Int
+SELECT @SearchCol=ScreenCriId,@OScreenId=ScreenId,@OColumnId=ColumnId,@OTabIndex=TabIndex,@ODisplayModeId=DisplayModeId,@ORowSize=RowSize,@ODdlKeyColumnId=DdlKeyColumnId,@ODdlRefColumnId=DdlRefColumnId,@ORequiredValid=RequiredValid,@OColumnSize=ColumnSize,@ODdlSrtColumnId=DdlSrtColumnId,@OColumnJustify=ColumnJustify,@OLabelCss=LabelCss,@OContentCss=ContentCss,@OOperatorId=OperatorId,@ODdlFtrColumnId=DdlFtrColumnId FROM dbo.ScreenCri WHERE ScreenCriId=@ScreenCriId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',73,'Y',104,@ScreenCriId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1179,'Screen',971,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1181,'Database Column',975,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @OTabIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1182,'Tab Index',976,'TabIndex',CONVERT(varchar(100),@OTabIndex),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1183,'Display Mode',979,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @ORowSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1184,'List Row Size',980,'RowSize',CONVERT(varchar(100),@ORowSize),NULL
+IF @ODdlKeyColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1185,'DropDown Key Column',981,'DdlKeyColumnId',CONVERT(varchar(100),@ODdlKeyColumnId),NULL
+IF @ODdlRefColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1186,'DropDown Ref Column',982,'DdlRefColumnId',CONVERT(varchar(100),@ODdlRefColumnId),NULL
+IF @ORequiredValid IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1187,'Require Validation',983,'RequiredValid',@ORequiredValid,NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1188,'Column Size (px)',987,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @ODdlSrtColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1278,'DropDown Sort Column',1120,'DdlSrtColumnId',CONVERT(varchar(100),@ODdlSrtColumnId),NULL
+IF @OColumnJustify IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1425,'Justify',1371,'ColumnJustify',@OColumnJustify,NULL
+IF @OLabelCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1859,'Label Style',1896,'LabelCss',@OLabelCss,NULL
+IF @OContentCss IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1860,'Content Style',1895,'ContentCss',@OContentCss,NULL
+IF @OOperatorId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3305,'Operator',5340,'OperatorId',CONVERT(varchar(100),@OOperatorId),NULL
+IF @ODdlFtrColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3365,'DropDown Filter Column',5361,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),NULL
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -611,11 +6759,11 @@ SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE dbo.Audit_Del76M
  @ButtonHlpId		Int
-,@UserId		int
+,@_UserId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-DECLARE	 @ScrAuditId		bigint
+DECLARE	 @_ScrAuditId		bigint
 		,@SearchCol		nvarchar(2000)
 		,@OScreenId		Int
 		,@OCultureId		SmallInt
@@ -631,44 +6779,4172 @@ DECLARE	 @ScrAuditId		bigint
 		,@OBotVisible		Char(1)
 SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButtonTypeId=ButtonTypeId,@OButtonName=ButtonName,@OButtonToolTip=ButtonToolTip,@OButtonVisible=ButtonVisible,@OReportId=ReportId,@OWizardId=WizardId,@OButtonLongNm=ButtonLongNm,@ORowVisible=RowVisible,@OTopVisible=TopVisible,@OBotVisible=BotVisible FROM dbo.ButtonHlp WHERE ButtonHlpId=@ButtonHlpId
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
-	SELECT 'D',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@UserId,getutcdate()
-SELECT @ScrAuditId = @@IDENTITY
+	SELECT 'D',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
 IF @OScreenId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1208,'Screen',1021,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+	SELECT @_ScrAuditId,1208,'Screen',1021,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
 IF @OCultureId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1209,'Culture',1022,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+	SELECT @_ScrAuditId,1209,'Culture',1022,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
 IF @OButtonTypeId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1210,'Button Type',1023,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),NULL
+	SELECT @_ScrAuditId,1210,'Button Type',1023,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),NULL
 IF @OButtonName IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1211,'Alternate Name',1024,'ButtonName',@OButtonName,NULL
+	SELECT @_ScrAuditId,1211,'Alternate Name',1024,'ButtonName',@OButtonName,NULL
 IF @OButtonToolTip IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,NULL
+	SELECT @_ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,NULL
 IF @OButtonVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,NULL
+	SELECT @_ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,NULL
 IF @OReportId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+	SELECT @_ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(100),@OReportId),NULL
 IF @OWizardId IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+	SELECT @_ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
 IF @OButtonLongNm IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,NULL
+	SELECT @_ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,NULL
 IF @ORowVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,NULL
+	SELECT @_ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,NULL
 IF @OTopVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,NULL
+	SELECT @_ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,NULL
 IF @OBotVisible IS NOT NULL
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
+	SELECT @_ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del79M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del79M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del79M
+ @ClientRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OCultureId		SmallInt
+		,@OScreenObjHlpId		Int
+		,@OClientScript		SmallInt
+		,@OUserScriptEvent		VarChar(50)
+		,@OUserScriptName		NVarChar(1000)
+		,@OScriptParam		NVarChar(500)
+		,@OReportId		Int
+		,@OScreenCriHlpId		Int
+		,@OReportCriHlpId		Int
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleTypeId		TinyInt
+		,@ORuleName		NVarChar(100)
+		,@ORuleMethodId		TinyInt
+		,@ORuleCntTypeId		TinyInt
+		,@OClientRuleProg		NVarChar(max)
+SELECT @SearchCol=ClientRuleId,@OScreenId=ScreenId,@OCultureId=CultureId,@OScreenObjHlpId=ScreenObjHlpId,@OClientScript=ClientScript,@OUserScriptEvent=UserScriptEvent,@OUserScriptName=UserScriptName,@OScriptParam=ScriptParam,@OReportId=ReportId,@OScreenCriHlpId=ScreenCriHlpId,@OReportCriHlpId=ReportCriHlpId,@ORuleDescription=RuleDescription,@ORuleTypeId=RuleTypeId,@ORuleName=RuleName,@ORuleMethodId=RuleMethodId,@ORuleCntTypeId=RuleCntTypeId,@OClientRuleProg=ClientRuleProg FROM dbo.ClientRule WHERE ClientRuleId=@ClientRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',79,'Y',127,@ClientRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1258,'Screen',1103,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1259,'Culture',1104,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OScreenObjHlpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1260,'Object',1105,'ScreenObjHlpId',CONVERT(varchar(100),@OScreenObjHlpId),NULL
+IF @OClientScript IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1261,'Stock Script',1106,'ClientScript',CONVERT(varchar(100),@OClientScript),NULL
+IF @OUserScriptEvent IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1262,'Event Override',1107,'UserScriptEvent',@OUserScriptEvent,NULL
+IF @OUserScriptName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1263,'Script Override',1108,'UserScriptName',@OUserScriptName,NULL
+IF @OScriptParam IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1264,'Parameters',1109,'ScriptParam',@OScriptParam,NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1265,'Report',1112,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OScreenCriHlpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1266,'Criteria',1113,'ScreenCriHlpId',CONVERT(varchar(100),@OScreenCriHlpId),NULL
+IF @OReportCriHlpId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1267,'Criteria',1114,'ReportCriHlpId',CONVERT(varchar(100),@OReportCriHlpId),NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1292,'Description',1138,'RuleDescription',@ORuleDescription,NULL
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1293,'Rule Type',1139,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1294,'Rule Name',1111,'RuleName',@ORuleName,NULL
+IF @ORuleMethodId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4073,'Rule Method',7378,'RuleMethodId',CONVERT(varchar(100),@ORuleMethodId),NULL
+IF @ORuleCntTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4075,'Embedded CSS/JS',7377,'RuleCntTypeId',CONVERT(varchar(100),@ORuleCntTypeId),NULL
+IF @OClientRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4077,'Rule Content',6368,'ClientRuleProg',@OClientRuleProg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del80M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del80M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del80M
+ @WebRuleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORuleTypeId		TinyInt
+		,@ORuleDescription		NVarChar(500)
+		,@OScreenId		Int
+		,@OScreenObjId		Int
+		,@OButtonTypeId		TinyInt
+		,@OEventId		TinyInt
+		,@OWebRuleProg		NVarChar(max)
+		,@ORuleName		NVarChar(100)
+		,@OReactEventId		TinyInt
+		,@OReactRuleProg		NVarChar(max)
+		,@OReduxEventId		TinyInt
+		,@OReduxRuleProg		NVarChar(max)
+		,@OServiceEventId		TinyInt
+		,@OServiceRuleProg		NVarChar(max)
+		,@OAsmxEventId		TinyInt
+		,@OAsmxRuleProg		NVarChar(max)
+		,@OForCompanyId		Int
+SELECT @SearchCol=WebRuleId,@ORuleTypeId=RuleTypeId,@ORuleDescription=RuleDescription,@OScreenId=ScreenId,@OScreenObjId=ScreenObjId,@OButtonTypeId=ButtonTypeId,@OEventId=EventId,@OWebRuleProg=WebRuleProg,@ORuleName=RuleName,@OReactEventId=ReactEventId,@OReactRuleProg=ReactRuleProg,@OReduxEventId=ReduxEventId,@OReduxRuleProg=ReduxRuleProg,@OServiceEventId=ServiceEventId,@OServiceRuleProg=ServiceRuleProg,@OAsmxEventId=AsmxEventId,@OAsmxRuleProg=AsmxRuleProg,@OForCompanyId=ForCompanyId FROM dbo.WebRule WHERE WebRuleId=@WebRuleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',80,'Y',128,@WebRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORuleTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1284,'Rule Type',1127,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),NULL
+IF @ORuleDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1285,'Description',1128,'RuleDescription',@ORuleDescription,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1286,'Screen',1129,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OScreenObjId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1287,'Screen Column',1130,'ScreenObjId',CONVERT(varchar(100),@OScreenObjId),NULL
+IF @OButtonTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1288,'System Button',1131,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),NULL
+IF @OEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1289,'Event',1132,'EventId',CONVERT(varchar(100),@OEventId),NULL
+IF @OWebRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1290,'C# Business Rule',1133,'WebRuleProg',@OWebRuleProg,NULL
+IF @ORuleName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1291,'Rule Name',1137,'RuleName',@ORuleName,NULL
+IF @OReactEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4207,'React Event/Type',7552,'ReactEventId',CONVERT(varchar(100),@OReactEventId),NULL
+IF @OReactRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4208,'React Business Rule',7551,'ReactRuleProg',@OReactRuleProg,NULL
+IF @OReduxEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4210,'Redux Event/Type',7550,'ReduxEventId',CONVERT(varchar(100),@OReduxEventId),NULL
+IF @OReduxRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4211,'Redux Business Rule',7549,'ReduxRuleProg',@OReduxRuleProg,NULL
+IF @OServiceEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4212,'Service Event/Rule',7548,'ServiceEventId',CONVERT(varchar(100),@OServiceEventId),NULL
+IF @OServiceRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4213,'Service Business Rule',7547,'ServiceRuleProg',@OServiceRuleProg,NULL
+IF @OAsmxEventId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4214,'ASMX Event/Type',7546,'AsmxEventId',CONVERT(varchar(100),@OAsmxEventId),NULL
+IF @OAsmxRuleProg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4215,'ASMX Business Rule',7545,'AsmxRuleProg',@OAsmxRuleProg,NULL
+IF @OForCompanyId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4427,'For Company',7689,'ForCompanyId',CONVERT(varchar(100),@OForCompanyId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del82M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del82M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del82M
+ @AppInfoId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OVersionMa		SmallInt
+		,@OVersionMi		SmallInt
+		,@OVersionDt		DateTime
+		,@OPrerequisite		NVarChar(max)
+		,@OReadme		NVarChar(max)
+		,@OVersionValue		Money
+SELECT @SearchCol=AppInfoId,@OVersionMa=VersionMa,@OVersionMi=VersionMi,@OVersionDt=VersionDt,@OPrerequisite=Prerequisite,@OReadme=Readme,@OVersionValue=VersionValue FROM dbo.AppInfo WHERE AppInfoId=@AppInfoId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',82,'Y',135,@AppInfoId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OVersionMa IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1342,'Major Version #',1214,'VersionMa',CONVERT(varchar(100),@OVersionMa),NULL
+IF @OVersionMi IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1343,'Minor Version #',1215,'VersionMi',CONVERT(varchar(100),@OVersionMi),NULL
+IF @OVersionDt IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1344,'Release Date',1216,'VersionDt',CONVERT(varchar(10),@OVersionDt,102),NULL
+IF @OPrerequisite IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1345,'Prerequisite',1217,'Prerequisite',@OPrerequisite,NULL
+IF @OReadme IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1348,'Read Me',1218,'Readme',@OReadme,NULL
+IF @OVersionValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2073,'Value of Release',2190,'VersionValue',CONVERT(varchar(100),@OVersionValue),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del83M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del83M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del83M
+ @AppItemId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OAppInfoId		Int
+		,@OItemOrder		SmallInt
+		,@OObjectTypeCd		Char(1)
+		,@OLanguageCd		Char(1)
+		,@OFrameworkCd		Char(1)
+		,@ODbProviderCd		Char(1)
+		,@ORelativePath		VarChar(100)
+		,@OMultiDesignDb		Char(1)
+		,@OAppItemName		VarChar(50)
+		,@OAppItemCode		NVarChar(max)
+		,@ORemoveItem		Char(1)
+		,@OScreenId		Int
+		,@OReportId		Int
+		,@OWizardId		Int
+		,@OCustomId		Int
+SELECT @SearchCol=AppItemId,@OAppInfoId=AppInfoId,@OItemOrder=ItemOrder,@OObjectTypeCd=ObjectTypeCd,@OLanguageCd=LanguageCd,@OFrameworkCd=FrameworkCd,@ODbProviderCd=DbProviderCd,@ORelativePath=RelativePath,@OMultiDesignDb=MultiDesignDb,@OAppItemName=AppItemName,@OAppItemCode=AppItemCode,@ORemoveItem=RemoveItem,@OScreenId=ScreenId,@OReportId=ReportId,@OWizardId=WizardId,@OCustomId=CustomId FROM dbo.AppItem WHERE AppItemId=@AppItemId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',83,'Y',136,@AppItemId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OAppInfoId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1352,'Version',1222,'AppInfoId',CONVERT(varchar(100),@OAppInfoId),NULL
+IF @OItemOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1353,'Order',1223,'ItemOrder',CONVERT(varchar(100),@OItemOrder),NULL
+IF @OObjectTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1354,'Tier',1224,'ObjectTypeCd',@OObjectTypeCd,NULL
+IF @OLanguageCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1355,'Language',1225,'LanguageCd',@OLanguageCd,NULL
+IF @OFrameworkCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1356,'Framework',1226,'FrameworkCd',@OFrameworkCd,NULL
+IF @ODbProviderCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1357,'db Provider',1227,'DbProviderCd',@ODbProviderCd,NULL
+IF @ORelativePath IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1358,'Relative Path',1228,'RelativePath',@ORelativePath,NULL
+IF @OMultiDesignDb IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1359,'Multi Design db',1229,'MultiDesignDb',@OMultiDesignDb,NULL
+IF @OAppItemName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1360,'Item Name',1230,'AppItemName',@OAppItemName,NULL
+IF @OAppItemCode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1361,'',1231,'AppItemCode',@OAppItemCode,NULL
+IF @ORemoveItem IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1363,'Remove',1233,'RemoveItem',@ORemoveItem,NULL
+IF @OScreenId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1364,'Screen',1234,'ScreenId',CONVERT(varchar(100),@OScreenId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1365,'Report',1235,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OWizardId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1366,'Wizard',1236,'WizardId',CONVERT(varchar(100),@OWizardId),NULL
+IF @OCustomId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1367,'Custom',1237,'CustomId',CONVERT(varchar(100),@OCustomId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del86D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del86D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del86D
+ @MsgCenterId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OMsg		NVarChar(800)
+SELECT @SearchCol=MsgCenterId,@OCultureId=CultureId,@OMsg=Msg FROM dbo.MsgCenter WHERE MsgCenterId=@MsgCenterId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',86,'N',147,@MsgCenterId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1414,'Culture',1312,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @OMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1415,'Message',1313,'Msg',@OMsg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del86M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del86M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del86M
+ @MsgId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMsgTypeCd		Char(1)
+		,@OMsgSource		VarChar(50)
+SELECT @SearchCol=MsgId,@OMsgTypeCd=MsgTypeCd,@OMsgSource=MsgSource FROM dbo.Msg WHERE MsgId=@MsgId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',86,'Y',146,@MsgId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OMsgTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1409,'Message Type',1311,'MsgTypeCd',@OMsgTypeCd,NULL
+IF @OMsgSource IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1410,'Source',1310,'MsgSource',@OMsgSource,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del89M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del89M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del89M
+ @RptStyleId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptStyleDesc		NVarChar(300)
+		,@OBorderColorD		VarChar(100)
+		,@OBorderColorL		VarChar(100)
+		,@OBorderColorR		VarChar(100)
+		,@OBorderColorT		VarChar(100)
+		,@OBorderColorB		VarChar(100)
+		,@OBorderStyleD		TinyInt
+		,@OBorderStyleL		TinyInt
+		,@OBorderStyleR		TinyInt
+		,@OBorderStyleT		TinyInt
+		,@OBorderStyleB		TinyInt
+		,@OBorderWidthD		TinyInt
+		,@OBorderWidthL		TinyInt
+		,@OBorderWidthR		TinyInt
+		,@OBorderWidthT		TinyInt
+		,@OBorderWidthB		TinyInt
+		,@OBgColor		VarChar(100)
+		,@OBgGradType		TinyInt
+		,@OBgGradColor		VarChar(100)
+		,@OBgImage		VarChar(200)
+		,@OFontStyle		Char(1)
+		,@OFontFamily		VarChar(100)
+		,@OFontSize		TinyInt
+		,@OFontWeight		TinyInt
+		,@OFormat		VarChar(100)
+		,@OTextDecor		Char(1)
+		,@OTextAlign		Char(1)
+		,@OVerticalAlign		Char(1)
+		,@OColor		VarChar(100)
+		,@OPadLeft		SmallInt
+		,@OPadRight		SmallInt
+		,@OPadTop		SmallInt
+		,@OPadBottom		SmallInt
+		,@OLineHeight		SmallInt
+		,@ODirection		Char(1)
+		,@OWritingMode		Char(1)
+		,@ODefaultCd		Char(2)
+SELECT @SearchCol=RptStyleId,@ORptStyleDesc=RptStyleDesc,@OBorderColorD=BorderColorD,@OBorderColorL=BorderColorL,@OBorderColorR=BorderColorR,@OBorderColorT=BorderColorT,@OBorderColorB=BorderColorB,@OBorderStyleD=BorderStyleD,@OBorderStyleL=BorderStyleL,@OBorderStyleR=BorderStyleR,@OBorderStyleT=BorderStyleT,@OBorderStyleB=BorderStyleB,@OBorderWidthD=BorderWidthD,@OBorderWidthL=BorderWidthL,@OBorderWidthR=BorderWidthR,@OBorderWidthT=BorderWidthT,@OBorderWidthB=BorderWidthB,@OBgColor=BgColor,@OBgGradType=BgGradType,@OBgGradColor=BgGradColor,@OBgImage=BgImage,@OFontStyle=FontStyle,@OFontFamily=FontFamily,@OFontSize=FontSize,@OFontWeight=FontWeight,@OFormat=Format,@OTextDecor=TextDecor,@OTextAlign=TextAlign,@OVerticalAlign=VerticalAlign,@OColor=Color,@OPadLeft=PadLeft,@OPadRight=PadRight,@OPadTop=PadTop,@OPadBottom=PadBottom,@OLineHeight=LineHeight,@ODirection=Direction,@OWritingMode=WritingMode,@ODefaultCd=DefaultCd FROM dbo.RptStyle WHERE RptStyleId=@RptStyleId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',89,'Y',167,@RptStyleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptStyleDesc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1534,'Description',1495,'RptStyleDesc',@ORptStyleDesc,NULL
+IF @OBorderColorD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1535,'Border Color Default',1496,'BorderColorD',@OBorderColorD,NULL
+IF @OBorderColorL IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1536,'Border Color Left',1497,'BorderColorL',@OBorderColorL,NULL
+IF @OBorderColorR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1537,'Border Color Right',1498,'BorderColorR',@OBorderColorR,NULL
+IF @OBorderColorT IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1538,'Border Color Top',1499,'BorderColorT',@OBorderColorT,NULL
+IF @OBorderColorB IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1539,'Border Color Bottom',1500,'BorderColorB',@OBorderColorB,NULL
+IF @OBorderStyleD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1540,'Border Style Default',1501,'BorderStyleD',CONVERT(varchar(100),@OBorderStyleD),NULL
+IF @OBorderStyleL IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1541,'Border Style Left',1502,'BorderStyleL',CONVERT(varchar(100),@OBorderStyleL),NULL
+IF @OBorderStyleR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1542,'Border Style Right',1503,'BorderStyleR',CONVERT(varchar(100),@OBorderStyleR),NULL
+IF @OBorderStyleT IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1543,'Border Style Top',1504,'BorderStyleT',CONVERT(varchar(100),@OBorderStyleT),NULL
+IF @OBorderStyleB IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1544,'Border Style Bottom',1505,'BorderStyleB',CONVERT(varchar(100),@OBorderStyleB),NULL
+IF @OBorderWidthD IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1545,'Border Width Default (pt)',1506,'BorderWidthD',CONVERT(varchar(100),@OBorderWidthD),NULL
+IF @OBorderWidthL IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1546,'Border Width Left (pt)',1507,'BorderWidthL',CONVERT(varchar(100),@OBorderWidthL),NULL
+IF @OBorderWidthR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1547,'Border Width Right (pt)',1508,'BorderWidthR',CONVERT(varchar(100),@OBorderWidthR),NULL
+IF @OBorderWidthT IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1548,'Border Width Top (pt)',1509,'BorderWidthT',CONVERT(varchar(100),@OBorderWidthT),NULL
+IF @OBorderWidthB IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1549,'Border Width Bottom (pt)',1510,'BorderWidthB',CONVERT(varchar(100),@OBorderWidthB),NULL
+IF @OBgColor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1550,'Background Color',1515,'BgColor',@OBgColor,NULL
+IF @OBgGradType IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1551,'Background Gradient',1516,'BgGradType',CONVERT(varchar(100),@OBgGradType),NULL
+IF @OBgGradColor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1552,'Background End Color',1517,'BgGradColor',@OBgGradColor,NULL
+IF @OBgImage IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1553,'Background Image',1518,'BgImage',@OBgImage,NULL
+IF @OFontStyle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1554,'Font Style',1519,'FontStyle',@OFontStyle,NULL
+IF @OFontFamily IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1555,'Font Family',1520,'FontFamily',@OFontFamily,NULL
+IF @OFontSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1556,'Font Size (pt)',1521,'FontSize',CONVERT(varchar(100),@OFontSize),NULL
+IF @OFontWeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1557,'Font Weight',1522,'FontWeight',CONVERT(varchar(100),@OFontWeight),NULL
+IF @OFormat IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1558,'Format',1529,'Format',@OFormat,NULL
+IF @OTextDecor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1559,'Text Decoration',1530,'TextDecor',@OTextDecor,NULL
+IF @OTextAlign IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1560,'Text Alignment',1531,'TextAlign',@OTextAlign,NULL
+IF @OVerticalAlign IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1561,'Vertical Alignment',1532,'VerticalAlign',@OVerticalAlign,NULL
+IF @OColor IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1562,'Foreground Color',1533,'Color',@OColor,NULL
+IF @OPadLeft IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1563,'Padding Left (pt)',1534,'PadLeft',CONVERT(varchar(100),@OPadLeft),NULL
+IF @OPadRight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1564,'Padding Right (pt)',1535,'PadRight',CONVERT(varchar(100),@OPadRight),NULL
+IF @OPadTop IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1565,'Padding Top (pt)',1536,'PadTop',CONVERT(varchar(100),@OPadTop),NULL
+IF @OPadBottom IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1566,'Padding Bottom (pt)',1537,'PadBottom',CONVERT(varchar(100),@OPadBottom),NULL
+IF @OLineHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1567,'Line Height (pt)',1538,'LineHeight',CONVERT(varchar(100),@OLineHeight),NULL
+IF @ODirection IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1568,'Direction',1539,'Direction',@ODirection,NULL
+IF @OWritingMode IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1569,'Writing Mode',1540,'WritingMode',@OWritingMode,NULL
+IF @ODefaultCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1571,'Default',1556,'DefaultCd',@ODefaultCd,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del90M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del90M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del90M
+ @RptCtrId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPRptCtrId		Int
+		,@ORptElmId		Int
+		,@ORptCelId		Int
+		,@OReportId		Int
+		,@ORptCtrTypeCd		Char(1)
+		,@ORptCtrName		NVarChar(100)
+		,@ORptStyleId		Int
+		,@OCtrTop		Decimal(8,2)
+		,@OCtrLeft		Decimal(8,2)
+		,@OCtrHeight		Decimal(8,2)
+		,@OCtrWidth		Decimal(8,2)
+		,@OCtrZIndex		SmallInt
+		,@OCtrAction		VarChar(500)
+		,@OCtrVisibility		Char(1)
+		,@OCtrToolTip		NVarChar(200)
+		,@OCtrPgBrStart		Char(1)
+		,@OCtrPgBrEnd		Char(1)
+		,@OCtrValue		NVarChar(1000)
+		,@OCtrCanGrow		Char(1)
+		,@OCtrCanShrink		Char(1)
+		,@OCtrTogether		Char(1)
+		,@OCtrGrouping		Int
+		,@OCtrToggle		Int
+SELECT @SearchCol=RptCtrId,@OPRptCtrId=PRptCtrId,@ORptElmId=RptElmId,@ORptCelId=RptCelId,@OReportId=ReportId,@ORptCtrTypeCd=RptCtrTypeCd,@ORptCtrName=RptCtrName,@ORptStyleId=RptStyleId,@OCtrTop=CtrTop,@OCtrLeft=CtrLeft,@OCtrHeight=CtrHeight,@OCtrWidth=CtrWidth,@OCtrZIndex=CtrZIndex,@OCtrAction=CtrAction,@OCtrVisibility=CtrVisibility,@OCtrToolTip=CtrToolTip,@OCtrPgBrStart=CtrPgBrStart,@OCtrPgBrEnd=CtrPgBrEnd,@OCtrValue=CtrValue,@OCtrCanGrow=CtrCanGrow,@OCtrCanShrink=CtrCanShrink,@OCtrTogether=CtrTogether,@OCtrGrouping=CtrGrouping,@OCtrToggle=CtrToggle FROM dbo.RptCtr WHERE RptCtrId=@RptCtrId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',90,'Y',161,@RptCtrId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OPRptCtrId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1574,'Parent Control',1430,'PRptCtrId',CONVERT(varchar(100),@OPRptCtrId),NULL
+IF @ORptElmId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1575,'Report Element',1429,'RptElmId',CONVERT(varchar(100),@ORptElmId),NULL
+IF @ORptCelId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1576,'Table Cell',1431,'RptCelId',CONVERT(varchar(100),@ORptCelId),NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1577,'Report',1467,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @ORptCtrTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1578,'Control Type',1432,'RptCtrTypeCd',@ORptCtrTypeCd,NULL
+IF @ORptCtrName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1579,'Control Name',1446,'RptCtrName',@ORptCtrName,NULL
+IF @ORptStyleId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1580,'Control Style',1447,'RptStyleId',CONVERT(varchar(100),@ORptStyleId),NULL
+IF @OCtrTop IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1581,'Top',1448,'CtrTop',CONVERT(varchar(100),@OCtrTop),NULL
+IF @OCtrLeft IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1582,'Left',1449,'CtrLeft',CONVERT(varchar(100),@OCtrLeft),NULL
+IF @OCtrHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1583,'Height',1450,'CtrHeight',CONVERT(varchar(100),@OCtrHeight),NULL
+IF @OCtrWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1584,'Width',1451,'CtrWidth',CONVERT(varchar(100),@OCtrWidth),NULL
+IF @OCtrZIndex IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1585,'ZIndex',1455,'CtrZIndex',CONVERT(varchar(100),@OCtrZIndex),NULL
+IF @OCtrAction IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1586,'Hyperlink',1452,'CtrAction',@OCtrAction,NULL
+IF @OCtrVisibility IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1587,'Hidden',1453,'CtrVisibility',@OCtrVisibility,NULL
+IF @OCtrToolTip IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1588,'Tool Tip',1454,'CtrToolTip',@OCtrToolTip,NULL
+IF @OCtrPgBrStart IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1589,'Page Break at Start',1456,'CtrPgBrStart',@OCtrPgBrStart,NULL
+IF @OCtrPgBrEnd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1590,'Page Break at End',1457,'CtrPgBrEnd',@OCtrPgBrEnd,NULL
+IF @OCtrValue IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1591,'Value',1458,'CtrValue',@OCtrValue,NULL
+IF @OCtrCanGrow IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1592,'Can Grow',1459,'CtrCanGrow',@OCtrCanGrow,NULL
+IF @OCtrCanShrink IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1593,'Can Shrink',1460,'CtrCanShrink',@OCtrCanShrink,NULL
+IF @OCtrTogether IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1594,'Keep Together',1461,'CtrTogether',@OCtrTogether,NULL
+IF @OCtrGrouping IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1595,'Grouping',1463,'CtrGrouping',CONVERT(varchar(100),@OCtrGrouping),NULL
+IF @OCtrToggle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1697,'Toggle Item',1623,'CtrToggle',CONVERT(varchar(100),@OCtrToggle),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del91M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del91M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del91M
+ @RptElmId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@ORptElmTypeCd		Char(1)
+		,@ORptStyleId		Int
+		,@OElmHeight		Decimal(8,2)
+		,@OElmColumns		SmallInt
+		,@OElmColSpacing		Decimal(8,2)
+		,@OElmPrintFirst		Char(1)
+		,@OElmPrintLast		Char(1)
+SELECT @SearchCol=RptElmId,@OReportId=ReportId,@ORptElmTypeCd=RptElmTypeCd,@ORptStyleId=RptStyleId,@OElmHeight=ElmHeight,@OElmColumns=ElmColumns,@OElmColSpacing=ElmColSpacing,@OElmPrintFirst=ElmPrintFirst,@OElmPrintLast=ElmPrintLast FROM dbo.RptElm WHERE RptElmId=@RptElmId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',91,'Y',160,@RptElmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1599,'Report',1420,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @ORptElmTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1600,'Element Type',1421,'RptElmTypeCd',@ORptElmTypeCd,NULL
+IF @ORptStyleId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1601,'Style',1422,'RptStyleId',CONVERT(varchar(100),@ORptStyleId),NULL
+IF @OElmHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1602,'Height',1423,'ElmHeight',CONVERT(varchar(100),@OElmHeight),NULL
+IF @OElmColumns IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1603,'Columns',1424,'ElmColumns',CONVERT(varchar(100),@OElmColumns),NULL
+IF @OElmColSpacing IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1604,'Column Spacing',1425,'ElmColSpacing',CONVERT(varchar(100),@OElmColSpacing),NULL
+IF @OElmPrintFirst IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1605,'Print on First',1426,'ElmPrintFirst',@OElmPrintFirst,NULL
+IF @OElmPrintLast IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1606,'Print on Last',1427,'ElmPrintLast',@OElmPrintLast,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del92D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del92D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del92D
+ @RptCelId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORowNum		SmallInt
+		,@ORowHeight		Decimal(8,2)
+		,@ORowVisibility		VarChar(1000)
+		,@OCelNum		Int
+		,@OCelColSpan		SmallInt
+SELECT @SearchCol=RptCelId,@ORowNum=RowNum,@ORowHeight=RowHeight,@ORowVisibility=RowVisibility,@OCelNum=CelNum,@OCelColSpan=CelColSpan FROM dbo.RptCel WHERE RptCelId=@RptCelId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',92,'N',164,@RptCelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORowNum IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1621,'Row#',1475,'RowNum',CONVERT(varchar(100),@ORowNum),NULL
+IF @ORowHeight IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1622,'Row Height',1476,'RowHeight',CONVERT(varchar(100),@ORowHeight),NULL
+IF @ORowVisibility IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1623,'Visibility',1479,'RowVisibility',@ORowVisibility,NULL
+IF @OCelNum IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1624,'Table Column',1477,'CelNum',CONVERT(varchar(100),@OCelNum),NULL
+IF @OCelColSpan IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1625,'Column Span',1478,'CelColSpan',CONVERT(varchar(100),@OCelColSpan),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del92M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del92M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del92M
+ @RptTblId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OParentId		Int
+		,@ORptCtrId		Int
+		,@ORptTblTypeCd		Char(1)
+		,@OTblRepeatNew		Char(1)
+		,@OTblOrder		SmallInt
+		,@OColWidth		Decimal(8,2)
+		,@OTblGrouping		Int
+		,@OTblVisibility		Char(1)
+		,@OReportId		Int
+		,@OTblToggle		Int
+SELECT @SearchCol=RptTblId,@OParentId=ParentId,@ORptCtrId=RptCtrId,@ORptTblTypeCd=RptTblTypeCd,@OTblRepeatNew=TblRepeatNew,@OTblOrder=TblOrder,@OColWidth=ColWidth,@OTblGrouping=TblGrouping,@OTblVisibility=TblVisibility,@OReportId=ReportId,@OTblToggle=TblToggle FROM dbo.RptTbl WHERE RptTblId=@RptTblId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',92,'Y',162,@RptTblId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OParentId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1609,'Parent',1486,'ParentId',CONVERT(varchar(100),@OParentId),NULL
+IF @ORptCtrId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1610,'Control',1436,'RptCtrId',CONVERT(varchar(100),@ORptCtrId),NULL
+IF @ORptTblTypeCd IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1611,'Table Type',1434,'RptTblTypeCd',@ORptTblTypeCd,NULL
+IF @OTblRepeatNew IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1612,'Repeat on New Page',1435,'TblRepeatNew',@OTblRepeatNew,NULL
+IF @OTblOrder IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1613,'Order',1480,'TblOrder',CONVERT(varchar(100),@OTblOrder),NULL
+IF @OColWidth IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1614,'Width',1439,'ColWidth',CONVERT(varchar(100),@OColWidth),NULL
+IF @OTblGrouping IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1615,'Grouping',1437,'TblGrouping',CONVERT(varchar(100),@OTblGrouping),NULL
+IF @OTblVisibility IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1617,'Hidden',1440,'TblVisibility',@OTblVisibility,NULL
+IF @OReportId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1695,'Report',1621,'ReportId',CONVERT(varchar(100),@OReportId),NULL
+IF @OTblToggle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1696,'Toggle Item',1622,'TblToggle',CONVERT(varchar(100),@OTblToggle),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del96D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del96D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del96D
+ @RptwizCatDtlId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnId		Int
+		,@ODisplayModeId		TinyInt
+		,@OColumnSize		SmallInt
+		,@ORowSize		SmallInt
+		,@ORegClause		VarChar(400)
+		,@OStoredProc		VarChar(max)
+		,@ODdlKeyColNm		VarChar(50)
+		,@ODdlRefColNm		VarChar(50)
+SELECT @SearchCol=RptwizCatDtlId,@OColumnId=ColumnId,@ODisplayModeId=DisplayModeId,@OColumnSize=ColumnSize,@ORowSize=RowSize,@ORegClause=RegClause,@OStoredProc=StoredProc,@ODdlKeyColNm=DdlKeyColNm,@ODdlRefColNm=DdlRefColNm FROM dbo.RptwizCatDtl WHERE RptwizCatDtlId=@RptwizCatDtlId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',96,'N',182,@RptwizCatDtlId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OColumnId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1667,'Column',1579,'ColumnId',CONVERT(varchar(100),@OColumnId),NULL
+IF @ODisplayModeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1843,'Display Mode',1865,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),NULL
+IF @OColumnSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1844,'Width',1600,'ColumnSize',CONVERT(varchar(100),@OColumnSize),NULL
+IF @ORowSize IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1845,'#Rows',1866,'RowSize',CONVERT(varchar(100),@ORowSize),NULL
+IF @ORegClause IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1846,'Calling Clause',1867,'RegClause',@ORegClause,NULL
+IF @OStoredProc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1847,'Stored Procedure',1868,'StoredProc',@OStoredProc,NULL
+IF @ODdlKeyColNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1848,'Key Name',1869,'DdlKeyColNm',@ODdlKeyColNm,NULL
+IF @ODdlRefColNm IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1849,'Ref Name',1870,'DdlRefColNm',@ODdlRefColNm,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del96M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del96M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del96M
+ @RptwizCatId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptwizCatName		NVarChar(100)
+		,@OCatDescription		NVarChar(400)
+		,@OTableId		Int
+		,@ORptwizTypId		SmallInt
+SELECT @SearchCol=RptwizCatId,@ORptwizCatName=RptwizCatName,@OCatDescription=CatDescription,@OTableId=TableId,@ORptwizTypId=RptwizTypId FROM dbo.RptwizCat WHERE RptwizCatId=@RptwizCatId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',96,'Y',181,@RptwizCatId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptwizCatName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1658,'Category Name',1576,'RptwizCatName',@ORptwizCatName,NULL
+IF @OCatDescription IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1659,'Description',1573,'CatDescription',@OCatDescription,NULL
+IF @OTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1663,'Relevant Table',1864,'TableId',CONVERT(varchar(100),@OTableId),NULL
+IF @ORptwizTypId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1671,'Data Type',1604,'RptwizTypId',CONVERT(varchar(100),@ORptwizTypId),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del97M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del97M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del97M
+ @RptwizTypId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptwizTypName		NVarChar(100)
+SELECT @SearchCol=RptwizTypId,@ORptwizTypName=RptwizTypName FROM dbo.RptwizTyp WHERE RptwizTypId=@RptwizTypId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',97,'Y',185,@RptwizTypId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @ORptwizTypName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1669,'Report Data Type Name',1602,'RptwizTypName',@ORptwizTypName,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del9D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del9D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del9D
+ @ScreenHlpId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@ODefaultHlpMsg		NVarChar(max)
+		,@OScreenTitle		NVarChar(50)
+		,@OAddMsg		NVarChar(100)
+		,@OUpdMsg		NVarChar(100)
+		,@ODelMsg		NVarChar(100)
+		,@OFootNote		NVarChar(400)
+		,@OMasterLstTitle		NVarChar(100)
+		,@ODetailLstTitle		NVarChar(100)
+		,@OMasterLstSubtitle		NVarChar(100)
+		,@ODetailLstSubtitle		NVarChar(100)
+		,@OMasterRecTitle		NVarChar(100)
+		,@ODetailRecTitle		NVarChar(100)
+		,@OMasterRecSubtitle		NVarChar(100)
+		,@ODetailRecSubtitle		NVarChar(100)
+		,@OIncrementMsg		NVarChar(100)
+		,@OMasterFoundMsg		NVarChar(100)
+		,@ODetailFoundMsg		NVarChar(100)
+		,@ONoMasterMsg		NVarChar(100)
+		,@ONoDetailMsg		NVarChar(100)
+		,@OAddMasterMsg		NVarChar(100)
+		,@OAddDetailMsg		NVarChar(100)
+SELECT @SearchCol=ScreenHlpId,@OCultureId=CultureId,@ODefaultHlpMsg=DefaultHlpMsg,@OScreenTitle=ScreenTitle,@OAddMsg=AddMsg,@OUpdMsg=UpdMsg,@ODelMsg=DelMsg,@OFootNote=FootNote,@OMasterLstTitle=MasterLstTitle,@ODetailLstTitle=DetailLstTitle,@OMasterLstSubtitle=MasterLstSubtitle,@ODetailLstSubtitle=DetailLstSubtitle,@OMasterRecTitle=MasterRecTitle,@ODetailRecTitle=DetailRecTitle,@OMasterRecSubtitle=MasterRecSubtitle,@ODetailRecSubtitle=DetailRecSubtitle,@OIncrementMsg=IncrementMsg,@OMasterFoundMsg=MasterFoundMsg,@ODetailFoundMsg=DetailFoundMsg,@ONoMasterMsg=NoMasterMsg,@ONoDetailMsg=NoDetailMsg,@OAddMasterMsg=AddMasterMsg,@OAddDetailMsg=AddDetailMsg FROM dbo.ScreenHlp WHERE ScreenHlpId=@ScreenHlpId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',9,'N',16,@ScreenHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OCultureId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,53,'Culture',136,'CultureId',CONVERT(varchar(100),@OCultureId),NULL
+IF @ODefaultHlpMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,54,'Help Message',137,'DefaultHlpMsg',@ODefaultHlpMsg,NULL
+IF @OScreenTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,55,'Screen Title',138,'ScreenTitle',@OScreenTitle,NULL
+IF @OAddMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,56,'Add Message',139,'AddMsg',@OAddMsg,NULL
+IF @OUpdMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,57,'Update Message',140,'UpdMsg',@OUpdMsg,NULL
+IF @ODelMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,58,'Delete Message',141,'DelMsg',@ODelMsg,NULL
+IF @OFootNote IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1370,'Foot Note',1248,'FootNote',@OFootNote,NULL
+IF @OMasterLstTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4168,'Master List Title',7489,'MasterLstTitle',@OMasterLstTitle,NULL
+IF @ODetailLstTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4170,'Detail List Title',7485,'DetailLstTitle',@ODetailLstTitle,NULL
+IF @OMasterLstSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4171,'Master List Subtitle',7488,'MasterLstSubtitle',@OMasterLstSubtitle,NULL
+IF @ODetailLstSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4172,'Detail List Subtitle',7484,'DetailLstSubtitle',@ODetailLstSubtitle,NULL
+IF @OMasterRecTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4173,'Master Record Title',7487,'MasterRecTitle',@OMasterRecTitle,NULL
+IF @ODetailRecTitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4174,'Detail Record Title',7483,'DetailRecTitle',@ODetailRecTitle,NULL
+IF @OMasterRecSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4175,'Master Record Subtitle',7486,'MasterRecSubtitle',@OMasterRecSubtitle,NULL
+IF @ODetailRecSubtitle IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4176,'Detail Record Subtitle',7482,'DetailRecSubtitle',@ODetailRecSubtitle,NULL
+IF @OIncrementMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4177,'Increment',7490,'IncrementMsg',@OIncrementMsg,NULL
+IF @OMasterFoundMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4179,'Master Records Found',7495,'MasterFoundMsg',@OMasterFoundMsg,NULL
+IF @ODetailFoundMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4180,'Detail Records Found',7496,'DetailFoundMsg',@ODetailFoundMsg,NULL
+IF @ONoMasterMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4181,'No Master Message',7491,'NoMasterMsg',@ONoMasterMsg,NULL
+IF @ONoDetailMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4182,'No Detail Message',7492,'NoDetailMsg',@ONoDetailMsg,NULL
+IF @OAddMasterMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4183,'Add Master Message',7493,'AddMasterMsg',@OAddMasterMsg,NULL
+IF @OAddDetailMsg IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4184,'Add Detail Message',7494,'AddDetailMsg',@OAddDetailMsg,NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Del9M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Del9M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Del9M
+ @ScreenId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenTypeId		TinyInt
+		,@OSearchId		Int
+		,@OGridRows		TinyInt
+		,@OProgramName		VarChar(20)
+		,@OMasterTableId		Int
+		,@ODetailTableId		Int
+		,@OSearchAscending		Char(1)
+		,@OGenerateSc		Char(1)
+		,@OHasDeleteAll		Char(1)
+		,@OValidateReq		Char(1)
+		,@ODeferError		Char(1)
+		,@OGenerateSr		Char(1)
+		,@OAuthRequired		Char(1)
+		,@OShowGridHead		Char(1)
+		,@OViewOnly		Char(1)
+		,@OGenAudit		Char(1)
+		,@OSearchTableId		Int
+		,@OSearchImgId		Int
+		,@OSearchUrlId		Int
+		,@OSearchDtlId		Int
+		,@OSearchIdR		Int
+		,@OSearchDtlIdR		Int
+SELECT @SearchCol=ScreenId,@OScreenTypeId=ScreenTypeId,@OSearchId=SearchId,@OGridRows=GridRows,@OProgramName=ProgramName,@OMasterTableId=MasterTableId,@ODetailTableId=DetailTableId,@OSearchAscending=SearchAscending,@OGenerateSc=GenerateSc,@OHasDeleteAll=HasDeleteAll,@OValidateReq=ValidateReq,@ODeferError=DeferError,@OGenerateSr=GenerateSr,@OAuthRequired=AuthRequired,@OShowGridHead=ShowGridHead,@OViewOnly=ViewOnly,@OGenAudit=GenAudit,@OSearchTableId=SearchTableId,@OSearchImgId=SearchImgId,@OSearchUrlId=SearchUrlId,@OSearchDtlId=SearchDtlId,@OSearchIdR=SearchIdR,@OSearchDtlIdR=SearchDtlIdR FROM dbo.Screen WHERE ScreenId=@ScreenId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'D',9,'Y',15,@ScreenId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF @OScreenTypeId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,45,'Screen Type',127,'ScreenTypeId',CONVERT(varchar(100),@OScreenTypeId),NULL
+IF @OSearchId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,46,'Search Title L',128,'SearchId',CONVERT(varchar(100),@OSearchId),NULL
+IF @OGridRows IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,48,'Rows for Grid',130,'GridRows',CONVERT(varchar(100),@OGridRows),NULL
+IF @OProgramName IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,49,'Program Name',131,'ProgramName',@OProgramName,NULL
+IF @OMasterTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,59,'Master Table',146,'MasterTableId',CONVERT(varchar(100),@OMasterTableId),NULL
+IF @ODetailTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,60,'Detail Table',147,'DetailTableId',CONVERT(varchar(100),@ODetailTableId),NULL
+IF @OSearchAscending IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,494,'Ascending Order',363,'SearchAscending',@OSearchAscending,NULL
+IF @OGenerateSc IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1247,'Generate CLN',1093,'GenerateSc',@OGenerateSc,NULL
+IF @OHasDeleteAll IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1301,'DeleteAll Visible',1155,'HasDeleteAll',@OHasDeleteAll,NULL
+IF @OValidateReq IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1371,'Validate Request',1249,'ValidateReq',@OValidateReq,NULL
+IF @ODeferError IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1868,'Defer Error',1905,'DeferError',@ODeferError,NULL
+IF @OGenerateSr IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1959,'Generate SRV',2045,'GenerateSr',@OGenerateSr,NULL
+IF @OAuthRequired IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1989,'Authentication',2119,'AuthRequired',@OAuthRequired,NULL
+IF @OShowGridHead IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3101,'Show Grid Header',3227,'ShowGridHead',@OShowGridHead,NULL
+IF @OViewOnly IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3103,'View Only',3245,'ViewOnly',@OViewOnly,NULL
+IF @OGenAudit IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4104,'Audit Trail',7435,'GenAudit',@OGenAudit,NULL
+IF @OSearchTableId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4145,'Search Table',7451,'SearchTableId',CONVERT(varchar(100),@OSearchTableId),NULL
+IF @OSearchImgId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4146,'Image Content',7448,'SearchImgId',CONVERT(varchar(100),@OSearchImgId),NULL
+IF @OSearchUrlId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4147,'Image URL',7449,'SearchUrlId',CONVERT(varchar(100),@OSearchUrlId),NULL
+IF @OSearchDtlId IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4148,'Search Subtitle L',7450,'SearchDtlId',CONVERT(varchar(100),@OSearchDtlId),NULL
+IF @OSearchIdR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4164,'Search Title R',7478,'SearchIdR',CONVERT(varchar(100),@OSearchIdR),NULL
+IF @OSearchDtlIdR IS NOT NULL
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4165,'Search Subtitle R',7479,'SearchDtlIdR',CONVERT(varchar(100),@OSearchDtlIdR),NULL
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1006D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1006D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1006D
+ @ScreenObjHlpId		Int
+,@CultureId		SmallInt
+,@ColumnHeader		NVarChar(max)
+,@ToolTip		NVarChar(1000)
+,@ErrMessage		NVarChar(1000)
+,@TbHint		NVarChar(1000)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(max)
+		,@OToolTip		NVarChar(1000)
+		,@OErrMessage		NVarChar(1000)
+		,@OTbHint		NVarChar(1000)
+SELECT @SearchCol=ScreenObjHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader,@OToolTip=ToolTip,@OErrMessage=ErrMessage,@OTbHint=TbHint FROM dbo.ScreenObjHlp WHERE ScreenObjHlpId=@ScreenObjHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)) OR ((@OToolTip IS NOT NULL AND @ToolTip IS NULL) OR (@OToolTip IS NULL AND @ToolTip IS NOT NULL) OR (@OToolTip <> @ToolTip)) OR ((@OErrMessage IS NOT NULL AND @ErrMessage IS NULL) OR (@OErrMessage IS NULL AND @ErrMessage IS NOT NULL) OR (@OErrMessage <> @ErrMessage)) OR ((@OTbHint IS NOT NULL AND @TbHint IS NULL) OR (@OTbHint IS NULL AND @TbHint IS NOT NULL) OR (@OTbHint <> @TbHint))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1006,'N',21,@ScreenObjHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3255,'Culture',163,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3256,'Column Header',164,'ColumnHeader',@OColumnHeader,@ColumnHeader
+IF (@OToolTip IS NOT NULL AND @ToolTip IS NULL) OR (@OToolTip IS NULL AND @ToolTip IS NOT NULL) OR (@OToolTip <> @ToolTip)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3257,'Tool Tips',165,'ToolTip',@OToolTip,@ToolTip
+IF (@OErrMessage IS NOT NULL AND @ErrMessage IS NULL) OR (@OErrMessage IS NULL AND @ErrMessage IS NOT NULL) OR (@OErrMessage <> @ErrMessage)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3258,'Error Message',166,'ErrMessage',@OErrMessage,@ErrMessage
+IF (@OTbHint IS NOT NULL AND @TbHint IS NULL) OR (@OTbHint IS NULL AND @TbHint IS NOT NULL) OR (@OTbHint <> @TbHint)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3259,'Watermark',2160,'TbHint',@OTbHint,@TbHint
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1006M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1006M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1006M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=ScreenObjId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1006,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1007M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1007M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1007M
+ @ScreenObjId		Int
+,@ScreenId		Int
+,@GroupRowId		SmallInt
+,@GroupColId		SmallInt
+,@ColumnName		VarChar(50)
+,@TabFolderId		Int
+,@TabIndex		SmallInt
+,@MasterTable		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OGroupRowId		SmallInt
+		,@OGroupColId		SmallInt
+		,@OColumnName		VarChar(50)
+		,@OTabFolderId		Int
+		,@OTabIndex		SmallInt
+		,@OMasterTable		Char(1)
+SELECT @SearchCol=ScreenObjId,@OScreenId=ScreenId,@OGroupRowId=GroupRowId,@OGroupColId=GroupColId,@OColumnName=ColumnName,@OTabFolderId=TabFolderId,@OTabIndex=TabIndex,@OMasterTable=MasterTable FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OGroupRowId IS NOT NULL AND @GroupRowId IS NULL) OR (@OGroupRowId IS NULL AND @GroupRowId IS NOT NULL) OR (@OGroupRowId <> @GroupRowId)) OR ((@OGroupColId IS NOT NULL AND @GroupColId IS NULL) OR (@OGroupColId IS NULL AND @GroupColId IS NOT NULL) OR (@OGroupColId <> @GroupColId)) OR ((@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)) OR ((@OTabFolderId IS NOT NULL AND @TabFolderId IS NULL) OR (@OTabFolderId IS NULL AND @TabFolderId IS NOT NULL) OR (@OTabFolderId <> @TabFolderId)) OR ((@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)) OR ((@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1007,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3261,'Screen ID',934,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OGroupRowId IS NOT NULL AND @GroupRowId IS NULL) OR (@OGroupRowId IS NULL AND @GroupRowId IS NOT NULL) OR (@OGroupRowId <> @GroupRowId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3263,'Group Row',5279,'GroupRowId',CONVERT(varchar(100),@OGroupRowId),CONVERT(varchar(100),@GroupRowId)
+IF (@OGroupColId IS NOT NULL AND @GroupColId IS NULL) OR (@OGroupColId IS NULL AND @GroupColId IS NOT NULL) OR (@OGroupColId <> @GroupColId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3264,'Group Col',1016,'GroupColId',CONVERT(varchar(100),@OGroupColId),CONVERT(varchar(100),@GroupColId)
+IF (@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3269,'ColumnName',110,'ColumnName',@OColumnName,@ColumnName
+IF (@OTabFolderId IS NOT NULL AND @TabFolderId IS NULL) OR (@OTabFolderId IS NULL AND @TabFolderId IS NOT NULL) OR (@OTabFolderId <> @TabFolderId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3291,'Tab Folder',119,'TabFolderId',CONVERT(varchar(100),@OTabFolderId),CONVERT(varchar(100),@TabFolderId)
+IF (@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3292,'TabIndex',120,'TabIndex',CONVERT(varchar(100),@OTabIndex),CONVERT(varchar(100),@TabIndex)
+IF (@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3359,'Master Table',108,'MasterTable',@OMasterTable,@MasterTable
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd100M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd100M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd100M
+ @RptChaId		Int
+,@RptCtrId		Int
+,@ReportId		Int
+,@RptChaTypeCd		Char(2)
+,@ThreeD		Char(1)
+,@CategoryGrp		Int
+,@ChartData		NVarChar(1000)
+,@SeriesGrp		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptCtrId		Int
+		,@OReportId		Int
+		,@ORptChaTypeCd		Char(2)
+		,@OThreeD		Char(1)
+		,@OCategoryGrp		Int
+		,@OChartData		NVarChar(1000)
+		,@OSeriesGrp		Int
+SELECT @SearchCol=RptChaId,@ORptCtrId=RptCtrId,@OReportId=ReportId,@ORptChaTypeCd=RptChaTypeCd,@OThreeD=ThreeD,@OCategoryGrp=CategoryGrp,@OChartData=ChartData,@OSeriesGrp=SeriesGrp FROM dbo.RptCha WHERE RptChaId=@RptChaId
+IF ((@ORptCtrId IS NOT NULL AND @RptCtrId IS NULL) OR (@ORptCtrId IS NULL AND @RptCtrId IS NOT NULL) OR (@ORptCtrId <> @RptCtrId)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@ORptChaTypeCd IS NOT NULL AND @RptChaTypeCd IS NULL) OR (@ORptChaTypeCd IS NULL AND @RptChaTypeCd IS NOT NULL) OR (@ORptChaTypeCd <> @RptChaTypeCd)) OR ((@OThreeD IS NOT NULL AND @ThreeD IS NULL) OR (@OThreeD IS NULL AND @ThreeD IS NOT NULL) OR (@OThreeD <> @ThreeD)) OR ((@OCategoryGrp IS NOT NULL AND @CategoryGrp IS NULL) OR (@OCategoryGrp IS NULL AND @CategoryGrp IS NOT NULL) OR (@OCategoryGrp <> @CategoryGrp)) OR ((@OChartData IS NOT NULL AND @ChartData IS NULL) OR (@OChartData IS NULL AND @ChartData IS NOT NULL) OR (@OChartData <> @ChartData)) OR ((@OSeriesGrp IS NOT NULL AND @SeriesGrp IS NULL) OR (@OSeriesGrp IS NULL AND @SeriesGrp IS NOT NULL) OR (@OSeriesGrp <> @SeriesGrp))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',100,'Y',206,@RptChaId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@ORptCtrId IS NOT NULL AND @RptCtrId IS NULL) OR (@ORptCtrId IS NULL AND @RptCtrId IS NOT NULL) OR (@ORptCtrId <> @RptCtrId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1732,'Control',1723,'RptCtrId',CONVERT(varchar(100),@ORptCtrId),CONVERT(varchar(100),@RptCtrId)
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1733,'Report',1724,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@ORptChaTypeCd IS NOT NULL AND @RptChaTypeCd IS NULL) OR (@ORptChaTypeCd IS NULL AND @RptChaTypeCd IS NOT NULL) OR (@ORptChaTypeCd <> @RptChaTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1734,'Chart Type',1725,'RptChaTypeCd',@ORptChaTypeCd,@RptChaTypeCd
+IF (@OThreeD IS NOT NULL AND @ThreeD IS NULL) OR (@OThreeD IS NULL AND @ThreeD IS NOT NULL) OR (@OThreeD <> @ThreeD)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1735,'3D',1726,'ThreeD',@OThreeD,@ThreeD
+IF (@OCategoryGrp IS NOT NULL AND @CategoryGrp IS NULL) OR (@OCategoryGrp IS NULL AND @CategoryGrp IS NOT NULL) OR (@OCategoryGrp <> @CategoryGrp)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1736,'Category',1727,'CategoryGrp',CONVERT(varchar(100),@OCategoryGrp),CONVERT(varchar(100),@CategoryGrp)
+IF (@OChartData IS NOT NULL AND @ChartData IS NULL) OR (@OChartData IS NULL AND @ChartData IS NOT NULL) OR (@OChartData <> @ChartData)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1737,'Value',1728,'ChartData',@OChartData,@ChartData
+IF (@OSeriesGrp IS NOT NULL AND @SeriesGrp IS NULL) OR (@OSeriesGrp IS NULL AND @SeriesGrp IS NOT NULL) OR (@OSeriesGrp <> @SeriesGrp)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1738,'Series',1729,'SeriesGrp',CONVERT(varchar(100),@OSeriesGrp),CONVERT(varchar(100),@SeriesGrp)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1019M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1019M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1019M
+ @ScrAuditId		BigInt
+,@CudAction		Char(1)
+,@ScreenId		Int
+,@MasterTable		Char(1)
+,@TableId		Int
+,@RowId		BigInt
+,@RowDesc		NVarChar(max)
+,@ChangedBy		Int
+,@ChangedOn		DateTime
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCudAction		Char(1)
+		,@OScreenId		Int
+		,@OMasterTable		Char(1)
+		,@OTableId		Int
+		,@ORowId		BigInt
+		,@ORowDesc		NVarChar(max)
+		,@OChangedBy		Int
+		,@OChangedOn		DateTime
+SELECT @SearchCol=ScrAuditId,@OCudAction=CudAction,@OScreenId=ScreenId,@OMasterTable=MasterTable,@OTableId=TableId,@ORowId=RowId,@ORowDesc=RowDesc,@OChangedBy=ChangedBy,@OChangedOn=ChangedOn FROM dbo.ScrAudit WHERE ScrAuditId=@ScrAuditId
+IF ((@OCudAction IS NOT NULL AND @CudAction IS NULL) OR (@OCudAction IS NULL AND @CudAction IS NOT NULL) OR (@OCudAction <> @CudAction)) OR ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable)) OR ((@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)) OR ((@ORowId IS NOT NULL AND @RowId IS NULL) OR (@ORowId IS NULL AND @RowId IS NOT NULL) OR (@ORowId <> @RowId)) OR ((@ORowDesc IS NOT NULL AND @RowDesc IS NULL) OR (@ORowDesc IS NULL AND @RowDesc IS NOT NULL) OR (@ORowDesc <> @RowDesc)) OR ((@OChangedBy IS NOT NULL AND @ChangedBy IS NULL) OR (@OChangedBy IS NULL AND @ChangedBy IS NOT NULL) OR (@OChangedBy <> @ChangedBy)) OR ((@OChangedOn IS NOT NULL AND @ChangedOn IS NULL) OR (@OChangedOn IS NULL AND @ChangedOn IS NOT NULL) OR (@OChangedOn <> @ChangedOn))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1019,'Y',1300,@ScrAuditId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCudAction IS NOT NULL AND @CudAction IS NULL) OR (@OCudAction IS NULL AND @CudAction IS NOT NULL) OR (@OCudAction <> @CudAction)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4106,'Action',7420,'CudAction',@OCudAction,@CudAction
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4107,'Screen',7425,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4108,'Master',7421,'MasterTable',@OMasterTable,@MasterTable
+IF (@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4109,'TableId',7426,'TableId',CONVERT(varchar(100),@OTableId),CONVERT(varchar(100),@TableId)
+IF (@ORowId IS NOT NULL AND @RowId IS NULL) OR (@ORowId IS NULL AND @RowId IS NOT NULL) OR (@ORowId <> @RowId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4110,'Row ID',7423,'RowId',CONVERT(varchar(100),@ORowId),CONVERT(varchar(100),@RowId)
+IF (@ORowDesc IS NOT NULL AND @RowDesc IS NULL) OR (@ORowDesc IS NULL AND @RowDesc IS NOT NULL) OR (@ORowDesc <> @RowDesc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4111,'Row Description',7422,'RowDesc',@ORowDesc,@RowDesc
+IF (@OChangedBy IS NOT NULL AND @ChangedBy IS NULL) OR (@OChangedBy IS NULL AND @ChangedBy IS NOT NULL) OR (@OChangedBy <> @ChangedBy)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4112,'Changed By',7418,'ChangedBy',CONVERT(varchar(100),@OChangedBy),CONVERT(varchar(100),@ChangedBy)
+IF (@OChangedOn IS NOT NULL AND @ChangedOn IS NULL) OR (@OChangedOn IS NULL AND @ChangedOn IS NOT NULL) OR (@OChangedOn <> @ChangedOn)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4113,'Changed On',7419,'ChangedOn',CONVERT(varchar(10),@OChangedOn,102),CONVERT(varchar(10),@ChangedOn,102)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1020M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1020M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1020M
+ @ScrAuditDtlId		BigInt
+,@ScrAuditId		BigInt
+,@ScreenObjId		Int
+,@ScreenObjDesc		NVarChar(max)
+,@ColumnId		Int
+,@ColumnDesc		NVarChar(max)
+,@ChangedFr		NVarChar(max)
+,@ChangedTo		NVarChar(max)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScrAuditId		BigInt
+		,@OScreenObjId		Int
+		,@OScreenObjDesc		NVarChar(max)
+		,@OColumnId		Int
+		,@OColumnDesc		NVarChar(max)
+		,@OChangedFr		NVarChar(max)
+		,@OChangedTo		NVarChar(max)
+SELECT @SearchCol=ScrAuditDtlId,@OScrAuditId=ScrAuditId,@OScreenObjId=ScreenObjId,@OScreenObjDesc=ScreenObjDesc,@OColumnId=ColumnId,@OColumnDesc=ColumnDesc,@OChangedFr=ChangedFr,@OChangedTo=ChangedTo FROM dbo.ScrAuditDtl WHERE ScrAuditDtlId=@ScrAuditDtlId
+IF ((@OScrAuditId IS NOT NULL AND @ScrAuditId IS NULL) OR (@OScrAuditId IS NULL AND @ScrAuditId IS NOT NULL) OR (@OScrAuditId <> @ScrAuditId)) OR ((@OScreenObjId IS NOT NULL AND @ScreenObjId IS NULL) OR (@OScreenObjId IS NULL AND @ScreenObjId IS NOT NULL) OR (@OScreenObjId <> @ScreenObjId)) OR ((@OScreenObjDesc IS NOT NULL AND @ScreenObjDesc IS NULL) OR (@OScreenObjDesc IS NULL AND @ScreenObjDesc IS NOT NULL) OR (@OScreenObjDesc <> @ScreenObjDesc)) OR ((@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)) OR ((@OColumnDesc IS NOT NULL AND @ColumnDesc IS NULL) OR (@OColumnDesc IS NULL AND @ColumnDesc IS NOT NULL) OR (@OColumnDesc <> @ColumnDesc)) OR ((@OChangedFr IS NOT NULL AND @ChangedFr IS NULL) OR (@OChangedFr IS NULL AND @ChangedFr IS NOT NULL) OR (@OChangedFr <> @ChangedFr)) OR ((@OChangedTo IS NOT NULL AND @ChangedTo IS NULL) OR (@OChangedTo IS NULL AND @ChangedTo IS NOT NULL) OR (@OChangedTo <> @ChangedTo))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1020,'Y',1301,@ScrAuditDtlId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScrAuditId IS NOT NULL AND @ScrAuditId IS NULL) OR (@OScrAuditId IS NULL AND @ScrAuditId IS NOT NULL) OR (@OScrAuditId <> @ScrAuditId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4115,'Audit ID',7432,'ScrAuditId',CONVERT(varchar(100),@OScrAuditId),CONVERT(varchar(100),@ScrAuditId)
+IF (@OScreenObjId IS NOT NULL AND @ScreenObjId IS NULL) OR (@OScreenObjId IS NULL AND @ScreenObjId IS NOT NULL) OR (@OScreenObjId <> @ScreenObjId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4116,'Field ID',7434,'ScreenObjId',CONVERT(varchar(100),@OScreenObjId),CONVERT(varchar(100),@ScreenObjId)
+IF (@OScreenObjDesc IS NOT NULL AND @ScreenObjDesc IS NULL) OR (@OScreenObjDesc IS NULL AND @ScreenObjDesc IS NOT NULL) OR (@OScreenObjDesc <> @ScreenObjDesc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4117,'Field Description',7433,'ScreenObjDesc',@OScreenObjDesc,@ScreenObjDesc
+IF (@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4118,'Column ID',7430,'ColumnId',CONVERT(varchar(100),@OColumnId),CONVERT(varchar(100),@ColumnId)
+IF (@OColumnDesc IS NOT NULL AND @ColumnDesc IS NULL) OR (@OColumnDesc IS NULL AND @ColumnDesc IS NOT NULL) OR (@OColumnDesc <> @ColumnDesc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4119,'Column Name',7429,'ColumnDesc',@OColumnDesc,@ColumnDesc
+IF (@OChangedFr IS NOT NULL AND @ChangedFr IS NULL) OR (@OChangedFr IS NULL AND @ChangedFr IS NOT NULL) OR (@OChangedFr <> @ChangedFr)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4120,'Changed From',7427,'ChangedFr',@OChangedFr,@ChangedFr
+IF (@OChangedTo IS NOT NULL AND @ChangedTo IS NULL) OR (@OChangedTo IS NULL AND @ChangedTo IS NOT NULL) OR (@OChangedTo <> @ChangedTo)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4121,'Changed To',7428,'ChangedTo',@OChangedTo,@ChangedTo
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1026D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1026D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1026D
+ @ServerRuledOvrdPrmId		Int
+,@PermKeyId		SmallInt
+,@AndCondition		Char(1)
+,@PermKeyRowId		Int
+,@Match		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OAndCondition		Char(1)
+		,@OPermKeyRowId		Int
+		,@OMatch		Char(1)
+SELECT @SearchCol=ServerRuledOvrdPrmId,@OPermKeyId=PermKeyId,@OAndCondition=AndCondition,@OPermKeyRowId=PermKeyRowId,@OMatch=Match FROM dbo.AtServerRuleOvrdPrm WHERE ServerRuledOvrdPrmId=@ServerRuledOvrdPrmId
+IF ((@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)) OR ((@OAndCondition IS NOT NULL AND @AndCondition IS NULL) OR (@OAndCondition IS NULL AND @AndCondition IS NOT NULL) OR (@OAndCondition <> @AndCondition)) OR ((@OPermKeyRowId IS NOT NULL AND @PermKeyRowId IS NULL) OR (@OPermKeyRowId IS NULL AND @PermKeyRowId IS NOT NULL) OR (@OPermKeyRowId <> @PermKeyRowId)) OR ((@OMatch IS NOT NULL AND @Match IS NULL) OR (@OMatch IS NULL AND @Match IS NOT NULL) OR (@OMatch <> @Match))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1026,'N',1321,@ServerRuledOvrdPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4363,'Entity Type',7618,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),CONVERT(varchar(100),@PermKeyId)
+IF (@OAndCondition IS NOT NULL AND @AndCondition IS NULL) OR (@OAndCondition IS NULL AND @AndCondition IS NOT NULL) OR (@OAndCondition <> @AndCondition)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4364,'AndCondition',7617,'AndCondition',@OAndCondition,@AndCondition
+IF (@OPermKeyRowId IS NOT NULL AND @PermKeyRowId IS NULL) OR (@OPermKeyRowId IS NULL AND @PermKeyRowId IS NOT NULL) OR (@OPermKeyRowId <> @PermKeyRowId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4369,'Entity',7635,'PermKeyRowId',CONVERT(varchar(100),@OPermKeyRowId),CONVERT(varchar(100),@PermKeyRowId)
+IF (@OMatch IS NOT NULL AND @Match IS NULL) OR (@OMatch IS NULL AND @Match IS NOT NULL) OR (@OMatch <> @Match)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4371,'Match',7634,'Match',@OMatch,@Match
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1026M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1026M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1026M
+ @AtServerRuleOvrdId		Int
+,@ServerRuleOvrdDesc		VarChar(1000)
+,@ServerRuleOvrdName		VarChar(500)
+,@ServerRuleId		Int
+,@Disable		Char(1)
+,@Priority		SmallInt
+,@ScreenId		Int
+,@RunMode		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OServerRuleOvrdDesc		VarChar(1000)
+		,@OServerRuleOvrdName		VarChar(500)
+		,@OServerRuleId		Int
+		,@ODisable		Char(1)
+		,@OPriority		SmallInt
+		,@OScreenId		Int
+		,@ORunMode		Char(1)
+SELECT @SearchCol=AtServerRuleOvrdId,@OServerRuleOvrdDesc=ServerRuleOvrdDesc,@OServerRuleOvrdName=ServerRuleOvrdName,@OServerRuleId=ServerRuleId,@ODisable=Disable,@OPriority=Priority,@OScreenId=ScreenId,@ORunMode=RunMode FROM dbo.AtServerRuleOvrd WHERE AtServerRuleOvrdId=@AtServerRuleOvrdId
+IF ((@OServerRuleOvrdDesc IS NOT NULL AND @ServerRuleOvrdDesc IS NULL) OR (@OServerRuleOvrdDesc IS NULL AND @ServerRuleOvrdDesc IS NOT NULL) OR (@OServerRuleOvrdDesc <> @ServerRuleOvrdDesc)) OR ((@OServerRuleOvrdName IS NOT NULL AND @ServerRuleOvrdName IS NULL) OR (@OServerRuleOvrdName IS NULL AND @ServerRuleOvrdName IS NOT NULL) OR (@OServerRuleOvrdName <> @ServerRuleOvrdName)) OR ((@OServerRuleId IS NOT NULL AND @ServerRuleId IS NULL) OR (@OServerRuleId IS NULL AND @ServerRuleId IS NOT NULL) OR (@OServerRuleId <> @ServerRuleId)) OR ((@ODisable IS NOT NULL AND @Disable IS NULL) OR (@ODisable IS NULL AND @Disable IS NOT NULL) OR (@ODisable <> @Disable)) OR ((@OPriority IS NOT NULL AND @Priority IS NULL) OR (@OPriority IS NULL AND @Priority IS NOT NULL) OR (@OPriority <> @Priority)) OR ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@ORunMode IS NOT NULL AND @RunMode IS NULL) OR (@ORunMode IS NULL AND @RunMode IS NOT NULL) OR (@ORunMode <> @RunMode))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1026,'Y',1322,@AtServerRuleOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OServerRuleOvrdDesc IS NOT NULL AND @ServerRuleOvrdDesc IS NULL) OR (@OServerRuleOvrdDesc IS NULL AND @ServerRuleOvrdDesc IS NOT NULL) OR (@OServerRuleOvrdDesc <> @ServerRuleOvrdDesc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4357,'ServerRuleOvrdDesc',7625,'ServerRuleOvrdDesc',@OServerRuleOvrdDesc,@ServerRuleOvrdDesc
+IF (@OServerRuleOvrdName IS NOT NULL AND @ServerRuleOvrdName IS NULL) OR (@OServerRuleOvrdName IS NULL AND @ServerRuleOvrdName IS NOT NULL) OR (@OServerRuleOvrdName <> @ServerRuleOvrdName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4358,'ServerRuleOvrdName',7626,'ServerRuleOvrdName',@OServerRuleOvrdName,@ServerRuleOvrdName
+IF (@OServerRuleId IS NOT NULL AND @ServerRuleId IS NULL) OR (@OServerRuleId IS NULL AND @ServerRuleId IS NOT NULL) OR (@OServerRuleId <> @ServerRuleId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4359,'ServerRuleId',7624,'ServerRuleId',CONVERT(varchar(100),@OServerRuleId),CONVERT(varchar(100),@ServerRuleId)
+IF (@ODisable IS NOT NULL AND @Disable IS NULL) OR (@ODisable IS NULL AND @Disable IS NOT NULL) OR (@ODisable <> @Disable)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4360,'Disable',7623,'Disable',@ODisable,@Disable
+IF (@OPriority IS NOT NULL AND @Priority IS NULL) OR (@OPriority IS NULL AND @Priority IS NOT NULL) OR (@OPriority <> @Priority)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4366,'Priority',7631,'Priority',CONVERT(varchar(100),@OPriority),CONVERT(varchar(100),@Priority)
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4367,'Screen',7630,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@ORunMode IS NOT NULL AND @RunMode IS NULL) OR (@ORunMode IS NULL AND @RunMode IS NOT NULL) OR (@ORunMode <> @RunMode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4373,'Run Mode',7640,'RunMode',@ORunMode,@RunMode
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1030D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1030D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1030D
+ @TemplatePrmId		Int
+,@GrantDeny		Char(1)
+,@PermKeyId		SmallInt
+,@PermId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OGrantDeny		Char(1)
+		,@OPermKeyId		SmallInt
+		,@OPermId		Int
+SELECT @SearchCol=TemplatePrmId,@OGrantDeny=GrantDeny,@OPermKeyId=PermKeyId,@OPermId=PermId FROM dbo.TemplatePrm WHERE TemplatePrmId=@TemplatePrmId
+IF ((@OGrantDeny IS NOT NULL AND @GrantDeny IS NULL) OR (@OGrantDeny IS NULL AND @GrantDeny IS NOT NULL) OR (@OGrantDeny <> @GrantDeny)) OR ((@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)) OR ((@OPermId IS NOT NULL AND @PermId IS NULL) OR (@OPermId IS NULL AND @PermId IS NOT NULL) OR (@OPermId <> @PermId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1030,'N',1331,@TemplatePrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OGrantDeny IS NOT NULL AND @GrantDeny IS NULL) OR (@OGrantDeny IS NULL AND @GrantDeny IS NOT NULL) OR (@OGrantDeny <> @GrantDeny)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4448,'Grant/Deny',7707,'GrantDeny',@OGrantDeny,@GrantDeny
+IF (@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4449,'Entity Type',7704,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),CONVERT(varchar(100),@PermKeyId)
+IF (@OPermId IS NOT NULL AND @PermId IS NULL) OR (@OPermId IS NULL AND @PermId IS NOT NULL) OR (@OPermId <> @PermId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4450,'Entity',7703,'PermId',CONVERT(varchar(100),@OPermId),CONVERT(varchar(100),@PermId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd1030M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd1030M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd1030M
+ @TemplateId		SmallInt
+,@TemplateName		NVarChar(30)
+,@TmplPrefix		VarChar(10)
+,@TmplDefault		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTemplateName		NVarChar(30)
+		,@OTmplPrefix		VarChar(10)
+		,@OTmplDefault		Char(1)
+SELECT @SearchCol=TemplateId,@OTemplateName=TemplateName,@OTmplPrefix=TmplPrefix,@OTmplDefault=TmplDefault FROM dbo.Template WHERE TemplateId=@TemplateId
+IF ((@OTemplateName IS NOT NULL AND @TemplateName IS NULL) OR (@OTemplateName IS NULL AND @TemplateName IS NOT NULL) OR (@OTemplateName <> @TemplateName)) OR ((@OTmplPrefix IS NOT NULL AND @TmplPrefix IS NULL) OR (@OTmplPrefix IS NULL AND @TmplPrefix IS NOT NULL) OR (@OTmplPrefix <> @TmplPrefix)) OR ((@OTmplDefault IS NOT NULL AND @TmplDefault IS NULL) OR (@OTmplDefault IS NULL AND @TmplDefault IS NOT NULL) OR (@OTmplDefault <> @TmplDefault))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',1030,'Y',79,@TemplateId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OTemplateName IS NOT NULL AND @TemplateName IS NULL) OR (@OTemplateName IS NULL AND @TemplateName IS NOT NULL) OR (@OTemplateName <> @TemplateName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4442,'Template Name',609,'TemplateName',@OTemplateName,@TemplateName
+IF (@OTmplPrefix IS NOT NULL AND @TmplPrefix IS NULL) OR (@OTmplPrefix IS NULL AND @TmplPrefix IS NOT NULL) OR (@OTmplPrefix <> @TmplPrefix)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4443,'Template Prefix',610,'TmplPrefix',@OTmplPrefix,@TmplPrefix
+IF (@OTmplDefault IS NOT NULL AND @TmplDefault IS NULL) OR (@OTmplDefault IS NULL AND @TmplDefault IS NOT NULL) OR (@OTmplDefault <> @TmplDefault)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4444,'Default',611,'TmplDefault',@OTmplDefault,@TmplDefault
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd10M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd10M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd10M
+ @ScreenObjId		Int
+,@MasterTable		Char(1)
+,@ColumnId		Int
+,@ColumnName		VarChar(50)
+,@DefaultValue		NVarChar(200)
+,@SystemValue		NVarChar(200)
+,@ColumnSize		SmallInt
+,@ColumnHeight		SmallInt
+,@DisplayModeId		TinyInt
+,@DdlKeyColumnId		Int
+,@DdlRefColumnId		Int
+,@RequiredValid		Char(1)
+,@MaskValid		VarChar(100)
+,@RangeValidType		VarChar(50)
+,@RangeValidMax		VarChar(50)
+,@RangeValidMin		VarChar(50)
+,@GenerateSp		Char(1)
+,@SortOrder		SmallInt
+,@ColumnWrap		Char(1)
+,@GroupColId		SmallInt
+,@ColumnLink		VarChar(1000)
+,@AggregateCd		Char(1)
+,@ScreenId		Int
+,@DdlSrtColumnId		Int
+,@RefreshOnCUD		Char(1)
+,@DdlAdnColumnId		Int
+,@DdlFtrColumnId		Int
+,@ColumnJustify		Char(1)
+,@TrimOnEntry		Char(1)
+,@MatchCd		Char(1)
+,@LabelCss		VarChar(1000)
+,@ContentCss		VarChar(1000)
+,@IgnoreConfirm		Char(1)
+,@GridGrpCd		Char(1)
+,@DefAfter		Char(1)
+,@DefAlways		Char(1)
+,@LabelVertical		Char(1)
+,@HyperLinkUrl		NVarChar(200)
+,@GroupRowId		SmallInt
+,@HideOnTablet		Char(1)
+,@HideOnMobile		Char(1)
+,@ResizeWidth		SmallInt
+,@ResizeHeight		SmallInt
+,@DtlLstPosId		TinyInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMasterTable		Char(1)
+		,@OColumnId		Int
+		,@OColumnName		VarChar(50)
+		,@ODefaultValue		NVarChar(200)
+		,@OSystemValue		NVarChar(200)
+		,@OColumnSize		SmallInt
+		,@OColumnHeight		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ODdlKeyColumnId		Int
+		,@ODdlRefColumnId		Int
+		,@ORequiredValid		Char(1)
+		,@OMaskValid		VarChar(100)
+		,@ORangeValidType		VarChar(50)
+		,@ORangeValidMax		VarChar(50)
+		,@ORangeValidMin		VarChar(50)
+		,@OGenerateSp		Char(1)
+		,@OSortOrder		SmallInt
+		,@OColumnWrap		Char(1)
+		,@OGroupColId		SmallInt
+		,@OColumnLink		VarChar(1000)
+		,@OAggregateCd		Char(1)
+		,@OScreenId		Int
+		,@ODdlSrtColumnId		Int
+		,@ORefreshOnCUD		Char(1)
+		,@ODdlAdnColumnId		Int
+		,@ODdlFtrColumnId		Int
+		,@OColumnJustify		Char(1)
+		,@OTrimOnEntry		Char(1)
+		,@OMatchCd		Char(1)
+		,@OLabelCss		VarChar(1000)
+		,@OContentCss		VarChar(1000)
+		,@OIgnoreConfirm		Char(1)
+		,@OGridGrpCd		Char(1)
+		,@ODefAfter		Char(1)
+		,@ODefAlways		Char(1)
+		,@OLabelVertical		Char(1)
+		,@OHyperLinkUrl		NVarChar(200)
+		,@OGroupRowId		SmallInt
+		,@OHideOnTablet		Char(1)
+		,@OHideOnMobile		Char(1)
+		,@OResizeWidth		SmallInt
+		,@OResizeHeight		SmallInt
+		,@ODtlLstPosId		TinyInt
+SELECT @SearchCol=ScreenObjId,@OMasterTable=MasterTable,@OColumnId=ColumnId,@OColumnName=ColumnName,@ODefaultValue=DefaultValue,@OSystemValue=SystemValue,@OColumnSize=ColumnSize,@OColumnHeight=ColumnHeight,@ODisplayModeId=DisplayModeId,@ODdlKeyColumnId=DdlKeyColumnId,@ODdlRefColumnId=DdlRefColumnId,@ORequiredValid=RequiredValid,@OMaskValid=MaskValid,@ORangeValidType=RangeValidType,@ORangeValidMax=RangeValidMax,@ORangeValidMin=RangeValidMin,@OGenerateSp=GenerateSp,@OSortOrder=SortOrder,@OColumnWrap=ColumnWrap,@OGroupColId=GroupColId,@OColumnLink=ColumnLink,@OAggregateCd=AggregateCd,@OScreenId=ScreenId,@ODdlSrtColumnId=DdlSrtColumnId,@ORefreshOnCUD=RefreshOnCUD,@ODdlAdnColumnId=DdlAdnColumnId,@ODdlFtrColumnId=DdlFtrColumnId,@OColumnJustify=ColumnJustify,@OTrimOnEntry=TrimOnEntry,@OMatchCd=MatchCd,@OLabelCss=LabelCss,@OContentCss=ContentCss,@OIgnoreConfirm=IgnoreConfirm,@OGridGrpCd=GridGrpCd,@ODefAfter=DefAfter,@ODefAlways=DefAlways,@OLabelVertical=LabelVertical,@OHyperLinkUrl=HyperLinkUrl,@OGroupRowId=GroupRowId,@OHideOnTablet=HideOnTablet,@OHideOnMobile=HideOnMobile,@OResizeWidth=ResizeWidth,@OResizeHeight=ResizeHeight,@ODtlLstPosId=DtlLstPosId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+IF ((@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable)) OR ((@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)) OR ((@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)) OR ((@ODefaultValue IS NOT NULL AND @DefaultValue IS NULL) OR (@ODefaultValue IS NULL AND @DefaultValue IS NOT NULL) OR (@ODefaultValue <> @DefaultValue)) OR ((@OSystemValue IS NOT NULL AND @SystemValue IS NULL) OR (@OSystemValue IS NULL AND @SystemValue IS NOT NULL) OR (@OSystemValue <> @SystemValue)) OR ((@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)) OR ((@OColumnHeight IS NOT NULL AND @ColumnHeight IS NULL) OR (@OColumnHeight IS NULL AND @ColumnHeight IS NOT NULL) OR (@OColumnHeight <> @ColumnHeight)) OR ((@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)) OR ((@ODdlKeyColumnId IS NOT NULL AND @DdlKeyColumnId IS NULL) OR (@ODdlKeyColumnId IS NULL AND @DdlKeyColumnId IS NOT NULL) OR (@ODdlKeyColumnId <> @DdlKeyColumnId)) OR ((@ODdlRefColumnId IS NOT NULL AND @DdlRefColumnId IS NULL) OR (@ODdlRefColumnId IS NULL AND @DdlRefColumnId IS NOT NULL) OR (@ODdlRefColumnId <> @DdlRefColumnId)) OR ((@ORequiredValid IS NOT NULL AND @RequiredValid IS NULL) OR (@ORequiredValid IS NULL AND @RequiredValid IS NOT NULL) OR (@ORequiredValid <> @RequiredValid)) OR ((@OMaskValid IS NOT NULL AND @MaskValid IS NULL) OR (@OMaskValid IS NULL AND @MaskValid IS NOT NULL) OR (@OMaskValid <> @MaskValid)) OR ((@ORangeValidType IS NOT NULL AND @RangeValidType IS NULL) OR (@ORangeValidType IS NULL AND @RangeValidType IS NOT NULL) OR (@ORangeValidType <> @RangeValidType)) OR ((@ORangeValidMax IS NOT NULL AND @RangeValidMax IS NULL) OR (@ORangeValidMax IS NULL AND @RangeValidMax IS NOT NULL) OR (@ORangeValidMax <> @RangeValidMax)) OR ((@ORangeValidMin IS NOT NULL AND @RangeValidMin IS NULL) OR (@ORangeValidMin IS NULL AND @RangeValidMin IS NOT NULL) OR (@ORangeValidMin <> @RangeValidMin)) OR ((@OGenerateSp IS NOT NULL AND @GenerateSp IS NULL) OR (@OGenerateSp IS NULL AND @GenerateSp IS NOT NULL) OR (@OGenerateSp <> @GenerateSp)) OR ((@OSortOrder IS NOT NULL AND @SortOrder IS NULL) OR (@OSortOrder IS NULL AND @SortOrder IS NOT NULL) OR (@OSortOrder <> @SortOrder)) OR ((@OColumnWrap IS NOT NULL AND @ColumnWrap IS NULL) OR (@OColumnWrap IS NULL AND @ColumnWrap IS NOT NULL) OR (@OColumnWrap <> @ColumnWrap)) OR ((@OGroupColId IS NOT NULL AND @GroupColId IS NULL) OR (@OGroupColId IS NULL AND @GroupColId IS NOT NULL) OR (@OGroupColId <> @GroupColId)) OR ((@OColumnLink IS NOT NULL AND @ColumnLink IS NULL) OR (@OColumnLink IS NULL AND @ColumnLink IS NOT NULL) OR (@OColumnLink <> @ColumnLink)) OR ((@OAggregateCd IS NOT NULL AND @AggregateCd IS NULL) OR (@OAggregateCd IS NULL AND @AggregateCd IS NOT NULL) OR (@OAggregateCd <> @AggregateCd)) OR ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@ODdlSrtColumnId IS NOT NULL AND @DdlSrtColumnId IS NULL) OR (@ODdlSrtColumnId IS NULL AND @DdlSrtColumnId IS NOT NULL) OR (@ODdlSrtColumnId <> @DdlSrtColumnId)) OR ((@ORefreshOnCUD IS NOT NULL AND @RefreshOnCUD IS NULL) OR (@ORefreshOnCUD IS NULL AND @RefreshOnCUD IS NOT NULL) OR (@ORefreshOnCUD <> @RefreshOnCUD)) OR ((@ODdlAdnColumnId IS NOT NULL AND @DdlAdnColumnId IS NULL) OR (@ODdlAdnColumnId IS NULL AND @DdlAdnColumnId IS NOT NULL) OR (@ODdlAdnColumnId <> @DdlAdnColumnId)) OR ((@ODdlFtrColumnId IS NOT NULL AND @DdlFtrColumnId IS NULL) OR (@ODdlFtrColumnId IS NULL AND @DdlFtrColumnId IS NOT NULL) OR (@ODdlFtrColumnId <> @DdlFtrColumnId)) OR ((@OColumnJustify IS NOT NULL AND @ColumnJustify IS NULL) OR (@OColumnJustify IS NULL AND @ColumnJustify IS NOT NULL) OR (@OColumnJustify <> @ColumnJustify)) OR ((@OTrimOnEntry IS NOT NULL AND @TrimOnEntry IS NULL) OR (@OTrimOnEntry IS NULL AND @TrimOnEntry IS NOT NULL) OR (@OTrimOnEntry <> @TrimOnEntry)) OR ((@OMatchCd IS NOT NULL AND @MatchCd IS NULL) OR (@OMatchCd IS NULL AND @MatchCd IS NOT NULL) OR (@OMatchCd <> @MatchCd)) OR ((@OLabelCss IS NOT NULL AND @LabelCss IS NULL) OR (@OLabelCss IS NULL AND @LabelCss IS NOT NULL) OR (@OLabelCss <> @LabelCss)) OR ((@OContentCss IS NOT NULL AND @ContentCss IS NULL) OR (@OContentCss IS NULL AND @ContentCss IS NOT NULL) OR (@OContentCss <> @ContentCss)) OR ((@OIgnoreConfirm IS NOT NULL AND @IgnoreConfirm IS NULL) OR (@OIgnoreConfirm IS NULL AND @IgnoreConfirm IS NOT NULL) OR (@OIgnoreConfirm <> @IgnoreConfirm)) OR ((@OGridGrpCd IS NOT NULL AND @GridGrpCd IS NULL) OR (@OGridGrpCd IS NULL AND @GridGrpCd IS NOT NULL) OR (@OGridGrpCd <> @GridGrpCd)) OR ((@ODefAfter IS NOT NULL AND @DefAfter IS NULL) OR (@ODefAfter IS NULL AND @DefAfter IS NOT NULL) OR (@ODefAfter <> @DefAfter)) OR ((@ODefAlways IS NOT NULL AND @DefAlways IS NULL) OR (@ODefAlways IS NULL AND @DefAlways IS NOT NULL) OR (@ODefAlways <> @DefAlways)) OR ((@OLabelVertical IS NOT NULL AND @LabelVertical IS NULL) OR (@OLabelVertical IS NULL AND @LabelVertical IS NOT NULL) OR (@OLabelVertical <> @LabelVertical)) OR ((@OHyperLinkUrl IS NOT NULL AND @HyperLinkUrl IS NULL) OR (@OHyperLinkUrl IS NULL AND @HyperLinkUrl IS NOT NULL) OR (@OHyperLinkUrl <> @HyperLinkUrl)) OR ((@OGroupRowId IS NOT NULL AND @GroupRowId IS NULL) OR (@OGroupRowId IS NULL AND @GroupRowId IS NOT NULL) OR (@OGroupRowId <> @GroupRowId)) OR ((@OHideOnTablet IS NOT NULL AND @HideOnTablet IS NULL) OR (@OHideOnTablet IS NULL AND @HideOnTablet IS NOT NULL) OR (@OHideOnTablet <> @HideOnTablet)) OR ((@OHideOnMobile IS NOT NULL AND @HideOnMobile IS NULL) OR (@OHideOnMobile IS NULL AND @HideOnMobile IS NOT NULL) OR (@OHideOnMobile <> @HideOnMobile)) OR ((@OResizeWidth IS NOT NULL AND @ResizeWidth IS NULL) OR (@OResizeWidth IS NULL AND @ResizeWidth IS NOT NULL) OR (@OResizeWidth <> @ResizeWidth)) OR ((@OResizeHeight IS NOT NULL AND @ResizeHeight IS NULL) OR (@OResizeHeight IS NULL AND @ResizeHeight IS NOT NULL) OR (@OResizeHeight <> @ResizeHeight)) OR ((@ODtlLstPosId IS NOT NULL AND @DtlLstPosId IS NULL) OR (@ODtlLstPosId IS NULL AND @DtlLstPosId IS NOT NULL) OR (@ODtlLstPosId <> @DtlLstPosId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',10,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,73,'Master Table',108,'MasterTable',@OMasterTable,@MasterTable
+IF (@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,74,'Database Column',109,'ColumnId',CONVERT(varchar(100),@OColumnId),CONVERT(varchar(100),@ColumnId)
+IF (@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,75,'Column Name',110,'ColumnName',@OColumnName,@ColumnName
+IF (@ODefaultValue IS NOT NULL AND @DefaultValue IS NULL) OR (@ODefaultValue IS NULL AND @DefaultValue IS NOT NULL) OR (@ODefaultValue <> @DefaultValue)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,76,'Default Value',111,'DefaultValue',@ODefaultValue,@DefaultValue
+IF (@OSystemValue IS NOT NULL AND @SystemValue IS NULL) OR (@OSystemValue IS NULL AND @SystemValue IS NOT NULL) OR (@OSystemValue <> @SystemValue)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,77,'System Value',112,'SystemValue',@OSystemValue,@SystemValue
+IF (@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,79,'Display Width',114,'ColumnSize',CONVERT(varchar(100),@OColumnSize),CONVERT(varchar(100),@ColumnSize)
+IF (@OColumnHeight IS NOT NULL AND @ColumnHeight IS NULL) OR (@OColumnHeight IS NULL AND @ColumnHeight IS NOT NULL) OR (@OColumnHeight <> @ColumnHeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,80,'Display Height',115,'ColumnHeight',CONVERT(varchar(100),@OColumnHeight),CONVERT(varchar(100),@ColumnHeight)
+IF (@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,81,'Display Mode',116,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),CONVERT(varchar(100),@DisplayModeId)
+IF (@ODdlKeyColumnId IS NOT NULL AND @DdlKeyColumnId IS NULL) OR (@ODdlKeyColumnId IS NULL AND @DdlKeyColumnId IS NOT NULL) OR (@ODdlKeyColumnId <> @DdlKeyColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,82,'Key Column',117,'DdlKeyColumnId',CONVERT(varchar(100),@ODdlKeyColumnId),CONVERT(varchar(100),@DdlKeyColumnId)
+IF (@ODdlRefColumnId IS NOT NULL AND @DdlRefColumnId IS NULL) OR (@ODdlRefColumnId IS NULL AND @DdlRefColumnId IS NOT NULL) OR (@ODdlRefColumnId <> @DdlRefColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,83,'Reference Column',118,'DdlRefColumnId',CONVERT(varchar(100),@ODdlRefColumnId),CONVERT(varchar(100),@DdlRefColumnId)
+IF (@ORequiredValid IS NOT NULL AND @RequiredValid IS NULL) OR (@ORequiredValid IS NULL AND @RequiredValid IS NOT NULL) OR (@ORequiredValid <> @RequiredValid)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,86,'Mandatory',121,'RequiredValid',@ORequiredValid,@RequiredValid
+IF (@OMaskValid IS NOT NULL AND @MaskValid IS NULL) OR (@OMaskValid IS NULL AND @MaskValid IS NOT NULL) OR (@OMaskValid <> @MaskValid)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,87,'Input Mask',122,'MaskValid',@OMaskValid,@MaskValid
+IF (@ORangeValidType IS NOT NULL AND @RangeValidType IS NULL) OR (@ORangeValidType IS NULL AND @RangeValidType IS NOT NULL) OR (@ORangeValidType <> @RangeValidType)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,88,'Range Type',123,'RangeValidType',@ORangeValidType,@RangeValidType
+IF (@ORangeValidMax IS NOT NULL AND @RangeValidMax IS NULL) OR (@ORangeValidMax IS NULL AND @RangeValidMax IS NOT NULL) OR (@ORangeValidMax <> @RangeValidMax)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,89,'Range Max',124,'RangeValidMax',@ORangeValidMax,@RangeValidMax
+IF (@ORangeValidMin IS NOT NULL AND @RangeValidMin IS NULL) OR (@ORangeValidMin IS NULL AND @RangeValidMin IS NOT NULL) OR (@ORangeValidMin <> @RangeValidMin)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,90,'Range Min',125,'RangeValidMin',@ORangeValidMin,@RangeValidMin
+IF (@OGenerateSp IS NOT NULL AND @GenerateSp IS NULL) OR (@OGenerateSp IS NULL AND @GenerateSp IS NOT NULL) OR (@OGenerateSp <> @GenerateSp)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,572,'Generate',467,'GenerateSp',@OGenerateSp,@GenerateSp
+IF (@OSortOrder IS NOT NULL AND @SortOrder IS NULL) OR (@OSortOrder IS NULL AND @SortOrder IS NOT NULL) OR (@OSortOrder <> @SortOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,723,'Sort Order',623,'SortOrder',CONVERT(varchar(100),@OSortOrder),CONVERT(varchar(100),@SortOrder)
+IF (@OColumnWrap IS NOT NULL AND @ColumnWrap IS NULL) OR (@OColumnWrap IS NULL AND @ColumnWrap IS NOT NULL) OR (@OColumnWrap <> @ColumnWrap)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1203,'Content Wrap',1012,'ColumnWrap',@OColumnWrap,@ColumnWrap
+IF (@OGroupColId IS NOT NULL AND @GroupColId IS NULL) OR (@OGroupColId IS NULL AND @GroupColId IS NOT NULL) OR (@OGroupColId <> @GroupColId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1204,'Column Group',1016,'GroupColId',CONVERT(varchar(100),@OGroupColId),CONVERT(varchar(100),@GroupColId)
+IF (@OColumnLink IS NOT NULL AND @ColumnLink IS NULL) OR (@OColumnLink IS NULL AND @ColumnLink IS NOT NULL) OR (@OColumnLink <> @ColumnLink)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1220,'Search Link',1053,'ColumnLink',@OColumnLink,@ColumnLink
+IF (@OAggregateCd IS NOT NULL AND @AggregateCd IS NULL) OR (@OAggregateCd IS NULL AND @AggregateCd IS NOT NULL) OR (@OAggregateCd <> @AggregateCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1238,'Aggregate',1082,'AggregateCd',@OAggregateCd,@AggregateCd
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1268,'Screen',934,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@ODdlSrtColumnId IS NOT NULL AND @DdlSrtColumnId IS NULL) OR (@ODdlSrtColumnId IS NULL AND @DdlSrtColumnId IS NOT NULL) OR (@ODdlSrtColumnId <> @DdlSrtColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1269,'Sort Column',1119,'DdlSrtColumnId',CONVERT(varchar(100),@ODdlSrtColumnId),CONVERT(varchar(100),@DdlSrtColumnId)
+IF (@ORefreshOnCUD IS NOT NULL AND @RefreshOnCUD IS NULL) OR (@ORefreshOnCUD IS NULL AND @RefreshOnCUD IS NOT NULL) OR (@ORefreshOnCUD <> @RefreshOnCUD)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1280,'Refresh on CUD',1122,'RefreshOnCUD',@ORefreshOnCUD,@RefreshOnCUD
+IF (@ODdlAdnColumnId IS NOT NULL AND @DdlAdnColumnId IS NULL) OR (@ODdlAdnColumnId IS NULL AND @DdlAdnColumnId IS NOT NULL) OR (@ODdlAdnColumnId <> @DdlAdnColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1281,'Additional Column',1123,'DdlAdnColumnId',CONVERT(varchar(100),@ODdlAdnColumnId),CONVERT(varchar(100),@DdlAdnColumnId)
+IF (@ODdlFtrColumnId IS NOT NULL AND @DdlFtrColumnId IS NULL) OR (@ODdlFtrColumnId IS NULL AND @DdlFtrColumnId IS NOT NULL) OR (@ODdlFtrColumnId <> @DdlFtrColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1282,'= Screen Filter Column',1124,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),CONVERT(varchar(100),@DdlFtrColumnId)
+IF (@OColumnJustify IS NOT NULL AND @ColumnJustify IS NULL) OR (@OColumnJustify IS NULL AND @ColumnJustify IS NOT NULL) OR (@OColumnJustify <> @ColumnJustify)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1422,'Justify',1365,'ColumnJustify',@OColumnJustify,@ColumnJustify
+IF (@OTrimOnEntry IS NOT NULL AND @TrimOnEntry IS NULL) OR (@OTrimOnEntry IS NULL AND @TrimOnEntry IS NOT NULL) OR (@OTrimOnEntry <> @TrimOnEntry)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1483,'Trim On Entry',1482,'TrimOnEntry',@OTrimOnEntry,@TrimOnEntry
+IF (@OMatchCd IS NOT NULL AND @MatchCd IS NULL) OR (@OMatchCd IS NULL AND @MatchCd IS NOT NULL) OR (@OMatchCd <> @MatchCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1806,'Import Match',1849,'MatchCd',@OMatchCd,@MatchCd
+IF (@OLabelCss IS NOT NULL AND @LabelCss IS NULL) OR (@OLabelCss IS NULL AND @LabelCss IS NOT NULL) OR (@OLabelCss <> @LabelCss)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1857,'Label Style',1894,'LabelCss',@OLabelCss,@LabelCss
+IF (@OContentCss IS NOT NULL AND @ContentCss IS NULL) OR (@OContentCss IS NULL AND @ContentCss IS NOT NULL) OR (@OContentCss <> @ContentCss)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1858,'Content Style',1893,'ContentCss',@OContentCss,@ContentCss
+IF (@OIgnoreConfirm IS NOT NULL AND @IgnoreConfirm IS NULL) OR (@OIgnoreConfirm IS NULL AND @IgnoreConfirm IS NOT NULL) OR (@OIgnoreConfirm <> @IgnoreConfirm)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1982,'Ignore Confirm',2102,'IgnoreConfirm',@OIgnoreConfirm,@IgnoreConfirm
+IF (@OGridGrpCd IS NOT NULL AND @GridGrpCd IS NULL) OR (@OGridGrpCd IS NULL AND @GridGrpCd IS NOT NULL) OR (@OGridGrpCd <> @GridGrpCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2016,'Grid Grouping',2145,'GridGrpCd',@OGridGrpCd,@GridGrpCd
+IF (@ODefAfter IS NOT NULL AND @DefAfter IS NULL) OR (@ODefAfter IS NULL AND @DefAfter IS NOT NULL) OR (@ODefAfter <> @DefAfter)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2033,'Default After',2163,'DefAfter',@ODefAfter,@DefAfter
+IF (@ODefAlways IS NOT NULL AND @DefAlways IS NULL) OR (@ODefAlways IS NULL AND @DefAlways IS NOT NULL) OR (@ODefAlways <> @DefAlways)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2034,'Default Always',2162,'DefAlways',@ODefAlways,@DefAlways
+IF (@OLabelVertical IS NOT NULL AND @LabelVertical IS NULL) OR (@OLabelVertical IS NULL AND @LabelVertical IS NOT NULL) OR (@OLabelVertical <> @LabelVertical)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3104,'Label On Top',4248,'LabelVertical',@OLabelVertical,@LabelVertical
+IF (@OHyperLinkUrl IS NOT NULL AND @HyperLinkUrl IS NULL) OR (@OHyperLinkUrl IS NULL AND @HyperLinkUrl IS NOT NULL) OR (@OHyperLinkUrl <> @HyperLinkUrl)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3110,'Static Link URL',4249,'HyperLinkUrl',@OHyperLinkUrl,@HyperLinkUrl
+IF (@OGroupRowId IS NOT NULL AND @GroupRowId IS NULL) OR (@OGroupRowId IS NULL AND @GroupRowId IS NOT NULL) OR (@OGroupRowId <> @GroupRowId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3136,'Row Group',5279,'GroupRowId',CONVERT(varchar(100),@OGroupRowId),CONVERT(varchar(100),@GroupRowId)
+IF (@OHideOnTablet IS NOT NULL AND @HideOnTablet IS NULL) OR (@OHideOnTablet IS NULL AND @HideOnTablet IS NOT NULL) OR (@OHideOnTablet <> @HideOnTablet)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3155,'Hide On Tablet',5304,'HideOnTablet',@OHideOnTablet,@HideOnTablet
+IF (@OHideOnMobile IS NOT NULL AND @HideOnMobile IS NULL) OR (@OHideOnMobile IS NULL AND @HideOnMobile IS NOT NULL) OR (@OHideOnMobile <> @HideOnMobile)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3156,'Hide On Mobile',5303,'HideOnMobile',@OHideOnMobile,@HideOnMobile
+IF (@OResizeWidth IS NOT NULL AND @ResizeWidth IS NULL) OR (@OResizeWidth IS NULL AND @ResizeWidth IS NOT NULL) OR (@OResizeWidth <> @ResizeWidth)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4166,'Resize Width',7481,'ResizeWidth',CONVERT(varchar(100),@OResizeWidth),CONVERT(varchar(100),@ResizeWidth)
+IF (@OResizeHeight IS NOT NULL AND @ResizeHeight IS NULL) OR (@OResizeHeight IS NULL AND @ResizeHeight IS NOT NULL) OR (@OResizeHeight <> @ResizeHeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4167,'Resize Height',7480,'ResizeHeight',CONVERT(varchar(100),@OResizeHeight),CONVERT(varchar(100),@ResizeHeight)
+IF (@ODtlLstPosId IS NOT NULL AND @DtlLstPosId IS NULL) OR (@ODtlLstPosId IS NULL AND @DtlLstPosId IS NOT NULL) OR (@ODtlLstPosId <> @DtlLstPosId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4206,'Mobile Search Position',7542,'DtlLstPosId',CONVERT(varchar(100),@ODtlLstPosId),CONVERT(varchar(100),@DtlLstPosId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd112M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd112M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd112M
+ @LabelId		Int
+,@CultureId		SmallInt
+,@LabelCat		VarChar(50)
+,@LabelKey		VarChar(50)
+,@LabelText		NVarChar(max)
+,@CompanyId		Int
+,@SortOrder		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OLabelCat		VarChar(50)
+		,@OLabelKey		VarChar(50)
+		,@OLabelText		NVarChar(max)
+		,@OCompanyId		Int
+		,@OSortOrder		SmallInt
+SELECT @SearchCol=LabelId,@OCultureId=CultureId,@OLabelCat=LabelCat,@OLabelKey=LabelKey,@OLabelText=LabelText,@OCompanyId=CompanyId,@OSortOrder=SortOrder FROM dbo.Label WHERE LabelId=@LabelId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OLabelCat IS NOT NULL AND @LabelCat IS NULL) OR (@OLabelCat IS NULL AND @LabelCat IS NOT NULL) OR (@OLabelCat <> @LabelCat)) OR ((@OLabelKey IS NOT NULL AND @LabelKey IS NULL) OR (@OLabelKey IS NULL AND @LabelKey IS NOT NULL) OR (@OLabelKey <> @LabelKey)) OR ((@OLabelText IS NOT NULL AND @LabelText IS NULL) OR (@OLabelText IS NULL AND @LabelText IS NOT NULL) OR (@OLabelText <> @LabelText)) OR ((@OCompanyId IS NOT NULL AND @CompanyId IS NULL) OR (@OCompanyId IS NULL AND @CompanyId IS NOT NULL) OR (@OCompanyId <> @CompanyId)) OR ((@OSortOrder IS NOT NULL AND @SortOrder IS NULL) OR (@OSortOrder IS NULL AND @SortOrder IS NOT NULL) OR (@OSortOrder <> @SortOrder))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',112,'Y',215,@LabelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1967,'Culture',1796,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OLabelCat IS NOT NULL AND @LabelCat IS NULL) OR (@OLabelCat IS NULL AND @LabelCat IS NOT NULL) OR (@OLabelCat <> @LabelCat)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1968,'Category',1794,'LabelCat',@OLabelCat,@LabelCat
+IF (@OLabelKey IS NOT NULL AND @LabelKey IS NULL) OR (@OLabelKey IS NULL AND @LabelKey IS NOT NULL) OR (@OLabelKey <> @LabelKey)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1969,'Key',1795,'LabelKey',@OLabelKey,@LabelKey
+IF (@OLabelText IS NOT NULL AND @LabelText IS NULL) OR (@OLabelText IS NULL AND @LabelText IS NOT NULL) OR (@OLabelText <> @LabelText)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1970,'Label Text',1798,'LabelText',@OLabelText,@LabelText
+IF (@OCompanyId IS NOT NULL AND @CompanyId IS NULL) OR (@OCompanyId IS NULL AND @CompanyId IS NOT NULL) OR (@OCompanyId <> @CompanyId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1971,'Company',1797,'CompanyId',CONVERT(varchar(100),@OCompanyId),CONVERT(varchar(100),@CompanyId)
+IF (@OSortOrder IS NOT NULL AND @SortOrder IS NULL) OR (@OSortOrder IS NULL AND @SortOrder IS NOT NULL) OR (@OSortOrder <> @SortOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1972,'Sort Order',2030,'SortOrder',CONVERT(varchar(100),@OSortOrder),CONVERT(varchar(100),@SortOrder)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd113M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd113M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd113M
+ @TbdRuleId		Int
+,@ScreenId		Int
+,@TbdRuleName		NVarChar(100)
+,@TbdRuleDesc		NVarChar(max)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OTbdRuleName		NVarChar(100)
+		,@OTbdRuleDesc		NVarChar(max)
+SELECT @SearchCol=TbdRuleId,@OScreenId=ScreenId,@OTbdRuleName=TbdRuleName,@OTbdRuleDesc=TbdRuleDesc FROM dbo.TbdRule WHERE TbdRuleId=@TbdRuleId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OTbdRuleName IS NOT NULL AND @TbdRuleName IS NULL) OR (@OTbdRuleName IS NULL AND @TbdRuleName IS NOT NULL) OR (@OTbdRuleName <> @TbdRuleName)) OR ((@OTbdRuleDesc IS NOT NULL AND @TbdRuleDesc IS NULL) OR (@OTbdRuleDesc IS NULL AND @TbdRuleDesc IS NOT NULL) OR (@OTbdRuleDesc <> @TbdRuleDesc))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',113,'Y',254,@TbdRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1977,'Screen',2082,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OTbdRuleName IS NOT NULL AND @TbdRuleName IS NULL) OR (@OTbdRuleName IS NULL AND @TbdRuleName IS NOT NULL) OR (@OTbdRuleName <> @TbdRuleName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1978,'Rule Name',2084,'TbdRuleName',@OTbdRuleName,@TbdRuleName
+IF (@OTbdRuleDesc IS NOT NULL AND @TbdRuleDesc IS NULL) OR (@OTbdRuleDesc IS NULL AND @TbdRuleDesc IS NOT NULL) OR (@OTbdRuleDesc <> @TbdRuleDesc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1979,'Description',2083,'TbdRuleDesc',@OTbdRuleDesc,@TbdRuleDesc
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd114M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd114M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd114M
+ @StaticPgId		Int
+,@StaticPgTitle		NVarChar(100)
+,@StaticPgCss		NVarChar(max)
+,@MasterPgFile		VarChar(100)
+,@StaticPgJs		NVarChar(max)
+,@StaticCsId		SmallInt
+,@StaticJsId		SmallInt
+,@StaticPgNm		VarChar(50)
+,@StaticMeta		NVarChar(1000)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticPgTitle		NVarChar(100)
+		,@OStaticPgCss		NVarChar(max)
+		,@OMasterPgFile		VarChar(100)
+		,@OStaticPgJs		NVarChar(max)
+		,@OStaticCsId		SmallInt
+		,@OStaticJsId		SmallInt
+		,@OStaticPgNm		VarChar(50)
+		,@OStaticMeta		NVarChar(1000)
+SELECT @SearchCol=StaticPgId,@OStaticPgTitle=StaticPgTitle,@OStaticPgCss=StaticPgCss,@OMasterPgFile=MasterPgFile,@OStaticPgJs=StaticPgJs,@OStaticCsId=StaticCsId,@OStaticJsId=StaticJsId,@OStaticPgNm=StaticPgNm,@OStaticMeta=StaticMeta FROM dbo.StaticPg WHERE StaticPgId=@StaticPgId
+IF ((@OStaticPgTitle IS NOT NULL AND @StaticPgTitle IS NULL) OR (@OStaticPgTitle IS NULL AND @StaticPgTitle IS NOT NULL) OR (@OStaticPgTitle <> @StaticPgTitle)) OR ((@OStaticPgCss IS NOT NULL AND @StaticPgCss IS NULL) OR (@OStaticPgCss IS NULL AND @StaticPgCss IS NOT NULL) OR (@OStaticPgCss <> @StaticPgCss)) OR ((@OMasterPgFile IS NOT NULL AND @MasterPgFile IS NULL) OR (@OMasterPgFile IS NULL AND @MasterPgFile IS NOT NULL) OR (@OMasterPgFile <> @MasterPgFile)) OR ((@OStaticPgJs IS NOT NULL AND @StaticPgJs IS NULL) OR (@OStaticPgJs IS NULL AND @StaticPgJs IS NOT NULL) OR (@OStaticPgJs <> @StaticPgJs)) OR ((@OStaticCsId IS NOT NULL AND @StaticCsId IS NULL) OR (@OStaticCsId IS NULL AND @StaticCsId IS NOT NULL) OR (@OStaticCsId <> @StaticCsId)) OR ((@OStaticJsId IS NOT NULL AND @StaticJsId IS NULL) OR (@OStaticJsId IS NULL AND @StaticJsId IS NOT NULL) OR (@OStaticJsId <> @StaticJsId)) OR ((@OStaticPgNm IS NOT NULL AND @StaticPgNm IS NULL) OR (@OStaticPgNm IS NULL AND @StaticPgNm IS NOT NULL) OR (@OStaticPgNm <> @StaticPgNm)) OR ((@OStaticMeta IS NOT NULL AND @StaticMeta IS NULL) OR (@OStaticMeta IS NULL AND @StaticMeta IS NOT NULL) OR (@OStaticMeta <> @StaticMeta))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',114,'Y',259,@StaticPgId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OStaticPgTitle IS NOT NULL AND @StaticPgTitle IS NULL) OR (@OStaticPgTitle IS NULL AND @StaticPgTitle IS NOT NULL) OR (@OStaticPgTitle <> @StaticPgTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1994,'Page Title',2125,'StaticPgTitle',@OStaticPgTitle,@StaticPgTitle
+IF (@OStaticPgCss IS NOT NULL AND @StaticPgCss IS NULL) OR (@OStaticPgCss IS NULL AND @StaticPgCss IS NOT NULL) OR (@OStaticPgCss <> @StaticPgCss)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1995,'',2126,'StaticPgCss',@OStaticPgCss,@StaticPgCss
+IF (@OMasterPgFile IS NOT NULL AND @MasterPgFile IS NULL) OR (@OMasterPgFile IS NULL AND @MasterPgFile IS NOT NULL) OR (@OMasterPgFile <> @MasterPgFile)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1997,'Master Page File',2128,'MasterPgFile',@OMasterPgFile,@MasterPgFile
+IF (@OStaticPgJs IS NOT NULL AND @StaticPgJs IS NULL) OR (@OStaticPgJs IS NULL AND @StaticPgJs IS NOT NULL) OR (@OStaticPgJs <> @StaticPgJs)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2009,'',2142,'StaticPgJs',@OStaticPgJs,@StaticPgJs
+IF (@OStaticCsId IS NOT NULL AND @StaticCsId IS NULL) OR (@OStaticCsId IS NULL AND @StaticCsId IS NOT NULL) OR (@OStaticCsId <> @StaticCsId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2011,'Shared CSS',2140,'StaticCsId',CONVERT(varchar(100),@OStaticCsId),CONVERT(varchar(100),@StaticCsId)
+IF (@OStaticJsId IS NOT NULL AND @StaticJsId IS NULL) OR (@OStaticJsId IS NULL AND @StaticJsId IS NOT NULL) OR (@OStaticJsId <> @StaticJsId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2012,'Shared Javascript',2141,'StaticJsId',CONVERT(varchar(100),@OStaticJsId),CONVERT(varchar(100),@StaticJsId)
+IF (@OStaticPgNm IS NOT NULL AND @StaticPgNm IS NULL) OR (@OStaticPgNm IS NULL AND @StaticPgNm IS NOT NULL) OR (@OStaticPgNm <> @StaticPgNm)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2013,'Page Name',2143,'StaticPgNm',@OStaticPgNm,@StaticPgNm
+IF (@OStaticMeta IS NOT NULL AND @StaticMeta IS NULL) OR (@OStaticMeta IS NULL AND @StaticMeta IS NOT NULL) OR (@OStaticMeta <> @StaticMeta)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2032,'Description',2161,'StaticMeta',@OStaticMeta,@StaticMeta
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd115M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd115M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd115M
+ @StaticCsId		SmallInt
+,@StaticCsNm		NVarChar(200)
+,@StyleDef		NVarChar(max)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticCsNm		NVarChar(200)
+		,@OStyleDef		NVarChar(max)
+SELECT @SearchCol=StaticCsId,@OStaticCsNm=StaticCsNm,@OStyleDef=StyleDef FROM dbo.StaticCs WHERE StaticCsId=@StaticCsId
+IF ((@OStaticCsNm IS NOT NULL AND @StaticCsNm IS NULL) OR (@OStaticCsNm IS NULL AND @StaticCsNm IS NOT NULL) OR (@OStaticCsNm <> @StaticCsNm)) OR ((@OStyleDef IS NOT NULL AND @StyleDef IS NULL) OR (@OStyleDef IS NULL AND @StyleDef IS NOT NULL) OR (@OStyleDef <> @StyleDef))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',115,'Y',260,@StaticCsId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OStaticCsNm IS NOT NULL AND @StaticCsNm IS NULL) OR (@OStaticCsNm IS NULL AND @StaticCsNm IS NOT NULL) OR (@OStaticCsNm <> @StaticCsNm)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2002,'CSS Name',2134,'StaticCsNm',@OStaticCsNm,@StaticCsNm
+IF (@OStyleDef IS NOT NULL AND @StyleDef IS NULL) OR (@OStyleDef IS NULL AND @StyleDef IS NOT NULL) OR (@OStyleDef <> @StyleDef)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2003,'Definition',2133,'StyleDef',@OStyleDef,@StyleDef
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd116M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd116M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd116M
+ @StaticJsId		SmallInt
+,@StaticJsNm		NVarChar(200)
+,@ScriptDef		NVarChar(max)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticJsNm		NVarChar(200)
+		,@OScriptDef		NVarChar(max)
+SELECT @SearchCol=StaticJsId,@OStaticJsNm=StaticJsNm,@OScriptDef=ScriptDef FROM dbo.StaticJs WHERE StaticJsId=@StaticJsId
+IF ((@OStaticJsNm IS NOT NULL AND @StaticJsNm IS NULL) OR (@OStaticJsNm IS NULL AND @StaticJsNm IS NOT NULL) OR (@OStaticJsNm <> @StaticJsNm)) OR ((@OScriptDef IS NOT NULL AND @ScriptDef IS NULL) OR (@OScriptDef IS NULL AND @ScriptDef IS NOT NULL) OR (@OScriptDef <> @ScriptDef))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',116,'Y',261,@StaticJsId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OStaticJsNm IS NOT NULL AND @StaticJsNm IS NULL) OR (@OStaticJsNm IS NULL AND @StaticJsNm IS NOT NULL) OR (@OStaticJsNm <> @StaticJsNm)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2005,'Javascript Name',2136,'StaticJsNm',@OStaticJsNm,@StaticJsNm
+IF (@OScriptDef IS NOT NULL AND @ScriptDef IS NULL) OR (@OScriptDef IS NULL AND @ScriptDef IS NOT NULL) OR (@OScriptDef <> @ScriptDef)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2006,'Definition',2137,'ScriptDef',@OScriptDef,@ScriptDef
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd117M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd117M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd117M
+ @StaticFiId		Int
+,@StaticFiUrl		NVarChar(200)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OStaticFiUrl		NVarChar(200)
+SELECT @SearchCol=StaticFiId,@OStaticFiUrl=StaticFiUrl FROM dbo.StaticFi WHERE StaticFiId=@StaticFiId
+IF ((@OStaticFiUrl IS NOT NULL AND @StaticFiUrl IS NULL) OR (@OStaticFiUrl IS NULL AND @StaticFiUrl IS NOT NULL) OR (@OStaticFiUrl <> @StaticFiUrl))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',117,'Y',262,@StaticFiId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OStaticFiUrl IS NOT NULL AND @StaticFiUrl IS NULL) OR (@OStaticFiUrl IS NULL AND @StaticFiUrl IS NOT NULL) OR (@OStaticFiUrl <> @StaticFiUrl)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2008,'File/Image URL',2139,'StaticFiUrl',@OStaticFiUrl,@StaticFiUrl
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd118M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd118M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd118M
+ @CronJobId		Int
+,@CronJobName		NVarChar(200)
+,@Year		SmallInt
+,@Month		TinyInt
+,@Day		TinyInt
+,@Hour		TinyInt
+,@Minute		TinyInt
+,@DayOfWeek		TinyInt
+,@LastRun		DateTime
+,@NextRun		DateTime
+,@JobLink		VarChar(200)
+,@LastStatus		NVarChar(500)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCronJobName		NVarChar(200)
+		,@OYear		SmallInt
+		,@OMonth		TinyInt
+		,@ODay		TinyInt
+		,@OHour		TinyInt
+		,@OMinute		TinyInt
+		,@ODayOfWeek		TinyInt
+		,@OLastRun		DateTime
+		,@ONextRun		DateTime
+		,@OJobLink		VarChar(200)
+		,@OLastStatus		NVarChar(500)
+SELECT @SearchCol=CronJobId,@OCronJobName=CronJobName,@OYear=Year,@OMonth=Month,@ODay=Day,@OHour=Hour,@OMinute=Minute,@ODayOfWeek=DayOfWeek,@OLastRun=LastRun,@ONextRun=NextRun,@OJobLink=JobLink,@OLastStatus=LastStatus FROM dbo.CronJob WHERE CronJobId=@CronJobId
+IF ((@OCronJobName IS NOT NULL AND @CronJobName IS NULL) OR (@OCronJobName IS NULL AND @CronJobName IS NOT NULL) OR (@OCronJobName <> @CronJobName)) OR ((@OYear IS NOT NULL AND @Year IS NULL) OR (@OYear IS NULL AND @Year IS NOT NULL) OR (@OYear <> @Year)) OR ((@OMonth IS NOT NULL AND @Month IS NULL) OR (@OMonth IS NULL AND @Month IS NOT NULL) OR (@OMonth <> @Month)) OR ((@ODay IS NOT NULL AND @Day IS NULL) OR (@ODay IS NULL AND @Day IS NOT NULL) OR (@ODay <> @Day)) OR ((@OHour IS NOT NULL AND @Hour IS NULL) OR (@OHour IS NULL AND @Hour IS NOT NULL) OR (@OHour <> @Hour)) OR ((@OMinute IS NOT NULL AND @Minute IS NULL) OR (@OMinute IS NULL AND @Minute IS NOT NULL) OR (@OMinute <> @Minute)) OR ((@ODayOfWeek IS NOT NULL AND @DayOfWeek IS NULL) OR (@ODayOfWeek IS NULL AND @DayOfWeek IS NOT NULL) OR (@ODayOfWeek <> @DayOfWeek)) OR ((@OLastRun IS NOT NULL AND @LastRun IS NULL) OR (@OLastRun IS NULL AND @LastRun IS NOT NULL) OR (@OLastRun <> @LastRun)) OR ((@ONextRun IS NOT NULL AND @NextRun IS NULL) OR (@ONextRun IS NULL AND @NextRun IS NOT NULL) OR (@ONextRun <> @NextRun)) OR ((@OJobLink IS NOT NULL AND @JobLink IS NULL) OR (@OJobLink IS NULL AND @JobLink IS NOT NULL) OR (@OJobLink <> @JobLink)) OR ((@OLastStatus IS NOT NULL AND @LastStatus IS NULL) OR (@OLastStatus IS NULL AND @LastStatus IS NOT NULL) OR (@OLastStatus <> @LastStatus))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',118,'Y',264,@CronJobId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCronJobName IS NOT NULL AND @CronJobName IS NULL) OR (@OCronJobName IS NULL AND @CronJobName IS NOT NULL) OR (@OCronJobName <> @CronJobName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2020,'Job Name',2159,'CronJobName',@OCronJobName,@CronJobName
+IF (@OYear IS NOT NULL AND @Year IS NULL) OR (@OYear IS NULL AND @Year IS NOT NULL) OR (@OYear <> @Year)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2021,'Year',2158,'Year',CONVERT(varchar(100),@OYear),CONVERT(varchar(100),@Year)
+IF (@OMonth IS NOT NULL AND @Month IS NULL) OR (@OMonth IS NULL AND @Month IS NOT NULL) OR (@OMonth <> @Month)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2022,'Month',2156,'Month',CONVERT(varchar(100),@OMonth),CONVERT(varchar(100),@Month)
+IF (@ODay IS NOT NULL AND @Day IS NULL) OR (@ODay IS NULL AND @Day IS NOT NULL) OR (@ODay <> @Day)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2023,'Day',2149,'Day',CONVERT(varchar(100),@ODay),CONVERT(varchar(100),@Day)
+IF (@OHour IS NOT NULL AND @Hour IS NULL) OR (@OHour IS NULL AND @Hour IS NOT NULL) OR (@OHour <> @Hour)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2024,'Hour',2151,'Hour',CONVERT(varchar(100),@OHour),CONVERT(varchar(100),@Hour)
+IF (@OMinute IS NOT NULL AND @Minute IS NULL) OR (@OMinute IS NULL AND @Minute IS NOT NULL) OR (@OMinute <> @Minute)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2025,'Minute',2155,'Minute',CONVERT(varchar(100),@OMinute),CONVERT(varchar(100),@Minute)
+IF (@ODayOfWeek IS NOT NULL AND @DayOfWeek IS NULL) OR (@ODayOfWeek IS NULL AND @DayOfWeek IS NOT NULL) OR (@ODayOfWeek <> @DayOfWeek)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2026,'Day-of-Week',2150,'DayOfWeek',CONVERT(varchar(100),@ODayOfWeek),CONVERT(varchar(100),@DayOfWeek)
+IF (@OLastRun IS NOT NULL AND @LastRun IS NULL) OR (@OLastRun IS NULL AND @LastRun IS NOT NULL) OR (@OLastRun <> @LastRun)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2027,'Last Run',2153,'LastRun',CONVERT(varchar(10),@OLastRun,102),CONVERT(varchar(10),@LastRun,102)
+IF (@ONextRun IS NOT NULL AND @NextRun IS NULL) OR (@ONextRun IS NULL AND @NextRun IS NOT NULL) OR (@ONextRun <> @NextRun)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2028,'Next Run',2157,'NextRun',CONVERT(varchar(10),@ONextRun,102),CONVERT(varchar(10),@NextRun,102)
+IF (@OJobLink IS NOT NULL AND @JobLink IS NULL) OR (@OJobLink IS NULL AND @JobLink IS NOT NULL) OR (@OJobLink <> @JobLink)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2029,'Job Link',2152,'JobLink',@OJobLink,@JobLink
+IF (@OLastStatus IS NOT NULL AND @LastStatus IS NULL) OR (@OLastStatus IS NULL AND @LastStatus IS NOT NULL) OR (@OLastStatus <> @LastStatus)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2030,'Status',2154,'LastStatus',@OLastStatus,@LastStatus
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd119M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd119M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd119M
+ @LabelId		Int
+,@CultureId		SmallInt
+,@LabelCat		VarChar(50)
+,@LabelKey		VarChar(50)
+,@LabelText		NVarChar(max)
+,@SortOrder		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OLabelCat		VarChar(50)
+		,@OLabelKey		VarChar(50)
+		,@OLabelText		NVarChar(max)
+		,@OSortOrder		SmallInt
+SELECT @SearchCol=LabelId,@OCultureId=CultureId,@OLabelCat=LabelCat,@OLabelKey=LabelKey,@OLabelText=LabelText,@OSortOrder=SortOrder FROM dbo.VwLabel WHERE LabelId=@LabelId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OLabelCat IS NOT NULL AND @LabelCat IS NULL) OR (@OLabelCat IS NULL AND @LabelCat IS NOT NULL) OR (@OLabelCat <> @LabelCat)) OR ((@OLabelKey IS NOT NULL AND @LabelKey IS NULL) OR (@OLabelKey IS NULL AND @LabelKey IS NOT NULL) OR (@OLabelKey <> @LabelKey)) OR ((@OLabelText IS NOT NULL AND @LabelText IS NULL) OR (@OLabelText IS NULL AND @LabelText IS NOT NULL) OR (@OLabelText <> @LabelText)) OR ((@OSortOrder IS NOT NULL AND @SortOrder IS NULL) OR (@OSortOrder IS NULL AND @SortOrder IS NOT NULL) OR (@OSortOrder <> @SortOrder))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',119,'Y',265,@LabelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2037,'Culture ID',2165,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OLabelCat IS NOT NULL AND @LabelCat IS NULL) OR (@OLabelCat IS NULL AND @LabelCat IS NOT NULL) OR (@OLabelCat <> @LabelCat)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2038,'Category',2166,'LabelCat',@OLabelCat,@LabelCat
+IF (@OLabelKey IS NOT NULL AND @LabelKey IS NULL) OR (@OLabelKey IS NULL AND @LabelKey IS NOT NULL) OR (@OLabelKey <> @LabelKey)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2039,'Key',2167,'LabelKey',@OLabelKey,@LabelKey
+IF (@OLabelText IS NOT NULL AND @LabelText IS NULL) OR (@OLabelText IS NULL AND @LabelText IS NOT NULL) OR (@OLabelText <> @LabelText)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2040,'Label Text',2168,'LabelText',@OLabelText,@LabelText
+IF (@OSortOrder IS NOT NULL AND @SortOrder IS NULL) OR (@OSortOrder IS NULL AND @SortOrder IS NOT NULL) OR (@OSortOrder <> @SortOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2042,'Sort Order',2169,'SortOrder',CONVERT(varchar(100),@OSortOrder),CONVERT(varchar(100),@SortOrder)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd121M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd121M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd121M
+ @MenuId		Int
+,@MenuIndex		SmallInt
+,@ParentId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMenuIndex		SmallInt
+		,@OParentId		Int
+SELECT @SearchCol=MenuId,@OMenuIndex=MenuIndex,@OParentId=ParentId FROM dbo.Menu WHERE MenuId=@MenuId
+IF ((@OMenuIndex IS NOT NULL AND @MenuIndex IS NULL) OR (@OMenuIndex IS NULL AND @MenuIndex IS NOT NULL) OR (@OMenuIndex <> @MenuIndex)) OR ((@OParentId IS NOT NULL AND @ParentId IS NULL) OR (@OParentId IS NULL AND @ParentId IS NOT NULL) OR (@OParentId <> @ParentId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',121,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OMenuIndex IS NOT NULL AND @MenuIndex IS NULL) OR (@OMenuIndex IS NULL AND @MenuIndex IS NOT NULL) OR (@OMenuIndex <> @MenuIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2056,'MenuIndex',324,'MenuIndex',CONVERT(varchar(100),@OMenuIndex),CONVERT(varchar(100),@MenuIndex)
+IF (@OParentId IS NOT NULL AND @ParentId IS NULL) OR (@OParentId IS NULL AND @ParentId IS NOT NULL) OR (@OParentId <> @ParentId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2060,'ParentId',323,'ParentId',CONVERT(varchar(100),@OParentId),CONVERT(varchar(100),@ParentId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd13D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd13D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd13D
+ @ReportObjHlpId		Int
+,@CultureId		SmallInt
+,@ColumnHeader		NVarChar(50)
+,@HeaderWidth		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+		,@OHeaderWidth		SmallInt
+SELECT @SearchCol=ReportObjHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader,@OHeaderWidth=HeaderWidth FROM dbo.ReportObjHlp WHERE ReportObjHlpId=@ReportObjHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)) OR ((@OHeaderWidth IS NOT NULL AND @HeaderWidth IS NULL) OR (@OHeaderWidth IS NULL AND @HeaderWidth IS NOT NULL) OR (@OHeaderWidth <> @HeaderWidth))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',13,'N',99,@ReportObjHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1276,'Culture',930,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1277,'Column Header',931,'ColumnHeader',@OColumnHeader,@ColumnHeader
+IF (@OHeaderWidth IS NOT NULL AND @HeaderWidth IS NULL) OR (@OHeaderWidth IS NULL AND @HeaderWidth IS NOT NULL) OR (@OHeaderWidth <> @HeaderWidth)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1338,'Width',1193,'HeaderWidth',CONVERT(varchar(100),@OHeaderWidth),CONVERT(varchar(100),@HeaderWidth)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd13M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd13M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd13M
+ @ReportObjId		Int
+,@ReportId		Int
+,@ColumnName		VarChar(50)
+,@DataTypeId		TinyInt
+,@TabIndex		SmallInt
+,@ColumnFormat		VarChar(20)
+,@PaddSize		TinyInt
+,@OperatorId		TinyInt
+,@ReportCriId		Int
+,@PaddChar		NChar(1)
+,@RptObjTypeCd		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OColumnName		VarChar(50)
+		,@ODataTypeId		TinyInt
+		,@OTabIndex		SmallInt
+		,@OColumnFormat		VarChar(20)
+		,@OPaddSize		TinyInt
+		,@OOperatorId		TinyInt
+		,@OReportCriId		Int
+		,@OPaddChar		NChar(1)
+		,@ORptObjTypeCd		Char(1)
+SELECT @SearchCol=ReportObjId,@OReportId=ReportId,@OColumnName=ColumnName,@ODataTypeId=DataTypeId,@OTabIndex=TabIndex,@OColumnFormat=ColumnFormat,@OPaddSize=PaddSize,@OOperatorId=OperatorId,@OReportCriId=ReportCriId,@OPaddChar=PaddChar,@ORptObjTypeCd=RptObjTypeCd FROM dbo.ReportObj WHERE ReportObjId=@ReportObjId
+IF ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)) OR ((@ODataTypeId IS NOT NULL AND @DataTypeId IS NULL) OR (@ODataTypeId IS NULL AND @DataTypeId IS NOT NULL) OR (@ODataTypeId <> @DataTypeId)) OR ((@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)) OR ((@OColumnFormat IS NOT NULL AND @ColumnFormat IS NULL) OR (@OColumnFormat IS NULL AND @ColumnFormat IS NOT NULL) OR (@OColumnFormat <> @ColumnFormat)) OR ((@OPaddSize IS NOT NULL AND @PaddSize IS NULL) OR (@OPaddSize IS NULL AND @PaddSize IS NOT NULL) OR (@OPaddSize <> @PaddSize)) OR ((@OOperatorId IS NOT NULL AND @OperatorId IS NULL) OR (@OOperatorId IS NULL AND @OperatorId IS NOT NULL) OR (@OOperatorId <> @OperatorId)) OR ((@OReportCriId IS NOT NULL AND @ReportCriId IS NULL) OR (@OReportCriId IS NULL AND @ReportCriId IS NOT NULL) OR (@OReportCriId <> @ReportCriId)) OR ((@OPaddChar IS NOT NULL AND @PaddChar IS NULL) OR (@OPaddChar IS NULL AND @PaddChar IS NOT NULL) OR (@OPaddChar <> @PaddChar)) OR ((@ORptObjTypeCd IS NOT NULL AND @RptObjTypeCd IS NULL) OR (@ORptObjTypeCd IS NULL AND @RptObjTypeCd IS NOT NULL) OR (@ORptObjTypeCd <> @RptObjTypeCd))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',13,'Y',23,@ReportObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,121,'Report',870,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,130,'Column Name',176,'ColumnName',@OColumnName,@ColumnName
+IF (@ODataTypeId IS NOT NULL AND @DataTypeId IS NULL) OR (@ODataTypeId IS NULL AND @DataTypeId IS NOT NULL) OR (@ODataTypeId <> @DataTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,133,'Data Type',179,'DataTypeId',CONVERT(varchar(100),@ODataTypeId),CONVERT(varchar(100),@DataTypeId)
+IF (@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,138,'Tab Order',184,'TabIndex',CONVERT(varchar(100),@OTabIndex),CONVERT(varchar(100),@TabIndex)
+IF (@OColumnFormat IS NOT NULL AND @ColumnFormat IS NULL) OR (@OColumnFormat IS NULL AND @ColumnFormat IS NOT NULL) OR (@OColumnFormat <> @ColumnFormat)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,690,'Column Format',598,'ColumnFormat',@OColumnFormat,@ColumnFormat
+IF (@OPaddSize IS NOT NULL AND @PaddSize IS NULL) OR (@OPaddSize IS NULL AND @PaddSize IS NOT NULL) OR (@OPaddSize <> @PaddSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,985,'Padding Size',888,'PaddSize',CONVERT(varchar(100),@OPaddSize),CONVERT(varchar(100),@PaddSize)
+IF (@OOperatorId IS NOT NULL AND @OperatorId IS NULL) OR (@OOperatorId IS NULL AND @OperatorId IS NOT NULL) OR (@OOperatorId <> @OperatorId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1024,'Criteria Operator',925,'OperatorId',CONVERT(varchar(100),@OOperatorId),CONVERT(varchar(100),@OperatorId)
+IF (@OReportCriId IS NOT NULL AND @ReportCriId IS NULL) OR (@OReportCriId IS NULL AND @ReportCriId IS NOT NULL) OR (@OReportCriId <> @ReportCriId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1025,'Criteria Column',926,'ReportCriId',CONVERT(varchar(100),@OReportCriId),CONVERT(varchar(100),@ReportCriId)
+IF (@OPaddChar IS NOT NULL AND @PaddChar IS NULL) OR (@OPaddChar IS NULL AND @PaddChar IS NOT NULL) OR (@OPaddChar <> @PaddChar)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1456,'With Character',1377,'PaddChar',@OPaddChar,@PaddChar
+IF (@ORptObjTypeCd IS NOT NULL AND @RptObjTypeCd IS NULL) OR (@ORptObjTypeCd IS NULL AND @RptObjTypeCd IS NOT NULL) OR (@ORptObjTypeCd <> @RptObjTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1469,'Column Type',1403,'RptObjTypeCd',@ORptObjTypeCd,@RptObjTypeCd
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd14M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd14M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd14M
+ @ServerRuleId		Int
+,@ScreenId		Int
+,@RuleTypeId		TinyInt
+,@MasterTable		Char(1)
+,@RuleName		NVarChar(100)
+,@RuleDescription		NVarChar(500)
+,@RuleOrder		SmallInt
+,@ProcedureName		VarChar(50)
+,@ParameterNames		VarChar(max)
+,@ParameterTypes		VarChar(max)
+,@CallingParams		VarChar(max)
+,@OnAdd		Char(1)
+,@OnUpd		Char(1)
+,@OnDel		Char(1)
+,@BeforeCRUD		Char(1)
+,@RuleCode		NVarChar(max)
+,@LastGenDt		DateTime
+,@RunMode		Char(1)
+,@SrcNS		VarChar(30)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@ORuleTypeId		TinyInt
+		,@OMasterTable		Char(1)
+		,@ORuleName		NVarChar(100)
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleOrder		SmallInt
+		,@OProcedureName		VarChar(50)
+		,@OParameterNames		VarChar(max)
+		,@OParameterTypes		VarChar(max)
+		,@OCallingParams		VarChar(max)
+		,@OOnAdd		Char(1)
+		,@OOnUpd		Char(1)
+		,@OOnDel		Char(1)
+		,@OBeforeCRUD		Char(1)
+		,@ORuleCode		NVarChar(max)
+		,@OLastGenDt		DateTime
+		,@ORunMode		Char(1)
+		,@OSrcNS		VarChar(30)
+SELECT @SearchCol=ServerRuleId,@OScreenId=ScreenId,@ORuleTypeId=RuleTypeId,@OMasterTable=MasterTable,@ORuleName=RuleName,@ORuleDescription=RuleDescription,@ORuleOrder=RuleOrder,@OProcedureName=ProcedureName,@OParameterNames=ParameterNames,@OParameterTypes=ParameterTypes,@OCallingParams=CallingParams,@OOnAdd=OnAdd,@OOnUpd=OnUpd,@OOnDel=OnDel,@OBeforeCRUD=BeforeCRUD,@ORuleCode=RuleCode,@OLastGenDt=LastGenDt,@ORunMode=RunMode,@OSrcNS=SrcNS FROM dbo.ServerRule WHERE ServerRuleId=@ServerRuleId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)) OR ((@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable)) OR ((@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)) OR ((@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)) OR ((@ORuleOrder IS NOT NULL AND @RuleOrder IS NULL) OR (@ORuleOrder IS NULL AND @RuleOrder IS NOT NULL) OR (@ORuleOrder <> @RuleOrder)) OR ((@OProcedureName IS NOT NULL AND @ProcedureName IS NULL) OR (@OProcedureName IS NULL AND @ProcedureName IS NOT NULL) OR (@OProcedureName <> @ProcedureName)) OR ((@OParameterNames IS NOT NULL AND @ParameterNames IS NULL) OR (@OParameterNames IS NULL AND @ParameterNames IS NOT NULL) OR (@OParameterNames <> @ParameterNames)) OR ((@OParameterTypes IS NOT NULL AND @ParameterTypes IS NULL) OR (@OParameterTypes IS NULL AND @ParameterTypes IS NOT NULL) OR (@OParameterTypes <> @ParameterTypes)) OR ((@OCallingParams IS NOT NULL AND @CallingParams IS NULL) OR (@OCallingParams IS NULL AND @CallingParams IS NOT NULL) OR (@OCallingParams <> @CallingParams)) OR ((@OOnAdd IS NOT NULL AND @OnAdd IS NULL) OR (@OOnAdd IS NULL AND @OnAdd IS NOT NULL) OR (@OOnAdd <> @OnAdd)) OR ((@OOnUpd IS NOT NULL AND @OnUpd IS NULL) OR (@OOnUpd IS NULL AND @OnUpd IS NOT NULL) OR (@OOnUpd <> @OnUpd)) OR ((@OOnDel IS NOT NULL AND @OnDel IS NULL) OR (@OOnDel IS NULL AND @OnDel IS NOT NULL) OR (@OOnDel <> @OnDel)) OR ((@OBeforeCRUD IS NOT NULL AND @BeforeCRUD IS NULL) OR (@OBeforeCRUD IS NULL AND @BeforeCRUD IS NOT NULL) OR (@OBeforeCRUD <> @BeforeCRUD)) OR ((@ORuleCode IS NOT NULL AND @RuleCode IS NULL) OR (@ORuleCode IS NULL AND @RuleCode IS NOT NULL) OR (@ORuleCode <> @RuleCode)) OR ((@OLastGenDt IS NOT NULL AND @LastGenDt IS NULL) OR (@OLastGenDt IS NULL AND @LastGenDt IS NOT NULL) OR (@OLastGenDt <> @LastGenDt)) OR ((@ORunMode IS NOT NULL AND @RunMode IS NULL) OR (@ORunMode IS NULL AND @RunMode IS NOT NULL) OR (@ORunMode <> @RunMode)) OR ((@OSrcNS IS NOT NULL AND @SrcNS IS NULL) OR (@OSrcNS IS NULL AND @SrcNS IS NOT NULL) OR (@OSrcNS <> @SrcNS))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',14,'Y',24,@ServerRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,139,'Screen',1140,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,151,'Rule Type',188,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),CONVERT(varchar(100),@RuleTypeId)
+IF (@OMasterTable IS NOT NULL AND @MasterTable IS NULL) OR (@OMasterTable IS NULL AND @MasterTable IS NOT NULL) OR (@OMasterTable <> @MasterTable)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,152,'Master Table',189,'MasterTable',@OMasterTable,@MasterTable
+IF (@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,153,'Rule Name',190,'RuleName',@ORuleName,@RuleName
+IF (@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,154,'Description',191,'RuleDescription',@ORuleDescription,@RuleDescription
+IF (@ORuleOrder IS NOT NULL AND @RuleOrder IS NULL) OR (@ORuleOrder IS NULL AND @RuleOrder IS NOT NULL) OR (@ORuleOrder <> @RuleOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,155,'Exec Order',192,'RuleOrder',CONVERT(varchar(100),@ORuleOrder),CONVERT(varchar(100),@RuleOrder)
+IF (@OProcedureName IS NOT NULL AND @ProcedureName IS NULL) OR (@OProcedureName IS NULL AND @ProcedureName IS NOT NULL) OR (@OProcedureName <> @ProcedureName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,156,'Procedure Name',193,'ProcedureName',@OProcedureName,@ProcedureName
+IF (@OParameterNames IS NOT NULL AND @ParameterNames IS NULL) OR (@OParameterNames IS NULL AND @ParameterNames IS NOT NULL) OR (@OParameterNames <> @ParameterNames)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,157,'Parameter Names',194,'ParameterNames',@OParameterNames,@ParameterNames
+IF (@OParameterTypes IS NOT NULL AND @ParameterTypes IS NULL) OR (@OParameterTypes IS NULL AND @ParameterTypes IS NOT NULL) OR (@OParameterTypes <> @ParameterTypes)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,158,'Parameter Types',195,'ParameterTypes',@OParameterTypes,@ParameterTypes
+IF (@OCallingParams IS NOT NULL AND @CallingParams IS NULL) OR (@OCallingParams IS NULL AND @CallingParams IS NOT NULL) OR (@OCallingParams <> @CallingParams)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,159,'Calling Parameters',196,'CallingParams',@OCallingParams,@CallingParams
+IF (@OOnAdd IS NOT NULL AND @OnAdd IS NULL) OR (@OOnAdd IS NULL AND @OnAdd IS NOT NULL) OR (@OOnAdd <> @OnAdd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,160,'On Add',197,'OnAdd',@OOnAdd,@OnAdd
+IF (@OOnUpd IS NOT NULL AND @OnUpd IS NULL) OR (@OOnUpd IS NULL AND @OnUpd IS NOT NULL) OR (@OOnUpd <> @OnUpd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,161,'On Update',198,'OnUpd',@OOnUpd,@OnUpd
+IF (@OOnDel IS NOT NULL AND @OnDel IS NULL) OR (@OOnDel IS NULL AND @OnDel IS NOT NULL) OR (@OOnDel <> @OnDel)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,162,'On Delete',199,'OnDel',@OOnDel,@OnDel
+IF (@OBeforeCRUD IS NOT NULL AND @BeforeCRUD IS NULL) OR (@OBeforeCRUD IS NULL AND @BeforeCRUD IS NOT NULL) OR (@OBeforeCRUD <> @BeforeCRUD)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,163,'CRUD',200,'BeforeCRUD',@OBeforeCRUD,@BeforeCRUD
+IF (@ORuleCode IS NOT NULL AND @RuleCode IS NULL) OR (@ORuleCode IS NULL AND @RuleCode IS NOT NULL) OR (@ORuleCode <> @RuleCode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1396,'S.Procedure',1263,'RuleCode',@ORuleCode,@RuleCode
+IF (@OLastGenDt IS NOT NULL AND @LastGenDt IS NULL) OR (@OLastGenDt IS NULL AND @LastGenDt IS NOT NULL) OR (@OLastGenDt <> @LastGenDt)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1419,'Last Applied',1355,'LastGenDt',CONVERT(varchar(10),@OLastGenDt,102),CONVERT(varchar(10),@LastGenDt,102)
+IF (@ORunMode IS NOT NULL AND @RunMode IS NULL) OR (@ORunMode IS NULL AND @RunMode IS NOT NULL) OR (@ORunMode <> @RunMode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4354,'Run Mode',7589,'RunMode',@ORunMode,@RunMode
+IF (@OSrcNS IS NOT NULL AND @SrcNS IS NULL) OR (@OSrcNS IS NULL AND @SrcNS IS NOT NULL) OR (@OSrcNS <> @SrcNS)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4355,'Source NS',7612,'SrcNS',@OSrcNS,@SrcNS
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd15M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd15M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd15M
+ @KeyId		Int
+,@KeyName		VarChar(50)
+,@TableId		Int
+,@ColumnId		Int
+,@RefTableId		Int
+,@RefColumnId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OKeyName		VarChar(50)
+		,@OTableId		Int
+		,@OColumnId		Int
+		,@ORefTableId		Int
+		,@ORefColumnId		Int
+SELECT @SearchCol=KeyId,@OKeyName=KeyName,@OTableId=TableId,@OColumnId=ColumnId,@ORefTableId=RefTableId,@ORefColumnId=RefColumnId FROM dbo.DbKey WHERE KeyId=@KeyId
+IF ((@OKeyName IS NOT NULL AND @KeyName IS NULL) OR (@OKeyName IS NULL AND @KeyName IS NOT NULL) OR (@OKeyName <> @KeyName)) OR ((@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)) OR ((@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)) OR ((@ORefTableId IS NOT NULL AND @RefTableId IS NULL) OR (@ORefTableId IS NULL AND @RefTableId IS NOT NULL) OR (@ORefTableId <> @RefTableId)) OR ((@ORefColumnId IS NOT NULL AND @RefColumnId IS NULL) OR (@ORefColumnId IS NULL AND @RefColumnId IS NOT NULL) OR (@ORefColumnId <> @RefColumnId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',15,'Y',20,@KeyId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OKeyName IS NOT NULL AND @KeyName IS NULL) OR (@OKeyName IS NULL AND @KeyName IS NOT NULL) OR (@OKeyName <> @KeyName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,165,'Foreign Key Name',155,'KeyName',@OKeyName,@KeyName
+IF (@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,166,'FK Table',156,'TableId',CONVERT(varchar(100),@OTableId),CONVERT(varchar(100),@TableId)
+IF (@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,167,'FK Column',157,'ColumnId',CONVERT(varchar(100),@OColumnId),CONVERT(varchar(100),@ColumnId)
+IF (@ORefTableId IS NOT NULL AND @RefTableId IS NULL) OR (@ORefTableId IS NULL AND @RefTableId IS NOT NULL) OR (@ORefTableId <> @RefTableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,168,'PK Table',158,'RefTableId',CONVERT(varchar(100),@ORefTableId),CONVERT(varchar(100),@RefTableId)
+IF (@ORefColumnId IS NOT NULL AND @RefColumnId IS NULL) OR (@ORefColumnId IS NULL AND @RefColumnId IS NOT NULL) OR (@ORefColumnId <> @RefColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,169,'PK Column',159,'RefColumnId',CONVERT(varchar(100),@ORefColumnId),CONVERT(varchar(100),@RefColumnId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd16D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd16D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd16D
+ @ColOvrdId		Int
+,@PermKeyId		SmallInt
+,@Priority		SmallInt
+,@ColVisible		Char(1)
+,@ColReadOnly		Char(1)
+,@ColExport		Char(1)
+,@ToolTip		NVarChar(200)
+,@ColumnHeader		NVarChar(50)
+,@ErrMessage		NVarChar(300)
+,@PermKeyRowId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OPriority		SmallInt
+		,@OColVisible		Char(1)
+		,@OColReadOnly		Char(1)
+		,@OColExport		Char(1)
+		,@OToolTip		NVarChar(200)
+		,@OColumnHeader		NVarChar(50)
+		,@OErrMessage		NVarChar(300)
+		,@OPermKeyRowId		Int
+SELECT @SearchCol=ColOvrdId,@OPermKeyId=PermKeyId,@OPriority=Priority,@OColVisible=ColVisible,@OColReadOnly=ColReadOnly,@OColExport=ColExport,@OToolTip=ToolTip,@OColumnHeader=ColumnHeader,@OErrMessage=ErrMessage,@OPermKeyRowId=PermKeyRowId FROM dbo.ColOvrd WHERE ColOvrdId=@ColOvrdId
+IF ((@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)) OR ((@OPriority IS NOT NULL AND @Priority IS NULL) OR (@OPriority IS NULL AND @Priority IS NOT NULL) OR (@OPriority <> @Priority)) OR ((@OColVisible IS NOT NULL AND @ColVisible IS NULL) OR (@OColVisible IS NULL AND @ColVisible IS NOT NULL) OR (@OColVisible <> @ColVisible)) OR ((@OColReadOnly IS NOT NULL AND @ColReadOnly IS NULL) OR (@OColReadOnly IS NULL AND @ColReadOnly IS NOT NULL) OR (@OColReadOnly <> @ColReadOnly)) OR ((@OColExport IS NOT NULL AND @ColExport IS NULL) OR (@OColExport IS NULL AND @ColExport IS NOT NULL) OR (@OColExport <> @ColExport)) OR ((@OToolTip IS NOT NULL AND @ToolTip IS NULL) OR (@OToolTip IS NULL AND @ToolTip IS NOT NULL) OR (@OToolTip <> @ToolTip)) OR ((@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)) OR ((@OErrMessage IS NOT NULL AND @ErrMessage IS NULL) OR (@OErrMessage IS NULL AND @ErrMessage IS NOT NULL) OR (@OErrMessage <> @ErrMessage)) OR ((@OPermKeyRowId IS NOT NULL AND @PermKeyRowId IS NULL) OR (@OPermKeyRowId IS NULL AND @PermKeyRowId IS NOT NULL) OR (@OPermKeyRowId <> @PermKeyRowId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',16,'N',241,@ColOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,182,'Entity Type',1971,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),CONVERT(varchar(100),@PermKeyId)
+IF (@OPriority IS NOT NULL AND @Priority IS NULL) OR (@OPriority IS NULL AND @Priority IS NOT NULL) OR (@OPriority <> @Priority)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,184,'Priority',1964,'Priority',CONVERT(varchar(100),@OPriority),CONVERT(varchar(100),@Priority)
+IF (@OColVisible IS NOT NULL AND @ColVisible IS NULL) OR (@OColVisible IS NULL AND @ColVisible IS NOT NULL) OR (@OColVisible <> @ColVisible)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,185,'Visible',1965,'ColVisible',@OColVisible,@ColVisible
+IF (@OColReadOnly IS NOT NULL AND @ColReadOnly IS NULL) OR (@OColReadOnly IS NULL AND @ColReadOnly IS NOT NULL) OR (@OColReadOnly <> @ColReadOnly)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,186,'Read Only',1966,'ColReadOnly',@OColReadOnly,@ColReadOnly
+IF (@OColExport IS NOT NULL AND @ColExport IS NULL) OR (@OColExport IS NULL AND @ColExport IS NOT NULL) OR (@OColExport <> @ColExport)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1331,'Exportable',1967,'ColExport',@OColExport,@ColExport
+IF (@OToolTip IS NOT NULL AND @ToolTip IS NULL) OR (@OToolTip IS NULL AND @ToolTip IS NOT NULL) OR (@OToolTip <> @ToolTip)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1884,'Tool Tips',1969,'ToolTip',@OToolTip,@ToolTip
+IF (@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1885,'Label Override',1968,'ColumnHeader',@OColumnHeader,@ColumnHeader
+IF (@OErrMessage IS NOT NULL AND @ErrMessage IS NULL) OR (@OErrMessage IS NULL AND @ErrMessage IS NOT NULL) OR (@OErrMessage <> @ErrMessage)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1886,'Error Message',1970,'ErrMessage',@OErrMessage,@ErrMessage
+IF (@OPermKeyRowId IS NOT NULL AND @PermKeyRowId IS NULL) OR (@OPermKeyRowId IS NULL AND @PermKeyRowId IS NOT NULL) OR (@OPermKeyRowId <> @PermKeyRowId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1887,'Entity Value',7414,'PermKeyRowId',CONVERT(varchar(100),@OPermKeyRowId),CONVERT(varchar(100),@PermKeyRowId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd16M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd16M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd16M
+ @ScreenObjId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=ScreenObjId FROM dbo.ScreenObj WHERE ScreenObjId=@ScreenObjId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',16,'Y',14,@ScreenObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd17D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd17D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd17D
+ @RowOvrdPrmId		SmallInt
+,@SelLevel		Char(1)
+,@PermKeyId		SmallInt
+,@AndCondition		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OSelLevel		Char(1)
+		,@OPermKeyId		SmallInt
+		,@OAndCondition		Char(1)
+SELECT @SearchCol=RowOvrdPrmId,@OSelLevel=SelLevel,@OPermKeyId=PermKeyId,@OAndCondition=AndCondition FROM dbo.RowOvrdPrm WHERE RowOvrdPrmId=@RowOvrdPrmId
+IF ((@OSelLevel IS NOT NULL AND @SelLevel IS NULL) OR (@OSelLevel IS NULL AND @SelLevel IS NOT NULL) OR (@OSelLevel <> @SelLevel)) OR ((@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)) OR ((@OAndCondition IS NOT NULL AND @AndCondition IS NULL) OR (@OAndCondition IS NULL AND @AndCondition IS NOT NULL) OR (@OAndCondition <> @AndCondition))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',17,'N',239,@RowOvrdPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OSelLevel IS NOT NULL AND @SelLevel IS NULL) OR (@OSelLevel IS NULL AND @SelLevel IS NOT NULL) OR (@OSelLevel <> @SelLevel)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1308,'Allow Select',1951,'SelLevel',@OSelLevel,@SelLevel
+IF (@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1882,'Entity Type',1950,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),CONVERT(varchar(100),@PermKeyId)
+IF (@OAndCondition IS NOT NULL AND @AndCondition IS NULL) OR (@OAndCondition IS NULL AND @AndCondition IS NOT NULL) OR (@OAndCondition <> @AndCondition)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1981,'Condition',2099,'AndCondition',@OAndCondition,@AndCondition
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd17M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd17M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd17M
+ @RowOvrdId		SmallInt
+,@ScreenId		Int
+,@RowAuthId		SmallInt
+,@AllowSel		Char(1)
+,@AllowAdd		Char(1)
+,@AllowUpd		Char(1)
+,@AllowDel		Char(1)
+,@ReportId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@ORowAuthId		SmallInt
+		,@OAllowSel		Char(1)
+		,@OAllowAdd		Char(1)
+		,@OAllowUpd		Char(1)
+		,@OAllowDel		Char(1)
+		,@OReportId		Int
+SELECT @SearchCol=RowOvrdId,@OScreenId=ScreenId,@ORowAuthId=RowAuthId,@OAllowSel=AllowSel,@OAllowAdd=AllowAdd,@OAllowUpd=AllowUpd,@OAllowDel=AllowDel,@OReportId=ReportId FROM dbo.RowOvrd WHERE RowOvrdId=@RowOvrdId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@ORowAuthId IS NOT NULL AND @RowAuthId IS NULL) OR (@ORowAuthId IS NULL AND @RowAuthId IS NOT NULL) OR (@ORowAuthId <> @RowAuthId)) OR ((@OAllowSel IS NOT NULL AND @AllowSel IS NULL) OR (@OAllowSel IS NULL AND @AllowSel IS NOT NULL) OR (@OAllowSel <> @AllowSel)) OR ((@OAllowAdd IS NOT NULL AND @AllowAdd IS NULL) OR (@OAllowAdd IS NULL AND @AllowAdd IS NOT NULL) OR (@OAllowAdd <> @AllowAdd)) OR ((@OAllowUpd IS NOT NULL AND @AllowUpd IS NULL) OR (@OAllowUpd IS NULL AND @AllowUpd IS NOT NULL) OR (@OAllowUpd <> @AllowUpd)) OR ((@OAllowDel IS NOT NULL AND @AllowDel IS NULL) OR (@OAllowDel IS NULL AND @AllowDel IS NOT NULL) OR (@OAllowDel <> @AllowDel)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',17,'Y',238,@RowOvrdId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,188,'Screen',1940,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@ORowAuthId IS NOT NULL AND @RowAuthId IS NULL) OR (@ORowAuthId IS NULL AND @RowAuthId IS NOT NULL) OR (@ORowAuthId <> @RowAuthId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,200,'Row Authority',1942,'RowAuthId',CONVERT(varchar(100),@ORowAuthId),CONVERT(varchar(100),@RowAuthId)
+IF (@OAllowSel IS NOT NULL AND @AllowSel IS NULL) OR (@OAllowSel IS NULL AND @AllowSel IS NOT NULL) OR (@OAllowSel <> @AllowSel)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,201,'Allow Select',1943,'AllowSel',@OAllowSel,@AllowSel
+IF (@OAllowAdd IS NOT NULL AND @AllowAdd IS NULL) OR (@OAllowAdd IS NULL AND @AllowAdd IS NOT NULL) OR (@OAllowAdd <> @AllowAdd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,202,'Allow Add',1944,'AllowAdd',@OAllowAdd,@AllowAdd
+IF (@OAllowUpd IS NOT NULL AND @AllowUpd IS NULL) OR (@OAllowUpd IS NULL AND @AllowUpd IS NOT NULL) OR (@OAllowUpd <> @AllowUpd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,203,'Allow Update',1945,'AllowUpd',@OAllowUpd,@AllowUpd
+IF (@OAllowDel IS NOT NULL AND @AllowDel IS NULL) OR (@OAllowDel IS NULL AND @AllowDel IS NOT NULL) OR (@OAllowDel <> @AllowDel)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,204,'Allow Delete',1946,'AllowDel',@OAllowDel,@AllowDel
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1750,'Report',1941,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd2D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd2D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd2D
+ @ColumnId		Int
+,@ColumnName		VarChar(50)
+,@DataType		TinyInt
+,@ColumnLength		SmallInt
+,@AllowNulls		Char(1)
+,@ColumnIdentity		Char(1)
+,@PrimaryKey		Char(1)
+,@ColumnScale		TinyInt
+,@ExternalTable		VarChar(50)
+,@ColObjective		NVarChar(200)
+,@ColumnIndex		SmallInt
+,@DefaultValue		NVarChar(50)
+,@IsIndex		Char(1)
+,@IsIndexU		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnName		VarChar(50)
+		,@ODataType		TinyInt
+		,@OColumnLength		SmallInt
+		,@OAllowNulls		Char(1)
+		,@OColumnIdentity		Char(1)
+		,@OPrimaryKey		Char(1)
+		,@OColumnScale		TinyInt
+		,@OExternalTable		VarChar(50)
+		,@OColObjective		NVarChar(200)
+		,@OColumnIndex		SmallInt
+		,@ODefaultValue		NVarChar(50)
+		,@OIsIndex		Char(1)
+		,@OIsIndexU		Char(1)
+SELECT @SearchCol=ColumnId,@OColumnName=ColumnName,@ODataType=DataType,@OColumnLength=ColumnLength,@OAllowNulls=AllowNulls,@OColumnIdentity=ColumnIdentity,@OPrimaryKey=PrimaryKey,@OColumnScale=ColumnScale,@OExternalTable=ExternalTable,@OColObjective=ColObjective,@OColumnIndex=ColumnIndex,@ODefaultValue=DefaultValue,@OIsIndex=IsIndex,@OIsIndexU=IsIndexU FROM dbo.DbColumn WHERE ColumnId=@ColumnId
+IF ((@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)) OR ((@ODataType IS NOT NULL AND @DataType IS NULL) OR (@ODataType IS NULL AND @DataType IS NOT NULL) OR (@ODataType <> @DataType)) OR ((@OColumnLength IS NOT NULL AND @ColumnLength IS NULL) OR (@OColumnLength IS NULL AND @ColumnLength IS NOT NULL) OR (@OColumnLength <> @ColumnLength)) OR ((@OAllowNulls IS NOT NULL AND @AllowNulls IS NULL) OR (@OAllowNulls IS NULL AND @AllowNulls IS NOT NULL) OR (@OAllowNulls <> @AllowNulls)) OR ((@OColumnIdentity IS NOT NULL AND @ColumnIdentity IS NULL) OR (@OColumnIdentity IS NULL AND @ColumnIdentity IS NOT NULL) OR (@OColumnIdentity <> @ColumnIdentity)) OR ((@OPrimaryKey IS NOT NULL AND @PrimaryKey IS NULL) OR (@OPrimaryKey IS NULL AND @PrimaryKey IS NOT NULL) OR (@OPrimaryKey <> @PrimaryKey)) OR ((@OColumnScale IS NOT NULL AND @ColumnScale IS NULL) OR (@OColumnScale IS NULL AND @ColumnScale IS NOT NULL) OR (@OColumnScale <> @ColumnScale)) OR ((@OExternalTable IS NOT NULL AND @ExternalTable IS NULL) OR (@OExternalTable IS NULL AND @ExternalTable IS NOT NULL) OR (@OExternalTable <> @ExternalTable)) OR ((@OColObjective IS NOT NULL AND @ColObjective IS NULL) OR (@OColObjective IS NULL AND @ColObjective IS NOT NULL) OR (@OColObjective <> @ColObjective)) OR ((@OColumnIndex IS NOT NULL AND @ColumnIndex IS NULL) OR (@OColumnIndex IS NULL AND @ColumnIndex IS NOT NULL) OR (@OColumnIndex <> @ColumnIndex)) OR ((@ODefaultValue IS NOT NULL AND @DefaultValue IS NULL) OR (@ODefaultValue IS NULL AND @DefaultValue IS NOT NULL) OR (@ODefaultValue <> @DefaultValue)) OR ((@OIsIndex IS NOT NULL AND @IsIndex IS NULL) OR (@OIsIndex IS NULL AND @IsIndex IS NOT NULL) OR (@OIsIndex <> @IsIndex)) OR ((@OIsIndexU IS NOT NULL AND @IsIndexU IS NULL) OR (@OIsIndexU IS NULL AND @IsIndexU IS NOT NULL) OR (@OIsIndexU <> @IsIndexU))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',2,'N',5,@ColumnId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,16,'Column Name',35,'ColumnName',@OColumnName,@ColumnName
+IF (@ODataType IS NOT NULL AND @DataType IS NULL) OR (@ODataType IS NULL AND @DataType IS NOT NULL) OR (@ODataType <> @DataType)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,17,'Data Type',36,'DataType',CONVERT(varchar(100),@ODataType),CONVERT(varchar(100),@DataType)
+IF (@OColumnLength IS NOT NULL AND @ColumnLength IS NULL) OR (@OColumnLength IS NULL AND @ColumnLength IS NOT NULL) OR (@OColumnLength <> @ColumnLength)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,19,'Length',34,'ColumnLength',CONVERT(varchar(100),@OColumnLength),CONVERT(varchar(100),@ColumnLength)
+IF (@OAllowNulls IS NOT NULL AND @AllowNulls IS NULL) OR (@OAllowNulls IS NULL AND @AllowNulls IS NOT NULL) OR (@OAllowNulls <> @AllowNulls)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,20,'Nullable',32,'AllowNulls',@OAllowNulls,@AllowNulls
+IF (@OColumnIdentity IS NOT NULL AND @ColumnIdentity IS NULL) OR (@OColumnIdentity IS NULL AND @ColumnIdentity IS NOT NULL) OR (@OColumnIdentity <> @ColumnIdentity)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,21,'Identity',33,'ColumnIdentity',@OColumnIdentity,@ColumnIdentity
+IF (@OPrimaryKey IS NOT NULL AND @PrimaryKey IS NULL) OR (@OPrimaryKey IS NULL AND @PrimaryKey IS NOT NULL) OR (@OPrimaryKey <> @PrimaryKey)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,22,'Primary Key',37,'PrimaryKey',@OPrimaryKey,@PrimaryKey
+IF (@OColumnScale IS NOT NULL AND @ColumnScale IS NULL) OR (@OColumnScale IS NULL AND @ColumnScale IS NOT NULL) OR (@OColumnScale <> @ColumnScale)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,428,'Decimal',319,'ColumnScale',CONVERT(varchar(100),@OColumnScale),CONVERT(varchar(100),@ColumnScale)
+IF (@OExternalTable IS NOT NULL AND @ExternalTable IS NULL) OR (@OExternalTable IS NULL AND @ExternalTable IS NOT NULL) OR (@OExternalTable <> @ExternalTable)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1198,'External Table',1007,'ExternalTable',@OExternalTable,@ExternalTable
+IF (@OColObjective IS NOT NULL AND @ColObjective IS NULL) OR (@OColObjective IS NULL AND @ColObjective IS NOT NULL) OR (@OColObjective <> @ColObjective)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1334,'Column Objective',1192,'ColObjective',@OColObjective,@ColObjective
+IF (@OColumnIndex IS NOT NULL AND @ColumnIndex IS NULL) OR (@OColumnIndex IS NULL AND @ColumnIndex IS NOT NULL) OR (@OColumnIndex <> @ColumnIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1400,'Order',1266,'ColumnIndex',CONVERT(varchar(100),@OColumnIndex),CONVERT(varchar(100),@ColumnIndex)
+IF (@ODefaultValue IS NOT NULL AND @DefaultValue IS NULL) OR (@ODefaultValue IS NULL AND @DefaultValue IS NOT NULL) OR (@ODefaultValue <> @DefaultValue)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1401,'Default',1267,'DefaultValue',@ODefaultValue,@DefaultValue
+IF (@OIsIndex IS NOT NULL AND @IsIndex IS NULL) OR (@OIsIndex IS NULL AND @IsIndex IS NOT NULL) OR (@OIsIndex <> @IsIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1774,'N/U-Index',1806,'IsIndex',@OIsIndex,@IsIndex
+IF (@OIsIndexU IS NOT NULL AND @IsIndexU IS NULL) OR (@OIsIndexU IS NULL AND @IsIndexU IS NOT NULL) OR (@OIsIndexU <> @IsIndexU)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1983,'Unique Index',2109,'IsIndexU',@OIsIndexU,@IsIndexU
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd2M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd2M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd2M
+ @TableId		Int
+,@TableName		VarChar(500)
+,@TableDesc		NVarChar(100)
+,@SystemId		TinyInt
+,@MultiDesignDb		Char(1)
+,@TblObjective		NVarChar(500)
+,@LastSyncDt		DateTime
+,@VirtualTbl		Char(1)
+,@VirtualSql		NVarChar(max)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTableName		VarChar(500)
+		,@OTableDesc		NVarChar(100)
+		,@OSystemId		TinyInt
+		,@OMultiDesignDb		Char(1)
+		,@OTblObjective		NVarChar(500)
+		,@OLastSyncDt		DateTime
+		,@OVirtualTbl		Char(1)
+		,@OVirtualSql		NVarChar(max)
+SELECT @SearchCol=TableId,@OTableName=TableName,@OTableDesc=TableDesc,@OSystemId=SystemId,@OMultiDesignDb=MultiDesignDb,@OTblObjective=TblObjective,@OLastSyncDt=LastSyncDt,@OVirtualTbl=VirtualTbl,@OVirtualSql=VirtualSql FROM dbo.DbTable WHERE TableId=@TableId
+IF ((@OTableName IS NOT NULL AND @TableName IS NULL) OR (@OTableName IS NULL AND @TableName IS NOT NULL) OR (@OTableName <> @TableName)) OR ((@OTableDesc IS NOT NULL AND @TableDesc IS NULL) OR (@OTableDesc IS NULL AND @TableDesc IS NOT NULL) OR (@OTableDesc <> @TableDesc)) OR ((@OSystemId IS NOT NULL AND @SystemId IS NULL) OR (@OSystemId IS NULL AND @SystemId IS NOT NULL) OR (@OSystemId <> @SystemId)) OR ((@OMultiDesignDb IS NOT NULL AND @MultiDesignDb IS NULL) OR (@OMultiDesignDb IS NULL AND @MultiDesignDb IS NOT NULL) OR (@OMultiDesignDb <> @MultiDesignDb)) OR ((@OTblObjective IS NOT NULL AND @TblObjective IS NULL) OR (@OTblObjective IS NULL AND @TblObjective IS NOT NULL) OR (@OTblObjective <> @TblObjective)) OR ((@OLastSyncDt IS NOT NULL AND @LastSyncDt IS NULL) OR (@OLastSyncDt IS NULL AND @LastSyncDt IS NOT NULL) OR (@OLastSyncDt <> @LastSyncDt)) OR ((@OVirtualTbl IS NOT NULL AND @VirtualTbl IS NULL) OR (@OVirtualTbl IS NULL AND @VirtualTbl IS NOT NULL) OR (@OVirtualTbl <> @VirtualTbl)) OR ((@OVirtualSql IS NOT NULL AND @VirtualSql IS NULL) OR (@OVirtualSql IS NULL AND @VirtualSql IS NOT NULL) OR (@OVirtualSql <> @VirtualSql))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',2,'Y',3,@TableId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OTableName IS NOT NULL AND @TableName IS NULL) OR (@OTableName IS NULL AND @TableName IS NOT NULL) OR (@OTableName <> @TableName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,12,'Table Name',12,'TableName',@OTableName,@TableName
+IF (@OTableDesc IS NOT NULL AND @TableDesc IS NULL) OR (@OTableDesc IS NULL AND @TableDesc IS NOT NULL) OR (@OTableDesc <> @TableDesc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,13,'Description',13,'TableDesc',@OTableDesc,@TableDesc
+IF (@OSystemId IS NOT NULL AND @SystemId IS NULL) OR (@OSystemId IS NULL AND @SystemId IS NOT NULL) OR (@OSystemId <> @SystemId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,430,'Database',321,'SystemId',CONVERT(varchar(100),@OSystemId),CONVERT(varchar(100),@SystemId)
+IF (@OMultiDesignDb IS NOT NULL AND @MultiDesignDb IS NULL) OR (@OMultiDesignDb IS NULL AND @MultiDesignDb IS NOT NULL) OR (@OMultiDesignDb <> @MultiDesignDb)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,933,'Multi-design DB',823,'MultiDesignDb',@OMultiDesignDb,@MultiDesignDb
+IF (@OTblObjective IS NOT NULL AND @TblObjective IS NULL) OR (@OTblObjective IS NULL AND @TblObjective IS NOT NULL) OR (@OTblObjective <> @TblObjective)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1332,'',1190,'TblObjective',@OTblObjective,@TblObjective
+IF (@OLastSyncDt IS NOT NULL AND @LastSyncDt IS NULL) OR (@OLastSyncDt IS NULL AND @LastSyncDt IS NOT NULL) OR (@OLastSyncDt <> @LastSyncDt)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1452,'Synchronized on',1374,'LastSyncDt',CONVERT(varchar(10),@OLastSyncDt,102),CONVERT(varchar(10),@LastSyncDt,102)
+IF (@OVirtualTbl IS NOT NULL AND @VirtualTbl IS NULL) OR (@OVirtualTbl IS NULL AND @VirtualTbl IS NOT NULL) OR (@OVirtualTbl <> @VirtualTbl)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1753,'Virtual',1778,'VirtualTbl',@OVirtualTbl,@VirtualTbl
+IF (@OVirtualSql IS NOT NULL AND @VirtualSql IS NULL) OR (@OVirtualSql IS NULL AND @VirtualSql IS NOT NULL) OR (@OVirtualSql <> @VirtualSql)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1757,'Function',1779,'VirtualSql',@OVirtualSql,@VirtualSql
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd35M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd35M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd35M
+ @MenuId		Int
+,@ParentId		Int
+,@MenuIndex		SmallInt
+,@ScreenId		Int
+,@ReportId		Int
+,@Miscellaneous		VarChar(1000)
+,@WizardId		Int
+,@StaticPgId		Int
+,@Popup		Char(1)
+,@ReactQuickMenu		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OParentId		Int
+		,@OMenuIndex		SmallInt
+		,@OScreenId		Int
+		,@OReportId		Int
+		,@OMiscellaneous		VarChar(1000)
+		,@OWizardId		Int
+		,@OStaticPgId		Int
+		,@OPopup		Char(1)
+		,@OReactQuickMenu		Char(1)
+SELECT @SearchCol=MenuId,@OParentId=ParentId,@OMenuIndex=MenuIndex,@OScreenId=ScreenId,@OReportId=ReportId,@OMiscellaneous=Miscellaneous,@OWizardId=WizardId,@OStaticPgId=StaticPgId,@OPopup=Popup,@OReactQuickMenu=ReactQuickMenu FROM dbo.Menu WHERE MenuId=@MenuId
+IF ((@OParentId IS NOT NULL AND @ParentId IS NULL) OR (@OParentId IS NULL AND @ParentId IS NOT NULL) OR (@OParentId <> @ParentId)) OR ((@OMenuIndex IS NOT NULL AND @MenuIndex IS NULL) OR (@OMenuIndex IS NULL AND @MenuIndex IS NOT NULL) OR (@OMenuIndex <> @MenuIndex)) OR ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OMiscellaneous IS NOT NULL AND @Miscellaneous IS NULL) OR (@OMiscellaneous IS NULL AND @Miscellaneous IS NOT NULL) OR (@OMiscellaneous <> @Miscellaneous)) OR ((@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)) OR ((@OStaticPgId IS NOT NULL AND @StaticPgId IS NULL) OR (@OStaticPgId IS NULL AND @StaticPgId IS NOT NULL) OR (@OStaticPgId <> @StaticPgId)) OR ((@OPopup IS NOT NULL AND @Popup IS NULL) OR (@OPopup IS NULL AND @Popup IS NOT NULL) OR (@OPopup <> @Popup)) OR ((@OReactQuickMenu IS NOT NULL AND @ReactQuickMenu IS NULL) OR (@OReactQuickMenu IS NULL AND @ReactQuickMenu IS NOT NULL) OR (@OReactQuickMenu <> @ReactQuickMenu))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',35,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OParentId IS NOT NULL AND @ParentId IS NULL) OR (@OParentId IS NULL AND @ParentId IS NOT NULL) OR (@OParentId <> @ParentId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,432,'Parent Item',323,'ParentId',CONVERT(varchar(100),@OParentId),CONVERT(varchar(100),@ParentId)
+IF (@OMenuIndex IS NOT NULL AND @MenuIndex IS NULL) OR (@OMenuIndex IS NULL AND @MenuIndex IS NOT NULL) OR (@OMenuIndex <> @MenuIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,433,'Order',324,'MenuIndex',CONVERT(varchar(100),@OMenuIndex),CONVERT(varchar(100),@MenuIndex)
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,435,'Screen',326,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,436,'Report',327,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@OMiscellaneous IS NOT NULL AND @Miscellaneous IS NULL) OR (@OMiscellaneous IS NULL AND @Miscellaneous IS NOT NULL) OR (@OMiscellaneous <> @Miscellaneous)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,437,'Miscellaneous',328,'Miscellaneous',@OMiscellaneous,@Miscellaneous
+IF (@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,839,'Wizard',538,'WizardId',CONVERT(varchar(100),@OWizardId),CONVERT(varchar(100),@WizardId)
+IF (@OStaticPgId IS NOT NULL AND @StaticPgId IS NULL) OR (@OStaticPgId IS NULL AND @StaticPgId IS NOT NULL) OR (@OStaticPgId <> @StaticPgId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1998,'Static Page',2129,'StaticPgId',CONVERT(varchar(100),@OStaticPgId),CONVERT(varchar(100),@StaticPgId)
+IF (@OPopup IS NOT NULL AND @Popup IS NULL) OR (@OPopup IS NULL AND @Popup IS NOT NULL) OR (@OPopup <> @Popup)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4139,'Popup',7438,'Popup',@OPopup,@Popup
+IF (@OReactQuickMenu IS NOT NULL AND @ReactQuickMenu IS NULL) OR (@OReactQuickMenu IS NULL AND @ReactQuickMenu IS NOT NULL) OR (@OReactQuickMenu <> @ReactQuickMenu)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4353,'React Quick Menu',7587,'ReactQuickMenu',@OReactQuickMenu,@ReactQuickMenu
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd36D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd36D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd36D
+ @MenuHlpId		Int
+,@CultureId		SmallInt
+,@MenuText		NVarChar(50)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OMenuText		NVarChar(50)
+SELECT @SearchCol=MenuHlpId,@OCultureId=CultureId,@OMenuText=MenuText FROM dbo.MenuHlp WHERE MenuHlpId=@MenuHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OMenuText IS NOT NULL AND @MenuText IS NULL) OR (@OMenuText IS NULL AND @MenuText IS NOT NULL) OR (@OMenuText <> @MenuText))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',36,'N',40,@MenuHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,448,'Culture',1304,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OMenuText IS NOT NULL AND @MenuText IS NULL) OR (@OMenuText IS NULL AND @MenuText IS NOT NULL) OR (@OMenuText <> @MenuText)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,450,'Menu Label',332,'MenuText',@OMenuText,@MenuText
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd36M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd36M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd36M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=MenuId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',36,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd49D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd49D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd49D
+ @WizardObjId		Int
+,@ColumnId		Int
+,@TabIndex		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnId		Int
+		,@OTabIndex		SmallInt
+SELECT @SearchCol=WizardObjId,@OColumnId=ColumnId,@OTabIndex=TabIndex FROM dbo.WizardObj WHERE WizardObjId=@WizardObjId
+IF ((@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)) OR ((@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',49,'N',72,@WizardObjId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,642,'Column',551,'ColumnId',CONVERT(varchar(100),@OColumnId),CONVERT(varchar(100),@ColumnId)
+IF (@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,644,'Tab Index',553,'TabIndex',CONVERT(varchar(100),@OTabIndex),CONVERT(varchar(100),@TabIndex)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd49M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd49M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd49M
+ @WizardId		Int
+,@WizardTypeId		TinyInt
+,@MasterTableId		Int
+,@WizardTitle		NVarChar(50)
+,@ProgramName		VarChar(50)
+,@DefWorkSheet		NVarChar(50)
+,@DefStartRow		SmallInt
+,@DefOverwrite		Char(1)
+,@OvwrReadonly		Char(1)
+,@AuthRequired		Char(1)
+,@NoTrans		Char(1)
+,@CommandTimeOut		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OWizardTypeId		TinyInt
+		,@OMasterTableId		Int
+		,@OWizardTitle		NVarChar(50)
+		,@OProgramName		VarChar(50)
+		,@ODefWorkSheet		NVarChar(50)
+		,@ODefStartRow		SmallInt
+		,@ODefOverwrite		Char(1)
+		,@OOvwrReadonly		Char(1)
+		,@OAuthRequired		Char(1)
+		,@ONoTrans		Char(1)
+		,@OCommandTimeOut		SmallInt
+SELECT @SearchCol=WizardId,@OWizardTypeId=WizardTypeId,@OMasterTableId=MasterTableId,@OWizardTitle=WizardTitle,@OProgramName=ProgramName,@ODefWorkSheet=DefWorkSheet,@ODefStartRow=DefStartRow,@ODefOverwrite=DefOverwrite,@OOvwrReadonly=OvwrReadonly,@OAuthRequired=AuthRequired,@ONoTrans=NoTrans,@OCommandTimeOut=CommandTimeOut FROM dbo.Wizard WHERE WizardId=@WizardId
+IF ((@OWizardTypeId IS NOT NULL AND @WizardTypeId IS NULL) OR (@OWizardTypeId IS NULL AND @WizardTypeId IS NOT NULL) OR (@OWizardTypeId <> @WizardTypeId)) OR ((@OMasterTableId IS NOT NULL AND @MasterTableId IS NULL) OR (@OMasterTableId IS NULL AND @MasterTableId IS NOT NULL) OR (@OMasterTableId <> @MasterTableId)) OR ((@OWizardTitle IS NOT NULL AND @WizardTitle IS NULL) OR (@OWizardTitle IS NULL AND @WizardTitle IS NOT NULL) OR (@OWizardTitle <> @WizardTitle)) OR ((@OProgramName IS NOT NULL AND @ProgramName IS NULL) OR (@OProgramName IS NULL AND @ProgramName IS NOT NULL) OR (@OProgramName <> @ProgramName)) OR ((@ODefWorkSheet IS NOT NULL AND @DefWorkSheet IS NULL) OR (@ODefWorkSheet IS NULL AND @DefWorkSheet IS NOT NULL) OR (@ODefWorkSheet <> @DefWorkSheet)) OR ((@ODefStartRow IS NOT NULL AND @DefStartRow IS NULL) OR (@ODefStartRow IS NULL AND @DefStartRow IS NOT NULL) OR (@ODefStartRow <> @DefStartRow)) OR ((@ODefOverwrite IS NOT NULL AND @DefOverwrite IS NULL) OR (@ODefOverwrite IS NULL AND @DefOverwrite IS NOT NULL) OR (@ODefOverwrite <> @DefOverwrite)) OR ((@OOvwrReadonly IS NOT NULL AND @OvwrReadonly IS NULL) OR (@OOvwrReadonly IS NULL AND @OvwrReadonly IS NOT NULL) OR (@OOvwrReadonly <> @OvwrReadonly)) OR ((@OAuthRequired IS NOT NULL AND @AuthRequired IS NULL) OR (@OAuthRequired IS NULL AND @AuthRequired IS NOT NULL) OR (@OAuthRequired <> @AuthRequired)) OR ((@ONoTrans IS NOT NULL AND @NoTrans IS NULL) OR (@ONoTrans IS NULL AND @NoTrans IS NOT NULL) OR (@ONoTrans <> @NoTrans)) OR ((@OCommandTimeOut IS NOT NULL AND @CommandTimeOut IS NULL) OR (@OCommandTimeOut IS NULL AND @CommandTimeOut IS NOT NULL) OR (@OCommandTimeOut <> @CommandTimeOut))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',49,'Y',71,@WizardId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OWizardTypeId IS NOT NULL AND @WizardTypeId IS NULL) OR (@OWizardTypeId IS NULL AND @WizardTypeId IS NOT NULL) OR (@OWizardTypeId <> @WizardTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,634,'Wizard Type',543,'WizardTypeId',CONVERT(varchar(100),@OWizardTypeId),CONVERT(varchar(100),@WizardTypeId)
+IF (@OMasterTableId IS NOT NULL AND @MasterTableId IS NULL) OR (@OMasterTableId IS NULL AND @MasterTableId IS NOT NULL) OR (@OMasterTableId <> @MasterTableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,635,'Master Table',544,'MasterTableId',CONVERT(varchar(100),@OMasterTableId),CONVERT(varchar(100),@MasterTableId)
+IF (@OWizardTitle IS NOT NULL AND @WizardTitle IS NULL) OR (@OWizardTitle IS NULL AND @WizardTitle IS NOT NULL) OR (@OWizardTitle <> @WizardTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,636,'Wizard Title',545,'WizardTitle',@OWizardTitle,@WizardTitle
+IF (@OProgramName IS NOT NULL AND @ProgramName IS NULL) OR (@OProgramName IS NULL AND @ProgramName IS NOT NULL) OR (@OProgramName <> @ProgramName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,637,'Program Name',546,'ProgramName',@OProgramName,@ProgramName
+IF (@ODefWorkSheet IS NOT NULL AND @DefWorkSheet IS NULL) OR (@ODefWorkSheet IS NULL AND @DefWorkSheet IS NOT NULL) OR (@ODefWorkSheet <> @DefWorkSheet)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1218,'Default WorkSheet',1051,'DefWorkSheet',@ODefWorkSheet,@DefWorkSheet
+IF (@ODefStartRow IS NOT NULL AND @DefStartRow IS NULL) OR (@ODefStartRow IS NULL AND @DefStartRow IS NOT NULL) OR (@ODefStartRow <> @DefStartRow)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1219,'Default Start Row',1052,'DefStartRow',CONVERT(varchar(100),@ODefStartRow),CONVERT(varchar(100),@DefStartRow)
+IF (@ODefOverwrite IS NOT NULL AND @DefOverwrite IS NULL) OR (@ODefOverwrite IS NULL AND @DefOverwrite IS NOT NULL) OR (@ODefOverwrite <> @DefOverwrite)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1328,'Default Overwrite',1187,'DefOverwrite',@ODefOverwrite,@DefOverwrite
+IF (@OOvwrReadonly IS NOT NULL AND @OvwrReadonly IS NULL) OR (@OOvwrReadonly IS NULL AND @OvwrReadonly IS NOT NULL) OR (@OOvwrReadonly <> @OvwrReadonly)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1329,'Overwrite Readonly',1188,'OvwrReadonly',@OOvwrReadonly,@OvwrReadonly
+IF (@OAuthRequired IS NOT NULL AND @AuthRequired IS NULL) OR (@OAuthRequired IS NULL AND @AuthRequired IS NOT NULL) OR (@OAuthRequired <> @AuthRequired)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1992,'Authentication',2121,'AuthRequired',@OAuthRequired,@AuthRequired
+IF (@ONoTrans IS NOT NULL AND @NoTrans IS NULL) OR (@ONoTrans IS NULL AND @NoTrans IS NOT NULL) OR (@ONoTrans <> @NoTrans)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4374,'No Transaction Wrap!!',7660,'NoTrans',@ONoTrans,@NoTrans
+IF (@OCommandTimeOut IS NOT NULL AND @CommandTimeOut IS NULL) OR (@OCommandTimeOut IS NULL AND @CommandTimeOut IS NOT NULL) OR (@OCommandTimeOut <> @CommandTimeOut)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4375,'Command Timeout(sec)',7661,'CommandTimeOut',CONVERT(varchar(100),@OCommandTimeOut),CONVERT(varchar(100),@CommandTimeOut)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd50M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd50M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd50M
+ @WizardRuleId		Int
+,@WizardId		Int
+,@RuleTypeId		TinyInt
+,@RuleName		NVarChar(100)
+,@RuleDescription		NVarChar(500)
+,@RuleOrder		SmallInt
+,@ProcedureName		VarChar(50)
+,@BeforeCRUD		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OWizardId		Int
+		,@ORuleTypeId		TinyInt
+		,@ORuleName		NVarChar(100)
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleOrder		SmallInt
+		,@OProcedureName		VarChar(50)
+		,@OBeforeCRUD		Char(1)
+SELECT @SearchCol=WizardRuleId,@OWizardId=WizardId,@ORuleTypeId=RuleTypeId,@ORuleName=RuleName,@ORuleDescription=RuleDescription,@ORuleOrder=RuleOrder,@OProcedureName=ProcedureName,@OBeforeCRUD=BeforeCRUD FROM dbo.WizardRule WHERE WizardRuleId=@WizardRuleId
+IF ((@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)) OR ((@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)) OR ((@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)) OR ((@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)) OR ((@ORuleOrder IS NOT NULL AND @RuleOrder IS NULL) OR (@ORuleOrder IS NULL AND @RuleOrder IS NOT NULL) OR (@ORuleOrder <> @RuleOrder)) OR ((@OProcedureName IS NOT NULL AND @ProcedureName IS NULL) OR (@OProcedureName IS NULL AND @ProcedureName IS NOT NULL) OR (@OProcedureName <> @ProcedureName)) OR ((@OBeforeCRUD IS NOT NULL AND @BeforeCRUD IS NULL) OR (@OBeforeCRUD IS NULL AND @BeforeCRUD IS NOT NULL) OR (@OBeforeCRUD <> @BeforeCRUD))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',50,'Y',73,@WizardRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,645,'Wizard',1141,'WizardId',CONVERT(varchar(100),@OWizardId),CONVERT(varchar(100),@WizardId)
+IF (@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,654,'Rule Type',556,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),CONVERT(varchar(100),@RuleTypeId)
+IF (@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,655,'Rule Name',557,'RuleName',@ORuleName,@RuleName
+IF (@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,656,'Description',558,'RuleDescription',@ORuleDescription,@RuleDescription
+IF (@ORuleOrder IS NOT NULL AND @RuleOrder IS NULL) OR (@ORuleOrder IS NULL AND @RuleOrder IS NOT NULL) OR (@ORuleOrder <> @RuleOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,657,'Exec Order',559,'RuleOrder',CONVERT(varchar(100),@ORuleOrder),CONVERT(varchar(100),@RuleOrder)
+IF (@OProcedureName IS NOT NULL AND @ProcedureName IS NULL) OR (@OProcedureName IS NULL AND @ProcedureName IS NOT NULL) OR (@OProcedureName <> @ProcedureName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,658,'Procedure Name',560,'ProcedureName',@OProcedureName,@ProcedureName
+IF (@OBeforeCRUD IS NOT NULL AND @BeforeCRUD IS NULL) OR (@OBeforeCRUD IS NULL AND @BeforeCRUD IS NOT NULL) OR (@OBeforeCRUD <> @BeforeCRUD)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,659,'Before CRUD',561,'BeforeCRUD',@OBeforeCRUD,@BeforeCRUD
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd53M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd53M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd53M
+ @TemplateId		SmallInt
+,@TemplateName		NVarChar(30)
+,@TmplPrefix		VarChar(10)
+,@TmplDefault		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTemplateName		NVarChar(30)
+		,@OTmplPrefix		VarChar(10)
+		,@OTmplDefault		Char(1)
+SELECT @SearchCol=TemplateId,@OTemplateName=TemplateName,@OTmplPrefix=TmplPrefix,@OTmplDefault=TmplDefault FROM dbo.Template WHERE TemplateId=@TemplateId
+IF ((@OTemplateName IS NOT NULL AND @TemplateName IS NULL) OR (@OTemplateName IS NULL AND @TemplateName IS NOT NULL) OR (@OTemplateName <> @TemplateName)) OR ((@OTmplPrefix IS NOT NULL AND @TmplPrefix IS NULL) OR (@OTmplPrefix IS NULL AND @TmplPrefix IS NOT NULL) OR (@OTmplPrefix <> @TmplPrefix)) OR ((@OTmplDefault IS NOT NULL AND @TmplDefault IS NULL) OR (@OTmplDefault IS NULL AND @TmplDefault IS NOT NULL) OR (@OTmplDefault <> @TmplDefault))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',53,'Y',79,@TemplateId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OTemplateName IS NOT NULL AND @TemplateName IS NULL) OR (@OTemplateName IS NULL AND @TemplateName IS NOT NULL) OR (@OTemplateName <> @TemplateName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,707,'Template Name',609,'TemplateName',@OTemplateName,@TemplateName
+IF (@OTmplPrefix IS NOT NULL AND @TmplPrefix IS NULL) OR (@OTmplPrefix IS NULL AND @TmplPrefix IS NOT NULL) OR (@OTmplPrefix <> @TmplPrefix)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,708,'Template Prefix',610,'TmplPrefix',@OTmplPrefix,@TmplPrefix
+IF (@OTmplDefault IS NOT NULL AND @TmplDefault IS NULL) OR (@OTmplDefault IS NULL AND @TmplDefault IS NOT NULL) OR (@OTmplDefault <> @TmplDefault)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,709,'Default',611,'TmplDefault',@OTmplDefault,@TmplDefault
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd54D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd54D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd54D
+ @ScreenTabHlpId		Int
+,@CultureId		SmallInt
+,@TabFolderName		NVarChar(50)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OTabFolderName		NVarChar(50)
+SELECT @SearchCol=ScreenTabHlpId,@OCultureId=CultureId,@OTabFolderName=TabFolderName FROM dbo.ScreenTabHlp WHERE ScreenTabHlpId=@ScreenTabHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OTabFolderName IS NOT NULL AND @TabFolderName IS NULL) OR (@OTabFolderName IS NULL AND @TabFolderName IS NOT NULL) OR (@OTabFolderName <> @TabFolderName))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',54,'N',80,@ScreenTabHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,721,'Culture',621,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OTabFolderName IS NOT NULL AND @TabFolderName IS NULL) OR (@OTabFolderName IS NULL AND @TabFolderName IS NOT NULL) OR (@OTabFolderName <> @TabFolderName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,722,'Tab Display Name',622,'TabFolderName',@OTabFolderName,@TabFolderName
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd54M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd54M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd54M
+ @ScreenTabId		Int
+,@TabFolderName		NVarChar(30)
+,@TabFolderOrder		TinyInt
+,@ScreenId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OTabFolderName		NVarChar(30)
+		,@OTabFolderOrder		TinyInt
+		,@OScreenId		Int
+SELECT @SearchCol=ScreenTabId,@OTabFolderName=TabFolderName,@OTabFolderOrder=TabFolderOrder,@OScreenId=ScreenId FROM dbo.ScreenTab WHERE ScreenTabId=@ScreenTabId
+IF ((@OTabFolderName IS NOT NULL AND @TabFolderName IS NULL) OR (@OTabFolderName IS NULL AND @TabFolderName IS NOT NULL) OR (@OTabFolderName <> @TabFolderName)) OR ((@OTabFolderOrder IS NOT NULL AND @TabFolderOrder IS NULL) OR (@OTabFolderOrder IS NULL AND @TabFolderOrder IS NOT NULL) OR (@OTabFolderOrder <> @TabFolderOrder)) OR ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',54,'Y',19,@ScreenTabId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OTabFolderName IS NOT NULL AND @TabFolderName IS NULL) OR (@OTabFolderName IS NULL AND @TabFolderName IS NOT NULL) OR (@OTabFolderName <> @TabFolderName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,717,'Tab Folder Name',153,'TabFolderName',@OTabFolderName,@TabFolderName
+IF (@OTabFolderOrder IS NOT NULL AND @TabFolderOrder IS NULL) OR (@OTabFolderOrder IS NULL AND @TabFolderOrder IS NOT NULL) OR (@OTabFolderOrder <> @TabFolderOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,718,'Tab Folder Order',618,'TabFolderOrder',CONVERT(varchar(100),@OTabFolderOrder),CONVERT(varchar(100),@TabFolderOrder)
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3162,'Screen',5338,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd58D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd58D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd58D
+ @MenuPrmId		Int
+,@PermKeyId		SmallInt
+,@GrantDeny		Char(1)
+,@PermId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPermKeyId		SmallInt
+		,@OGrantDeny		Char(1)
+		,@OPermId		Int
+SELECT @SearchCol=MenuPrmId,@OPermKeyId=PermKeyId,@OGrantDeny=GrantDeny,@OPermId=PermId FROM dbo.MenuPrm WHERE MenuPrmId=@MenuPrmId
+IF ((@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)) OR ((@OGrantDeny IS NOT NULL AND @GrantDeny IS NULL) OR (@OGrantDeny IS NULL AND @GrantDeny IS NOT NULL) OR (@OGrantDeny <> @GrantDeny)) OR ((@OPermId IS NOT NULL AND @PermId IS NULL) OR (@OPermId IS NULL AND @PermId IS NOT NULL) OR (@OPermId <> @PermId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',58,'N',231,@MenuPrmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OPermKeyId IS NOT NULL AND @PermKeyId IS NULL) OR (@OPermKeyId IS NULL AND @PermKeyId IS NOT NULL) OR (@OPermKeyId <> @PermKeyId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,833,'Entity Type',1887,'PermKeyId',CONVERT(varchar(100),@OPermKeyId),CONVERT(varchar(100),@PermKeyId)
+IF (@OGrantDeny IS NOT NULL AND @GrantDeny IS NULL) OR (@OGrantDeny IS NULL AND @GrantDeny IS NOT NULL) OR (@OGrantDeny <> @GrantDeny)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,838,'Grant/Deny',1892,'GrantDeny',@OGrantDeny,@GrantDeny
+IF (@OPermId IS NOT NULL AND @PermId IS NULL) OR (@OPermId IS NULL AND @PermId IS NOT NULL) OR (@OPermId <> @PermId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1751,'Entity',1888,'PermId',CONVERT(varchar(100),@OPermId),CONVERT(varchar(100),@PermId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd58M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd58M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd58M
+ @MenuId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+SELECT @SearchCol=MenuId FROM dbo.Menu WHERE MenuId=@MenuId
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',58,'Y',39,@MenuId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd59D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd59D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd59D
+ @ScreenFilterHlpId		Int
+,@CultureId		SmallInt
+,@FilterName		NVarChar(50)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OFilterName		NVarChar(50)
+SELECT @SearchCol=ScreenFilterHlpId,@OCultureId=CultureId,@OFilterName=FilterName FROM dbo.ScreenFilterHlp WHERE ScreenFilterHlpId=@ScreenFilterHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OFilterName IS NOT NULL AND @FilterName IS NULL) OR (@OFilterName IS NULL AND @FilterName IS NOT NULL) OR (@OFilterName <> @FilterName))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',59,'N',87,@ScreenFilterHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,848,'Culture',730,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OFilterName IS NOT NULL AND @FilterName IS NULL) OR (@OFilterName IS NULL AND @FilterName IS NOT NULL) OR (@OFilterName <> @FilterName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,849,'Filter Header',731,'FilterName',@OFilterName,@FilterName
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd59M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd59M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd59M
+ @ScreenFilterId		Int
+,@ScreenId		Int
+,@ScreenFilterName		VarChar(50)
+,@FilterClause		VarChar(1500)
+,@FilterOrder		TinyInt
+,@ApplyToMst		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OScreenFilterName		VarChar(50)
+		,@OFilterClause		VarChar(1500)
+		,@OFilterOrder		TinyInt
+		,@OApplyToMst		Char(1)
+SELECT @SearchCol=ScreenFilterId,@OScreenId=ScreenId,@OScreenFilterName=ScreenFilterName,@OFilterClause=FilterClause,@OFilterOrder=FilterOrder,@OApplyToMst=ApplyToMst FROM dbo.ScreenFilter WHERE ScreenFilterId=@ScreenFilterId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OScreenFilterName IS NOT NULL AND @ScreenFilterName IS NULL) OR (@OScreenFilterName IS NULL AND @ScreenFilterName IS NOT NULL) OR (@OScreenFilterName <> @ScreenFilterName)) OR ((@OFilterClause IS NOT NULL AND @FilterClause IS NULL) OR (@OFilterClause IS NULL AND @FilterClause IS NOT NULL) OR (@OFilterClause <> @FilterClause)) OR ((@OFilterOrder IS NOT NULL AND @FilterOrder IS NULL) OR (@OFilterOrder IS NULL AND @FilterOrder IS NOT NULL) OR (@OFilterOrder <> @FilterOrder)) OR ((@OApplyToMst IS NOT NULL AND @ApplyToMst IS NULL) OR (@OApplyToMst IS NULL AND @ApplyToMst IS NOT NULL) OR (@OApplyToMst <> @ApplyToMst))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',59,'Y',86,@ScreenFilterId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,841,'Screen',723,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OScreenFilterName IS NOT NULL AND @ScreenFilterName IS NULL) OR (@OScreenFilterName IS NULL AND @ScreenFilterName IS NOT NULL) OR (@OScreenFilterName <> @ScreenFilterName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,842,'Filter Name',724,'ScreenFilterName',@OScreenFilterName,@ScreenFilterName
+IF (@OFilterClause IS NOT NULL AND @FilterClause IS NULL) OR (@OFilterClause IS NULL AND @FilterClause IS NOT NULL) OR (@OFilterClause <> @FilterClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,844,'Filter Clause',726,'FilterClause',@OFilterClause,@FilterClause
+IF (@OFilterOrder IS NOT NULL AND @FilterOrder IS NULL) OR (@OFilterOrder IS NULL AND @FilterOrder IS NOT NULL) OR (@OFilterOrder <> @FilterOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,845,'Filter Order',727,'FilterOrder',CONVERT(varchar(100),@OFilterOrder),CONVERT(varchar(100),@FilterOrder)
+IF (@OApplyToMst IS NOT NULL AND @ApplyToMst IS NULL) OR (@OApplyToMst IS NULL AND @ApplyToMst IS NOT NULL) OR (@OApplyToMst <> @ApplyToMst)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1807,'Master Table',1856,'ApplyToMst',@OApplyToMst,@ApplyToMst
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd65M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd65M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd65M
+ @ReportGrpId		Int
+,@ReportId		Int
+,@ReportGrpName		NVarChar(50)
+,@ContentVertical		Char(1)
+,@LabelVertical		Char(1)
+,@ParentGrpId		Int
+,@ReportGrpIndex		VarChar(20)
+,@BorderWidth		TinyInt
+,@GrpStyle		VarChar(200)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OReportGrpName		NVarChar(50)
+		,@OContentVertical		Char(1)
+		,@OLabelVertical		Char(1)
+		,@OParentGrpId		Int
+		,@OReportGrpIndex		VarChar(20)
+		,@OBorderWidth		TinyInt
+		,@OGrpStyle		VarChar(200)
+SELECT @SearchCol=ReportGrpId,@OReportId=ReportId,@OReportGrpName=ReportGrpName,@OContentVertical=ContentVertical,@OLabelVertical=LabelVertical,@OParentGrpId=ParentGrpId,@OReportGrpIndex=ReportGrpIndex,@OBorderWidth=BorderWidth,@OGrpStyle=GrpStyle FROM dbo.ReportGrp WHERE ReportGrpId=@ReportGrpId
+IF ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OReportGrpName IS NOT NULL AND @ReportGrpName IS NULL) OR (@OReportGrpName IS NULL AND @ReportGrpName IS NOT NULL) OR (@OReportGrpName <> @ReportGrpName)) OR ((@OContentVertical IS NOT NULL AND @ContentVertical IS NULL) OR (@OContentVertical IS NULL AND @ContentVertical IS NOT NULL) OR (@OContentVertical <> @ContentVertical)) OR ((@OLabelVertical IS NOT NULL AND @LabelVertical IS NULL) OR (@OLabelVertical IS NULL AND @LabelVertical IS NOT NULL) OR (@OLabelVertical <> @LabelVertical)) OR ((@OParentGrpId IS NOT NULL AND @ParentGrpId IS NULL) OR (@OParentGrpId IS NULL AND @ParentGrpId IS NOT NULL) OR (@OParentGrpId <> @ParentGrpId)) OR ((@OReportGrpIndex IS NOT NULL AND @ReportGrpIndex IS NULL) OR (@OReportGrpIndex IS NULL AND @ReportGrpIndex IS NOT NULL) OR (@OReportGrpIndex <> @ReportGrpIndex)) OR ((@OBorderWidth IS NOT NULL AND @BorderWidth IS NULL) OR (@OBorderWidth IS NULL AND @BorderWidth IS NOT NULL) OR (@OBorderWidth <> @BorderWidth)) OR ((@OGrpStyle IS NOT NULL AND @GrpStyle IS NULL) OR (@OGrpStyle IS NULL AND @GrpStyle IS NOT NULL) OR (@OGrpStyle <> @GrpStyle))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',65,'Y',94,@ReportGrpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,967,'Report',882,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@OReportGrpName IS NOT NULL AND @ReportGrpName IS NULL) OR (@OReportGrpName IS NULL AND @ReportGrpName IS NOT NULL) OR (@OReportGrpName <> @ReportGrpName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,978,'Group Name',874,'ReportGrpName',@OReportGrpName,@ReportGrpName
+IF (@OContentVertical IS NOT NULL AND @ContentVertical IS NULL) OR (@OContentVertical IS NULL AND @ContentVertical IS NOT NULL) OR (@OContentVertical <> @ContentVertical)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,979,'Content Vertical',876,'ContentVertical',@OContentVertical,@ContentVertical
+IF (@OLabelVertical IS NOT NULL AND @LabelVertical IS NULL) OR (@OLabelVertical IS NULL AND @LabelVertical IS NOT NULL) OR (@OLabelVertical <> @LabelVertical)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,980,'Label Vertical',877,'LabelVertical',@OLabelVertical,@LabelVertical
+IF (@OParentGrpId IS NOT NULL AND @ParentGrpId IS NULL) OR (@OParentGrpId IS NULL AND @ParentGrpId IS NOT NULL) OR (@OParentGrpId <> @ParentGrpId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,982,'Parent Group',885,'ParentGrpId',CONVERT(varchar(100),@OParentGrpId),CONVERT(varchar(100),@ParentGrpId)
+IF (@OReportGrpIndex IS NOT NULL AND @ReportGrpIndex IS NULL) OR (@OReportGrpIndex IS NULL AND @ReportGrpIndex IS NOT NULL) OR (@OReportGrpIndex <> @ReportGrpIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,983,'Group Index',886,'ReportGrpIndex',@OReportGrpIndex,@ReportGrpIndex
+IF (@OBorderWidth IS NOT NULL AND @BorderWidth IS NULL) OR (@OBorderWidth IS NULL AND @BorderWidth IS NOT NULL) OR (@OBorderWidth <> @BorderWidth)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,984,'Border Width',887,'BorderWidth',CONVERT(varchar(100),@OBorderWidth),CONVERT(varchar(100),@BorderWidth)
+IF (@OGrpStyle IS NOT NULL AND @GrpStyle IS NULL) OR (@OGrpStyle IS NULL AND @GrpStyle IS NOT NULL) OR (@OGrpStyle <> @GrpStyle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1453,'Override Style',1375,'GrpStyle',@OGrpStyle,@GrpStyle
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd67D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd67D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd67D
+ @ReportHlpId		Int
+,@CultureId		SmallInt
+,@ReportTitle		NVarChar(50)
+,@DefaultHlpMsg		NVarChar(max)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OReportTitle		NVarChar(50)
+		,@ODefaultHlpMsg		NVarChar(max)
+SELECT @SearchCol=ReportHlpId,@OCultureId=CultureId,@OReportTitle=ReportTitle,@ODefaultHlpMsg=DefaultHlpMsg FROM dbo.ReportHlp WHERE ReportHlpId=@ReportHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OReportTitle IS NOT NULL AND @ReportTitle IS NULL) OR (@OReportTitle IS NULL AND @ReportTitle IS NOT NULL) OR (@OReportTitle <> @ReportTitle)) OR ((@ODefaultHlpMsg IS NOT NULL AND @DefaultHlpMsg IS NULL) OR (@ODefaultHlpMsg IS NULL AND @DefaultHlpMsg IS NOT NULL) OR (@ODefaultHlpMsg <> @DefaultHlpMsg))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',67,'N',96,@ReportHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1022,'Culture',899,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OReportTitle IS NOT NULL AND @ReportTitle IS NULL) OR (@OReportTitle IS NULL AND @ReportTitle IS NOT NULL) OR (@OReportTitle <> @ReportTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1023,'Report Title',900,'ReportTitle',@OReportTitle,@ReportTitle
+IF (@ODefaultHlpMsg IS NOT NULL AND @DefaultHlpMsg IS NULL) OR (@ODefaultHlpMsg IS NULL AND @DefaultHlpMsg IS NOT NULL) OR (@ODefaultHlpMsg <> @DefaultHlpMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1156,'Default Help Message',967,'DefaultHlpMsg',@ODefaultHlpMsg,@DefaultHlpMsg
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd67M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd67M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd67M
+ @ReportId		Int
+,@ProgramName		VarChar(20)
+,@OrientationCd		Char(1)
+,@CopyReportId		Int
+,@TemplateName		VarChar(50)
+,@WhereClause		VarChar(1000)
+,@RegClause		VarChar(400)
+,@UpdClause		VarChar(200)
+,@XlsClause		VarChar(200)
+,@GenerateRp		Char(1)
+,@LastGenDt		DateTime
+,@RegCode		NVarChar(max)
+,@ValCode		NVarChar(max)
+,@XlsCode		NVarChar(max)
+,@UpdCode		NVarChar(max)
+,@ValClause		VarChar(400)
+,@UnitCd		Char(2)
+,@TopMargin		Decimal(8,2)
+,@BottomMargin		Decimal(8,2)
+,@LeftMargin		Decimal(8,2)
+,@RightMargin		Decimal(8,2)
+,@PageWidth		Decimal(8,2)
+,@PageHeight		Decimal(8,2)
+,@ReportTypeCd		Char(1)
+,@AllowSelect		Char(1)
+,@AuthRequired		Char(1)
+,@CommandTimeOut		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OProgramName		VarChar(20)
+		,@OOrientationCd		Char(1)
+		,@OCopyReportId		Int
+		,@OTemplateName		VarChar(50)
+		,@OWhereClause		VarChar(1000)
+		,@ORegClause		VarChar(400)
+		,@OUpdClause		VarChar(200)
+		,@OXlsClause		VarChar(200)
+		,@OGenerateRp		Char(1)
+		,@OLastGenDt		DateTime
+		,@ORegCode		NVarChar(max)
+		,@OValCode		NVarChar(max)
+		,@OXlsCode		NVarChar(max)
+		,@OUpdCode		NVarChar(max)
+		,@OValClause		VarChar(400)
+		,@OUnitCd		Char(2)
+		,@OTopMargin		Decimal(8,2)
+		,@OBottomMargin		Decimal(8,2)
+		,@OLeftMargin		Decimal(8,2)
+		,@ORightMargin		Decimal(8,2)
+		,@OPageWidth		Decimal(8,2)
+		,@OPageHeight		Decimal(8,2)
+		,@OReportTypeCd		Char(1)
+		,@OAllowSelect		Char(1)
+		,@OAuthRequired		Char(1)
+		,@OCommandTimeOut		SmallInt
+SELECT @SearchCol=ReportId,@OProgramName=ProgramName,@OOrientationCd=OrientationCd,@OCopyReportId=CopyReportId,@OTemplateName=TemplateName,@OWhereClause=WhereClause,@ORegClause=RegClause,@OUpdClause=UpdClause,@OXlsClause=XlsClause,@OGenerateRp=GenerateRp,@OLastGenDt=LastGenDt,@ORegCode=RegCode,@OValCode=ValCode,@OXlsCode=XlsCode,@OUpdCode=UpdCode,@OValClause=ValClause,@OUnitCd=UnitCd,@OTopMargin=TopMargin,@OBottomMargin=BottomMargin,@OLeftMargin=LeftMargin,@ORightMargin=RightMargin,@OPageWidth=PageWidth,@OPageHeight=PageHeight,@OReportTypeCd=ReportTypeCd,@OAllowSelect=AllowSelect,@OAuthRequired=AuthRequired,@OCommandTimeOut=CommandTimeOut FROM dbo.Report WHERE ReportId=@ReportId
+IF ((@OProgramName IS NOT NULL AND @ProgramName IS NULL) OR (@OProgramName IS NULL AND @ProgramName IS NOT NULL) OR (@OProgramName <> @ProgramName)) OR ((@OOrientationCd IS NOT NULL AND @OrientationCd IS NULL) OR (@OOrientationCd IS NULL AND @OrientationCd IS NOT NULL) OR (@OOrientationCd <> @OrientationCd)) OR ((@OCopyReportId IS NOT NULL AND @CopyReportId IS NULL) OR (@OCopyReportId IS NULL AND @CopyReportId IS NOT NULL) OR (@OCopyReportId <> @CopyReportId)) OR ((@OTemplateName IS NOT NULL AND @TemplateName IS NULL) OR (@OTemplateName IS NULL AND @TemplateName IS NOT NULL) OR (@OTemplateName <> @TemplateName)) OR ((@OWhereClause IS NOT NULL AND @WhereClause IS NULL) OR (@OWhereClause IS NULL AND @WhereClause IS NOT NULL) OR (@OWhereClause <> @WhereClause)) OR ((@ORegClause IS NOT NULL AND @RegClause IS NULL) OR (@ORegClause IS NULL AND @RegClause IS NOT NULL) OR (@ORegClause <> @RegClause)) OR ((@OUpdClause IS NOT NULL AND @UpdClause IS NULL) OR (@OUpdClause IS NULL AND @UpdClause IS NOT NULL) OR (@OUpdClause <> @UpdClause)) OR ((@OXlsClause IS NOT NULL AND @XlsClause IS NULL) OR (@OXlsClause IS NULL AND @XlsClause IS NOT NULL) OR (@OXlsClause <> @XlsClause)) OR ((@OGenerateRp IS NOT NULL AND @GenerateRp IS NULL) OR (@OGenerateRp IS NULL AND @GenerateRp IS NOT NULL) OR (@OGenerateRp <> @GenerateRp)) OR ((@OLastGenDt IS NOT NULL AND @LastGenDt IS NULL) OR (@OLastGenDt IS NULL AND @LastGenDt IS NOT NULL) OR (@OLastGenDt <> @LastGenDt)) OR ((@ORegCode IS NOT NULL AND @RegCode IS NULL) OR (@ORegCode IS NULL AND @RegCode IS NOT NULL) OR (@ORegCode <> @RegCode)) OR ((@OValCode IS NOT NULL AND @ValCode IS NULL) OR (@OValCode IS NULL AND @ValCode IS NOT NULL) OR (@OValCode <> @ValCode)) OR ((@OXlsCode IS NOT NULL AND @XlsCode IS NULL) OR (@OXlsCode IS NULL AND @XlsCode IS NOT NULL) OR (@OXlsCode <> @XlsCode)) OR ((@OUpdCode IS NOT NULL AND @UpdCode IS NULL) OR (@OUpdCode IS NULL AND @UpdCode IS NOT NULL) OR (@OUpdCode <> @UpdCode)) OR ((@OValClause IS NOT NULL AND @ValClause IS NULL) OR (@OValClause IS NULL AND @ValClause IS NOT NULL) OR (@OValClause <> @ValClause)) OR ((@OUnitCd IS NOT NULL AND @UnitCd IS NULL) OR (@OUnitCd IS NULL AND @UnitCd IS NOT NULL) OR (@OUnitCd <> @UnitCd)) OR ((@OTopMargin IS NOT NULL AND @TopMargin IS NULL) OR (@OTopMargin IS NULL AND @TopMargin IS NOT NULL) OR (@OTopMargin <> @TopMargin)) OR ((@OBottomMargin IS NOT NULL AND @BottomMargin IS NULL) OR (@OBottomMargin IS NULL AND @BottomMargin IS NOT NULL) OR (@OBottomMargin <> @BottomMargin)) OR ((@OLeftMargin IS NOT NULL AND @LeftMargin IS NULL) OR (@OLeftMargin IS NULL AND @LeftMargin IS NOT NULL) OR (@OLeftMargin <> @LeftMargin)) OR ((@ORightMargin IS NOT NULL AND @RightMargin IS NULL) OR (@ORightMargin IS NULL AND @RightMargin IS NOT NULL) OR (@ORightMargin <> @RightMargin)) OR ((@OPageWidth IS NOT NULL AND @PageWidth IS NULL) OR (@OPageWidth IS NULL AND @PageWidth IS NOT NULL) OR (@OPageWidth <> @PageWidth)) OR ((@OPageHeight IS NOT NULL AND @PageHeight IS NULL) OR (@OPageHeight IS NULL AND @PageHeight IS NOT NULL) OR (@OPageHeight <> @PageHeight)) OR ((@OReportTypeCd IS NOT NULL AND @ReportTypeCd IS NULL) OR (@OReportTypeCd IS NULL AND @ReportTypeCd IS NOT NULL) OR (@OReportTypeCd <> @ReportTypeCd)) OR ((@OAllowSelect IS NOT NULL AND @AllowSelect IS NULL) OR (@OAllowSelect IS NULL AND @AllowSelect IS NOT NULL) OR (@OAllowSelect <> @AllowSelect)) OR ((@OAuthRequired IS NOT NULL AND @AuthRequired IS NULL) OR (@OAuthRequired IS NULL AND @AuthRequired IS NOT NULL) OR (@OAuthRequired <> @AuthRequired)) OR ((@OCommandTimeOut IS NOT NULL AND @CommandTimeOut IS NULL) OR (@OCommandTimeOut IS NULL AND @CommandTimeOut IS NOT NULL) OR (@OCommandTimeOut <> @CommandTimeOut))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',67,'Y',22,@ReportId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OProgramName IS NOT NULL AND @ProgramName IS NULL) OR (@OProgramName IS NULL AND @ProgramName IS NOT NULL) OR (@OProgramName <> @ProgramName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1009,'Program Name',169,'ProgramName',@OProgramName,@ProgramName
+IF (@OOrientationCd IS NOT NULL AND @OrientationCd IS NULL) OR (@OOrientationCd IS NULL AND @OrientationCd IS NOT NULL) OR (@OOrientationCd <> @OrientationCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1010,'Orientation',172,'OrientationCd',@OOrientationCd,@OrientationCd
+IF (@OCopyReportId IS NOT NULL AND @CopyReportId IS NULL) OR (@OCopyReportId IS NULL AND @CopyReportId IS NOT NULL) OR (@OCopyReportId <> @CopyReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1012,'Copy from Report',483,'CopyReportId',CONVERT(varchar(100),@OCopyReportId),CONVERT(varchar(100),@CopyReportId)
+IF (@OTemplateName IS NOT NULL AND @TemplateName IS NULL) OR (@OTemplateName IS NULL AND @TemplateName IS NOT NULL) OR (@OTemplateName <> @TemplateName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1013,'Template Name',596,'TemplateName',@OTemplateName,@TemplateName
+IF (@OWhereClause IS NOT NULL AND @WhereClause IS NULL) OR (@OWhereClause IS NULL AND @WhereClause IS NOT NULL) OR (@OWhereClause <> @WhereClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1017,'Where Clause',894,'WhereClause',@OWhereClause,@WhereClause
+IF (@ORegClause IS NOT NULL AND @RegClause IS NULL) OR (@ORegClause IS NULL AND @RegClause IS NOT NULL) OR (@ORegClause <> @RegClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1018,'Regular Field Clause',895,'RegClause',@ORegClause,@RegClause
+IF (@OUpdClause IS NOT NULL AND @UpdClause IS NULL) OR (@OUpdClause IS NULL AND @UpdClause IS NOT NULL) OR (@OUpdClause <> @UpdClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1019,'Txt Update Clause',896,'UpdClause',@OUpdClause,@UpdClause
+IF (@OXlsClause IS NOT NULL AND @XlsClause IS NULL) OR (@OXlsClause IS NULL AND @XlsClause IS NOT NULL) OR (@OXlsClause <> @XlsClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1099,'Formatted Xls Clause',937,'XlsClause',@OXlsClause,@XlsClause
+IF (@OGenerateRp IS NOT NULL AND @GenerateRp IS NULL) OR (@OGenerateRp IS NULL AND @GenerateRp IS NOT NULL) OR (@OGenerateRp <> @GenerateRp)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1307,'Generate',1166,'GenerateRp',@OGenerateRp,@GenerateRp
+IF (@OLastGenDt IS NOT NULL AND @LastGenDt IS NULL) OR (@OLastGenDt IS NULL AND @LastGenDt IS NOT NULL) OR (@OLastGenDt <> @LastGenDt)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1472,'Last Generated',1412,'LastGenDt',CONVERT(varchar(10),@OLastGenDt,102),CONVERT(varchar(10),@LastGenDt,102)
+IF (@ORegCode IS NOT NULL AND @RegCode IS NULL) OR (@ORegCode IS NULL AND @RegCode IS NOT NULL) OR (@ORegCode <> @RegCode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1475,'S.Procedure',1406,'RegCode',@ORegCode,@RegCode
+IF (@OValCode IS NOT NULL AND @ValCode IS NULL) OR (@OValCode IS NULL AND @ValCode IS NOT NULL) OR (@OValCode <> @ValCode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1476,'S.Procedure',1407,'ValCode',@OValCode,@ValCode
+IF (@OXlsCode IS NOT NULL AND @XlsCode IS NULL) OR (@OXlsCode IS NULL AND @XlsCode IS NOT NULL) OR (@OXlsCode <> @XlsCode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1477,'S.Procedure',1409,'XlsCode',@OXlsCode,@XlsCode
+IF (@OUpdCode IS NOT NULL AND @UpdCode IS NULL) OR (@OUpdCode IS NULL AND @UpdCode IS NOT NULL) OR (@OUpdCode <> @UpdCode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1478,'S.Procedure',1408,'UpdCode',@OUpdCode,@UpdCode
+IF (@OValClause IS NOT NULL AND @ValClause IS NULL) OR (@OValClause IS NULL AND @ValClause IS NOT NULL) OR (@OValClause <> @ValClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1480,'Parameter Clause',1405,'ValClause',@OValClause,@ValClause
+IF (@OUnitCd IS NOT NULL AND @UnitCd IS NULL) OR (@OUnitCd IS NULL AND @UnitCd IS NOT NULL) OR (@OUnitCd <> @UnitCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1525,'Unit',1487,'UnitCd',@OUnitCd,@UnitCd
+IF (@OTopMargin IS NOT NULL AND @TopMargin IS NULL) OR (@OTopMargin IS NULL AND @TopMargin IS NOT NULL) OR (@OTopMargin <> @TopMargin)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1527,'Top Margin',1492,'TopMargin',CONVERT(varchar(100),@OTopMargin),CONVERT(varchar(100),@TopMargin)
+IF (@OBottomMargin IS NOT NULL AND @BottomMargin IS NULL) OR (@OBottomMargin IS NULL AND @BottomMargin IS NOT NULL) OR (@OBottomMargin <> @BottomMargin)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1528,'Bottom Margin',1491,'BottomMargin',CONVERT(varchar(100),@OBottomMargin),CONVERT(varchar(100),@BottomMargin)
+IF (@OLeftMargin IS NOT NULL AND @LeftMargin IS NULL) OR (@OLeftMargin IS NULL AND @LeftMargin IS NOT NULL) OR (@OLeftMargin <> @LeftMargin)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1529,'Left Margin',1490,'LeftMargin',CONVERT(varchar(100),@OLeftMargin),CONVERT(varchar(100),@LeftMargin)
+IF (@ORightMargin IS NOT NULL AND @RightMargin IS NULL) OR (@ORightMargin IS NULL AND @RightMargin IS NOT NULL) OR (@ORightMargin <> @RightMargin)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1530,'Right Margin',1493,'RightMargin',CONVERT(varchar(100),@ORightMargin),CONVERT(varchar(100),@RightMargin)
+IF (@OPageWidth IS NOT NULL AND @PageWidth IS NULL) OR (@OPageWidth IS NULL AND @PageWidth IS NOT NULL) OR (@OPageWidth <> @PageWidth)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1531,'Page Width',1488,'PageWidth',CONVERT(varchar(100),@OPageWidth),CONVERT(varchar(100),@PageWidth)
+IF (@OPageHeight IS NOT NULL AND @PageHeight IS NULL) OR (@OPageHeight IS NULL AND @PageHeight IS NOT NULL) OR (@OPageHeight <> @PageHeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1532,'Page Height',1489,'PageHeight',CONVERT(varchar(100),@OPageHeight),CONVERT(varchar(100),@PageHeight)
+IF (@OReportTypeCd IS NOT NULL AND @ReportTypeCd IS NULL) OR (@OReportTypeCd IS NULL AND @ReportTypeCd IS NOT NULL) OR (@OReportTypeCd <> @ReportTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1729,'Report Type',1718,'ReportTypeCd',@OReportTypeCd,@ReportTypeCd
+IF (@OAllowSelect IS NOT NULL AND @AllowSelect IS NULL) OR (@OAllowSelect IS NULL AND @AllowSelect IS NOT NULL) OR (@OAllowSelect <> @AllowSelect)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1773,'Allow Columns Selection',1792,'AllowSelect',@OAllowSelect,@AllowSelect
+IF (@OAuthRequired IS NOT NULL AND @AuthRequired IS NULL) OR (@OAuthRequired IS NULL AND @AuthRequired IS NOT NULL) OR (@OAuthRequired <> @AuthRequired)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1991,'Authentication',2120,'AuthRequired',@OAuthRequired,@AuthRequired
+IF (@OCommandTimeOut IS NOT NULL AND @CommandTimeOut IS NULL) OR (@OCommandTimeOut IS NULL AND @CommandTimeOut IS NOT NULL) OR (@OCommandTimeOut <> @CommandTimeOut)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4376,'Command Time Out(sec)',7662,'CommandTimeOut',CONVERT(varchar(100),@OCommandTimeOut),CONVERT(varchar(100),@CommandTimeOut)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd69D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd69D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd69D
+ @ReportCriHlpId		Int
+,@CultureId		SmallInt
+,@ColumnHeader		NVarChar(50)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+SELECT @SearchCol=ReportCriHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader FROM dbo.ReportCriHlp WHERE ReportCriHlpId=@ReportCriHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',69,'N',98,@ReportCriHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1097,'Culture',923,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1098,'Column Label',924,'ColumnHeader',@OColumnHeader,@ColumnHeader
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd69M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd69M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd69M
+ @ReportCriId		Int
+,@ReportId		Int
+,@ReportGrpId		Int
+,@TableId		Int
+,@TableAbbr		VarChar(10)
+,@ColumnName		VarChar(50)
+,@TabIndex		SmallInt
+,@DataTypeId		TinyInt
+,@DataTypeSize		SmallInt
+,@DisplayModeId		TinyInt
+,@RowSize		SmallInt
+,@DdlKeyColumnName		VarChar(50)
+,@DdlRefColumnName		VarChar(50)
+,@RequiredValid		Char(1)
+,@WhereClause		VarChar(1000)
+,@RegClause		VarChar(400)
+,@ColumnSize		SmallInt
+,@DdlSrtColumnName		VarChar(50)
+,@LabelCss		VarChar(100)
+,@ContentCss		VarChar(100)
+,@DefaultValue		NVarChar(100)
+,@DdlFtrColumnId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@OReportGrpId		Int
+		,@OTableId		Int
+		,@OTableAbbr		VarChar(10)
+		,@OColumnName		VarChar(50)
+		,@OTabIndex		SmallInt
+		,@ODataTypeId		TinyInt
+		,@ODataTypeSize		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ORowSize		SmallInt
+		,@ODdlKeyColumnName		VarChar(50)
+		,@ODdlRefColumnName		VarChar(50)
+		,@ORequiredValid		Char(1)
+		,@OWhereClause		VarChar(1000)
+		,@ORegClause		VarChar(400)
+		,@OColumnSize		SmallInt
+		,@ODdlSrtColumnName		VarChar(50)
+		,@OLabelCss		VarChar(100)
+		,@OContentCss		VarChar(100)
+		,@ODefaultValue		NVarChar(100)
+		,@ODdlFtrColumnId		Int
+SELECT @SearchCol=ReportCriId,@OReportId=ReportId,@OReportGrpId=ReportGrpId,@OTableId=TableId,@OTableAbbr=TableAbbr,@OColumnName=ColumnName,@OTabIndex=TabIndex,@ODataTypeId=DataTypeId,@ODataTypeSize=DataTypeSize,@ODisplayModeId=DisplayModeId,@ORowSize=RowSize,@ODdlKeyColumnName=DdlKeyColumnName,@ODdlRefColumnName=DdlRefColumnName,@ORequiredValid=RequiredValid,@OWhereClause=WhereClause,@ORegClause=RegClause,@OColumnSize=ColumnSize,@ODdlSrtColumnName=DdlSrtColumnName,@OLabelCss=LabelCss,@OContentCss=ContentCss,@ODefaultValue=DefaultValue,@ODdlFtrColumnId=DdlFtrColumnId FROM dbo.ReportCri WHERE ReportCriId=@ReportCriId
+IF ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OReportGrpId IS NOT NULL AND @ReportGrpId IS NULL) OR (@OReportGrpId IS NULL AND @ReportGrpId IS NOT NULL) OR (@OReportGrpId <> @ReportGrpId)) OR ((@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)) OR ((@OTableAbbr IS NOT NULL AND @TableAbbr IS NULL) OR (@OTableAbbr IS NULL AND @TableAbbr IS NOT NULL) OR (@OTableAbbr <> @TableAbbr)) OR ((@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)) OR ((@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)) OR ((@ODataTypeId IS NOT NULL AND @DataTypeId IS NULL) OR (@ODataTypeId IS NULL AND @DataTypeId IS NOT NULL) OR (@ODataTypeId <> @DataTypeId)) OR ((@ODataTypeSize IS NOT NULL AND @DataTypeSize IS NULL) OR (@ODataTypeSize IS NULL AND @DataTypeSize IS NOT NULL) OR (@ODataTypeSize <> @DataTypeSize)) OR ((@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)) OR ((@ORowSize IS NOT NULL AND @RowSize IS NULL) OR (@ORowSize IS NULL AND @RowSize IS NOT NULL) OR (@ORowSize <> @RowSize)) OR ((@ODdlKeyColumnName IS NOT NULL AND @DdlKeyColumnName IS NULL) OR (@ODdlKeyColumnName IS NULL AND @DdlKeyColumnName IS NOT NULL) OR (@ODdlKeyColumnName <> @DdlKeyColumnName)) OR ((@ODdlRefColumnName IS NOT NULL AND @DdlRefColumnName IS NULL) OR (@ODdlRefColumnName IS NULL AND @DdlRefColumnName IS NOT NULL) OR (@ODdlRefColumnName <> @DdlRefColumnName)) OR ((@ORequiredValid IS NOT NULL AND @RequiredValid IS NULL) OR (@ORequiredValid IS NULL AND @RequiredValid IS NOT NULL) OR (@ORequiredValid <> @RequiredValid)) OR ((@OWhereClause IS NOT NULL AND @WhereClause IS NULL) OR (@OWhereClause IS NULL AND @WhereClause IS NOT NULL) OR (@OWhereClause <> @WhereClause)) OR ((@ORegClause IS NOT NULL AND @RegClause IS NULL) OR (@ORegClause IS NULL AND @RegClause IS NOT NULL) OR (@ORegClause <> @RegClause)) OR ((@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)) OR ((@ODdlSrtColumnName IS NOT NULL AND @DdlSrtColumnName IS NULL) OR (@ODdlSrtColumnName IS NULL AND @DdlSrtColumnName IS NOT NULL) OR (@ODdlSrtColumnName <> @DdlSrtColumnName)) OR ((@OLabelCss IS NOT NULL AND @LabelCss IS NULL) OR (@OLabelCss IS NULL AND @LabelCss IS NOT NULL) OR (@OLabelCss <> @LabelCss)) OR ((@OContentCss IS NOT NULL AND @ContentCss IS NULL) OR (@OContentCss IS NULL AND @ContentCss IS NOT NULL) OR (@OContentCss <> @ContentCss)) OR ((@ODefaultValue IS NOT NULL AND @DefaultValue IS NULL) OR (@ODefaultValue IS NULL AND @DefaultValue IS NOT NULL) OR (@ODefaultValue <> @DefaultValue)) OR ((@ODdlFtrColumnId IS NOT NULL AND @DdlFtrColumnId IS NULL) OR (@ODdlFtrColumnId IS NULL AND @DdlFtrColumnId IS NOT NULL) OR (@ODdlFtrColumnId <> @DdlFtrColumnId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',69,'Y',97,@ReportCriId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1075,'Report',902,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@OReportGrpId IS NOT NULL AND @ReportGrpId IS NULL) OR (@OReportGrpId IS NULL AND @ReportGrpId IS NOT NULL) OR (@OReportGrpId <> @ReportGrpId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1076,'Report Group',903,'ReportGrpId',CONVERT(varchar(100),@OReportGrpId),CONVERT(varchar(100),@ReportGrpId)
+IF (@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1077,'Permission Table',904,'TableId',CONVERT(varchar(100),@OTableId),CONVERT(varchar(100),@TableId)
+IF (@OTableAbbr IS NOT NULL AND @TableAbbr IS NULL) OR (@OTableAbbr IS NULL AND @TableAbbr IS NOT NULL) OR (@OTableAbbr <> @TableAbbr)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1078,'Table Abbreviation',905,'TableAbbr',@OTableAbbr,@TableAbbr
+IF (@OColumnName IS NOT NULL AND @ColumnName IS NULL) OR (@OColumnName IS NULL AND @ColumnName IS NOT NULL) OR (@OColumnName <> @ColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1079,'Column Name',906,'ColumnName',@OColumnName,@ColumnName
+IF (@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1080,'Tab Index',907,'TabIndex',CONVERT(varchar(100),@OTabIndex),CONVERT(varchar(100),@TabIndex)
+IF (@ODataTypeId IS NOT NULL AND @DataTypeId IS NULL) OR (@ODataTypeId IS NULL AND @DataTypeId IS NOT NULL) OR (@ODataTypeId <> @DataTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1081,'Data Type',908,'DataTypeId',CONVERT(varchar(100),@ODataTypeId),CONVERT(varchar(100),@DataTypeId)
+IF (@ODataTypeSize IS NOT NULL AND @DataTypeSize IS NULL) OR (@ODataTypeSize IS NULL AND @DataTypeSize IS NOT NULL) OR (@ODataTypeSize <> @DataTypeSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1082,'Data Type Size',909,'DataTypeSize',CONVERT(varchar(100),@ODataTypeSize),CONVERT(varchar(100),@DataTypeSize)
+IF (@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1083,'Display Mode',910,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),CONVERT(varchar(100),@DisplayModeId)
+IF (@ORowSize IS NOT NULL AND @RowSize IS NULL) OR (@ORowSize IS NULL AND @RowSize IS NOT NULL) OR (@ORowSize <> @RowSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1084,'List Row Size',911,'RowSize',CONVERT(varchar(100),@ORowSize),CONVERT(varchar(100),@RowSize)
+IF (@ODdlKeyColumnName IS NOT NULL AND @DdlKeyColumnName IS NULL) OR (@ODdlKeyColumnName IS NULL AND @DdlKeyColumnName IS NOT NULL) OR (@ODdlKeyColumnName <> @DdlKeyColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1085,'DropDown Key Column',912,'DdlKeyColumnName',@ODdlKeyColumnName,@DdlKeyColumnName
+IF (@ODdlRefColumnName IS NOT NULL AND @DdlRefColumnName IS NULL) OR (@ODdlRefColumnName IS NULL AND @DdlRefColumnName IS NOT NULL) OR (@ODdlRefColumnName <> @DdlRefColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1086,'DropDown Ref Column',913,'DdlRefColumnName',@ODdlRefColumnName,@DdlRefColumnName
+IF (@ORequiredValid IS NOT NULL AND @RequiredValid IS NULL) OR (@ORequiredValid IS NULL AND @RequiredValid IS NOT NULL) OR (@ORequiredValid <> @RequiredValid)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1087,'Require Validation',914,'RequiredValid',@ORequiredValid,@RequiredValid
+IF (@OWhereClause IS NOT NULL AND @WhereClause IS NULL) OR (@OWhereClause IS NULL AND @WhereClause IS NOT NULL) OR (@OWhereClause <> @WhereClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1090,'Where Clause',917,'WhereClause',@OWhereClause,@WhereClause
+IF (@ORegClause IS NOT NULL AND @RegClause IS NULL) OR (@ORegClause IS NULL AND @RegClause IS NOT NULL) OR (@ORegClause <> @RegClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1091,'Regular Criteria Clause',918,'RegClause',@ORegClause,@RegClause
+IF (@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1158,'Column Size (px)',969,'ColumnSize',CONVERT(varchar(100),@OColumnSize),CONVERT(varchar(100),@ColumnSize)
+IF (@ODdlSrtColumnName IS NOT NULL AND @DdlSrtColumnName IS NULL) OR (@ODdlSrtColumnName IS NULL AND @DdlSrtColumnName IS NOT NULL) OR (@ODdlSrtColumnName <> @DdlSrtColumnName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1279,'DropDown Sort Column',1121,'DdlSrtColumnName',@ODdlSrtColumnName,@DdlSrtColumnName
+IF (@OLabelCss IS NOT NULL AND @LabelCss IS NULL) OR (@OLabelCss IS NULL AND @LabelCss IS NOT NULL) OR (@OLabelCss <> @LabelCss)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1861,'Label Style',1898,'LabelCss',@OLabelCss,@LabelCss
+IF (@OContentCss IS NOT NULL AND @ContentCss IS NULL) OR (@OContentCss IS NULL AND @ContentCss IS NOT NULL) OR (@OContentCss <> @ContentCss)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1862,'Content Style',1897,'ContentCss',@OContentCss,@ContentCss
+IF (@ODefaultValue IS NOT NULL AND @DefaultValue IS NULL) OR (@ODefaultValue IS NULL AND @DefaultValue IS NOT NULL) OR (@ODefaultValue <> @DefaultValue)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1986,'Default Value',2118,'DefaultValue',@ODefaultValue,@DefaultValue
+IF (@ODdlFtrColumnId IS NOT NULL AND @DdlFtrColumnId IS NULL) OR (@ODdlFtrColumnId IS NULL AND @DdlFtrColumnId IS NOT NULL) OR (@ODdlFtrColumnId <> @DdlFtrColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3367,'DropDown Filter Column',5360,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),CONVERT(varchar(100),@DdlFtrColumnId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd73D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd73D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd73D
+ @ScreenCriHlpId		Int
+,@CultureId		SmallInt
+,@ColumnHeader		NVarChar(50)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OColumnHeader		NVarChar(50)
+SELECT @SearchCol=ScreenCriHlpId,@OCultureId=CultureId,@OColumnHeader=ColumnHeader FROM dbo.ScreenCriHlp WHERE ScreenCriHlpId=@ScreenCriHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',73,'N',105,@ScreenCriHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1191,'Culture',990,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OColumnHeader IS NOT NULL AND @ColumnHeader IS NULL) OR (@OColumnHeader IS NULL AND @ColumnHeader IS NOT NULL) OR (@OColumnHeader <> @ColumnHeader)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1192,'Column Label',991,'ColumnHeader',@OColumnHeader,@ColumnHeader
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd73M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd73M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd73M
+ @ScreenCriId		Int
+,@ScreenId		Int
+,@ColumnId		Int
+,@TabIndex		SmallInt
+,@DisplayModeId		TinyInt
+,@RowSize		SmallInt
+,@DdlKeyColumnId		Int
+,@DdlRefColumnId		Int
+,@RequiredValid		Char(1)
+,@ColumnSize		SmallInt
+,@DdlSrtColumnId		Int
+,@ColumnJustify		Char(1)
+,@LabelCss		VarChar(100)
+,@ContentCss		VarChar(100)
+,@OperatorId		TinyInt
+,@DdlFtrColumnId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OColumnId		Int
+		,@OTabIndex		SmallInt
+		,@ODisplayModeId		TinyInt
+		,@ORowSize		SmallInt
+		,@ODdlKeyColumnId		Int
+		,@ODdlRefColumnId		Int
+		,@ORequiredValid		Char(1)
+		,@OColumnSize		SmallInt
+		,@ODdlSrtColumnId		Int
+		,@OColumnJustify		Char(1)
+		,@OLabelCss		VarChar(100)
+		,@OContentCss		VarChar(100)
+		,@OOperatorId		TinyInt
+		,@ODdlFtrColumnId		Int
+SELECT @SearchCol=ScreenCriId,@OScreenId=ScreenId,@OColumnId=ColumnId,@OTabIndex=TabIndex,@ODisplayModeId=DisplayModeId,@ORowSize=RowSize,@ODdlKeyColumnId=DdlKeyColumnId,@ODdlRefColumnId=DdlRefColumnId,@ORequiredValid=RequiredValid,@OColumnSize=ColumnSize,@ODdlSrtColumnId=DdlSrtColumnId,@OColumnJustify=ColumnJustify,@OLabelCss=LabelCss,@OContentCss=ContentCss,@OOperatorId=OperatorId,@ODdlFtrColumnId=DdlFtrColumnId FROM dbo.ScreenCri WHERE ScreenCriId=@ScreenCriId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)) OR ((@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)) OR ((@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)) OR ((@ORowSize IS NOT NULL AND @RowSize IS NULL) OR (@ORowSize IS NULL AND @RowSize IS NOT NULL) OR (@ORowSize <> @RowSize)) OR ((@ODdlKeyColumnId IS NOT NULL AND @DdlKeyColumnId IS NULL) OR (@ODdlKeyColumnId IS NULL AND @DdlKeyColumnId IS NOT NULL) OR (@ODdlKeyColumnId <> @DdlKeyColumnId)) OR ((@ODdlRefColumnId IS NOT NULL AND @DdlRefColumnId IS NULL) OR (@ODdlRefColumnId IS NULL AND @DdlRefColumnId IS NOT NULL) OR (@ODdlRefColumnId <> @DdlRefColumnId)) OR ((@ORequiredValid IS NOT NULL AND @RequiredValid IS NULL) OR (@ORequiredValid IS NULL AND @RequiredValid IS NOT NULL) OR (@ORequiredValid <> @RequiredValid)) OR ((@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)) OR ((@ODdlSrtColumnId IS NOT NULL AND @DdlSrtColumnId IS NULL) OR (@ODdlSrtColumnId IS NULL AND @DdlSrtColumnId IS NOT NULL) OR (@ODdlSrtColumnId <> @DdlSrtColumnId)) OR ((@OColumnJustify IS NOT NULL AND @ColumnJustify IS NULL) OR (@OColumnJustify IS NULL AND @ColumnJustify IS NOT NULL) OR (@OColumnJustify <> @ColumnJustify)) OR ((@OLabelCss IS NOT NULL AND @LabelCss IS NULL) OR (@OLabelCss IS NULL AND @LabelCss IS NOT NULL) OR (@OLabelCss <> @LabelCss)) OR ((@OContentCss IS NOT NULL AND @ContentCss IS NULL) OR (@OContentCss IS NULL AND @ContentCss IS NOT NULL) OR (@OContentCss <> @ContentCss)) OR ((@OOperatorId IS NOT NULL AND @OperatorId IS NULL) OR (@OOperatorId IS NULL AND @OperatorId IS NOT NULL) OR (@OOperatorId <> @OperatorId)) OR ((@ODdlFtrColumnId IS NOT NULL AND @DdlFtrColumnId IS NULL) OR (@ODdlFtrColumnId IS NULL AND @DdlFtrColumnId IS NOT NULL) OR (@ODdlFtrColumnId <> @DdlFtrColumnId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',73,'Y',104,@ScreenCriId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1179,'Screen',971,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1181,'Database Column',975,'ColumnId',CONVERT(varchar(100),@OColumnId),CONVERT(varchar(100),@ColumnId)
+IF (@OTabIndex IS NOT NULL AND @TabIndex IS NULL) OR (@OTabIndex IS NULL AND @TabIndex IS NOT NULL) OR (@OTabIndex <> @TabIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1182,'Tab Index',976,'TabIndex',CONVERT(varchar(100),@OTabIndex),CONVERT(varchar(100),@TabIndex)
+IF (@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1183,'Display Mode',979,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),CONVERT(varchar(100),@DisplayModeId)
+IF (@ORowSize IS NOT NULL AND @RowSize IS NULL) OR (@ORowSize IS NULL AND @RowSize IS NOT NULL) OR (@ORowSize <> @RowSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1184,'List Row Size',980,'RowSize',CONVERT(varchar(100),@ORowSize),CONVERT(varchar(100),@RowSize)
+IF (@ODdlKeyColumnId IS NOT NULL AND @DdlKeyColumnId IS NULL) OR (@ODdlKeyColumnId IS NULL AND @DdlKeyColumnId IS NOT NULL) OR (@ODdlKeyColumnId <> @DdlKeyColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1185,'DropDown Key Column',981,'DdlKeyColumnId',CONVERT(varchar(100),@ODdlKeyColumnId),CONVERT(varchar(100),@DdlKeyColumnId)
+IF (@ODdlRefColumnId IS NOT NULL AND @DdlRefColumnId IS NULL) OR (@ODdlRefColumnId IS NULL AND @DdlRefColumnId IS NOT NULL) OR (@ODdlRefColumnId <> @DdlRefColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1186,'DropDown Ref Column',982,'DdlRefColumnId',CONVERT(varchar(100),@ODdlRefColumnId),CONVERT(varchar(100),@DdlRefColumnId)
+IF (@ORequiredValid IS NOT NULL AND @RequiredValid IS NULL) OR (@ORequiredValid IS NULL AND @RequiredValid IS NOT NULL) OR (@ORequiredValid <> @RequiredValid)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1187,'Require Validation',983,'RequiredValid',@ORequiredValid,@RequiredValid
+IF (@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1188,'Column Size (px)',987,'ColumnSize',CONVERT(varchar(100),@OColumnSize),CONVERT(varchar(100),@ColumnSize)
+IF (@ODdlSrtColumnId IS NOT NULL AND @DdlSrtColumnId IS NULL) OR (@ODdlSrtColumnId IS NULL AND @DdlSrtColumnId IS NOT NULL) OR (@ODdlSrtColumnId <> @DdlSrtColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1278,'DropDown Sort Column',1120,'DdlSrtColumnId',CONVERT(varchar(100),@ODdlSrtColumnId),CONVERT(varchar(100),@DdlSrtColumnId)
+IF (@OColumnJustify IS NOT NULL AND @ColumnJustify IS NULL) OR (@OColumnJustify IS NULL AND @ColumnJustify IS NOT NULL) OR (@OColumnJustify <> @ColumnJustify)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1425,'Justify',1371,'ColumnJustify',@OColumnJustify,@ColumnJustify
+IF (@OLabelCss IS NOT NULL AND @LabelCss IS NULL) OR (@OLabelCss IS NULL AND @LabelCss IS NOT NULL) OR (@OLabelCss <> @LabelCss)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1859,'Label Style',1896,'LabelCss',@OLabelCss,@LabelCss
+IF (@OContentCss IS NOT NULL AND @ContentCss IS NULL) OR (@OContentCss IS NULL AND @ContentCss IS NOT NULL) OR (@OContentCss <> @ContentCss)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1860,'Content Style',1895,'ContentCss',@OContentCss,@ContentCss
+IF (@OOperatorId IS NOT NULL AND @OperatorId IS NULL) OR (@OOperatorId IS NULL AND @OperatorId IS NOT NULL) OR (@OOperatorId <> @OperatorId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3305,'Operator',5340,'OperatorId',CONVERT(varchar(100),@OOperatorId),CONVERT(varchar(100),@OperatorId)
+IF (@ODdlFtrColumnId IS NOT NULL AND @DdlFtrColumnId IS NULL) OR (@ODdlFtrColumnId IS NULL AND @DdlFtrColumnId IS NOT NULL) OR (@ODdlFtrColumnId <> @DdlFtrColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3365,'DropDown Filter Column',5361,'DdlFtrColumnId',CONVERT(varchar(100),@ODdlFtrColumnId),CONVERT(varchar(100),@DdlFtrColumnId)
+END
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -694,11 +10970,11 @@ ALTER PROCEDURE dbo.Audit_Upd76M
 ,@RowVisible		Char(1)
 ,@TopVisible		Char(1)
 ,@BotVisible		Char(1)
-,@UserId		int
+,@_UserId		int
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
-DECLARE	 @ScrAuditId		bigint
+DECLARE	 @_ScrAuditId		bigint
 		,@SearchCol		nvarchar(2000)
 		,@OScreenId		Int
 		,@OCultureId		SmallInt
@@ -716,44 +10992,1450 @@ SELECT @SearchCol=ButtonHlpId,@OScreenId=ScreenId,@OCultureId=CultureId,@OButton
 IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OButtonTypeId IS NOT NULL AND @ButtonTypeId IS NULL) OR (@OButtonTypeId IS NULL AND @ButtonTypeId IS NOT NULL) OR (@OButtonTypeId <> @ButtonTypeId)) OR ((@OButtonName IS NOT NULL AND @ButtonName IS NULL) OR (@OButtonName IS NULL AND @ButtonName IS NOT NULL) OR (@OButtonName <> @ButtonName)) OR ((@OButtonToolTip IS NOT NULL AND @ButtonToolTip IS NULL) OR (@OButtonToolTip IS NULL AND @ButtonToolTip IS NOT NULL) OR (@OButtonToolTip <> @ButtonToolTip)) OR ((@OButtonVisible IS NOT NULL AND @ButtonVisible IS NULL) OR (@OButtonVisible IS NULL AND @ButtonVisible IS NOT NULL) OR (@OButtonVisible <> @ButtonVisible)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)) OR ((@OButtonLongNm IS NOT NULL AND @ButtonLongNm IS NULL) OR (@OButtonLongNm IS NULL AND @ButtonLongNm IS NOT NULL) OR (@OButtonLongNm <> @ButtonLongNm)) OR ((@ORowVisible IS NOT NULL AND @RowVisible IS NULL) OR (@ORowVisible IS NULL AND @RowVisible IS NOT NULL) OR (@ORowVisible <> @RowVisible)) OR ((@OTopVisible IS NOT NULL AND @TopVisible IS NULL) OR (@OTopVisible IS NULL AND @TopVisible IS NOT NULL) OR (@OTopVisible <> @TopVisible)) OR ((@OBotVisible IS NOT NULL AND @BotVisible IS NULL) OR (@OBotVisible IS NULL AND @BotVisible IS NOT NULL) OR (@OBotVisible <> @BotVisible))
 BEGIN
 INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
-	SELECT 'U',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@UserId,getutcdate()
-SELECT @ScrAuditId = @@IDENTITY
+	SELECT 'U',76,'Y',116,@ButtonHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
 IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1208,'Screen',1021,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+	SELECT @_ScrAuditId,1208,'Screen',1021,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
 IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1209,'Culture',1022,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+	SELECT @_ScrAuditId,1209,'Culture',1022,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
 IF (@OButtonTypeId IS NOT NULL AND @ButtonTypeId IS NULL) OR (@OButtonTypeId IS NULL AND @ButtonTypeId IS NOT NULL) OR (@OButtonTypeId <> @ButtonTypeId)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1210,'Button Type',1023,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),CONVERT(varchar(100),@ButtonTypeId)
+	SELECT @_ScrAuditId,1210,'Button Type',1023,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),CONVERT(varchar(100),@ButtonTypeId)
 IF (@OButtonName IS NOT NULL AND @ButtonName IS NULL) OR (@OButtonName IS NULL AND @ButtonName IS NOT NULL) OR (@OButtonName <> @ButtonName)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1211,'Alternate Name',1024,'ButtonName',@OButtonName,@ButtonName
+	SELECT @_ScrAuditId,1211,'Alternate Name',1024,'ButtonName',@OButtonName,@ButtonName
 IF (@OButtonToolTip IS NOT NULL AND @ButtonToolTip IS NULL) OR (@OButtonToolTip IS NULL AND @ButtonToolTip IS NOT NULL) OR (@OButtonToolTip <> @ButtonToolTip)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,@ButtonToolTip
+	SELECT @_ScrAuditId,1212,'Alternate Tool Tip',1025,'ButtonToolTip',@OButtonToolTip,@ButtonToolTip
 IF (@OButtonVisible IS NOT NULL AND @ButtonVisible IS NULL) OR (@OButtonVisible IS NULL AND @ButtonVisible IS NOT NULL) OR (@OButtonVisible <> @ButtonVisible)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,@ButtonVisible
+	SELECT @_ScrAuditId,1213,'Visibility',1026,'ButtonVisible',@OButtonVisible,@ButtonVisible
 IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+	SELECT @_ScrAuditId,1214,'Report',1041,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
 IF (@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(100),@OWizardId),CONVERT(varchar(100),@WizardId)
+	SELECT @_ScrAuditId,1215,'Wizard',1042,'WizardId',CONVERT(varchar(100),@OWizardId),CONVERT(varchar(100),@WizardId)
 IF (@OButtonLongNm IS NOT NULL AND @ButtonLongNm IS NULL) OR (@OButtonLongNm IS NULL AND @ButtonLongNm IS NOT NULL) OR (@OButtonLongNm <> @ButtonLongNm)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,@ButtonLongNm
+	SELECT @_ScrAuditId,4159,'Alternative Long Name',7472,'ButtonLongNm',@OButtonLongNm,@ButtonLongNm
 IF (@ORowVisible IS NOT NULL AND @RowVisible IS NULL) OR (@ORowVisible IS NULL AND @RowVisible IS NOT NULL) OR (@ORowVisible <> @RowVisible)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,@RowVisible
+	SELECT @_ScrAuditId,4160,'Row Menu',7475,'RowVisible',@ORowVisible,@RowVisible
 IF (@OTopVisible IS NOT NULL AND @TopVisible IS NULL) OR (@OTopVisible IS NULL AND @TopVisible IS NOT NULL) OR (@OTopVisible <> @TopVisible)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,@TopVisible
+	SELECT @_ScrAuditId,4161,'Top Menu',7473,'TopVisible',@OTopVisible,@TopVisible
 IF (@OBotVisible IS NOT NULL AND @BotVisible IS NULL) OR (@OBotVisible IS NULL AND @BotVisible IS NOT NULL) OR (@OBotVisible <> @BotVisible)
 INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
-	SELECT @ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,@BotVisible
+	SELECT @_ScrAuditId,4163,'Bottom Menu',7474,'BotVisible',@OBotVisible,@BotVisible
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd79M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd79M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd79M
+ @ClientRuleId		Int
+,@ScreenId		Int
+,@CultureId		SmallInt
+,@ScreenObjHlpId		Int
+,@ClientScript		SmallInt
+,@UserScriptEvent		VarChar(50)
+,@UserScriptName		NVarChar(1000)
+,@ScriptParam		NVarChar(500)
+,@ReportId		Int
+,@ScreenCriHlpId		Int
+,@ReportCriHlpId		Int
+,@RuleDescription		NVarChar(500)
+,@RuleTypeId		TinyInt
+,@RuleName		NVarChar(100)
+,@RuleMethodId		TinyInt
+,@RuleCntTypeId		TinyInt
+,@ClientRuleProg		NVarChar(max)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenId		Int
+		,@OCultureId		SmallInt
+		,@OScreenObjHlpId		Int
+		,@OClientScript		SmallInt
+		,@OUserScriptEvent		VarChar(50)
+		,@OUserScriptName		NVarChar(1000)
+		,@OScriptParam		NVarChar(500)
+		,@OReportId		Int
+		,@OScreenCriHlpId		Int
+		,@OReportCriHlpId		Int
+		,@ORuleDescription		NVarChar(500)
+		,@ORuleTypeId		TinyInt
+		,@ORuleName		NVarChar(100)
+		,@ORuleMethodId		TinyInt
+		,@ORuleCntTypeId		TinyInt
+		,@OClientRuleProg		NVarChar(max)
+SELECT @SearchCol=ClientRuleId,@OScreenId=ScreenId,@OCultureId=CultureId,@OScreenObjHlpId=ScreenObjHlpId,@OClientScript=ClientScript,@OUserScriptEvent=UserScriptEvent,@OUserScriptName=UserScriptName,@OScriptParam=ScriptParam,@OReportId=ReportId,@OScreenCriHlpId=ScreenCriHlpId,@OReportCriHlpId=ReportCriHlpId,@ORuleDescription=RuleDescription,@ORuleTypeId=RuleTypeId,@ORuleName=RuleName,@ORuleMethodId=RuleMethodId,@ORuleCntTypeId=RuleCntTypeId,@OClientRuleProg=ClientRuleProg FROM dbo.ClientRule WHERE ClientRuleId=@ClientRuleId
+IF ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OScreenObjHlpId IS NOT NULL AND @ScreenObjHlpId IS NULL) OR (@OScreenObjHlpId IS NULL AND @ScreenObjHlpId IS NOT NULL) OR (@OScreenObjHlpId <> @ScreenObjHlpId)) OR ((@OClientScript IS NOT NULL AND @ClientScript IS NULL) OR (@OClientScript IS NULL AND @ClientScript IS NOT NULL) OR (@OClientScript <> @ClientScript)) OR ((@OUserScriptEvent IS NOT NULL AND @UserScriptEvent IS NULL) OR (@OUserScriptEvent IS NULL AND @UserScriptEvent IS NOT NULL) OR (@OUserScriptEvent <> @UserScriptEvent)) OR ((@OUserScriptName IS NOT NULL AND @UserScriptName IS NULL) OR (@OUserScriptName IS NULL AND @UserScriptName IS NOT NULL) OR (@OUserScriptName <> @UserScriptName)) OR ((@OScriptParam IS NOT NULL AND @ScriptParam IS NULL) OR (@OScriptParam IS NULL AND @ScriptParam IS NOT NULL) OR (@OScriptParam <> @ScriptParam)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OScreenCriHlpId IS NOT NULL AND @ScreenCriHlpId IS NULL) OR (@OScreenCriHlpId IS NULL AND @ScreenCriHlpId IS NOT NULL) OR (@OScreenCriHlpId <> @ScreenCriHlpId)) OR ((@OReportCriHlpId IS NOT NULL AND @ReportCriHlpId IS NULL) OR (@OReportCriHlpId IS NULL AND @ReportCriHlpId IS NOT NULL) OR (@OReportCriHlpId <> @ReportCriHlpId)) OR ((@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)) OR ((@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)) OR ((@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)) OR ((@ORuleMethodId IS NOT NULL AND @RuleMethodId IS NULL) OR (@ORuleMethodId IS NULL AND @RuleMethodId IS NOT NULL) OR (@ORuleMethodId <> @RuleMethodId)) OR ((@ORuleCntTypeId IS NOT NULL AND @RuleCntTypeId IS NULL) OR (@ORuleCntTypeId IS NULL AND @RuleCntTypeId IS NOT NULL) OR (@ORuleCntTypeId <> @RuleCntTypeId)) OR ((@OClientRuleProg IS NOT NULL AND @ClientRuleProg IS NULL) OR (@OClientRuleProg IS NULL AND @ClientRuleProg IS NOT NULL) OR (@OClientRuleProg <> @ClientRuleProg))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',79,'Y',127,@ClientRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1258,'Screen',1103,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1259,'Culture',1104,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OScreenObjHlpId IS NOT NULL AND @ScreenObjHlpId IS NULL) OR (@OScreenObjHlpId IS NULL AND @ScreenObjHlpId IS NOT NULL) OR (@OScreenObjHlpId <> @ScreenObjHlpId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1260,'Object',1105,'ScreenObjHlpId',CONVERT(varchar(100),@OScreenObjHlpId),CONVERT(varchar(100),@ScreenObjHlpId)
+IF (@OClientScript IS NOT NULL AND @ClientScript IS NULL) OR (@OClientScript IS NULL AND @ClientScript IS NOT NULL) OR (@OClientScript <> @ClientScript)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1261,'Stock Script',1106,'ClientScript',CONVERT(varchar(100),@OClientScript),CONVERT(varchar(100),@ClientScript)
+IF (@OUserScriptEvent IS NOT NULL AND @UserScriptEvent IS NULL) OR (@OUserScriptEvent IS NULL AND @UserScriptEvent IS NOT NULL) OR (@OUserScriptEvent <> @UserScriptEvent)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1262,'Event Override',1107,'UserScriptEvent',@OUserScriptEvent,@UserScriptEvent
+IF (@OUserScriptName IS NOT NULL AND @UserScriptName IS NULL) OR (@OUserScriptName IS NULL AND @UserScriptName IS NOT NULL) OR (@OUserScriptName <> @UserScriptName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1263,'Script Override',1108,'UserScriptName',@OUserScriptName,@UserScriptName
+IF (@OScriptParam IS NOT NULL AND @ScriptParam IS NULL) OR (@OScriptParam IS NULL AND @ScriptParam IS NOT NULL) OR (@OScriptParam <> @ScriptParam)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1264,'Parameters',1109,'ScriptParam',@OScriptParam,@ScriptParam
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1265,'Report',1112,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@OScreenCriHlpId IS NOT NULL AND @ScreenCriHlpId IS NULL) OR (@OScreenCriHlpId IS NULL AND @ScreenCriHlpId IS NOT NULL) OR (@OScreenCriHlpId <> @ScreenCriHlpId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1266,'Criteria',1113,'ScreenCriHlpId',CONVERT(varchar(100),@OScreenCriHlpId),CONVERT(varchar(100),@ScreenCriHlpId)
+IF (@OReportCriHlpId IS NOT NULL AND @ReportCriHlpId IS NULL) OR (@OReportCriHlpId IS NULL AND @ReportCriHlpId IS NOT NULL) OR (@OReportCriHlpId <> @ReportCriHlpId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1267,'Criteria',1114,'ReportCriHlpId',CONVERT(varchar(100),@OReportCriHlpId),CONVERT(varchar(100),@ReportCriHlpId)
+IF (@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1292,'Description',1138,'RuleDescription',@ORuleDescription,@RuleDescription
+IF (@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1293,'Rule Type',1139,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),CONVERT(varchar(100),@RuleTypeId)
+IF (@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1294,'Rule Name',1111,'RuleName',@ORuleName,@RuleName
+IF (@ORuleMethodId IS NOT NULL AND @RuleMethodId IS NULL) OR (@ORuleMethodId IS NULL AND @RuleMethodId IS NOT NULL) OR (@ORuleMethodId <> @RuleMethodId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4073,'Rule Method',7378,'RuleMethodId',CONVERT(varchar(100),@ORuleMethodId),CONVERT(varchar(100),@RuleMethodId)
+IF (@ORuleCntTypeId IS NOT NULL AND @RuleCntTypeId IS NULL) OR (@ORuleCntTypeId IS NULL AND @RuleCntTypeId IS NOT NULL) OR (@ORuleCntTypeId <> @RuleCntTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4075,'Embedded CSS/JS',7377,'RuleCntTypeId',CONVERT(varchar(100),@ORuleCntTypeId),CONVERT(varchar(100),@RuleCntTypeId)
+IF (@OClientRuleProg IS NOT NULL AND @ClientRuleProg IS NULL) OR (@OClientRuleProg IS NULL AND @ClientRuleProg IS NOT NULL) OR (@OClientRuleProg <> @ClientRuleProg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4077,'Rule Content',6368,'ClientRuleProg',@OClientRuleProg,@ClientRuleProg
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd80M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd80M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd80M
+ @WebRuleId		Int
+,@RuleTypeId		TinyInt
+,@RuleDescription		NVarChar(500)
+,@ScreenId		Int
+,@ScreenObjId		Int
+,@ButtonTypeId		TinyInt
+,@EventId		TinyInt
+,@WebRuleProg		NVarChar(max)
+,@RuleName		NVarChar(100)
+,@ReactEventId		TinyInt
+,@ReactRuleProg		NVarChar(max)
+,@ReduxEventId		TinyInt
+,@ReduxRuleProg		NVarChar(max)
+,@ServiceEventId		TinyInt
+,@ServiceRuleProg		NVarChar(max)
+,@AsmxEventId		TinyInt
+,@AsmxRuleProg		NVarChar(max)
+,@ForCompanyId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORuleTypeId		TinyInt
+		,@ORuleDescription		NVarChar(500)
+		,@OScreenId		Int
+		,@OScreenObjId		Int
+		,@OButtonTypeId		TinyInt
+		,@OEventId		TinyInt
+		,@OWebRuleProg		NVarChar(max)
+		,@ORuleName		NVarChar(100)
+		,@OReactEventId		TinyInt
+		,@OReactRuleProg		NVarChar(max)
+		,@OReduxEventId		TinyInt
+		,@OReduxRuleProg		NVarChar(max)
+		,@OServiceEventId		TinyInt
+		,@OServiceRuleProg		NVarChar(max)
+		,@OAsmxEventId		TinyInt
+		,@OAsmxRuleProg		NVarChar(max)
+		,@OForCompanyId		Int
+SELECT @SearchCol=WebRuleId,@ORuleTypeId=RuleTypeId,@ORuleDescription=RuleDescription,@OScreenId=ScreenId,@OScreenObjId=ScreenObjId,@OButtonTypeId=ButtonTypeId,@OEventId=EventId,@OWebRuleProg=WebRuleProg,@ORuleName=RuleName,@OReactEventId=ReactEventId,@OReactRuleProg=ReactRuleProg,@OReduxEventId=ReduxEventId,@OReduxRuleProg=ReduxRuleProg,@OServiceEventId=ServiceEventId,@OServiceRuleProg=ServiceRuleProg,@OAsmxEventId=AsmxEventId,@OAsmxRuleProg=AsmxRuleProg,@OForCompanyId=ForCompanyId FROM dbo.WebRule WHERE WebRuleId=@WebRuleId
+IF ((@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)) OR ((@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)) OR ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OScreenObjId IS NOT NULL AND @ScreenObjId IS NULL) OR (@OScreenObjId IS NULL AND @ScreenObjId IS NOT NULL) OR (@OScreenObjId <> @ScreenObjId)) OR ((@OButtonTypeId IS NOT NULL AND @ButtonTypeId IS NULL) OR (@OButtonTypeId IS NULL AND @ButtonTypeId IS NOT NULL) OR (@OButtonTypeId <> @ButtonTypeId)) OR ((@OEventId IS NOT NULL AND @EventId IS NULL) OR (@OEventId IS NULL AND @EventId IS NOT NULL) OR (@OEventId <> @EventId)) OR ((@OWebRuleProg IS NOT NULL AND @WebRuleProg IS NULL) OR (@OWebRuleProg IS NULL AND @WebRuleProg IS NOT NULL) OR (@OWebRuleProg <> @WebRuleProg)) OR ((@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)) OR ((@OReactEventId IS NOT NULL AND @ReactEventId IS NULL) OR (@OReactEventId IS NULL AND @ReactEventId IS NOT NULL) OR (@OReactEventId <> @ReactEventId)) OR ((@OReactRuleProg IS NOT NULL AND @ReactRuleProg IS NULL) OR (@OReactRuleProg IS NULL AND @ReactRuleProg IS NOT NULL) OR (@OReactRuleProg <> @ReactRuleProg)) OR ((@OReduxEventId IS NOT NULL AND @ReduxEventId IS NULL) OR (@OReduxEventId IS NULL AND @ReduxEventId IS NOT NULL) OR (@OReduxEventId <> @ReduxEventId)) OR ((@OReduxRuleProg IS NOT NULL AND @ReduxRuleProg IS NULL) OR (@OReduxRuleProg IS NULL AND @ReduxRuleProg IS NOT NULL) OR (@OReduxRuleProg <> @ReduxRuleProg)) OR ((@OServiceEventId IS NOT NULL AND @ServiceEventId IS NULL) OR (@OServiceEventId IS NULL AND @ServiceEventId IS NOT NULL) OR (@OServiceEventId <> @ServiceEventId)) OR ((@OServiceRuleProg IS NOT NULL AND @ServiceRuleProg IS NULL) OR (@OServiceRuleProg IS NULL AND @ServiceRuleProg IS NOT NULL) OR (@OServiceRuleProg <> @ServiceRuleProg)) OR ((@OAsmxEventId IS NOT NULL AND @AsmxEventId IS NULL) OR (@OAsmxEventId IS NULL AND @AsmxEventId IS NOT NULL) OR (@OAsmxEventId <> @AsmxEventId)) OR ((@OAsmxRuleProg IS NOT NULL AND @AsmxRuleProg IS NULL) OR (@OAsmxRuleProg IS NULL AND @AsmxRuleProg IS NOT NULL) OR (@OAsmxRuleProg <> @AsmxRuleProg)) OR ((@OForCompanyId IS NOT NULL AND @ForCompanyId IS NULL) OR (@OForCompanyId IS NULL AND @ForCompanyId IS NOT NULL) OR (@OForCompanyId <> @ForCompanyId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',80,'Y',128,@WebRuleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@ORuleTypeId IS NOT NULL AND @RuleTypeId IS NULL) OR (@ORuleTypeId IS NULL AND @RuleTypeId IS NOT NULL) OR (@ORuleTypeId <> @RuleTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1284,'Rule Type',1127,'RuleTypeId',CONVERT(varchar(100),@ORuleTypeId),CONVERT(varchar(100),@RuleTypeId)
+IF (@ORuleDescription IS NOT NULL AND @RuleDescription IS NULL) OR (@ORuleDescription IS NULL AND @RuleDescription IS NOT NULL) OR (@ORuleDescription <> @RuleDescription)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1285,'Description',1128,'RuleDescription',@ORuleDescription,@RuleDescription
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1286,'Screen',1129,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OScreenObjId IS NOT NULL AND @ScreenObjId IS NULL) OR (@OScreenObjId IS NULL AND @ScreenObjId IS NOT NULL) OR (@OScreenObjId <> @ScreenObjId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1287,'Screen Column',1130,'ScreenObjId',CONVERT(varchar(100),@OScreenObjId),CONVERT(varchar(100),@ScreenObjId)
+IF (@OButtonTypeId IS NOT NULL AND @ButtonTypeId IS NULL) OR (@OButtonTypeId IS NULL AND @ButtonTypeId IS NOT NULL) OR (@OButtonTypeId <> @ButtonTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1288,'System Button',1131,'ButtonTypeId',CONVERT(varchar(100),@OButtonTypeId),CONVERT(varchar(100),@ButtonTypeId)
+IF (@OEventId IS NOT NULL AND @EventId IS NULL) OR (@OEventId IS NULL AND @EventId IS NOT NULL) OR (@OEventId <> @EventId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1289,'Event',1132,'EventId',CONVERT(varchar(100),@OEventId),CONVERT(varchar(100),@EventId)
+IF (@OWebRuleProg IS NOT NULL AND @WebRuleProg IS NULL) OR (@OWebRuleProg IS NULL AND @WebRuleProg IS NOT NULL) OR (@OWebRuleProg <> @WebRuleProg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1290,'C# Business Rule',1133,'WebRuleProg',@OWebRuleProg,@WebRuleProg
+IF (@ORuleName IS NOT NULL AND @RuleName IS NULL) OR (@ORuleName IS NULL AND @RuleName IS NOT NULL) OR (@ORuleName <> @RuleName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1291,'Rule Name',1137,'RuleName',@ORuleName,@RuleName
+IF (@OReactEventId IS NOT NULL AND @ReactEventId IS NULL) OR (@OReactEventId IS NULL AND @ReactEventId IS NOT NULL) OR (@OReactEventId <> @ReactEventId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4207,'React Event/Type',7552,'ReactEventId',CONVERT(varchar(100),@OReactEventId),CONVERT(varchar(100),@ReactEventId)
+IF (@OReactRuleProg IS NOT NULL AND @ReactRuleProg IS NULL) OR (@OReactRuleProg IS NULL AND @ReactRuleProg IS NOT NULL) OR (@OReactRuleProg <> @ReactRuleProg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4208,'React Business Rule',7551,'ReactRuleProg',@OReactRuleProg,@ReactRuleProg
+IF (@OReduxEventId IS NOT NULL AND @ReduxEventId IS NULL) OR (@OReduxEventId IS NULL AND @ReduxEventId IS NOT NULL) OR (@OReduxEventId <> @ReduxEventId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4210,'Redux Event/Type',7550,'ReduxEventId',CONVERT(varchar(100),@OReduxEventId),CONVERT(varchar(100),@ReduxEventId)
+IF (@OReduxRuleProg IS NOT NULL AND @ReduxRuleProg IS NULL) OR (@OReduxRuleProg IS NULL AND @ReduxRuleProg IS NOT NULL) OR (@OReduxRuleProg <> @ReduxRuleProg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4211,'Redux Business Rule',7549,'ReduxRuleProg',@OReduxRuleProg,@ReduxRuleProg
+IF (@OServiceEventId IS NOT NULL AND @ServiceEventId IS NULL) OR (@OServiceEventId IS NULL AND @ServiceEventId IS NOT NULL) OR (@OServiceEventId <> @ServiceEventId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4212,'Service Event/Rule',7548,'ServiceEventId',CONVERT(varchar(100),@OServiceEventId),CONVERT(varchar(100),@ServiceEventId)
+IF (@OServiceRuleProg IS NOT NULL AND @ServiceRuleProg IS NULL) OR (@OServiceRuleProg IS NULL AND @ServiceRuleProg IS NOT NULL) OR (@OServiceRuleProg <> @ServiceRuleProg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4213,'Service Business Rule',7547,'ServiceRuleProg',@OServiceRuleProg,@ServiceRuleProg
+IF (@OAsmxEventId IS NOT NULL AND @AsmxEventId IS NULL) OR (@OAsmxEventId IS NULL AND @AsmxEventId IS NOT NULL) OR (@OAsmxEventId <> @AsmxEventId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4214,'ASMX Event/Type',7546,'AsmxEventId',CONVERT(varchar(100),@OAsmxEventId),CONVERT(varchar(100),@AsmxEventId)
+IF (@OAsmxRuleProg IS NOT NULL AND @AsmxRuleProg IS NULL) OR (@OAsmxRuleProg IS NULL AND @AsmxRuleProg IS NOT NULL) OR (@OAsmxRuleProg <> @AsmxRuleProg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4215,'ASMX Business Rule',7545,'AsmxRuleProg',@OAsmxRuleProg,@AsmxRuleProg
+IF (@OForCompanyId IS NOT NULL AND @ForCompanyId IS NULL) OR (@OForCompanyId IS NULL AND @ForCompanyId IS NOT NULL) OR (@OForCompanyId <> @ForCompanyId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4427,'For Company',7689,'ForCompanyId',CONVERT(varchar(100),@OForCompanyId),CONVERT(varchar(100),@ForCompanyId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd82M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd82M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd82M
+ @AppInfoId		Int
+,@VersionMa		SmallInt
+,@VersionMi		SmallInt
+,@VersionDt		DateTime
+,@Prerequisite		NVarChar(max)
+,@Readme		NVarChar(max)
+,@VersionValue		Money
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OVersionMa		SmallInt
+		,@OVersionMi		SmallInt
+		,@OVersionDt		DateTime
+		,@OPrerequisite		NVarChar(max)
+		,@OReadme		NVarChar(max)
+		,@OVersionValue		Money
+SELECT @SearchCol=AppInfoId,@OVersionMa=VersionMa,@OVersionMi=VersionMi,@OVersionDt=VersionDt,@OPrerequisite=Prerequisite,@OReadme=Readme,@OVersionValue=VersionValue FROM dbo.AppInfo WHERE AppInfoId=@AppInfoId
+IF ((@OVersionMa IS NOT NULL AND @VersionMa IS NULL) OR (@OVersionMa IS NULL AND @VersionMa IS NOT NULL) OR (@OVersionMa <> @VersionMa)) OR ((@OVersionMi IS NOT NULL AND @VersionMi IS NULL) OR (@OVersionMi IS NULL AND @VersionMi IS NOT NULL) OR (@OVersionMi <> @VersionMi)) OR ((@OVersionDt IS NOT NULL AND @VersionDt IS NULL) OR (@OVersionDt IS NULL AND @VersionDt IS NOT NULL) OR (@OVersionDt <> @VersionDt)) OR ((@OPrerequisite IS NOT NULL AND @Prerequisite IS NULL) OR (@OPrerequisite IS NULL AND @Prerequisite IS NOT NULL) OR (@OPrerequisite <> @Prerequisite)) OR ((@OReadme IS NOT NULL AND @Readme IS NULL) OR (@OReadme IS NULL AND @Readme IS NOT NULL) OR (@OReadme <> @Readme)) OR ((@OVersionValue IS NOT NULL AND @VersionValue IS NULL) OR (@OVersionValue IS NULL AND @VersionValue IS NOT NULL) OR (@OVersionValue <> @VersionValue))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',82,'Y',135,@AppInfoId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OVersionMa IS NOT NULL AND @VersionMa IS NULL) OR (@OVersionMa IS NULL AND @VersionMa IS NOT NULL) OR (@OVersionMa <> @VersionMa)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1342,'Major Version #',1214,'VersionMa',CONVERT(varchar(100),@OVersionMa),CONVERT(varchar(100),@VersionMa)
+IF (@OVersionMi IS NOT NULL AND @VersionMi IS NULL) OR (@OVersionMi IS NULL AND @VersionMi IS NOT NULL) OR (@OVersionMi <> @VersionMi)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1343,'Minor Version #',1215,'VersionMi',CONVERT(varchar(100),@OVersionMi),CONVERT(varchar(100),@VersionMi)
+IF (@OVersionDt IS NOT NULL AND @VersionDt IS NULL) OR (@OVersionDt IS NULL AND @VersionDt IS NOT NULL) OR (@OVersionDt <> @VersionDt)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1344,'Release Date',1216,'VersionDt',CONVERT(varchar(10),@OVersionDt,102),CONVERT(varchar(10),@VersionDt,102)
+IF (@OPrerequisite IS NOT NULL AND @Prerequisite IS NULL) OR (@OPrerequisite IS NULL AND @Prerequisite IS NOT NULL) OR (@OPrerequisite <> @Prerequisite)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1345,'Prerequisite',1217,'Prerequisite',@OPrerequisite,@Prerequisite
+IF (@OReadme IS NOT NULL AND @Readme IS NULL) OR (@OReadme IS NULL AND @Readme IS NOT NULL) OR (@OReadme <> @Readme)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1348,'Read Me',1218,'Readme',@OReadme,@Readme
+IF (@OVersionValue IS NOT NULL AND @VersionValue IS NULL) OR (@OVersionValue IS NULL AND @VersionValue IS NOT NULL) OR (@OVersionValue <> @VersionValue)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,2073,'Value of Release',2190,'VersionValue',CONVERT(varchar(100),@OVersionValue),CONVERT(varchar(100),@VersionValue)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd83M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd83M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd83M
+ @AppItemId		Int
+,@AppInfoId		Int
+,@ItemOrder		SmallInt
+,@ObjectTypeCd		Char(1)
+,@LanguageCd		Char(1)
+,@FrameworkCd		Char(1)
+,@DbProviderCd		Char(1)
+,@RelativePath		VarChar(100)
+,@MultiDesignDb		Char(1)
+,@AppItemName		VarChar(50)
+,@AppItemCode		NVarChar(max)
+,@RemoveItem		Char(1)
+,@ScreenId		Int
+,@ReportId		Int
+,@WizardId		Int
+,@CustomId		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OAppInfoId		Int
+		,@OItemOrder		SmallInt
+		,@OObjectTypeCd		Char(1)
+		,@OLanguageCd		Char(1)
+		,@OFrameworkCd		Char(1)
+		,@ODbProviderCd		Char(1)
+		,@ORelativePath		VarChar(100)
+		,@OMultiDesignDb		Char(1)
+		,@OAppItemName		VarChar(50)
+		,@OAppItemCode		NVarChar(max)
+		,@ORemoveItem		Char(1)
+		,@OScreenId		Int
+		,@OReportId		Int
+		,@OWizardId		Int
+		,@OCustomId		Int
+SELECT @SearchCol=AppItemId,@OAppInfoId=AppInfoId,@OItemOrder=ItemOrder,@OObjectTypeCd=ObjectTypeCd,@OLanguageCd=LanguageCd,@OFrameworkCd=FrameworkCd,@ODbProviderCd=DbProviderCd,@ORelativePath=RelativePath,@OMultiDesignDb=MultiDesignDb,@OAppItemName=AppItemName,@OAppItemCode=AppItemCode,@ORemoveItem=RemoveItem,@OScreenId=ScreenId,@OReportId=ReportId,@OWizardId=WizardId,@OCustomId=CustomId FROM dbo.AppItem WHERE AppItemId=@AppItemId
+IF ((@OAppInfoId IS NOT NULL AND @AppInfoId IS NULL) OR (@OAppInfoId IS NULL AND @AppInfoId IS NOT NULL) OR (@OAppInfoId <> @AppInfoId)) OR ((@OItemOrder IS NOT NULL AND @ItemOrder IS NULL) OR (@OItemOrder IS NULL AND @ItemOrder IS NOT NULL) OR (@OItemOrder <> @ItemOrder)) OR ((@OObjectTypeCd IS NOT NULL AND @ObjectTypeCd IS NULL) OR (@OObjectTypeCd IS NULL AND @ObjectTypeCd IS NOT NULL) OR (@OObjectTypeCd <> @ObjectTypeCd)) OR ((@OLanguageCd IS NOT NULL AND @LanguageCd IS NULL) OR (@OLanguageCd IS NULL AND @LanguageCd IS NOT NULL) OR (@OLanguageCd <> @LanguageCd)) OR ((@OFrameworkCd IS NOT NULL AND @FrameworkCd IS NULL) OR (@OFrameworkCd IS NULL AND @FrameworkCd IS NOT NULL) OR (@OFrameworkCd <> @FrameworkCd)) OR ((@ODbProviderCd IS NOT NULL AND @DbProviderCd IS NULL) OR (@ODbProviderCd IS NULL AND @DbProviderCd IS NOT NULL) OR (@ODbProviderCd <> @DbProviderCd)) OR ((@ORelativePath IS NOT NULL AND @RelativePath IS NULL) OR (@ORelativePath IS NULL AND @RelativePath IS NOT NULL) OR (@ORelativePath <> @RelativePath)) OR ((@OMultiDesignDb IS NOT NULL AND @MultiDesignDb IS NULL) OR (@OMultiDesignDb IS NULL AND @MultiDesignDb IS NOT NULL) OR (@OMultiDesignDb <> @MultiDesignDb)) OR ((@OAppItemName IS NOT NULL AND @AppItemName IS NULL) OR (@OAppItemName IS NULL AND @AppItemName IS NOT NULL) OR (@OAppItemName <> @AppItemName)) OR ((@OAppItemCode IS NOT NULL AND @AppItemCode IS NULL) OR (@OAppItemCode IS NULL AND @AppItemCode IS NOT NULL) OR (@OAppItemCode <> @AppItemCode)) OR ((@ORemoveItem IS NOT NULL AND @RemoveItem IS NULL) OR (@ORemoveItem IS NULL AND @RemoveItem IS NOT NULL) OR (@ORemoveItem <> @RemoveItem)) OR ((@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)) OR ((@OCustomId IS NOT NULL AND @CustomId IS NULL) OR (@OCustomId IS NULL AND @CustomId IS NOT NULL) OR (@OCustomId <> @CustomId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',83,'Y',136,@AppItemId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OAppInfoId IS NOT NULL AND @AppInfoId IS NULL) OR (@OAppInfoId IS NULL AND @AppInfoId IS NOT NULL) OR (@OAppInfoId <> @AppInfoId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1352,'Version',1222,'AppInfoId',CONVERT(varchar(100),@OAppInfoId),CONVERT(varchar(100),@AppInfoId)
+IF (@OItemOrder IS NOT NULL AND @ItemOrder IS NULL) OR (@OItemOrder IS NULL AND @ItemOrder IS NOT NULL) OR (@OItemOrder <> @ItemOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1353,'Order',1223,'ItemOrder',CONVERT(varchar(100),@OItemOrder),CONVERT(varchar(100),@ItemOrder)
+IF (@OObjectTypeCd IS NOT NULL AND @ObjectTypeCd IS NULL) OR (@OObjectTypeCd IS NULL AND @ObjectTypeCd IS NOT NULL) OR (@OObjectTypeCd <> @ObjectTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1354,'Tier',1224,'ObjectTypeCd',@OObjectTypeCd,@ObjectTypeCd
+IF (@OLanguageCd IS NOT NULL AND @LanguageCd IS NULL) OR (@OLanguageCd IS NULL AND @LanguageCd IS NOT NULL) OR (@OLanguageCd <> @LanguageCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1355,'Language',1225,'LanguageCd',@OLanguageCd,@LanguageCd
+IF (@OFrameworkCd IS NOT NULL AND @FrameworkCd IS NULL) OR (@OFrameworkCd IS NULL AND @FrameworkCd IS NOT NULL) OR (@OFrameworkCd <> @FrameworkCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1356,'Framework',1226,'FrameworkCd',@OFrameworkCd,@FrameworkCd
+IF (@ODbProviderCd IS NOT NULL AND @DbProviderCd IS NULL) OR (@ODbProviderCd IS NULL AND @DbProviderCd IS NOT NULL) OR (@ODbProviderCd <> @DbProviderCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1357,'db Provider',1227,'DbProviderCd',@ODbProviderCd,@DbProviderCd
+IF (@ORelativePath IS NOT NULL AND @RelativePath IS NULL) OR (@ORelativePath IS NULL AND @RelativePath IS NOT NULL) OR (@ORelativePath <> @RelativePath)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1358,'Relative Path',1228,'RelativePath',@ORelativePath,@RelativePath
+IF (@OMultiDesignDb IS NOT NULL AND @MultiDesignDb IS NULL) OR (@OMultiDesignDb IS NULL AND @MultiDesignDb IS NOT NULL) OR (@OMultiDesignDb <> @MultiDesignDb)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1359,'Multi Design db',1229,'MultiDesignDb',@OMultiDesignDb,@MultiDesignDb
+IF (@OAppItemName IS NOT NULL AND @AppItemName IS NULL) OR (@OAppItemName IS NULL AND @AppItemName IS NOT NULL) OR (@OAppItemName <> @AppItemName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1360,'Item Name',1230,'AppItemName',@OAppItemName,@AppItemName
+IF (@OAppItemCode IS NOT NULL AND @AppItemCode IS NULL) OR (@OAppItemCode IS NULL AND @AppItemCode IS NOT NULL) OR (@OAppItemCode <> @AppItemCode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1361,'',1231,'AppItemCode',@OAppItemCode,@AppItemCode
+IF (@ORemoveItem IS NOT NULL AND @RemoveItem IS NULL) OR (@ORemoveItem IS NULL AND @RemoveItem IS NOT NULL) OR (@ORemoveItem <> @RemoveItem)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1363,'Remove',1233,'RemoveItem',@ORemoveItem,@RemoveItem
+IF (@OScreenId IS NOT NULL AND @ScreenId IS NULL) OR (@OScreenId IS NULL AND @ScreenId IS NOT NULL) OR (@OScreenId <> @ScreenId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1364,'Screen',1234,'ScreenId',CONVERT(varchar(100),@OScreenId),CONVERT(varchar(100),@ScreenId)
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1365,'Report',1235,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@OWizardId IS NOT NULL AND @WizardId IS NULL) OR (@OWizardId IS NULL AND @WizardId IS NOT NULL) OR (@OWizardId <> @WizardId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1366,'Wizard',1236,'WizardId',CONVERT(varchar(100),@OWizardId),CONVERT(varchar(100),@WizardId)
+IF (@OCustomId IS NOT NULL AND @CustomId IS NULL) OR (@OCustomId IS NULL AND @CustomId IS NOT NULL) OR (@OCustomId <> @CustomId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1367,'Custom',1237,'CustomId',CONVERT(varchar(100),@OCustomId),CONVERT(varchar(100),@CustomId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd86D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd86D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd86D
+ @MsgCenterId		Int
+,@CultureId		SmallInt
+,@Msg		NVarChar(800)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@OMsg		NVarChar(800)
+SELECT @SearchCol=MsgCenterId,@OCultureId=CultureId,@OMsg=Msg FROM dbo.MsgCenter WHERE MsgCenterId=@MsgCenterId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@OMsg IS NOT NULL AND @Msg IS NULL) OR (@OMsg IS NULL AND @Msg IS NOT NULL) OR (@OMsg <> @Msg))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',86,'N',147,@MsgCenterId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1414,'Culture',1312,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@OMsg IS NOT NULL AND @Msg IS NULL) OR (@OMsg IS NULL AND @Msg IS NOT NULL) OR (@OMsg <> @Msg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1415,'Message',1313,'Msg',@OMsg,@Msg
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd86M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd86M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd86M
+ @MsgId		Int
+,@MsgTypeCd		Char(1)
+,@MsgSource		VarChar(50)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OMsgTypeCd		Char(1)
+		,@OMsgSource		VarChar(50)
+SELECT @SearchCol=MsgId,@OMsgTypeCd=MsgTypeCd,@OMsgSource=MsgSource FROM dbo.Msg WHERE MsgId=@MsgId
+IF ((@OMsgTypeCd IS NOT NULL AND @MsgTypeCd IS NULL) OR (@OMsgTypeCd IS NULL AND @MsgTypeCd IS NOT NULL) OR (@OMsgTypeCd <> @MsgTypeCd)) OR ((@OMsgSource IS NOT NULL AND @MsgSource IS NULL) OR (@OMsgSource IS NULL AND @MsgSource IS NOT NULL) OR (@OMsgSource <> @MsgSource))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',86,'Y',146,@MsgId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OMsgTypeCd IS NOT NULL AND @MsgTypeCd IS NULL) OR (@OMsgTypeCd IS NULL AND @MsgTypeCd IS NOT NULL) OR (@OMsgTypeCd <> @MsgTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1409,'Message Type',1311,'MsgTypeCd',@OMsgTypeCd,@MsgTypeCd
+IF (@OMsgSource IS NOT NULL AND @MsgSource IS NULL) OR (@OMsgSource IS NULL AND @MsgSource IS NOT NULL) OR (@OMsgSource <> @MsgSource)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1410,'Source',1310,'MsgSource',@OMsgSource,@MsgSource
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd89M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd89M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd89M
+ @RptStyleId		Int
+,@RptStyleDesc		NVarChar(300)
+,@BorderColorD		VarChar(100)
+,@BorderColorL		VarChar(100)
+,@BorderColorR		VarChar(100)
+,@BorderColorT		VarChar(100)
+,@BorderColorB		VarChar(100)
+,@BorderStyleD		TinyInt
+,@BorderStyleL		TinyInt
+,@BorderStyleR		TinyInt
+,@BorderStyleT		TinyInt
+,@BorderStyleB		TinyInt
+,@BorderWidthD		TinyInt
+,@BorderWidthL		TinyInt
+,@BorderWidthR		TinyInt
+,@BorderWidthT		TinyInt
+,@BorderWidthB		TinyInt
+,@BgColor		VarChar(100)
+,@BgGradType		TinyInt
+,@BgGradColor		VarChar(100)
+,@BgImage		VarChar(200)
+,@FontStyle		Char(1)
+,@FontFamily		VarChar(100)
+,@FontSize		TinyInt
+,@FontWeight		TinyInt
+,@Format		VarChar(100)
+,@TextDecor		Char(1)
+,@TextAlign		Char(1)
+,@VerticalAlign		Char(1)
+,@Color		VarChar(100)
+,@PadLeft		SmallInt
+,@PadRight		SmallInt
+,@PadTop		SmallInt
+,@PadBottom		SmallInt
+,@LineHeight		SmallInt
+,@Direction		Char(1)
+,@WritingMode		Char(1)
+,@DefaultCd		Char(2)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptStyleDesc		NVarChar(300)
+		,@OBorderColorD		VarChar(100)
+		,@OBorderColorL		VarChar(100)
+		,@OBorderColorR		VarChar(100)
+		,@OBorderColorT		VarChar(100)
+		,@OBorderColorB		VarChar(100)
+		,@OBorderStyleD		TinyInt
+		,@OBorderStyleL		TinyInt
+		,@OBorderStyleR		TinyInt
+		,@OBorderStyleT		TinyInt
+		,@OBorderStyleB		TinyInt
+		,@OBorderWidthD		TinyInt
+		,@OBorderWidthL		TinyInt
+		,@OBorderWidthR		TinyInt
+		,@OBorderWidthT		TinyInt
+		,@OBorderWidthB		TinyInt
+		,@OBgColor		VarChar(100)
+		,@OBgGradType		TinyInt
+		,@OBgGradColor		VarChar(100)
+		,@OBgImage		VarChar(200)
+		,@OFontStyle		Char(1)
+		,@OFontFamily		VarChar(100)
+		,@OFontSize		TinyInt
+		,@OFontWeight		TinyInt
+		,@OFormat		VarChar(100)
+		,@OTextDecor		Char(1)
+		,@OTextAlign		Char(1)
+		,@OVerticalAlign		Char(1)
+		,@OColor		VarChar(100)
+		,@OPadLeft		SmallInt
+		,@OPadRight		SmallInt
+		,@OPadTop		SmallInt
+		,@OPadBottom		SmallInt
+		,@OLineHeight		SmallInt
+		,@ODirection		Char(1)
+		,@OWritingMode		Char(1)
+		,@ODefaultCd		Char(2)
+SELECT @SearchCol=RptStyleId,@ORptStyleDesc=RptStyleDesc,@OBorderColorD=BorderColorD,@OBorderColorL=BorderColorL,@OBorderColorR=BorderColorR,@OBorderColorT=BorderColorT,@OBorderColorB=BorderColorB,@OBorderStyleD=BorderStyleD,@OBorderStyleL=BorderStyleL,@OBorderStyleR=BorderStyleR,@OBorderStyleT=BorderStyleT,@OBorderStyleB=BorderStyleB,@OBorderWidthD=BorderWidthD,@OBorderWidthL=BorderWidthL,@OBorderWidthR=BorderWidthR,@OBorderWidthT=BorderWidthT,@OBorderWidthB=BorderWidthB,@OBgColor=BgColor,@OBgGradType=BgGradType,@OBgGradColor=BgGradColor,@OBgImage=BgImage,@OFontStyle=FontStyle,@OFontFamily=FontFamily,@OFontSize=FontSize,@OFontWeight=FontWeight,@OFormat=Format,@OTextDecor=TextDecor,@OTextAlign=TextAlign,@OVerticalAlign=VerticalAlign,@OColor=Color,@OPadLeft=PadLeft,@OPadRight=PadRight,@OPadTop=PadTop,@OPadBottom=PadBottom,@OLineHeight=LineHeight,@ODirection=Direction,@OWritingMode=WritingMode,@ODefaultCd=DefaultCd FROM dbo.RptStyle WHERE RptStyleId=@RptStyleId
+IF ((@ORptStyleDesc IS NOT NULL AND @RptStyleDesc IS NULL) OR (@ORptStyleDesc IS NULL AND @RptStyleDesc IS NOT NULL) OR (@ORptStyleDesc <> @RptStyleDesc)) OR ((@OBorderColorD IS NOT NULL AND @BorderColorD IS NULL) OR (@OBorderColorD IS NULL AND @BorderColorD IS NOT NULL) OR (@OBorderColorD <> @BorderColorD)) OR ((@OBorderColorL IS NOT NULL AND @BorderColorL IS NULL) OR (@OBorderColorL IS NULL AND @BorderColorL IS NOT NULL) OR (@OBorderColorL <> @BorderColorL)) OR ((@OBorderColorR IS NOT NULL AND @BorderColorR IS NULL) OR (@OBorderColorR IS NULL AND @BorderColorR IS NOT NULL) OR (@OBorderColorR <> @BorderColorR)) OR ((@OBorderColorT IS NOT NULL AND @BorderColorT IS NULL) OR (@OBorderColorT IS NULL AND @BorderColorT IS NOT NULL) OR (@OBorderColorT <> @BorderColorT)) OR ((@OBorderColorB IS NOT NULL AND @BorderColorB IS NULL) OR (@OBorderColorB IS NULL AND @BorderColorB IS NOT NULL) OR (@OBorderColorB <> @BorderColorB)) OR ((@OBorderStyleD IS NOT NULL AND @BorderStyleD IS NULL) OR (@OBorderStyleD IS NULL AND @BorderStyleD IS NOT NULL) OR (@OBorderStyleD <> @BorderStyleD)) OR ((@OBorderStyleL IS NOT NULL AND @BorderStyleL IS NULL) OR (@OBorderStyleL IS NULL AND @BorderStyleL IS NOT NULL) OR (@OBorderStyleL <> @BorderStyleL)) OR ((@OBorderStyleR IS NOT NULL AND @BorderStyleR IS NULL) OR (@OBorderStyleR IS NULL AND @BorderStyleR IS NOT NULL) OR (@OBorderStyleR <> @BorderStyleR)) OR ((@OBorderStyleT IS NOT NULL AND @BorderStyleT IS NULL) OR (@OBorderStyleT IS NULL AND @BorderStyleT IS NOT NULL) OR (@OBorderStyleT <> @BorderStyleT)) OR ((@OBorderStyleB IS NOT NULL AND @BorderStyleB IS NULL) OR (@OBorderStyleB IS NULL AND @BorderStyleB IS NOT NULL) OR (@OBorderStyleB <> @BorderStyleB)) OR ((@OBorderWidthD IS NOT NULL AND @BorderWidthD IS NULL) OR (@OBorderWidthD IS NULL AND @BorderWidthD IS NOT NULL) OR (@OBorderWidthD <> @BorderWidthD)) OR ((@OBorderWidthL IS NOT NULL AND @BorderWidthL IS NULL) OR (@OBorderWidthL IS NULL AND @BorderWidthL IS NOT NULL) OR (@OBorderWidthL <> @BorderWidthL)) OR ((@OBorderWidthR IS NOT NULL AND @BorderWidthR IS NULL) OR (@OBorderWidthR IS NULL AND @BorderWidthR IS NOT NULL) OR (@OBorderWidthR <> @BorderWidthR)) OR ((@OBorderWidthT IS NOT NULL AND @BorderWidthT IS NULL) OR (@OBorderWidthT IS NULL AND @BorderWidthT IS NOT NULL) OR (@OBorderWidthT <> @BorderWidthT)) OR ((@OBorderWidthB IS NOT NULL AND @BorderWidthB IS NULL) OR (@OBorderWidthB IS NULL AND @BorderWidthB IS NOT NULL) OR (@OBorderWidthB <> @BorderWidthB)) OR ((@OBgColor IS NOT NULL AND @BgColor IS NULL) OR (@OBgColor IS NULL AND @BgColor IS NOT NULL) OR (@OBgColor <> @BgColor)) OR ((@OBgGradType IS NOT NULL AND @BgGradType IS NULL) OR (@OBgGradType IS NULL AND @BgGradType IS NOT NULL) OR (@OBgGradType <> @BgGradType)) OR ((@OBgGradColor IS NOT NULL AND @BgGradColor IS NULL) OR (@OBgGradColor IS NULL AND @BgGradColor IS NOT NULL) OR (@OBgGradColor <> @BgGradColor)) OR ((@OBgImage IS NOT NULL AND @BgImage IS NULL) OR (@OBgImage IS NULL AND @BgImage IS NOT NULL) OR (@OBgImage <> @BgImage)) OR ((@OFontStyle IS NOT NULL AND @FontStyle IS NULL) OR (@OFontStyle IS NULL AND @FontStyle IS NOT NULL) OR (@OFontStyle <> @FontStyle)) OR ((@OFontFamily IS NOT NULL AND @FontFamily IS NULL) OR (@OFontFamily IS NULL AND @FontFamily IS NOT NULL) OR (@OFontFamily <> @FontFamily)) OR ((@OFontSize IS NOT NULL AND @FontSize IS NULL) OR (@OFontSize IS NULL AND @FontSize IS NOT NULL) OR (@OFontSize <> @FontSize)) OR ((@OFontWeight IS NOT NULL AND @FontWeight IS NULL) OR (@OFontWeight IS NULL AND @FontWeight IS NOT NULL) OR (@OFontWeight <> @FontWeight)) OR ((@OFormat IS NOT NULL AND @Format IS NULL) OR (@OFormat IS NULL AND @Format IS NOT NULL) OR (@OFormat <> @Format)) OR ((@OTextDecor IS NOT NULL AND @TextDecor IS NULL) OR (@OTextDecor IS NULL AND @TextDecor IS NOT NULL) OR (@OTextDecor <> @TextDecor)) OR ((@OTextAlign IS NOT NULL AND @TextAlign IS NULL) OR (@OTextAlign IS NULL AND @TextAlign IS NOT NULL) OR (@OTextAlign <> @TextAlign)) OR ((@OVerticalAlign IS NOT NULL AND @VerticalAlign IS NULL) OR (@OVerticalAlign IS NULL AND @VerticalAlign IS NOT NULL) OR (@OVerticalAlign <> @VerticalAlign)) OR ((@OColor IS NOT NULL AND @Color IS NULL) OR (@OColor IS NULL AND @Color IS NOT NULL) OR (@OColor <> @Color)) OR ((@OPadLeft IS NOT NULL AND @PadLeft IS NULL) OR (@OPadLeft IS NULL AND @PadLeft IS NOT NULL) OR (@OPadLeft <> @PadLeft)) OR ((@OPadRight IS NOT NULL AND @PadRight IS NULL) OR (@OPadRight IS NULL AND @PadRight IS NOT NULL) OR (@OPadRight <> @PadRight)) OR ((@OPadTop IS NOT NULL AND @PadTop IS NULL) OR (@OPadTop IS NULL AND @PadTop IS NOT NULL) OR (@OPadTop <> @PadTop)) OR ((@OPadBottom IS NOT NULL AND @PadBottom IS NULL) OR (@OPadBottom IS NULL AND @PadBottom IS NOT NULL) OR (@OPadBottom <> @PadBottom)) OR ((@OLineHeight IS NOT NULL AND @LineHeight IS NULL) OR (@OLineHeight IS NULL AND @LineHeight IS NOT NULL) OR (@OLineHeight <> @LineHeight)) OR ((@ODirection IS NOT NULL AND @Direction IS NULL) OR (@ODirection IS NULL AND @Direction IS NOT NULL) OR (@ODirection <> @Direction)) OR ((@OWritingMode IS NOT NULL AND @WritingMode IS NULL) OR (@OWritingMode IS NULL AND @WritingMode IS NOT NULL) OR (@OWritingMode <> @WritingMode)) OR ((@ODefaultCd IS NOT NULL AND @DefaultCd IS NULL) OR (@ODefaultCd IS NULL AND @DefaultCd IS NOT NULL) OR (@ODefaultCd <> @DefaultCd))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',89,'Y',167,@RptStyleId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@ORptStyleDesc IS NOT NULL AND @RptStyleDesc IS NULL) OR (@ORptStyleDesc IS NULL AND @RptStyleDesc IS NOT NULL) OR (@ORptStyleDesc <> @RptStyleDesc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1534,'Description',1495,'RptStyleDesc',@ORptStyleDesc,@RptStyleDesc
+IF (@OBorderColorD IS NOT NULL AND @BorderColorD IS NULL) OR (@OBorderColorD IS NULL AND @BorderColorD IS NOT NULL) OR (@OBorderColorD <> @BorderColorD)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1535,'Border Color Default',1496,'BorderColorD',@OBorderColorD,@BorderColorD
+IF (@OBorderColorL IS NOT NULL AND @BorderColorL IS NULL) OR (@OBorderColorL IS NULL AND @BorderColorL IS NOT NULL) OR (@OBorderColorL <> @BorderColorL)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1536,'Border Color Left',1497,'BorderColorL',@OBorderColorL,@BorderColorL
+IF (@OBorderColorR IS NOT NULL AND @BorderColorR IS NULL) OR (@OBorderColorR IS NULL AND @BorderColorR IS NOT NULL) OR (@OBorderColorR <> @BorderColorR)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1537,'Border Color Right',1498,'BorderColorR',@OBorderColorR,@BorderColorR
+IF (@OBorderColorT IS NOT NULL AND @BorderColorT IS NULL) OR (@OBorderColorT IS NULL AND @BorderColorT IS NOT NULL) OR (@OBorderColorT <> @BorderColorT)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1538,'Border Color Top',1499,'BorderColorT',@OBorderColorT,@BorderColorT
+IF (@OBorderColorB IS NOT NULL AND @BorderColorB IS NULL) OR (@OBorderColorB IS NULL AND @BorderColorB IS NOT NULL) OR (@OBorderColorB <> @BorderColorB)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1539,'Border Color Bottom',1500,'BorderColorB',@OBorderColorB,@BorderColorB
+IF (@OBorderStyleD IS NOT NULL AND @BorderStyleD IS NULL) OR (@OBorderStyleD IS NULL AND @BorderStyleD IS NOT NULL) OR (@OBorderStyleD <> @BorderStyleD)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1540,'Border Style Default',1501,'BorderStyleD',CONVERT(varchar(100),@OBorderStyleD),CONVERT(varchar(100),@BorderStyleD)
+IF (@OBorderStyleL IS NOT NULL AND @BorderStyleL IS NULL) OR (@OBorderStyleL IS NULL AND @BorderStyleL IS NOT NULL) OR (@OBorderStyleL <> @BorderStyleL)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1541,'Border Style Left',1502,'BorderStyleL',CONVERT(varchar(100),@OBorderStyleL),CONVERT(varchar(100),@BorderStyleL)
+IF (@OBorderStyleR IS NOT NULL AND @BorderStyleR IS NULL) OR (@OBorderStyleR IS NULL AND @BorderStyleR IS NOT NULL) OR (@OBorderStyleR <> @BorderStyleR)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1542,'Border Style Right',1503,'BorderStyleR',CONVERT(varchar(100),@OBorderStyleR),CONVERT(varchar(100),@BorderStyleR)
+IF (@OBorderStyleT IS NOT NULL AND @BorderStyleT IS NULL) OR (@OBorderStyleT IS NULL AND @BorderStyleT IS NOT NULL) OR (@OBorderStyleT <> @BorderStyleT)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1543,'Border Style Top',1504,'BorderStyleT',CONVERT(varchar(100),@OBorderStyleT),CONVERT(varchar(100),@BorderStyleT)
+IF (@OBorderStyleB IS NOT NULL AND @BorderStyleB IS NULL) OR (@OBorderStyleB IS NULL AND @BorderStyleB IS NOT NULL) OR (@OBorderStyleB <> @BorderStyleB)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1544,'Border Style Bottom',1505,'BorderStyleB',CONVERT(varchar(100),@OBorderStyleB),CONVERT(varchar(100),@BorderStyleB)
+IF (@OBorderWidthD IS NOT NULL AND @BorderWidthD IS NULL) OR (@OBorderWidthD IS NULL AND @BorderWidthD IS NOT NULL) OR (@OBorderWidthD <> @BorderWidthD)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1545,'Border Width Default (pt)',1506,'BorderWidthD',CONVERT(varchar(100),@OBorderWidthD),CONVERT(varchar(100),@BorderWidthD)
+IF (@OBorderWidthL IS NOT NULL AND @BorderWidthL IS NULL) OR (@OBorderWidthL IS NULL AND @BorderWidthL IS NOT NULL) OR (@OBorderWidthL <> @BorderWidthL)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1546,'Border Width Left (pt)',1507,'BorderWidthL',CONVERT(varchar(100),@OBorderWidthL),CONVERT(varchar(100),@BorderWidthL)
+IF (@OBorderWidthR IS NOT NULL AND @BorderWidthR IS NULL) OR (@OBorderWidthR IS NULL AND @BorderWidthR IS NOT NULL) OR (@OBorderWidthR <> @BorderWidthR)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1547,'Border Width Right (pt)',1508,'BorderWidthR',CONVERT(varchar(100),@OBorderWidthR),CONVERT(varchar(100),@BorderWidthR)
+IF (@OBorderWidthT IS NOT NULL AND @BorderWidthT IS NULL) OR (@OBorderWidthT IS NULL AND @BorderWidthT IS NOT NULL) OR (@OBorderWidthT <> @BorderWidthT)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1548,'Border Width Top (pt)',1509,'BorderWidthT',CONVERT(varchar(100),@OBorderWidthT),CONVERT(varchar(100),@BorderWidthT)
+IF (@OBorderWidthB IS NOT NULL AND @BorderWidthB IS NULL) OR (@OBorderWidthB IS NULL AND @BorderWidthB IS NOT NULL) OR (@OBorderWidthB <> @BorderWidthB)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1549,'Border Width Bottom (pt)',1510,'BorderWidthB',CONVERT(varchar(100),@OBorderWidthB),CONVERT(varchar(100),@BorderWidthB)
+IF (@OBgColor IS NOT NULL AND @BgColor IS NULL) OR (@OBgColor IS NULL AND @BgColor IS NOT NULL) OR (@OBgColor <> @BgColor)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1550,'Background Color',1515,'BgColor',@OBgColor,@BgColor
+IF (@OBgGradType IS NOT NULL AND @BgGradType IS NULL) OR (@OBgGradType IS NULL AND @BgGradType IS NOT NULL) OR (@OBgGradType <> @BgGradType)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1551,'Background Gradient',1516,'BgGradType',CONVERT(varchar(100),@OBgGradType),CONVERT(varchar(100),@BgGradType)
+IF (@OBgGradColor IS NOT NULL AND @BgGradColor IS NULL) OR (@OBgGradColor IS NULL AND @BgGradColor IS NOT NULL) OR (@OBgGradColor <> @BgGradColor)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1552,'Background End Color',1517,'BgGradColor',@OBgGradColor,@BgGradColor
+IF (@OBgImage IS NOT NULL AND @BgImage IS NULL) OR (@OBgImage IS NULL AND @BgImage IS NOT NULL) OR (@OBgImage <> @BgImage)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1553,'Background Image',1518,'BgImage',@OBgImage,@BgImage
+IF (@OFontStyle IS NOT NULL AND @FontStyle IS NULL) OR (@OFontStyle IS NULL AND @FontStyle IS NOT NULL) OR (@OFontStyle <> @FontStyle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1554,'Font Style',1519,'FontStyle',@OFontStyle,@FontStyle
+IF (@OFontFamily IS NOT NULL AND @FontFamily IS NULL) OR (@OFontFamily IS NULL AND @FontFamily IS NOT NULL) OR (@OFontFamily <> @FontFamily)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1555,'Font Family',1520,'FontFamily',@OFontFamily,@FontFamily
+IF (@OFontSize IS NOT NULL AND @FontSize IS NULL) OR (@OFontSize IS NULL AND @FontSize IS NOT NULL) OR (@OFontSize <> @FontSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1556,'Font Size (pt)',1521,'FontSize',CONVERT(varchar(100),@OFontSize),CONVERT(varchar(100),@FontSize)
+IF (@OFontWeight IS NOT NULL AND @FontWeight IS NULL) OR (@OFontWeight IS NULL AND @FontWeight IS NOT NULL) OR (@OFontWeight <> @FontWeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1557,'Font Weight',1522,'FontWeight',CONVERT(varchar(100),@OFontWeight),CONVERT(varchar(100),@FontWeight)
+IF (@OFormat IS NOT NULL AND @Format IS NULL) OR (@OFormat IS NULL AND @Format IS NOT NULL) OR (@OFormat <> @Format)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1558,'Format',1529,'Format',@OFormat,@Format
+IF (@OTextDecor IS NOT NULL AND @TextDecor IS NULL) OR (@OTextDecor IS NULL AND @TextDecor IS NOT NULL) OR (@OTextDecor <> @TextDecor)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1559,'Text Decoration',1530,'TextDecor',@OTextDecor,@TextDecor
+IF (@OTextAlign IS NOT NULL AND @TextAlign IS NULL) OR (@OTextAlign IS NULL AND @TextAlign IS NOT NULL) OR (@OTextAlign <> @TextAlign)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1560,'Text Alignment',1531,'TextAlign',@OTextAlign,@TextAlign
+IF (@OVerticalAlign IS NOT NULL AND @VerticalAlign IS NULL) OR (@OVerticalAlign IS NULL AND @VerticalAlign IS NOT NULL) OR (@OVerticalAlign <> @VerticalAlign)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1561,'Vertical Alignment',1532,'VerticalAlign',@OVerticalAlign,@VerticalAlign
+IF (@OColor IS NOT NULL AND @Color IS NULL) OR (@OColor IS NULL AND @Color IS NOT NULL) OR (@OColor <> @Color)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1562,'Foreground Color',1533,'Color',@OColor,@Color
+IF (@OPadLeft IS NOT NULL AND @PadLeft IS NULL) OR (@OPadLeft IS NULL AND @PadLeft IS NOT NULL) OR (@OPadLeft <> @PadLeft)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1563,'Padding Left (pt)',1534,'PadLeft',CONVERT(varchar(100),@OPadLeft),CONVERT(varchar(100),@PadLeft)
+IF (@OPadRight IS NOT NULL AND @PadRight IS NULL) OR (@OPadRight IS NULL AND @PadRight IS NOT NULL) OR (@OPadRight <> @PadRight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1564,'Padding Right (pt)',1535,'PadRight',CONVERT(varchar(100),@OPadRight),CONVERT(varchar(100),@PadRight)
+IF (@OPadTop IS NOT NULL AND @PadTop IS NULL) OR (@OPadTop IS NULL AND @PadTop IS NOT NULL) OR (@OPadTop <> @PadTop)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1565,'Padding Top (pt)',1536,'PadTop',CONVERT(varchar(100),@OPadTop),CONVERT(varchar(100),@PadTop)
+IF (@OPadBottom IS NOT NULL AND @PadBottom IS NULL) OR (@OPadBottom IS NULL AND @PadBottom IS NOT NULL) OR (@OPadBottom <> @PadBottom)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1566,'Padding Bottom (pt)',1537,'PadBottom',CONVERT(varchar(100),@OPadBottom),CONVERT(varchar(100),@PadBottom)
+IF (@OLineHeight IS NOT NULL AND @LineHeight IS NULL) OR (@OLineHeight IS NULL AND @LineHeight IS NOT NULL) OR (@OLineHeight <> @LineHeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1567,'Line Height (pt)',1538,'LineHeight',CONVERT(varchar(100),@OLineHeight),CONVERT(varchar(100),@LineHeight)
+IF (@ODirection IS NOT NULL AND @Direction IS NULL) OR (@ODirection IS NULL AND @Direction IS NOT NULL) OR (@ODirection <> @Direction)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1568,'Direction',1539,'Direction',@ODirection,@Direction
+IF (@OWritingMode IS NOT NULL AND @WritingMode IS NULL) OR (@OWritingMode IS NULL AND @WritingMode IS NOT NULL) OR (@OWritingMode <> @WritingMode)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1569,'Writing Mode',1540,'WritingMode',@OWritingMode,@WritingMode
+IF (@ODefaultCd IS NOT NULL AND @DefaultCd IS NULL) OR (@ODefaultCd IS NULL AND @DefaultCd IS NOT NULL) OR (@ODefaultCd <> @DefaultCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1571,'Default',1556,'DefaultCd',@ODefaultCd,@DefaultCd
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd90M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd90M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd90M
+ @RptCtrId		Int
+,@PRptCtrId		Int
+,@RptElmId		Int
+,@RptCelId		Int
+,@ReportId		Int
+,@RptCtrTypeCd		Char(1)
+,@RptCtrName		NVarChar(100)
+,@RptStyleId		Int
+,@CtrTop		Decimal(8,2)
+,@CtrLeft		Decimal(8,2)
+,@CtrHeight		Decimal(8,2)
+,@CtrWidth		Decimal(8,2)
+,@CtrZIndex		SmallInt
+,@CtrAction		VarChar(500)
+,@CtrVisibility		Char(1)
+,@CtrToolTip		NVarChar(200)
+,@CtrPgBrStart		Char(1)
+,@CtrPgBrEnd		Char(1)
+,@CtrValue		NVarChar(1000)
+,@CtrCanGrow		Char(1)
+,@CtrCanShrink		Char(1)
+,@CtrTogether		Char(1)
+,@CtrGrouping		Int
+,@CtrToggle		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OPRptCtrId		Int
+		,@ORptElmId		Int
+		,@ORptCelId		Int
+		,@OReportId		Int
+		,@ORptCtrTypeCd		Char(1)
+		,@ORptCtrName		NVarChar(100)
+		,@ORptStyleId		Int
+		,@OCtrTop		Decimal(8,2)
+		,@OCtrLeft		Decimal(8,2)
+		,@OCtrHeight		Decimal(8,2)
+		,@OCtrWidth		Decimal(8,2)
+		,@OCtrZIndex		SmallInt
+		,@OCtrAction		VarChar(500)
+		,@OCtrVisibility		Char(1)
+		,@OCtrToolTip		NVarChar(200)
+		,@OCtrPgBrStart		Char(1)
+		,@OCtrPgBrEnd		Char(1)
+		,@OCtrValue		NVarChar(1000)
+		,@OCtrCanGrow		Char(1)
+		,@OCtrCanShrink		Char(1)
+		,@OCtrTogether		Char(1)
+		,@OCtrGrouping		Int
+		,@OCtrToggle		Int
+SELECT @SearchCol=RptCtrId,@OPRptCtrId=PRptCtrId,@ORptElmId=RptElmId,@ORptCelId=RptCelId,@OReportId=ReportId,@ORptCtrTypeCd=RptCtrTypeCd,@ORptCtrName=RptCtrName,@ORptStyleId=RptStyleId,@OCtrTop=CtrTop,@OCtrLeft=CtrLeft,@OCtrHeight=CtrHeight,@OCtrWidth=CtrWidth,@OCtrZIndex=CtrZIndex,@OCtrAction=CtrAction,@OCtrVisibility=CtrVisibility,@OCtrToolTip=CtrToolTip,@OCtrPgBrStart=CtrPgBrStart,@OCtrPgBrEnd=CtrPgBrEnd,@OCtrValue=CtrValue,@OCtrCanGrow=CtrCanGrow,@OCtrCanShrink=CtrCanShrink,@OCtrTogether=CtrTogether,@OCtrGrouping=CtrGrouping,@OCtrToggle=CtrToggle FROM dbo.RptCtr WHERE RptCtrId=@RptCtrId
+IF ((@OPRptCtrId IS NOT NULL AND @PRptCtrId IS NULL) OR (@OPRptCtrId IS NULL AND @PRptCtrId IS NOT NULL) OR (@OPRptCtrId <> @PRptCtrId)) OR ((@ORptElmId IS NOT NULL AND @RptElmId IS NULL) OR (@ORptElmId IS NULL AND @RptElmId IS NOT NULL) OR (@ORptElmId <> @RptElmId)) OR ((@ORptCelId IS NOT NULL AND @RptCelId IS NULL) OR (@ORptCelId IS NULL AND @RptCelId IS NOT NULL) OR (@ORptCelId <> @RptCelId)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@ORptCtrTypeCd IS NOT NULL AND @RptCtrTypeCd IS NULL) OR (@ORptCtrTypeCd IS NULL AND @RptCtrTypeCd IS NOT NULL) OR (@ORptCtrTypeCd <> @RptCtrTypeCd)) OR ((@ORptCtrName IS NOT NULL AND @RptCtrName IS NULL) OR (@ORptCtrName IS NULL AND @RptCtrName IS NOT NULL) OR (@ORptCtrName <> @RptCtrName)) OR ((@ORptStyleId IS NOT NULL AND @RptStyleId IS NULL) OR (@ORptStyleId IS NULL AND @RptStyleId IS NOT NULL) OR (@ORptStyleId <> @RptStyleId)) OR ((@OCtrTop IS NOT NULL AND @CtrTop IS NULL) OR (@OCtrTop IS NULL AND @CtrTop IS NOT NULL) OR (@OCtrTop <> @CtrTop)) OR ((@OCtrLeft IS NOT NULL AND @CtrLeft IS NULL) OR (@OCtrLeft IS NULL AND @CtrLeft IS NOT NULL) OR (@OCtrLeft <> @CtrLeft)) OR ((@OCtrHeight IS NOT NULL AND @CtrHeight IS NULL) OR (@OCtrHeight IS NULL AND @CtrHeight IS NOT NULL) OR (@OCtrHeight <> @CtrHeight)) OR ((@OCtrWidth IS NOT NULL AND @CtrWidth IS NULL) OR (@OCtrWidth IS NULL AND @CtrWidth IS NOT NULL) OR (@OCtrWidth <> @CtrWidth)) OR ((@OCtrZIndex IS NOT NULL AND @CtrZIndex IS NULL) OR (@OCtrZIndex IS NULL AND @CtrZIndex IS NOT NULL) OR (@OCtrZIndex <> @CtrZIndex)) OR ((@OCtrAction IS NOT NULL AND @CtrAction IS NULL) OR (@OCtrAction IS NULL AND @CtrAction IS NOT NULL) OR (@OCtrAction <> @CtrAction)) OR ((@OCtrVisibility IS NOT NULL AND @CtrVisibility IS NULL) OR (@OCtrVisibility IS NULL AND @CtrVisibility IS NOT NULL) OR (@OCtrVisibility <> @CtrVisibility)) OR ((@OCtrToolTip IS NOT NULL AND @CtrToolTip IS NULL) OR (@OCtrToolTip IS NULL AND @CtrToolTip IS NOT NULL) OR (@OCtrToolTip <> @CtrToolTip)) OR ((@OCtrPgBrStart IS NOT NULL AND @CtrPgBrStart IS NULL) OR (@OCtrPgBrStart IS NULL AND @CtrPgBrStart IS NOT NULL) OR (@OCtrPgBrStart <> @CtrPgBrStart)) OR ((@OCtrPgBrEnd IS NOT NULL AND @CtrPgBrEnd IS NULL) OR (@OCtrPgBrEnd IS NULL AND @CtrPgBrEnd IS NOT NULL) OR (@OCtrPgBrEnd <> @CtrPgBrEnd)) OR ((@OCtrValue IS NOT NULL AND @CtrValue IS NULL) OR (@OCtrValue IS NULL AND @CtrValue IS NOT NULL) OR (@OCtrValue <> @CtrValue)) OR ((@OCtrCanGrow IS NOT NULL AND @CtrCanGrow IS NULL) OR (@OCtrCanGrow IS NULL AND @CtrCanGrow IS NOT NULL) OR (@OCtrCanGrow <> @CtrCanGrow)) OR ((@OCtrCanShrink IS NOT NULL AND @CtrCanShrink IS NULL) OR (@OCtrCanShrink IS NULL AND @CtrCanShrink IS NOT NULL) OR (@OCtrCanShrink <> @CtrCanShrink)) OR ((@OCtrTogether IS NOT NULL AND @CtrTogether IS NULL) OR (@OCtrTogether IS NULL AND @CtrTogether IS NOT NULL) OR (@OCtrTogether <> @CtrTogether)) OR ((@OCtrGrouping IS NOT NULL AND @CtrGrouping IS NULL) OR (@OCtrGrouping IS NULL AND @CtrGrouping IS NOT NULL) OR (@OCtrGrouping <> @CtrGrouping)) OR ((@OCtrToggle IS NOT NULL AND @CtrToggle IS NULL) OR (@OCtrToggle IS NULL AND @CtrToggle IS NOT NULL) OR (@OCtrToggle <> @CtrToggle))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',90,'Y',161,@RptCtrId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OPRptCtrId IS NOT NULL AND @PRptCtrId IS NULL) OR (@OPRptCtrId IS NULL AND @PRptCtrId IS NOT NULL) OR (@OPRptCtrId <> @PRptCtrId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1574,'Parent Control',1430,'PRptCtrId',CONVERT(varchar(100),@OPRptCtrId),CONVERT(varchar(100),@PRptCtrId)
+IF (@ORptElmId IS NOT NULL AND @RptElmId IS NULL) OR (@ORptElmId IS NULL AND @RptElmId IS NOT NULL) OR (@ORptElmId <> @RptElmId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1575,'Report Element',1429,'RptElmId',CONVERT(varchar(100),@ORptElmId),CONVERT(varchar(100),@RptElmId)
+IF (@ORptCelId IS NOT NULL AND @RptCelId IS NULL) OR (@ORptCelId IS NULL AND @RptCelId IS NOT NULL) OR (@ORptCelId <> @RptCelId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1576,'Table Cell',1431,'RptCelId',CONVERT(varchar(100),@ORptCelId),CONVERT(varchar(100),@RptCelId)
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1577,'Report',1467,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@ORptCtrTypeCd IS NOT NULL AND @RptCtrTypeCd IS NULL) OR (@ORptCtrTypeCd IS NULL AND @RptCtrTypeCd IS NOT NULL) OR (@ORptCtrTypeCd <> @RptCtrTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1578,'Control Type',1432,'RptCtrTypeCd',@ORptCtrTypeCd,@RptCtrTypeCd
+IF (@ORptCtrName IS NOT NULL AND @RptCtrName IS NULL) OR (@ORptCtrName IS NULL AND @RptCtrName IS NOT NULL) OR (@ORptCtrName <> @RptCtrName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1579,'Control Name',1446,'RptCtrName',@ORptCtrName,@RptCtrName
+IF (@ORptStyleId IS NOT NULL AND @RptStyleId IS NULL) OR (@ORptStyleId IS NULL AND @RptStyleId IS NOT NULL) OR (@ORptStyleId <> @RptStyleId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1580,'Control Style',1447,'RptStyleId',CONVERT(varchar(100),@ORptStyleId),CONVERT(varchar(100),@RptStyleId)
+IF (@OCtrTop IS NOT NULL AND @CtrTop IS NULL) OR (@OCtrTop IS NULL AND @CtrTop IS NOT NULL) OR (@OCtrTop <> @CtrTop)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1581,'Top',1448,'CtrTop',CONVERT(varchar(100),@OCtrTop),CONVERT(varchar(100),@CtrTop)
+IF (@OCtrLeft IS NOT NULL AND @CtrLeft IS NULL) OR (@OCtrLeft IS NULL AND @CtrLeft IS NOT NULL) OR (@OCtrLeft <> @CtrLeft)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1582,'Left',1449,'CtrLeft',CONVERT(varchar(100),@OCtrLeft),CONVERT(varchar(100),@CtrLeft)
+IF (@OCtrHeight IS NOT NULL AND @CtrHeight IS NULL) OR (@OCtrHeight IS NULL AND @CtrHeight IS NOT NULL) OR (@OCtrHeight <> @CtrHeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1583,'Height',1450,'CtrHeight',CONVERT(varchar(100),@OCtrHeight),CONVERT(varchar(100),@CtrHeight)
+IF (@OCtrWidth IS NOT NULL AND @CtrWidth IS NULL) OR (@OCtrWidth IS NULL AND @CtrWidth IS NOT NULL) OR (@OCtrWidth <> @CtrWidth)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1584,'Width',1451,'CtrWidth',CONVERT(varchar(100),@OCtrWidth),CONVERT(varchar(100),@CtrWidth)
+IF (@OCtrZIndex IS NOT NULL AND @CtrZIndex IS NULL) OR (@OCtrZIndex IS NULL AND @CtrZIndex IS NOT NULL) OR (@OCtrZIndex <> @CtrZIndex)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1585,'ZIndex',1455,'CtrZIndex',CONVERT(varchar(100),@OCtrZIndex),CONVERT(varchar(100),@CtrZIndex)
+IF (@OCtrAction IS NOT NULL AND @CtrAction IS NULL) OR (@OCtrAction IS NULL AND @CtrAction IS NOT NULL) OR (@OCtrAction <> @CtrAction)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1586,'Hyperlink',1452,'CtrAction',@OCtrAction,@CtrAction
+IF (@OCtrVisibility IS NOT NULL AND @CtrVisibility IS NULL) OR (@OCtrVisibility IS NULL AND @CtrVisibility IS NOT NULL) OR (@OCtrVisibility <> @CtrVisibility)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1587,'Hidden',1453,'CtrVisibility',@OCtrVisibility,@CtrVisibility
+IF (@OCtrToolTip IS NOT NULL AND @CtrToolTip IS NULL) OR (@OCtrToolTip IS NULL AND @CtrToolTip IS NOT NULL) OR (@OCtrToolTip <> @CtrToolTip)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1588,'Tool Tip',1454,'CtrToolTip',@OCtrToolTip,@CtrToolTip
+IF (@OCtrPgBrStart IS NOT NULL AND @CtrPgBrStart IS NULL) OR (@OCtrPgBrStart IS NULL AND @CtrPgBrStart IS NOT NULL) OR (@OCtrPgBrStart <> @CtrPgBrStart)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1589,'Page Break at Start',1456,'CtrPgBrStart',@OCtrPgBrStart,@CtrPgBrStart
+IF (@OCtrPgBrEnd IS NOT NULL AND @CtrPgBrEnd IS NULL) OR (@OCtrPgBrEnd IS NULL AND @CtrPgBrEnd IS NOT NULL) OR (@OCtrPgBrEnd <> @CtrPgBrEnd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1590,'Page Break at End',1457,'CtrPgBrEnd',@OCtrPgBrEnd,@CtrPgBrEnd
+IF (@OCtrValue IS NOT NULL AND @CtrValue IS NULL) OR (@OCtrValue IS NULL AND @CtrValue IS NOT NULL) OR (@OCtrValue <> @CtrValue)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1591,'Value',1458,'CtrValue',@OCtrValue,@CtrValue
+IF (@OCtrCanGrow IS NOT NULL AND @CtrCanGrow IS NULL) OR (@OCtrCanGrow IS NULL AND @CtrCanGrow IS NOT NULL) OR (@OCtrCanGrow <> @CtrCanGrow)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1592,'Can Grow',1459,'CtrCanGrow',@OCtrCanGrow,@CtrCanGrow
+IF (@OCtrCanShrink IS NOT NULL AND @CtrCanShrink IS NULL) OR (@OCtrCanShrink IS NULL AND @CtrCanShrink IS NOT NULL) OR (@OCtrCanShrink <> @CtrCanShrink)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1593,'Can Shrink',1460,'CtrCanShrink',@OCtrCanShrink,@CtrCanShrink
+IF (@OCtrTogether IS NOT NULL AND @CtrTogether IS NULL) OR (@OCtrTogether IS NULL AND @CtrTogether IS NOT NULL) OR (@OCtrTogether <> @CtrTogether)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1594,'Keep Together',1461,'CtrTogether',@OCtrTogether,@CtrTogether
+IF (@OCtrGrouping IS NOT NULL AND @CtrGrouping IS NULL) OR (@OCtrGrouping IS NULL AND @CtrGrouping IS NOT NULL) OR (@OCtrGrouping <> @CtrGrouping)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1595,'Grouping',1463,'CtrGrouping',CONVERT(varchar(100),@OCtrGrouping),CONVERT(varchar(100),@CtrGrouping)
+IF (@OCtrToggle IS NOT NULL AND @CtrToggle IS NULL) OR (@OCtrToggle IS NULL AND @CtrToggle IS NOT NULL) OR (@OCtrToggle <> @CtrToggle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1697,'Toggle Item',1623,'CtrToggle',CONVERT(varchar(100),@OCtrToggle),CONVERT(varchar(100),@CtrToggle)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd91M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd91M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd91M
+ @RptElmId		Int
+,@ReportId		Int
+,@RptElmTypeCd		Char(1)
+,@RptStyleId		Int
+,@ElmHeight		Decimal(8,2)
+,@ElmColumns		SmallInt
+,@ElmColSpacing		Decimal(8,2)
+,@ElmPrintFirst		Char(1)
+,@ElmPrintLast		Char(1)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OReportId		Int
+		,@ORptElmTypeCd		Char(1)
+		,@ORptStyleId		Int
+		,@OElmHeight		Decimal(8,2)
+		,@OElmColumns		SmallInt
+		,@OElmColSpacing		Decimal(8,2)
+		,@OElmPrintFirst		Char(1)
+		,@OElmPrintLast		Char(1)
+SELECT @SearchCol=RptElmId,@OReportId=ReportId,@ORptElmTypeCd=RptElmTypeCd,@ORptStyleId=RptStyleId,@OElmHeight=ElmHeight,@OElmColumns=ElmColumns,@OElmColSpacing=ElmColSpacing,@OElmPrintFirst=ElmPrintFirst,@OElmPrintLast=ElmPrintLast FROM dbo.RptElm WHERE RptElmId=@RptElmId
+IF ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@ORptElmTypeCd IS NOT NULL AND @RptElmTypeCd IS NULL) OR (@ORptElmTypeCd IS NULL AND @RptElmTypeCd IS NOT NULL) OR (@ORptElmTypeCd <> @RptElmTypeCd)) OR ((@ORptStyleId IS NOT NULL AND @RptStyleId IS NULL) OR (@ORptStyleId IS NULL AND @RptStyleId IS NOT NULL) OR (@ORptStyleId <> @RptStyleId)) OR ((@OElmHeight IS NOT NULL AND @ElmHeight IS NULL) OR (@OElmHeight IS NULL AND @ElmHeight IS NOT NULL) OR (@OElmHeight <> @ElmHeight)) OR ((@OElmColumns IS NOT NULL AND @ElmColumns IS NULL) OR (@OElmColumns IS NULL AND @ElmColumns IS NOT NULL) OR (@OElmColumns <> @ElmColumns)) OR ((@OElmColSpacing IS NOT NULL AND @ElmColSpacing IS NULL) OR (@OElmColSpacing IS NULL AND @ElmColSpacing IS NOT NULL) OR (@OElmColSpacing <> @ElmColSpacing)) OR ((@OElmPrintFirst IS NOT NULL AND @ElmPrintFirst IS NULL) OR (@OElmPrintFirst IS NULL AND @ElmPrintFirst IS NOT NULL) OR (@OElmPrintFirst <> @ElmPrintFirst)) OR ((@OElmPrintLast IS NOT NULL AND @ElmPrintLast IS NULL) OR (@OElmPrintLast IS NULL AND @ElmPrintLast IS NOT NULL) OR (@OElmPrintLast <> @ElmPrintLast))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',91,'Y',160,@RptElmId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1599,'Report',1420,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@ORptElmTypeCd IS NOT NULL AND @RptElmTypeCd IS NULL) OR (@ORptElmTypeCd IS NULL AND @RptElmTypeCd IS NOT NULL) OR (@ORptElmTypeCd <> @RptElmTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1600,'Element Type',1421,'RptElmTypeCd',@ORptElmTypeCd,@RptElmTypeCd
+IF (@ORptStyleId IS NOT NULL AND @RptStyleId IS NULL) OR (@ORptStyleId IS NULL AND @RptStyleId IS NOT NULL) OR (@ORptStyleId <> @RptStyleId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1601,'Style',1422,'RptStyleId',CONVERT(varchar(100),@ORptStyleId),CONVERT(varchar(100),@RptStyleId)
+IF (@OElmHeight IS NOT NULL AND @ElmHeight IS NULL) OR (@OElmHeight IS NULL AND @ElmHeight IS NOT NULL) OR (@OElmHeight <> @ElmHeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1602,'Height',1423,'ElmHeight',CONVERT(varchar(100),@OElmHeight),CONVERT(varchar(100),@ElmHeight)
+IF (@OElmColumns IS NOT NULL AND @ElmColumns IS NULL) OR (@OElmColumns IS NULL AND @ElmColumns IS NOT NULL) OR (@OElmColumns <> @ElmColumns)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1603,'Columns',1424,'ElmColumns',CONVERT(varchar(100),@OElmColumns),CONVERT(varchar(100),@ElmColumns)
+IF (@OElmColSpacing IS NOT NULL AND @ElmColSpacing IS NULL) OR (@OElmColSpacing IS NULL AND @ElmColSpacing IS NOT NULL) OR (@OElmColSpacing <> @ElmColSpacing)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1604,'Column Spacing',1425,'ElmColSpacing',CONVERT(varchar(100),@OElmColSpacing),CONVERT(varchar(100),@ElmColSpacing)
+IF (@OElmPrintFirst IS NOT NULL AND @ElmPrintFirst IS NULL) OR (@OElmPrintFirst IS NULL AND @ElmPrintFirst IS NOT NULL) OR (@OElmPrintFirst <> @ElmPrintFirst)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1605,'Print on First',1426,'ElmPrintFirst',@OElmPrintFirst,@ElmPrintFirst
+IF (@OElmPrintLast IS NOT NULL AND @ElmPrintLast IS NULL) OR (@OElmPrintLast IS NULL AND @ElmPrintLast IS NOT NULL) OR (@OElmPrintLast <> @ElmPrintLast)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1606,'Print on Last',1427,'ElmPrintLast',@OElmPrintLast,@ElmPrintLast
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd92D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd92D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd92D
+ @RptCelId		Int
+,@RowNum		SmallInt
+,@RowHeight		Decimal(8,2)
+,@RowVisibility		VarChar(1000)
+,@CelNum		Int
+,@CelColSpan		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORowNum		SmallInt
+		,@ORowHeight		Decimal(8,2)
+		,@ORowVisibility		VarChar(1000)
+		,@OCelNum		Int
+		,@OCelColSpan		SmallInt
+SELECT @SearchCol=RptCelId,@ORowNum=RowNum,@ORowHeight=RowHeight,@ORowVisibility=RowVisibility,@OCelNum=CelNum,@OCelColSpan=CelColSpan FROM dbo.RptCel WHERE RptCelId=@RptCelId
+IF ((@ORowNum IS NOT NULL AND @RowNum IS NULL) OR (@ORowNum IS NULL AND @RowNum IS NOT NULL) OR (@ORowNum <> @RowNum)) OR ((@ORowHeight IS NOT NULL AND @RowHeight IS NULL) OR (@ORowHeight IS NULL AND @RowHeight IS NOT NULL) OR (@ORowHeight <> @RowHeight)) OR ((@ORowVisibility IS NOT NULL AND @RowVisibility IS NULL) OR (@ORowVisibility IS NULL AND @RowVisibility IS NOT NULL) OR (@ORowVisibility <> @RowVisibility)) OR ((@OCelNum IS NOT NULL AND @CelNum IS NULL) OR (@OCelNum IS NULL AND @CelNum IS NOT NULL) OR (@OCelNum <> @CelNum)) OR ((@OCelColSpan IS NOT NULL AND @CelColSpan IS NULL) OR (@OCelColSpan IS NULL AND @CelColSpan IS NOT NULL) OR (@OCelColSpan <> @CelColSpan))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',92,'N',164,@RptCelId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@ORowNum IS NOT NULL AND @RowNum IS NULL) OR (@ORowNum IS NULL AND @RowNum IS NOT NULL) OR (@ORowNum <> @RowNum)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1621,'Row#',1475,'RowNum',CONVERT(varchar(100),@ORowNum),CONVERT(varchar(100),@RowNum)
+IF (@ORowHeight IS NOT NULL AND @RowHeight IS NULL) OR (@ORowHeight IS NULL AND @RowHeight IS NOT NULL) OR (@ORowHeight <> @RowHeight)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1622,'Row Height',1476,'RowHeight',CONVERT(varchar(100),@ORowHeight),CONVERT(varchar(100),@RowHeight)
+IF (@ORowVisibility IS NOT NULL AND @RowVisibility IS NULL) OR (@ORowVisibility IS NULL AND @RowVisibility IS NOT NULL) OR (@ORowVisibility <> @RowVisibility)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1623,'Visibility',1479,'RowVisibility',@ORowVisibility,@RowVisibility
+IF (@OCelNum IS NOT NULL AND @CelNum IS NULL) OR (@OCelNum IS NULL AND @CelNum IS NOT NULL) OR (@OCelNum <> @CelNum)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1624,'Table Column',1477,'CelNum',CONVERT(varchar(100),@OCelNum),CONVERT(varchar(100),@CelNum)
+IF (@OCelColSpan IS NOT NULL AND @CelColSpan IS NULL) OR (@OCelColSpan IS NULL AND @CelColSpan IS NOT NULL) OR (@OCelColSpan <> @CelColSpan)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1625,'Column Span',1478,'CelColSpan',CONVERT(varchar(100),@OCelColSpan),CONVERT(varchar(100),@CelColSpan)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd92M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd92M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd92M
+ @RptTblId		Int
+,@ParentId		Int
+,@RptCtrId		Int
+,@RptTblTypeCd		Char(1)
+,@TblRepeatNew		Char(1)
+,@TblOrder		SmallInt
+,@ColWidth		Decimal(8,2)
+,@TblGrouping		Int
+,@TblVisibility		Char(1)
+,@ReportId		Int
+,@TblToggle		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OParentId		Int
+		,@ORptCtrId		Int
+		,@ORptTblTypeCd		Char(1)
+		,@OTblRepeatNew		Char(1)
+		,@OTblOrder		SmallInt
+		,@OColWidth		Decimal(8,2)
+		,@OTblGrouping		Int
+		,@OTblVisibility		Char(1)
+		,@OReportId		Int
+		,@OTblToggle		Int
+SELECT @SearchCol=RptTblId,@OParentId=ParentId,@ORptCtrId=RptCtrId,@ORptTblTypeCd=RptTblTypeCd,@OTblRepeatNew=TblRepeatNew,@OTblOrder=TblOrder,@OColWidth=ColWidth,@OTblGrouping=TblGrouping,@OTblVisibility=TblVisibility,@OReportId=ReportId,@OTblToggle=TblToggle FROM dbo.RptTbl WHERE RptTblId=@RptTblId
+IF ((@OParentId IS NOT NULL AND @ParentId IS NULL) OR (@OParentId IS NULL AND @ParentId IS NOT NULL) OR (@OParentId <> @ParentId)) OR ((@ORptCtrId IS NOT NULL AND @RptCtrId IS NULL) OR (@ORptCtrId IS NULL AND @RptCtrId IS NOT NULL) OR (@ORptCtrId <> @RptCtrId)) OR ((@ORptTblTypeCd IS NOT NULL AND @RptTblTypeCd IS NULL) OR (@ORptTblTypeCd IS NULL AND @RptTblTypeCd IS NOT NULL) OR (@ORptTblTypeCd <> @RptTblTypeCd)) OR ((@OTblRepeatNew IS NOT NULL AND @TblRepeatNew IS NULL) OR (@OTblRepeatNew IS NULL AND @TblRepeatNew IS NOT NULL) OR (@OTblRepeatNew <> @TblRepeatNew)) OR ((@OTblOrder IS NOT NULL AND @TblOrder IS NULL) OR (@OTblOrder IS NULL AND @TblOrder IS NOT NULL) OR (@OTblOrder <> @TblOrder)) OR ((@OColWidth IS NOT NULL AND @ColWidth IS NULL) OR (@OColWidth IS NULL AND @ColWidth IS NOT NULL) OR (@OColWidth <> @ColWidth)) OR ((@OTblGrouping IS NOT NULL AND @TblGrouping IS NULL) OR (@OTblGrouping IS NULL AND @TblGrouping IS NOT NULL) OR (@OTblGrouping <> @TblGrouping)) OR ((@OTblVisibility IS NOT NULL AND @TblVisibility IS NULL) OR (@OTblVisibility IS NULL AND @TblVisibility IS NOT NULL) OR (@OTblVisibility <> @TblVisibility)) OR ((@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)) OR ((@OTblToggle IS NOT NULL AND @TblToggle IS NULL) OR (@OTblToggle IS NULL AND @TblToggle IS NOT NULL) OR (@OTblToggle <> @TblToggle))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',92,'Y',162,@RptTblId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OParentId IS NOT NULL AND @ParentId IS NULL) OR (@OParentId IS NULL AND @ParentId IS NOT NULL) OR (@OParentId <> @ParentId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1609,'Parent',1486,'ParentId',CONVERT(varchar(100),@OParentId),CONVERT(varchar(100),@ParentId)
+IF (@ORptCtrId IS NOT NULL AND @RptCtrId IS NULL) OR (@ORptCtrId IS NULL AND @RptCtrId IS NOT NULL) OR (@ORptCtrId <> @RptCtrId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1610,'Control',1436,'RptCtrId',CONVERT(varchar(100),@ORptCtrId),CONVERT(varchar(100),@RptCtrId)
+IF (@ORptTblTypeCd IS NOT NULL AND @RptTblTypeCd IS NULL) OR (@ORptTblTypeCd IS NULL AND @RptTblTypeCd IS NOT NULL) OR (@ORptTblTypeCd <> @RptTblTypeCd)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1611,'Table Type',1434,'RptTblTypeCd',@ORptTblTypeCd,@RptTblTypeCd
+IF (@OTblRepeatNew IS NOT NULL AND @TblRepeatNew IS NULL) OR (@OTblRepeatNew IS NULL AND @TblRepeatNew IS NOT NULL) OR (@OTblRepeatNew <> @TblRepeatNew)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1612,'Repeat on New Page',1435,'TblRepeatNew',@OTblRepeatNew,@TblRepeatNew
+IF (@OTblOrder IS NOT NULL AND @TblOrder IS NULL) OR (@OTblOrder IS NULL AND @TblOrder IS NOT NULL) OR (@OTblOrder <> @TblOrder)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1613,'Order',1480,'TblOrder',CONVERT(varchar(100),@OTblOrder),CONVERT(varchar(100),@TblOrder)
+IF (@OColWidth IS NOT NULL AND @ColWidth IS NULL) OR (@OColWidth IS NULL AND @ColWidth IS NOT NULL) OR (@OColWidth <> @ColWidth)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1614,'Width',1439,'ColWidth',CONVERT(varchar(100),@OColWidth),CONVERT(varchar(100),@ColWidth)
+IF (@OTblGrouping IS NOT NULL AND @TblGrouping IS NULL) OR (@OTblGrouping IS NULL AND @TblGrouping IS NOT NULL) OR (@OTblGrouping <> @TblGrouping)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1615,'Grouping',1437,'TblGrouping',CONVERT(varchar(100),@OTblGrouping),CONVERT(varchar(100),@TblGrouping)
+IF (@OTblVisibility IS NOT NULL AND @TblVisibility IS NULL) OR (@OTblVisibility IS NULL AND @TblVisibility IS NOT NULL) OR (@OTblVisibility <> @TblVisibility)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1617,'Hidden',1440,'TblVisibility',@OTblVisibility,@TblVisibility
+IF (@OReportId IS NOT NULL AND @ReportId IS NULL) OR (@OReportId IS NULL AND @ReportId IS NOT NULL) OR (@OReportId <> @ReportId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1695,'Report',1621,'ReportId',CONVERT(varchar(100),@OReportId),CONVERT(varchar(100),@ReportId)
+IF (@OTblToggle IS NOT NULL AND @TblToggle IS NULL) OR (@OTblToggle IS NULL AND @TblToggle IS NOT NULL) OR (@OTblToggle <> @TblToggle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1696,'Toggle Item',1622,'TblToggle',CONVERT(varchar(100),@OTblToggle),CONVERT(varchar(100),@TblToggle)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd96D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd96D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd96D
+ @RptwizCatDtlId		Int
+,@ColumnId		Int
+,@DisplayModeId		TinyInt
+,@ColumnSize		SmallInt
+,@RowSize		SmallInt
+,@RegClause		VarChar(400)
+,@StoredProc		VarChar(max)
+,@DdlKeyColNm		VarChar(50)
+,@DdlRefColNm		VarChar(50)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OColumnId		Int
+		,@ODisplayModeId		TinyInt
+		,@OColumnSize		SmallInt
+		,@ORowSize		SmallInt
+		,@ORegClause		VarChar(400)
+		,@OStoredProc		VarChar(max)
+		,@ODdlKeyColNm		VarChar(50)
+		,@ODdlRefColNm		VarChar(50)
+SELECT @SearchCol=RptwizCatDtlId,@OColumnId=ColumnId,@ODisplayModeId=DisplayModeId,@OColumnSize=ColumnSize,@ORowSize=RowSize,@ORegClause=RegClause,@OStoredProc=StoredProc,@ODdlKeyColNm=DdlKeyColNm,@ODdlRefColNm=DdlRefColNm FROM dbo.RptwizCatDtl WHERE RptwizCatDtlId=@RptwizCatDtlId
+IF ((@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)) OR ((@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)) OR ((@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)) OR ((@ORowSize IS NOT NULL AND @RowSize IS NULL) OR (@ORowSize IS NULL AND @RowSize IS NOT NULL) OR (@ORowSize <> @RowSize)) OR ((@ORegClause IS NOT NULL AND @RegClause IS NULL) OR (@ORegClause IS NULL AND @RegClause IS NOT NULL) OR (@ORegClause <> @RegClause)) OR ((@OStoredProc IS NOT NULL AND @StoredProc IS NULL) OR (@OStoredProc IS NULL AND @StoredProc IS NOT NULL) OR (@OStoredProc <> @StoredProc)) OR ((@ODdlKeyColNm IS NOT NULL AND @DdlKeyColNm IS NULL) OR (@ODdlKeyColNm IS NULL AND @DdlKeyColNm IS NOT NULL) OR (@ODdlKeyColNm <> @DdlKeyColNm)) OR ((@ODdlRefColNm IS NOT NULL AND @DdlRefColNm IS NULL) OR (@ODdlRefColNm IS NULL AND @DdlRefColNm IS NOT NULL) OR (@ODdlRefColNm <> @DdlRefColNm))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',96,'N',182,@RptwizCatDtlId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OColumnId IS NOT NULL AND @ColumnId IS NULL) OR (@OColumnId IS NULL AND @ColumnId IS NOT NULL) OR (@OColumnId <> @ColumnId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1667,'Column',1579,'ColumnId',CONVERT(varchar(100),@OColumnId),CONVERT(varchar(100),@ColumnId)
+IF (@ODisplayModeId IS NOT NULL AND @DisplayModeId IS NULL) OR (@ODisplayModeId IS NULL AND @DisplayModeId IS NOT NULL) OR (@ODisplayModeId <> @DisplayModeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1843,'Display Mode',1865,'DisplayModeId',CONVERT(varchar(100),@ODisplayModeId),CONVERT(varchar(100),@DisplayModeId)
+IF (@OColumnSize IS NOT NULL AND @ColumnSize IS NULL) OR (@OColumnSize IS NULL AND @ColumnSize IS NOT NULL) OR (@OColumnSize <> @ColumnSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1844,'Width',1600,'ColumnSize',CONVERT(varchar(100),@OColumnSize),CONVERT(varchar(100),@ColumnSize)
+IF (@ORowSize IS NOT NULL AND @RowSize IS NULL) OR (@ORowSize IS NULL AND @RowSize IS NOT NULL) OR (@ORowSize <> @RowSize)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1845,'#Rows',1866,'RowSize',CONVERT(varchar(100),@ORowSize),CONVERT(varchar(100),@RowSize)
+IF (@ORegClause IS NOT NULL AND @RegClause IS NULL) OR (@ORegClause IS NULL AND @RegClause IS NOT NULL) OR (@ORegClause <> @RegClause)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1846,'Calling Clause',1867,'RegClause',@ORegClause,@RegClause
+IF (@OStoredProc IS NOT NULL AND @StoredProc IS NULL) OR (@OStoredProc IS NULL AND @StoredProc IS NOT NULL) OR (@OStoredProc <> @StoredProc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1847,'Stored Procedure',1868,'StoredProc',@OStoredProc,@StoredProc
+IF (@ODdlKeyColNm IS NOT NULL AND @DdlKeyColNm IS NULL) OR (@ODdlKeyColNm IS NULL AND @DdlKeyColNm IS NOT NULL) OR (@ODdlKeyColNm <> @DdlKeyColNm)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1848,'Key Name',1869,'DdlKeyColNm',@ODdlKeyColNm,@DdlKeyColNm
+IF (@ODdlRefColNm IS NOT NULL AND @DdlRefColNm IS NULL) OR (@ODdlRefColNm IS NULL AND @DdlRefColNm IS NOT NULL) OR (@ODdlRefColNm <> @DdlRefColNm)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1849,'Ref Name',1870,'DdlRefColNm',@ODdlRefColNm,@DdlRefColNm
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd96M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd96M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd96M
+ @RptwizCatId		SmallInt
+,@RptwizCatName		NVarChar(100)
+,@CatDescription		NVarChar(400)
+,@TableId		Int
+,@RptwizTypId		SmallInt
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptwizCatName		NVarChar(100)
+		,@OCatDescription		NVarChar(400)
+		,@OTableId		Int
+		,@ORptwizTypId		SmallInt
+SELECT @SearchCol=RptwizCatId,@ORptwizCatName=RptwizCatName,@OCatDescription=CatDescription,@OTableId=TableId,@ORptwizTypId=RptwizTypId FROM dbo.RptwizCat WHERE RptwizCatId=@RptwizCatId
+IF ((@ORptwizCatName IS NOT NULL AND @RptwizCatName IS NULL) OR (@ORptwizCatName IS NULL AND @RptwizCatName IS NOT NULL) OR (@ORptwizCatName <> @RptwizCatName)) OR ((@OCatDescription IS NOT NULL AND @CatDescription IS NULL) OR (@OCatDescription IS NULL AND @CatDescription IS NOT NULL) OR (@OCatDescription <> @CatDescription)) OR ((@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)) OR ((@ORptwizTypId IS NOT NULL AND @RptwizTypId IS NULL) OR (@ORptwizTypId IS NULL AND @RptwizTypId IS NOT NULL) OR (@ORptwizTypId <> @RptwizTypId))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',96,'Y',181,@RptwizCatId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@ORptwizCatName IS NOT NULL AND @RptwizCatName IS NULL) OR (@ORptwizCatName IS NULL AND @RptwizCatName IS NOT NULL) OR (@ORptwizCatName <> @RptwizCatName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1658,'Category Name',1576,'RptwizCatName',@ORptwizCatName,@RptwizCatName
+IF (@OCatDescription IS NOT NULL AND @CatDescription IS NULL) OR (@OCatDescription IS NULL AND @CatDescription IS NOT NULL) OR (@OCatDescription <> @CatDescription)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1659,'Description',1573,'CatDescription',@OCatDescription,@CatDescription
+IF (@OTableId IS NOT NULL AND @TableId IS NULL) OR (@OTableId IS NULL AND @TableId IS NOT NULL) OR (@OTableId <> @TableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1663,'Relevant Table',1864,'TableId',CONVERT(varchar(100),@OTableId),CONVERT(varchar(100),@TableId)
+IF (@ORptwizTypId IS NOT NULL AND @RptwizTypId IS NULL) OR (@ORptwizTypId IS NULL AND @RptwizTypId IS NOT NULL) OR (@ORptwizTypId <> @RptwizTypId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1671,'Data Type',1604,'RptwizTypId',CONVERT(varchar(100),@ORptwizTypId),CONVERT(varchar(100),@RptwizTypId)
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd97M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd97M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd97M
+ @RptwizTypId		SmallInt
+,@RptwizTypName		NVarChar(100)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@ORptwizTypName		NVarChar(100)
+SELECT @SearchCol=RptwizTypId,@ORptwizTypName=RptwizTypName FROM dbo.RptwizTyp WHERE RptwizTypId=@RptwizTypId
+IF ((@ORptwizTypName IS NOT NULL AND @RptwizTypName IS NULL) OR (@ORptwizTypName IS NULL AND @RptwizTypName IS NOT NULL) OR (@ORptwizTypName <> @RptwizTypName))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',97,'Y',185,@RptwizTypId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@ORptwizTypName IS NOT NULL AND @RptwizTypName IS NULL) OR (@ORptwizTypName IS NULL AND @RptwizTypName IS NOT NULL) OR (@ORptwizTypName <> @RptwizTypName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1669,'Report Data Type Name',1602,'RptwizTypName',@ORptwizTypName,@RptwizTypName
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd9D') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd9D AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd9D
+ @ScreenHlpId		Int
+,@CultureId		SmallInt
+,@DefaultHlpMsg		NVarChar(max)
+,@ScreenTitle		NVarChar(50)
+,@AddMsg		NVarChar(100)
+,@UpdMsg		NVarChar(100)
+,@DelMsg		NVarChar(100)
+,@FootNote		NVarChar(400)
+,@MasterLstTitle		NVarChar(100)
+,@DetailLstTitle		NVarChar(100)
+,@MasterLstSubtitle		NVarChar(100)
+,@DetailLstSubtitle		NVarChar(100)
+,@MasterRecTitle		NVarChar(100)
+,@DetailRecTitle		NVarChar(100)
+,@MasterRecSubtitle		NVarChar(100)
+,@DetailRecSubtitle		NVarChar(100)
+,@IncrementMsg		NVarChar(100)
+,@MasterFoundMsg		NVarChar(100)
+,@DetailFoundMsg		NVarChar(100)
+,@NoMasterMsg		NVarChar(100)
+,@NoDetailMsg		NVarChar(100)
+,@AddMasterMsg		NVarChar(100)
+,@AddDetailMsg		NVarChar(100)
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OCultureId		SmallInt
+		,@ODefaultHlpMsg		NVarChar(max)
+		,@OScreenTitle		NVarChar(50)
+		,@OAddMsg		NVarChar(100)
+		,@OUpdMsg		NVarChar(100)
+		,@ODelMsg		NVarChar(100)
+		,@OFootNote		NVarChar(400)
+		,@OMasterLstTitle		NVarChar(100)
+		,@ODetailLstTitle		NVarChar(100)
+		,@OMasterLstSubtitle		NVarChar(100)
+		,@ODetailLstSubtitle		NVarChar(100)
+		,@OMasterRecTitle		NVarChar(100)
+		,@ODetailRecTitle		NVarChar(100)
+		,@OMasterRecSubtitle		NVarChar(100)
+		,@ODetailRecSubtitle		NVarChar(100)
+		,@OIncrementMsg		NVarChar(100)
+		,@OMasterFoundMsg		NVarChar(100)
+		,@ODetailFoundMsg		NVarChar(100)
+		,@ONoMasterMsg		NVarChar(100)
+		,@ONoDetailMsg		NVarChar(100)
+		,@OAddMasterMsg		NVarChar(100)
+		,@OAddDetailMsg		NVarChar(100)
+SELECT @SearchCol=ScreenHlpId,@OCultureId=CultureId,@ODefaultHlpMsg=DefaultHlpMsg,@OScreenTitle=ScreenTitle,@OAddMsg=AddMsg,@OUpdMsg=UpdMsg,@ODelMsg=DelMsg,@OFootNote=FootNote,@OMasterLstTitle=MasterLstTitle,@ODetailLstTitle=DetailLstTitle,@OMasterLstSubtitle=MasterLstSubtitle,@ODetailLstSubtitle=DetailLstSubtitle,@OMasterRecTitle=MasterRecTitle,@ODetailRecTitle=DetailRecTitle,@OMasterRecSubtitle=MasterRecSubtitle,@ODetailRecSubtitle=DetailRecSubtitle,@OIncrementMsg=IncrementMsg,@OMasterFoundMsg=MasterFoundMsg,@ODetailFoundMsg=DetailFoundMsg,@ONoMasterMsg=NoMasterMsg,@ONoDetailMsg=NoDetailMsg,@OAddMasterMsg=AddMasterMsg,@OAddDetailMsg=AddDetailMsg FROM dbo.ScreenHlp WHERE ScreenHlpId=@ScreenHlpId
+IF ((@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)) OR ((@ODefaultHlpMsg IS NOT NULL AND @DefaultHlpMsg IS NULL) OR (@ODefaultHlpMsg IS NULL AND @DefaultHlpMsg IS NOT NULL) OR (@ODefaultHlpMsg <> @DefaultHlpMsg)) OR ((@OScreenTitle IS NOT NULL AND @ScreenTitle IS NULL) OR (@OScreenTitle IS NULL AND @ScreenTitle IS NOT NULL) OR (@OScreenTitle <> @ScreenTitle)) OR ((@OAddMsg IS NOT NULL AND @AddMsg IS NULL) OR (@OAddMsg IS NULL AND @AddMsg IS NOT NULL) OR (@OAddMsg <> @AddMsg)) OR ((@OUpdMsg IS NOT NULL AND @UpdMsg IS NULL) OR (@OUpdMsg IS NULL AND @UpdMsg IS NOT NULL) OR (@OUpdMsg <> @UpdMsg)) OR ((@ODelMsg IS NOT NULL AND @DelMsg IS NULL) OR (@ODelMsg IS NULL AND @DelMsg IS NOT NULL) OR (@ODelMsg <> @DelMsg)) OR ((@OFootNote IS NOT NULL AND @FootNote IS NULL) OR (@OFootNote IS NULL AND @FootNote IS NOT NULL) OR (@OFootNote <> @FootNote)) OR ((@OMasterLstTitle IS NOT NULL AND @MasterLstTitle IS NULL) OR (@OMasterLstTitle IS NULL AND @MasterLstTitle IS NOT NULL) OR (@OMasterLstTitle <> @MasterLstTitle)) OR ((@ODetailLstTitle IS NOT NULL AND @DetailLstTitle IS NULL) OR (@ODetailLstTitle IS NULL AND @DetailLstTitle IS NOT NULL) OR (@ODetailLstTitle <> @DetailLstTitle)) OR ((@OMasterLstSubtitle IS NOT NULL AND @MasterLstSubtitle IS NULL) OR (@OMasterLstSubtitle IS NULL AND @MasterLstSubtitle IS NOT NULL) OR (@OMasterLstSubtitle <> @MasterLstSubtitle)) OR ((@ODetailLstSubtitle IS NOT NULL AND @DetailLstSubtitle IS NULL) OR (@ODetailLstSubtitle IS NULL AND @DetailLstSubtitle IS NOT NULL) OR (@ODetailLstSubtitle <> @DetailLstSubtitle)) OR ((@OMasterRecTitle IS NOT NULL AND @MasterRecTitle IS NULL) OR (@OMasterRecTitle IS NULL AND @MasterRecTitle IS NOT NULL) OR (@OMasterRecTitle <> @MasterRecTitle)) OR ((@ODetailRecTitle IS NOT NULL AND @DetailRecTitle IS NULL) OR (@ODetailRecTitle IS NULL AND @DetailRecTitle IS NOT NULL) OR (@ODetailRecTitle <> @DetailRecTitle)) OR ((@OMasterRecSubtitle IS NOT NULL AND @MasterRecSubtitle IS NULL) OR (@OMasterRecSubtitle IS NULL AND @MasterRecSubtitle IS NOT NULL) OR (@OMasterRecSubtitle <> @MasterRecSubtitle)) OR ((@ODetailRecSubtitle IS NOT NULL AND @DetailRecSubtitle IS NULL) OR (@ODetailRecSubtitle IS NULL AND @DetailRecSubtitle IS NOT NULL) OR (@ODetailRecSubtitle <> @DetailRecSubtitle)) OR ((@OIncrementMsg IS NOT NULL AND @IncrementMsg IS NULL) OR (@OIncrementMsg IS NULL AND @IncrementMsg IS NOT NULL) OR (@OIncrementMsg <> @IncrementMsg)) OR ((@OMasterFoundMsg IS NOT NULL AND @MasterFoundMsg IS NULL) OR (@OMasterFoundMsg IS NULL AND @MasterFoundMsg IS NOT NULL) OR (@OMasterFoundMsg <> @MasterFoundMsg)) OR ((@ODetailFoundMsg IS NOT NULL AND @DetailFoundMsg IS NULL) OR (@ODetailFoundMsg IS NULL AND @DetailFoundMsg IS NOT NULL) OR (@ODetailFoundMsg <> @DetailFoundMsg)) OR ((@ONoMasterMsg IS NOT NULL AND @NoMasterMsg IS NULL) OR (@ONoMasterMsg IS NULL AND @NoMasterMsg IS NOT NULL) OR (@ONoMasterMsg <> @NoMasterMsg)) OR ((@ONoDetailMsg IS NOT NULL AND @NoDetailMsg IS NULL) OR (@ONoDetailMsg IS NULL AND @NoDetailMsg IS NOT NULL) OR (@ONoDetailMsg <> @NoDetailMsg)) OR ((@OAddMasterMsg IS NOT NULL AND @AddMasterMsg IS NULL) OR (@OAddMasterMsg IS NULL AND @AddMasterMsg IS NOT NULL) OR (@OAddMasterMsg <> @AddMasterMsg)) OR ((@OAddDetailMsg IS NOT NULL AND @AddDetailMsg IS NULL) OR (@OAddDetailMsg IS NULL AND @AddDetailMsg IS NOT NULL) OR (@OAddDetailMsg <> @AddDetailMsg))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',9,'N',16,@ScreenHlpId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OCultureId IS NOT NULL AND @CultureId IS NULL) OR (@OCultureId IS NULL AND @CultureId IS NOT NULL) OR (@OCultureId <> @CultureId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,53,'Culture',136,'CultureId',CONVERT(varchar(100),@OCultureId),CONVERT(varchar(100),@CultureId)
+IF (@ODefaultHlpMsg IS NOT NULL AND @DefaultHlpMsg IS NULL) OR (@ODefaultHlpMsg IS NULL AND @DefaultHlpMsg IS NOT NULL) OR (@ODefaultHlpMsg <> @DefaultHlpMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,54,'Help Message',137,'DefaultHlpMsg',@ODefaultHlpMsg,@DefaultHlpMsg
+IF (@OScreenTitle IS NOT NULL AND @ScreenTitle IS NULL) OR (@OScreenTitle IS NULL AND @ScreenTitle IS NOT NULL) OR (@OScreenTitle <> @ScreenTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,55,'Screen Title',138,'ScreenTitle',@OScreenTitle,@ScreenTitle
+IF (@OAddMsg IS NOT NULL AND @AddMsg IS NULL) OR (@OAddMsg IS NULL AND @AddMsg IS NOT NULL) OR (@OAddMsg <> @AddMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,56,'Add Message',139,'AddMsg',@OAddMsg,@AddMsg
+IF (@OUpdMsg IS NOT NULL AND @UpdMsg IS NULL) OR (@OUpdMsg IS NULL AND @UpdMsg IS NOT NULL) OR (@OUpdMsg <> @UpdMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,57,'Update Message',140,'UpdMsg',@OUpdMsg,@UpdMsg
+IF (@ODelMsg IS NOT NULL AND @DelMsg IS NULL) OR (@ODelMsg IS NULL AND @DelMsg IS NOT NULL) OR (@ODelMsg <> @DelMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,58,'Delete Message',141,'DelMsg',@ODelMsg,@DelMsg
+IF (@OFootNote IS NOT NULL AND @FootNote IS NULL) OR (@OFootNote IS NULL AND @FootNote IS NOT NULL) OR (@OFootNote <> @FootNote)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1370,'Foot Note',1248,'FootNote',@OFootNote,@FootNote
+IF (@OMasterLstTitle IS NOT NULL AND @MasterLstTitle IS NULL) OR (@OMasterLstTitle IS NULL AND @MasterLstTitle IS NOT NULL) OR (@OMasterLstTitle <> @MasterLstTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4168,'Master List Title',7489,'MasterLstTitle',@OMasterLstTitle,@MasterLstTitle
+IF (@ODetailLstTitle IS NOT NULL AND @DetailLstTitle IS NULL) OR (@ODetailLstTitle IS NULL AND @DetailLstTitle IS NOT NULL) OR (@ODetailLstTitle <> @DetailLstTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4170,'Detail List Title',7485,'DetailLstTitle',@ODetailLstTitle,@DetailLstTitle
+IF (@OMasterLstSubtitle IS NOT NULL AND @MasterLstSubtitle IS NULL) OR (@OMasterLstSubtitle IS NULL AND @MasterLstSubtitle IS NOT NULL) OR (@OMasterLstSubtitle <> @MasterLstSubtitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4171,'Master List Subtitle',7488,'MasterLstSubtitle',@OMasterLstSubtitle,@MasterLstSubtitle
+IF (@ODetailLstSubtitle IS NOT NULL AND @DetailLstSubtitle IS NULL) OR (@ODetailLstSubtitle IS NULL AND @DetailLstSubtitle IS NOT NULL) OR (@ODetailLstSubtitle <> @DetailLstSubtitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4172,'Detail List Subtitle',7484,'DetailLstSubtitle',@ODetailLstSubtitle,@DetailLstSubtitle
+IF (@OMasterRecTitle IS NOT NULL AND @MasterRecTitle IS NULL) OR (@OMasterRecTitle IS NULL AND @MasterRecTitle IS NOT NULL) OR (@OMasterRecTitle <> @MasterRecTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4173,'Master Record Title',7487,'MasterRecTitle',@OMasterRecTitle,@MasterRecTitle
+IF (@ODetailRecTitle IS NOT NULL AND @DetailRecTitle IS NULL) OR (@ODetailRecTitle IS NULL AND @DetailRecTitle IS NOT NULL) OR (@ODetailRecTitle <> @DetailRecTitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4174,'Detail Record Title',7483,'DetailRecTitle',@ODetailRecTitle,@DetailRecTitle
+IF (@OMasterRecSubtitle IS NOT NULL AND @MasterRecSubtitle IS NULL) OR (@OMasterRecSubtitle IS NULL AND @MasterRecSubtitle IS NOT NULL) OR (@OMasterRecSubtitle <> @MasterRecSubtitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4175,'Master Record Subtitle',7486,'MasterRecSubtitle',@OMasterRecSubtitle,@MasterRecSubtitle
+IF (@ODetailRecSubtitle IS NOT NULL AND @DetailRecSubtitle IS NULL) OR (@ODetailRecSubtitle IS NULL AND @DetailRecSubtitle IS NOT NULL) OR (@ODetailRecSubtitle <> @DetailRecSubtitle)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4176,'Detail Record Subtitle',7482,'DetailRecSubtitle',@ODetailRecSubtitle,@DetailRecSubtitle
+IF (@OIncrementMsg IS NOT NULL AND @IncrementMsg IS NULL) OR (@OIncrementMsg IS NULL AND @IncrementMsg IS NOT NULL) OR (@OIncrementMsg <> @IncrementMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4177,'Increment',7490,'IncrementMsg',@OIncrementMsg,@IncrementMsg
+IF (@OMasterFoundMsg IS NOT NULL AND @MasterFoundMsg IS NULL) OR (@OMasterFoundMsg IS NULL AND @MasterFoundMsg IS NOT NULL) OR (@OMasterFoundMsg <> @MasterFoundMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4179,'Master Records Found',7495,'MasterFoundMsg',@OMasterFoundMsg,@MasterFoundMsg
+IF (@ODetailFoundMsg IS NOT NULL AND @DetailFoundMsg IS NULL) OR (@ODetailFoundMsg IS NULL AND @DetailFoundMsg IS NOT NULL) OR (@ODetailFoundMsg <> @DetailFoundMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4180,'Detail Records Found',7496,'DetailFoundMsg',@ODetailFoundMsg,@DetailFoundMsg
+IF (@ONoMasterMsg IS NOT NULL AND @NoMasterMsg IS NULL) OR (@ONoMasterMsg IS NULL AND @NoMasterMsg IS NOT NULL) OR (@ONoMasterMsg <> @NoMasterMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4181,'No Master Message',7491,'NoMasterMsg',@ONoMasterMsg,@NoMasterMsg
+IF (@ONoDetailMsg IS NOT NULL AND @NoDetailMsg IS NULL) OR (@ONoDetailMsg IS NULL AND @NoDetailMsg IS NOT NULL) OR (@ONoDetailMsg <> @NoDetailMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4182,'No Detail Message',7492,'NoDetailMsg',@ONoDetailMsg,@NoDetailMsg
+IF (@OAddMasterMsg IS NOT NULL AND @AddMasterMsg IS NULL) OR (@OAddMasterMsg IS NULL AND @AddMasterMsg IS NOT NULL) OR (@OAddMasterMsg <> @AddMasterMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4183,'Add Master Message',7493,'AddMasterMsg',@OAddMasterMsg,@AddMasterMsg
+IF (@OAddDetailMsg IS NOT NULL AND @AddDetailMsg IS NULL) OR (@OAddDetailMsg IS NULL AND @AddDetailMsg IS NOT NULL) OR (@OAddDetailMsg <> @AddDetailMsg)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4184,'Add Detail Message',7494,'AddDetailMsg',@OAddDetailMsg,@AddDetailMsg
+END
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Audit_Upd9M') AND type='P')
+EXEC('CREATE PROCEDURE dbo.Audit_Upd9M AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE dbo.Audit_Upd9M
+ @ScreenId		Int
+,@ScreenTypeId		TinyInt
+,@SearchId		Int
+,@GridRows		TinyInt
+,@ProgramName		VarChar(20)
+,@MasterTableId		Int
+,@DetailTableId		Int
+,@SearchAscending		Char(1)
+,@GenerateSc		Char(1)
+,@HasDeleteAll		Char(1)
+,@ValidateReq		Char(1)
+,@DeferError		Char(1)
+,@GenerateSr		Char(1)
+,@AuthRequired		Char(1)
+,@ShowGridHead		Char(1)
+,@ViewOnly		Char(1)
+,@GenAudit		Char(1)
+,@SearchTableId		Int
+,@SearchImgId		Int
+,@SearchUrlId		Int
+,@SearchDtlId		Int
+,@SearchIdR		Int
+,@SearchDtlIdR		Int
+,@_UserId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @_ScrAuditId		bigint
+		,@SearchCol		nvarchar(2000)
+		,@OScreenTypeId		TinyInt
+		,@OSearchId		Int
+		,@OGridRows		TinyInt
+		,@OProgramName		VarChar(20)
+		,@OMasterTableId		Int
+		,@ODetailTableId		Int
+		,@OSearchAscending		Char(1)
+		,@OGenerateSc		Char(1)
+		,@OHasDeleteAll		Char(1)
+		,@OValidateReq		Char(1)
+		,@ODeferError		Char(1)
+		,@OGenerateSr		Char(1)
+		,@OAuthRequired		Char(1)
+		,@OShowGridHead		Char(1)
+		,@OViewOnly		Char(1)
+		,@OGenAudit		Char(1)
+		,@OSearchTableId		Int
+		,@OSearchImgId		Int
+		,@OSearchUrlId		Int
+		,@OSearchDtlId		Int
+		,@OSearchIdR		Int
+		,@OSearchDtlIdR		Int
+SELECT @SearchCol=ScreenId,@OScreenTypeId=ScreenTypeId,@OSearchId=SearchId,@OGridRows=GridRows,@OProgramName=ProgramName,@OMasterTableId=MasterTableId,@ODetailTableId=DetailTableId,@OSearchAscending=SearchAscending,@OGenerateSc=GenerateSc,@OHasDeleteAll=HasDeleteAll,@OValidateReq=ValidateReq,@ODeferError=DeferError,@OGenerateSr=GenerateSr,@OAuthRequired=AuthRequired,@OShowGridHead=ShowGridHead,@OViewOnly=ViewOnly,@OGenAudit=GenAudit,@OSearchTableId=SearchTableId,@OSearchImgId=SearchImgId,@OSearchUrlId=SearchUrlId,@OSearchDtlId=SearchDtlId,@OSearchIdR=SearchIdR,@OSearchDtlIdR=SearchDtlIdR FROM dbo.Screen WHERE ScreenId=@ScreenId
+IF ((@OScreenTypeId IS NOT NULL AND @ScreenTypeId IS NULL) OR (@OScreenTypeId IS NULL AND @ScreenTypeId IS NOT NULL) OR (@OScreenTypeId <> @ScreenTypeId)) OR ((@OSearchId IS NOT NULL AND @SearchId IS NULL) OR (@OSearchId IS NULL AND @SearchId IS NOT NULL) OR (@OSearchId <> @SearchId)) OR ((@OGridRows IS NOT NULL AND @GridRows IS NULL) OR (@OGridRows IS NULL AND @GridRows IS NOT NULL) OR (@OGridRows <> @GridRows)) OR ((@OProgramName IS NOT NULL AND @ProgramName IS NULL) OR (@OProgramName IS NULL AND @ProgramName IS NOT NULL) OR (@OProgramName <> @ProgramName)) OR ((@OMasterTableId IS NOT NULL AND @MasterTableId IS NULL) OR (@OMasterTableId IS NULL AND @MasterTableId IS NOT NULL) OR (@OMasterTableId <> @MasterTableId)) OR ((@ODetailTableId IS NOT NULL AND @DetailTableId IS NULL) OR (@ODetailTableId IS NULL AND @DetailTableId IS NOT NULL) OR (@ODetailTableId <> @DetailTableId)) OR ((@OSearchAscending IS NOT NULL AND @SearchAscending IS NULL) OR (@OSearchAscending IS NULL AND @SearchAscending IS NOT NULL) OR (@OSearchAscending <> @SearchAscending)) OR ((@OGenerateSc IS NOT NULL AND @GenerateSc IS NULL) OR (@OGenerateSc IS NULL AND @GenerateSc IS NOT NULL) OR (@OGenerateSc <> @GenerateSc)) OR ((@OHasDeleteAll IS NOT NULL AND @HasDeleteAll IS NULL) OR (@OHasDeleteAll IS NULL AND @HasDeleteAll IS NOT NULL) OR (@OHasDeleteAll <> @HasDeleteAll)) OR ((@OValidateReq IS NOT NULL AND @ValidateReq IS NULL) OR (@OValidateReq IS NULL AND @ValidateReq IS NOT NULL) OR (@OValidateReq <> @ValidateReq)) OR ((@ODeferError IS NOT NULL AND @DeferError IS NULL) OR (@ODeferError IS NULL AND @DeferError IS NOT NULL) OR (@ODeferError <> @DeferError)) OR ((@OGenerateSr IS NOT NULL AND @GenerateSr IS NULL) OR (@OGenerateSr IS NULL AND @GenerateSr IS NOT NULL) OR (@OGenerateSr <> @GenerateSr)) OR ((@OAuthRequired IS NOT NULL AND @AuthRequired IS NULL) OR (@OAuthRequired IS NULL AND @AuthRequired IS NOT NULL) OR (@OAuthRequired <> @AuthRequired)) OR ((@OShowGridHead IS NOT NULL AND @ShowGridHead IS NULL) OR (@OShowGridHead IS NULL AND @ShowGridHead IS NOT NULL) OR (@OShowGridHead <> @ShowGridHead)) OR ((@OViewOnly IS NOT NULL AND @ViewOnly IS NULL) OR (@OViewOnly IS NULL AND @ViewOnly IS NOT NULL) OR (@OViewOnly <> @ViewOnly)) OR ((@OGenAudit IS NOT NULL AND @GenAudit IS NULL) OR (@OGenAudit IS NULL AND @GenAudit IS NOT NULL) OR (@OGenAudit <> @GenAudit)) OR ((@OSearchTableId IS NOT NULL AND @SearchTableId IS NULL) OR (@OSearchTableId IS NULL AND @SearchTableId IS NOT NULL) OR (@OSearchTableId <> @SearchTableId)) OR ((@OSearchImgId IS NOT NULL AND @SearchImgId IS NULL) OR (@OSearchImgId IS NULL AND @SearchImgId IS NOT NULL) OR (@OSearchImgId <> @SearchImgId)) OR ((@OSearchUrlId IS NOT NULL AND @SearchUrlId IS NULL) OR (@OSearchUrlId IS NULL AND @SearchUrlId IS NOT NULL) OR (@OSearchUrlId <> @SearchUrlId)) OR ((@OSearchDtlId IS NOT NULL AND @SearchDtlId IS NULL) OR (@OSearchDtlId IS NULL AND @SearchDtlId IS NOT NULL) OR (@OSearchDtlId <> @SearchDtlId)) OR ((@OSearchIdR IS NOT NULL AND @SearchIdR IS NULL) OR (@OSearchIdR IS NULL AND @SearchIdR IS NOT NULL) OR (@OSearchIdR <> @SearchIdR)) OR ((@OSearchDtlIdR IS NOT NULL AND @SearchDtlIdR IS NULL) OR (@OSearchDtlIdR IS NULL AND @SearchDtlIdR IS NOT NULL) OR (@OSearchDtlIdR <> @SearchDtlIdR))
+BEGIN
+INSERT RODesign.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)
+	SELECT 'U',9,'Y',15,@ScreenId,ISNULL(@SearchCol,''),@_UserId,getutcdate()
+SELECT @_ScrAuditId = @@IDENTITY
+IF (@OScreenTypeId IS NOT NULL AND @ScreenTypeId IS NULL) OR (@OScreenTypeId IS NULL AND @ScreenTypeId IS NOT NULL) OR (@OScreenTypeId <> @ScreenTypeId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,45,'Screen Type',127,'ScreenTypeId',CONVERT(varchar(100),@OScreenTypeId),CONVERT(varchar(100),@ScreenTypeId)
+IF (@OSearchId IS NOT NULL AND @SearchId IS NULL) OR (@OSearchId IS NULL AND @SearchId IS NOT NULL) OR (@OSearchId <> @SearchId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,46,'Search Title L',128,'SearchId',CONVERT(varchar(100),@OSearchId),CONVERT(varchar(100),@SearchId)
+IF (@OGridRows IS NOT NULL AND @GridRows IS NULL) OR (@OGridRows IS NULL AND @GridRows IS NOT NULL) OR (@OGridRows <> @GridRows)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,48,'Rows for Grid',130,'GridRows',CONVERT(varchar(100),@OGridRows),CONVERT(varchar(100),@GridRows)
+IF (@OProgramName IS NOT NULL AND @ProgramName IS NULL) OR (@OProgramName IS NULL AND @ProgramName IS NOT NULL) OR (@OProgramName <> @ProgramName)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,49,'Program Name',131,'ProgramName',@OProgramName,@ProgramName
+IF (@OMasterTableId IS NOT NULL AND @MasterTableId IS NULL) OR (@OMasterTableId IS NULL AND @MasterTableId IS NOT NULL) OR (@OMasterTableId <> @MasterTableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,59,'Master Table',146,'MasterTableId',CONVERT(varchar(100),@OMasterTableId),CONVERT(varchar(100),@MasterTableId)
+IF (@ODetailTableId IS NOT NULL AND @DetailTableId IS NULL) OR (@ODetailTableId IS NULL AND @DetailTableId IS NOT NULL) OR (@ODetailTableId <> @DetailTableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,60,'Detail Table',147,'DetailTableId',CONVERT(varchar(100),@ODetailTableId),CONVERT(varchar(100),@DetailTableId)
+IF (@OSearchAscending IS NOT NULL AND @SearchAscending IS NULL) OR (@OSearchAscending IS NULL AND @SearchAscending IS NOT NULL) OR (@OSearchAscending <> @SearchAscending)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,494,'Ascending Order',363,'SearchAscending',@OSearchAscending,@SearchAscending
+IF (@OGenerateSc IS NOT NULL AND @GenerateSc IS NULL) OR (@OGenerateSc IS NULL AND @GenerateSc IS NOT NULL) OR (@OGenerateSc <> @GenerateSc)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1247,'Generate CLN',1093,'GenerateSc',@OGenerateSc,@GenerateSc
+IF (@OHasDeleteAll IS NOT NULL AND @HasDeleteAll IS NULL) OR (@OHasDeleteAll IS NULL AND @HasDeleteAll IS NOT NULL) OR (@OHasDeleteAll <> @HasDeleteAll)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1301,'DeleteAll Visible',1155,'HasDeleteAll',@OHasDeleteAll,@HasDeleteAll
+IF (@OValidateReq IS NOT NULL AND @ValidateReq IS NULL) OR (@OValidateReq IS NULL AND @ValidateReq IS NOT NULL) OR (@OValidateReq <> @ValidateReq)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1371,'Validate Request',1249,'ValidateReq',@OValidateReq,@ValidateReq
+IF (@ODeferError IS NOT NULL AND @DeferError IS NULL) OR (@ODeferError IS NULL AND @DeferError IS NOT NULL) OR (@ODeferError <> @DeferError)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1868,'Defer Error',1905,'DeferError',@ODeferError,@DeferError
+IF (@OGenerateSr IS NOT NULL AND @GenerateSr IS NULL) OR (@OGenerateSr IS NULL AND @GenerateSr IS NOT NULL) OR (@OGenerateSr <> @GenerateSr)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1959,'Generate SRV',2045,'GenerateSr',@OGenerateSr,@GenerateSr
+IF (@OAuthRequired IS NOT NULL AND @AuthRequired IS NULL) OR (@OAuthRequired IS NULL AND @AuthRequired IS NOT NULL) OR (@OAuthRequired <> @AuthRequired)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,1989,'Authentication',2119,'AuthRequired',@OAuthRequired,@AuthRequired
+IF (@OShowGridHead IS NOT NULL AND @ShowGridHead IS NULL) OR (@OShowGridHead IS NULL AND @ShowGridHead IS NOT NULL) OR (@OShowGridHead <> @ShowGridHead)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3101,'Show Grid Header',3227,'ShowGridHead',@OShowGridHead,@ShowGridHead
+IF (@OViewOnly IS NOT NULL AND @ViewOnly IS NULL) OR (@OViewOnly IS NULL AND @ViewOnly IS NOT NULL) OR (@OViewOnly <> @ViewOnly)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,3103,'View Only',3245,'ViewOnly',@OViewOnly,@ViewOnly
+IF (@OGenAudit IS NOT NULL AND @GenAudit IS NULL) OR (@OGenAudit IS NULL AND @GenAudit IS NOT NULL) OR (@OGenAudit <> @GenAudit)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4104,'Audit Trail',7435,'GenAudit',@OGenAudit,@GenAudit
+IF (@OSearchTableId IS NOT NULL AND @SearchTableId IS NULL) OR (@OSearchTableId IS NULL AND @SearchTableId IS NOT NULL) OR (@OSearchTableId <> @SearchTableId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4145,'Search Table',7451,'SearchTableId',CONVERT(varchar(100),@OSearchTableId),CONVERT(varchar(100),@SearchTableId)
+IF (@OSearchImgId IS NOT NULL AND @SearchImgId IS NULL) OR (@OSearchImgId IS NULL AND @SearchImgId IS NOT NULL) OR (@OSearchImgId <> @SearchImgId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4146,'Image Content',7448,'SearchImgId',CONVERT(varchar(100),@OSearchImgId),CONVERT(varchar(100),@SearchImgId)
+IF (@OSearchUrlId IS NOT NULL AND @SearchUrlId IS NULL) OR (@OSearchUrlId IS NULL AND @SearchUrlId IS NOT NULL) OR (@OSearchUrlId <> @SearchUrlId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4147,'Image URL',7449,'SearchUrlId',CONVERT(varchar(100),@OSearchUrlId),CONVERT(varchar(100),@SearchUrlId)
+IF (@OSearchDtlId IS NOT NULL AND @SearchDtlId IS NULL) OR (@OSearchDtlId IS NULL AND @SearchDtlId IS NOT NULL) OR (@OSearchDtlId <> @SearchDtlId)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4148,'Search Subtitle L',7450,'SearchDtlId',CONVERT(varchar(100),@OSearchDtlId),CONVERT(varchar(100),@SearchDtlId)
+IF (@OSearchIdR IS NOT NULL AND @SearchIdR IS NULL) OR (@OSearchIdR IS NULL AND @SearchIdR IS NOT NULL) OR (@OSearchIdR <> @SearchIdR)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4164,'Search Title R',7478,'SearchIdR',CONVERT(varchar(100),@OSearchIdR),CONVERT(varchar(100),@SearchIdR)
+IF (@OSearchDtlIdR IS NOT NULL AND @SearchDtlIdR IS NULL) OR (@OSearchDtlIdR IS NULL AND @SearchDtlIdR IS NOT NULL) OR (@OSearchDtlIdR <> @SearchDtlIdR)
+INSERT RODesign.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,ChangedFr,ChangedTo)
+	SELECT @_ScrAuditId,4165,'Search Subtitle R',7479,'SearchDtlIdR',CONVERT(varchar(100),@OSearchDtlIdR),CONVERT(varchar(100),@SearchDtlIdR)
 END
 RETURN 0
 GO
@@ -2410,6 +14092,8 @@ GO
 SET ANSI_NULLS ON
 GO
 ALTER PROCEDURE [dbo].[Cr_OneTemplateDefaultOnly]
+ @TmplPrefix	varchar(10)
+,@TmplDefault	char(1)
 /* WITH ENCRYPTION */
 AS
 SET NOCOUNT ON
@@ -2418,6 +14102,24 @@ BEGIN
 	RAISERROR('Please choose one and only one template default and try again.',18,2) WITH SETERROR
 	RETURN 1
 END
+/* can't check this as the column is mandatory and all space is treated as empty 2022.12.7 gary */
+--IF (@TmplDefault = 'Y' AND @TmplPrefix <> '')
+--BEGIN
+--	RAISERROR('Please make sure default Template Prefix is blank and try again.',18,2) WITH SETERROR
+--	RETURN 1
+--END
+ELSE IF (@TmplPrefix IS NULL)
+BEGIN
+	RAISERROR('Please enter a Template Prefix less than 10 characters and try again.',18,2) WITH SETERROR
+	RETURN 1
+END
+
+/* ensure prefix is empty(not null) 2022.12.7 gary */
+UPDATE t
+SET TmplPrefix = ''
+FROM dbo.Template t
+WHERE @TmplDefault = 'Y'
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -3452,7 +15154,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.RptwizCatDtl b182' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnName FROM dbo.DbColumn)x1579 ON b182.ColumnId = x1579.ColumnId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.CtDisplayType)x1865 ON b182.DisplayModeId = x1865.TypeId'
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.VwScDisplayType)x1865 ON b182.DisplayModeId = x1865.TypeId'
 SELECT @sClause = 'SELECT RptwizCatDtlId182=b182.RptwizCatDtlId'
 + ', ColumnId182=x1579.ColumnId'
 + ', ColumnId182Text=x1579.ColumnName'
@@ -3977,7 +15679,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@SelProject		char(1)
 	,@RowAuthorityId	smallint
 SELECT @fClause = 'FROM dbo.MenuPrm b231' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EveryoneCd,EveryoneName FROM RODesign.dbo.CtEveryone)x1892 ON b231.GrantDeny = x1892.EveryoneCd' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EveryoneCd,EveryoneName,EveryoneSort FROM RODesign.dbo.CtEveryone)x1892 ON b231.GrantDeny = x1892.EveryoneCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey)x1887 ON b231.PermKeyId = x1887.PermKeyId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow)x1888 ON b231.PermId = x1888.PermId AND x1887.PermKeyId = x1888.PermKeyId'
 SELECT @sClause = 'SELECT MenuPrmId231=b231.MenuPrmId'
@@ -6277,6 +17979,131 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmTemplatePerm1030ById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmTemplatePerm1030ById AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetAdmTemplatePerm1030ById
+ @KeyId1		nvarchar(1000)
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+SELECT @fClause = 'FROM dbo.Template b79'
+SELECT @sClause = 'SELECT TemplateId79=b79.TemplateId'
++ ', TemplateName79=b79.TemplateName'
++ ', TmplPrefix79=b79.TmplPrefix'
++ ', TmplDefault79=b79.TmplDefault'
+SELECT @wClause = 'WHERE b79.TemplateId' + isnull('='+ RODesign.dbo.fSanitizeKeyVal(@KeyId1,1),' is null')
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmTemplatePerm1030DtlById') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetAdmTemplatePerm1030DtlById AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetAdmTemplatePerm1030DtlById
+ @screenId		int
+,@keyId		nvarchar(1000)
+,@Usrs		varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@screenFilterId	int
+,@currCompanyId		int
+,@currProjectId		int
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause = 'FROM dbo.TemplatePrm b1331' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EveryoneCd,EveryoneName,EveryoneSort FROM RODesign.dbo.CtEveryone)x7707 ON b1331.GrantDeny = x7707.EveryoneCd' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey)x7704 ON b1331.PermKeyId = x7704.PermKeyId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow)x7703 ON b1331.PermId = x7703.PermId AND x7704.PermKeyId = x7703.PermKeyId'
+SELECT @sClause = 'SELECT TemplatePrmId1331=b1331.TemplatePrmId'
++ ', GrantDeny1331=x7707.EveryoneCd'
++ ', GrantDeny1331Text=x7707.EveryoneName'
++ ', PermKeyId1331=x7704.PermKeyId'
++ ', PermKeyId1331Text=x7704.PermKeyDesc'
++ ', PermId1331=x7703.PermId'
++ ', PermId1331Text=x7703.PermIdText'
+SELECT @oClause = ''
+SELECT @wClause = 'WHERE b1331.TemplateId' + case when @KeyId is null then ' is null' else '=' + convert(nvarchar,RODesign.dbo.fSanitizeKeyVal(@KeyId,1)) end
+SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst<>'Y'
+IF @@ROWCOUNT <> 0
+BEGIN
+    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@keyId,CHAR(191),','), '''',''''''),'NULL'))
+    SELECT @filterClause=replace(@filterClause,'@currCompanyId' ,CONVERT(varchar,@currCompanyId))
+    SELECT @filterClause=replace(@filterClause,'@currProjectId',CONVERT(varchar,@currProjectId))
+    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+    SELECT @filterClause=replace(@filterClause,'@screenId',CONVERT(varchar,@screenId))
+    SELECT @wClause=@wClause + ' AND ' + @filterClause
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetAdmWebRule80ById') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetAdmWebRule80ById AS SELECT 1')
 GO
@@ -7339,7 +19166,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AggregateCd14=a121.AggregateCd, AggregateCd14Text=a121.AggregateName, a121.AggregateSort'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AggregateCd14=a121.AggregateCd, AggregateCd14Text=a121.AggregateName, AggregateCd14Srt=a121.AggregateSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtAggregate a121'
 SELECT @oClause = 'ORDER BY a121.AggregateSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a121.AggregateName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -7349,7 +19176,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT AggregateCd14=null, AggregateCd14Text=null, AggregateSort=null WHERE 1<>1
+	SELECT AggregateCd14=null, AggregateCd14Text=null, AggregateCd14Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -7659,7 +19486,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppInfoId136=a135.AppInfoId, AppInfoId136Text=a135.AppInfoDesc, a135.AppInfoDesc'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' AppInfoId136=a135.AppInfoId, AppInfoId136Text=a135.AppInfoDesc, AppInfoId136Srt=a135.AppInfoDesc'
 SELECT @fClause = 'FROM dbo.AppInfo a135'
 SELECT @oClause = 'ORDER BY a135.AppInfoDesc desc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a135.AppInfoDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -7669,7 +19496,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT AppInfoId136=null, AppInfoId136Text=null, AppInfoDesc=null WHERE 1<>1
+	SELECT AppInfoId136=null, AppInfoId136Text=null, AppInfoId136Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -7880,7 +19707,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BeforeCRUD24=a1289.CrudTypeCd, BeforeCRUD24Text=a1289.CrudTypeName, a1289.CrudTypeSort, CrudTypeDesc1289=a1289.CrudTypeDesc'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' BeforeCRUD24=a1289.CrudTypeCd, BeforeCRUD24Text=a1289.CrudTypeName, BeforeCRUD24Srt=a1289.CrudTypeSort, CrudTypeDesc1289=a1289.CrudTypeDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtCrudType a1289'
 SELECT @oClause = 'ORDER BY a1289.CrudTypeSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1289.CrudTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -7890,7 +19717,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT BeforeCRUD24=null, BeforeCRUD24Text=null, CrudTypeSort=null, CrudTypeDesc1289=null WHERE 1<>1
+	SELECT BeforeCRUD24=null, BeforeCRUD24Text=null, BeforeCRUD24Srt=null, CrudTypeDesc1289=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -11587,7 +23414,7 @@ DECLARE	 @sClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId97=a258.TypeId, DisplayModeId97Text=a258.TypeDesc'
-SELECT @fClause = 'FROM RODesign.dbo.VwDisplayType a258'
+SELECT @fClause = 'FROM RODesign.dbo.VwRpDisplayType a258'
 SELECT @oClause = 'ORDER BY a258.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a258.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a258.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11642,7 +23469,7 @@ DECLARE	 @sClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId104=a258.TypeId, DisplayModeId104Text=a258.TypeDesc'
-SELECT @fClause = 'FROM RODesign.dbo.VwDisplayType a258'
+SELECT @fClause = 'FROM RODesign.dbo.VwRpDisplayType a258'
 SELECT @oClause = 'ORDER BY a258.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a258.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a258.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11697,7 +23524,7 @@ DECLARE	 @sClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId182=a18.TypeId, DisplayModeId182Text=a18.TypeDesc'
-SELECT @fClause = 'FROM RODesign.dbo.CtDisplayType a18'
+SELECT @fClause = 'FROM RODesign.dbo.VwScDisplayType a18'
 SELECT @oClause = 'ORDER BY a18.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a18.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a18.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -11752,7 +23579,7 @@ DECLARE	 @sClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
 SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' DisplayModeId14=a18.TypeId, DisplayModeId14Text=a18.TypeDesc, DisplayDesc18=a18.DisplayDesc'
-SELECT @fClause = 'FROM RODesign.dbo.CtDisplayType a18'
+SELECT @fClause = 'FROM RODesign.dbo.VwScDisplayType a18'
 SELECT @oClause = 'ORDER BY a18.TypeDesc'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a18.TypeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
 IF @keyId is not null SELECT @wClause = @wClause + 'a18.TypeId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
@@ -12010,7 +23837,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' FontWeight167=a172.FontWeightCd, FontWeight167Text=a172.FontWeightDesc, a172.FontWeightName'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' FontWeight167=a172.FontWeightCd, FontWeight167Text=a172.FontWeightDesc, FontWeight167Srt=a172.FontWeightName'
 SELECT @fClause = 'FROM RODesign.dbo.CtFontWeight a172'
 SELECT @oClause = 'ORDER BY a172.FontWeightName'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a172.FontWeightDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -12020,7 +23847,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT FontWeight167=null, FontWeight167Text=null, FontWeightName=null WHERE 1<>1
+	SELECT FontWeight167=null, FontWeight167Text=null, FontWeight167Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -12284,6 +24111,61 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGrantDeny3S4448') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlGrantDeny3S4448 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlGrantDeny3S4448
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Char(100)
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GrantDeny1331=a229.EveryoneCd, GrantDeny1331Text=a229.EveryoneName, GrantDeny1331Srt=a229.EveryoneSort'
+SELECT @fClause = 'FROM RODesign.dbo.CtEveryone a229'
+SELECT @oClause = 'ORDER BY a229.EveryoneSort'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a229.EveryoneName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a229.EveryoneCd = ''' + convert(varchar,@keyId) + ''')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT GrantDeny1331=null, GrantDeny1331Text=null, GrantDeny1331Srt=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlGrantDeny3S838') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetDdlGrantDeny3S838 AS SELECT 1')
 GO
@@ -12324,7 +24206,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GrantDeny231=a229.EveryoneCd, GrantDeny231Text=a229.EveryoneName, a229.EveryoneSort'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' GrantDeny231=a229.EveryoneCd, GrantDeny231Text=a229.EveryoneName, GrantDeny231Srt=a229.EveryoneSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtEveryone a229'
 SELECT @oClause = 'ORDER BY a229.EveryoneSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a229.EveryoneName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -12334,7 +24216,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT GrantDeny231=null, GrantDeny231Text=null, EveryoneSort=null WHERE 1<>1
+	SELECT GrantDeny231=null, GrantDeny231Text=null, GrantDeny231Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -13124,7 +25006,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MatchCd14=a227.MatchCd, MatchCd14Text=a227.MatchName, a227.MatchSort'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' MatchCd14=a227.MatchCd, MatchCd14Text=a227.MatchName, MatchCd14Srt=a227.MatchSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtMatch a227'
 SELECT @oClause = 'ORDER BY a227.MatchSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a227.MatchName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -13134,7 +25016,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT MatchCd14=null, MatchCd14Text=null, MatchSort=null WHERE 1<>1
+	SELECT MatchCd14=null, MatchCd14Text=null, MatchCd14Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -14304,6 +26186,79 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermId3S4450') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermId3S4450 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlPermId3S4450
+ @screenId		int
+,@bAll		char(1)
+,@keyId		Int
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermId1331=a1299.PermId, PermId1331Text=a1299.PermIdText, a1299.Active, a1299.PermKeyId'
+SELECT @fClause = 'FROM RODesign.dbo.VwPermKeyRow a1299'
+SELECT @oClause = 'ORDER BY a1299.PermIdText'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((a1299.Active = ''Y'') ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1299.PermIdText LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a1299.PermId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyId','Company','a1299.','Y','N',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Companys,'CompanyLs','Company','a1299.','Y','Y',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Cultures,'CultureId','Culture','a1299.','Y','N',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Projects,'ProjectId','Project','a1299.','Y','N',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Projects,'ProjectLs','Project','a1299.','Y','Y',null,'Y','PermKeyRowId',@wClause OUTPUT,@Usrs
+SELECT @tClause = ''
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Agents,'AgentId','Agent','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Brokers,'BrokerId','Broker','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Customers,'CustomerId','Customer','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Investors,'InvestorId','Investor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Members,'MemberId','Member','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@UsrGroups,'UsrGroupId','UsrGroup','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Usrs,'UsrId','Usr','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Vendors,'VendorId','Vendor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Lenders,'LenderId','Lender','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Borrowers,'BorrowerId','Borrower','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+EXEC RODesign.dbo.GetPermFilter @screenId,null,@RowAuthoritys,@Guarantors,'GuarantorId','Guarantor','a1299.','N','N',null,'Y','PermKeyRowId',@tClause OUTPUT,@Usrs
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC RODesign.dbo.GetCurrFilter @currCompanyId,'CompanyLs','Company','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
+EXEC RODesign.dbo.GetCurrFilter @currProjectId,'ProjectLs','Project','a1299.','Y',null,'PermKeyRowId',@wClause OUTPUT
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT PermId1331=null, PermId1331Text=null, Active=null, PermKeyId=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S182') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyId3S182 AS SELECT 1')
 GO
@@ -14465,6 +26420,61 @@ EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
 	SELECT PermKeyId1321=null, PermKeyId1321Text=null WHERE 1<>1
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetDdlPermKeyId3S4449') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetDdlPermKeyId3S4449 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetDdlPermKeyId3S4449
+ @screenId		int
+,@bAll		char(1)
+,@keyId		SmallInt
+,@Usrs		varchar(4000)
+,@RowAuthoritys		varchar(4000)
+,@Customers		varchar(4000)
+,@Vendors		varchar(4000)
+,@Members		varchar(4000)
+,@Investors		varchar(4000)
+,@Agents		varchar(4000)
+,@Brokers		varchar(4000)
+,@UsrGroups		varchar(4000)
+,@Companys		varchar(4000)
+,@Projects		varchar(4000)
+,@Cultures		varchar(4000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@currCompanyId		int
+,@currProjectId		int
+,@FilterTxt		nvarchar(1000) = null
+,@TopN		smallint=null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@tClause		nvarchar(max)
+IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
+BEGIN
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' PermKeyId1331=a230.PermKeyId, PermKeyId1331Text=a230.PermKeyDesc'
+SELECT @fClause = 'FROM RODesign.dbo.VwPermKey a230'
+SELECT @oClause = 'ORDER BY a230.PermKeyDesc'
+IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a230.PermKeyDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
+IF @keyId is not null SELECT @wClause = @wClause + 'a230.PermKeyId = ' + convert(varchar,@keyId) + ')' ELSE SELECT @wClause = @wClause + '1<>1)'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+END
+ELSE
+	SELECT PermKeyId1331=null, PermKeyId1331Text=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -18093,7 +30103,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleMethodId127=a1295.RuleMethodId, RuleMethodId127Text=a1295.RuleMethodName, a1295.RuleMethodId, RuleMethodDesc1295=a1295.RuleMethodDesc'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RuleMethodId127=a1295.RuleMethodId, RuleMethodId127Text=a1295.RuleMethodName, RuleMethodId127Srt=a1295.RuleMethodId, RuleMethodDesc1295=a1295.RuleMethodDesc'
 SELECT @fClause = 'FROM RODesign.dbo.CtRuleMethod a1295'
 SELECT @oClause = 'ORDER BY a1295.RuleMethodId'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1295.RuleMethodName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -18103,7 +30113,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT RuleMethodId127=null, RuleMethodId127Text=null, RuleMethodId=null, RuleMethodDesc1295=null WHERE 1<>1
+	SELECT RuleMethodId127=null, RuleMethodId127Text=null, RuleMethodId127Srt=null, RuleMethodDesc1295=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -18423,7 +30433,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RunMode24=a1320.RunModeCd, RunMode24Text=a1320.RunModeDesc, a1320.SrtOrder'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RunMode24=a1320.RunModeCd, RunMode24Text=a1320.RunModeDesc, RunMode24Srt=a1320.SrtOrder'
 SELECT @fClause = 'FROM dbo.VwServerRuleRunMode a1320'
 SELECT @oClause = 'ORDER BY a1320.SrtOrder'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1320.RunModeDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -18433,7 +30443,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT RunMode24=null, RunMode24Text=null, SrtOrder=null WHERE 1<>1
+	SELECT RunMode24=null, RunMode24Text=null, RunMode24Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -24422,7 +36432,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UnitCd22=a154.UnitCd, UnitCd22Text=a154.UnitDesc, a154.UnitOrder'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' UnitCd22=a154.UnitCd, UnitCd22Text=a154.UnitDesc, UnitCd22Srt=a154.UnitOrder'
 SELECT @fClause = 'FROM RODesign.dbo.CtUnit a154'
 SELECT @oClause = 'ORDER BY a154.UnitOrder'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a154.UnitDesc LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -24432,7 +36442,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT UnitCd22=null, UnitCd22Text=null, UnitOrder=null WHERE 1<>1
+	SELECT UnitCd22=null, UnitCd22Text=null, UnitCd22Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -24870,7 +36880,7 @@ DECLARE	 @sClause		nvarchar(max)
 	,@tClause		nvarchar(max)
 IF EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name='RODesign')
 BEGIN
-SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ViewOnly15=a1293.ViewTypeCd, ViewOnly15Text=a1293.ViewTypeName, a1293.ViewTypeSort'
+SELECT @sClause = 'SELECT distinct ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' ViewOnly15=a1293.ViewTypeCd, ViewOnly15Text=a1293.ViewTypeName, ViewOnly15Srt=a1293.ViewTypeSort'
 SELECT @fClause = 'FROM RODesign.dbo.CtViewType a1293'
 SELECT @oClause = 'ORDER BY a1293.ViewTypeSort'
 IF @bAll = 'Y' SELECT @wClause = 'WHERE (((1=1) ' + CASE WHEN @FilterTxt IS NULL OR @filterTxt = '' THEN '' ELSE ' AND a1293.ViewTypeName LIKE N''%' + REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''',''''''),' ','%') + '%''' END + ')  OR ' ELSE SELECT @wClause = 'WHERE ('
@@ -24880,7 +36890,7 @@ IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tC
 EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
 END
 ELSE
-	SELECT ViewOnly15=null, ViewOnly15Text=null, ViewTypeSort=null WHERE 1<>1
+	SELECT ViewOnly15=null, ViewOnly15Text=null, ViewOnly15Srt=null WHERE 1<>1
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -26291,7 +38301,7 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT RptwizTypId,Rptw
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableDesc FROM dbo.DbTable (NOLOCK))x1864 ON b181.TableId = x1864.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.RptwizCatDtl b182 (NOLOCK) ON b181.RptwizCatId = b182.RptwizCatId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnName FROM dbo.DbColumn (NOLOCK))x1579 ON b182.ColumnId = x1579.ColumnId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.CtDisplayType (NOLOCK))x1865 ON b182.DisplayModeId = x1865.TypeId'
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.VwScDisplayType (NOLOCK))x1865 ON b182.DisplayModeId = x1865.TypeId'
 SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' RptwizCatId181Text=b181.RptwizCatId'
 + ', RptwizCatId181=b181.RptwizCatId'
 + ', RptwizTypId181=x1604.RptwizTypId'
@@ -27910,7 +39920,7 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportId,ReportD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportGrpId,ReportGrpName FROM dbo.ReportGrp (NOLOCK))x903 ON b97.ReportGrpId = x903.ReportGrpId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TableId,TableName FROM dbo.DbTable (NOLOCK))x904 ON b97.TableId = x904.TableId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT DataTypeId,DataTypeName FROM RODesign.dbo.CtDataType (NOLOCK))x908 ON b97.DataTypeId = x908.DataTypeId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.VwDisplayType (NOLOCK))x910 ON b97.DisplayModeId = x910.TypeId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.VwRpDisplayType (NOLOCK))x910 ON b97.DisplayModeId = x910.TypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ReportCriId,ReportCriDesc,ReportId FROM dbo.ReportCri (NOLOCK))x5360 ON b97.DdlFtrColumnId = x5360.ReportCriId AND x902.ReportId = x5360.ReportId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.ReportCriHlp b98 (NOLOCK) ON b97.ReportCriId = b98.ReportCriId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT CultureId,CultureTypeDesc FROM RODesign.dbo.VwCulture (NOLOCK))x923 ON b98.CultureId = x923.CultureId'
@@ -29359,7 +41369,7 @@ SELECT @fClause='FROM dbo.ScreenCri b104 (NOLOCK)'
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenDesc FROM dbo.Screen (NOLOCK))x971 ON b104.ScreenId = x971.ScreenId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x975 ON b104.ColumnId = x975.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT OperatorId,OperatorDesc FROM RODesign.dbo.CtOperator (NOLOCK))x5340 ON b104.OperatorId = x5340.OperatorId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.VwDisplayType (NOLOCK))x979 ON b104.DisplayModeId = x979.TypeId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc FROM RODesign.dbo.VwRpDisplayType (NOLOCK))x979 ON b104.DisplayModeId = x979.TypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT JustifyCd,JustifyName FROM RODesign.dbo.CtJustify (NOLOCK))x1371 ON b104.ColumnJustify = x1371.JustifyCd' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x981 ON b104.DdlKeyColumnId = x981.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x982 ON b104.DdlRefColumnId = x982.ColumnId' 
@@ -29667,7 +41677,7 @@ SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ScreenId,ScreenD
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT GroupRowId,GroupRowName FROM RODesign.dbo.GroupRow (NOLOCK))x5279 ON b14.GroupRowId = x5279.GroupRowId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT GroupColId,GroupColName FROM RODesign.dbo.GroupCol (NOLOCK))x1016 ON b14.GroupColId = x1016.GroupColId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x109 ON b14.ColumnId = x109.ColumnId' 
-SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc,DisplayDesc FROM RODesign.dbo.CtDisplayType (NOLOCK))x116 ON b14.DisplayModeId = x116.TypeId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT TypeId,TypeDesc,DisplayDesc FROM RODesign.dbo.VwScDisplayType (NOLOCK))x116 ON b14.DisplayModeId = x116.TypeId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x117 ON b14.DdlKeyColumnId = x117.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x118 ON b14.DdlRefColumnId = x118.ColumnId' 
 SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT ColumnId,ColumnDesc FROM dbo.DbColumn (NOLOCK))x1119 ON b14.DdlSrtColumnId = x1119.ColumnId' 
@@ -30722,6 +42732,137 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmTemplatePerm1030') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetExpAdmTemplatePerm1030 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetExpAdmTemplatePerm1030
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM dbo.Template b79 (NOLOCK)' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN dbo.TemplatePrm b1331 (NOLOCK) ON b79.TemplateId = b1331.TemplateId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT EveryoneCd,EveryoneName FROM RODesign.dbo.CtEveryone (NOLOCK))x7707 ON b1331.GrantDeny = x7707.EveryoneCd' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermKeyId,PermKeyDesc FROM RODesign.dbo.VwPermKey (NOLOCK))x7704 ON b1331.PermKeyId = x7704.PermKeyId' 
+SELECT @fClause = @fClause + ' LEFT OUTER JOIN (SELECT DISTINCT PermId,PermIdText,PermKeyId FROM RODesign.dbo.VwPermKeyRow (NOLOCK))x7703 ON b1331.PermId = x7703.PermId AND x7704.PermKeyId = x7703.PermKeyId'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TemplateId79Text=b79.TemplateId'
++ ', TemplateId79=b79.TemplateId'
++ ', TemplateName79=b79.TemplateName'
++ ', TmplPrefix79=b79.TmplPrefix'
++ ', TmplDefault79=b79.TmplDefault'
++ ', TemplatePrmId1331=' + case when charindex('b1331 ',@fClause) > 0 then 'b1331.TemplatePrmId' else 'null' end
++ ', GrantDeny1331=x7707.EveryoneCd'
++ ', GrantDeny1331Text=x7707.EveryoneName'
++ ', PermKeyId1331=x7704.PermKeyId'
++ ', PermKeyId1331Text=x7704.PermKeyDesc'
++ ', PermId1331=x7703.PermId'
++ ', PermId1331Text=x7703.PermIdText'
+SELECT @oClause='ORDER BY b79.TemplateId'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		    SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b79.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b79.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b79.TemplateId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetExpAdmWebRule80') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetExpAdmWebRule80 AS SELECT 1')
 GO
@@ -31373,7 +43514,17 @@ BEGIN
 	SELECT @LstCnt = COUNT(1) FROM dbo.ReportLstCri WHERE UsrId = @UsrId AND ReportId = @ReportId
 	SELECT @CriCnt = COUNT(1) FROM dbo.ReportCri WHERE ReportId = @ReportId
 	IF @LstCnt > 0 AND @CriCnt > 0 AND @LstCnt <> @CriCnt
-	BEGIN RAISERROR('Please truncate table ReportLstCri and try again.',18,2) WITH SETERROR RETURN 1 END
+	BEGIN 
+		--RAISERROR('Please truncate table ReportLstCri and try again.',18,2) WITH SETERROR RETURN 1 
+		/* no reason it can't be deleted when truncate table is the same thing 2022.6.20 gary */
+		DELETE a
+		FROM
+		dbo.ReportLstCri a
+		WHERE 
+		a.ReportId = @ReportId
+		AND
+		a.UsrId = @UsrId
+	END
 	SELECT a.LastCriteria FROM dbo.ReportLstCri a
 		LEFT OUTER JOIN dbo.ReportCri b ON a.ReportCriId = b.ReportCriId
 		WHERE a.UsrId = @UsrId AND a.ReportId = @ReportId ORDER BY b.TabIndex
@@ -37154,6 +49305,123 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmTemplatePerm1030') AND type='P')
+EXEC('CREATE PROCEDURE dbo.GetLisAdmTemplatePerm1030 AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE GetLisAdmTemplatePerm1030
+ @useGlobalFilter	char(1)
+,@screenId		int
+,@Usrs			varchar(1000)
+,@RowAuthoritys		varchar(1000)
+,@Customers		varchar(1000)
+,@Vendors		varchar(1000)
+,@Members		varchar(1000)
+,@Investors		varchar(1000)
+,@Agents		varchar(1000)
+,@Brokers		varchar(1000)
+,@UsrGroups		varchar(1000)
+,@Companys		varchar(1000)
+,@Projects		varchar(1000)
+,@Cultures		varchar(1000)
+,@Borrowers		varchar(1000)
+,@Guarantors		varchar(1000)
+,@Lenders		varchar(1000)
+,@Key		nvarchar(500)
+,@FilterTxt		nvarchar(500)
+,@screenFilterId	int
+,@currCompanyId	int
+,@currProjectId	int
+,@topN	smallint = null
+/* WITH ENCRYPTION */
+AS
+SET NOCOUNT ON
+DECLARE	 @sClause		nvarchar(max)
+	,@fClause		nvarchar(max)
+	,@wClause		nvarchar(max)
+	,@oClause		nvarchar(max)
+	,@filterClause		nvarchar(2000)
+	,@bUsr		char(1)
+	,@UsrId			int
+	,@tClause		nvarchar(max)
+	,@cc		varchar(max)
+	,@rr		varchar(1000)
+	,@pp		varchar(1000)
+	,@SelUsr		char(1)
+	,@SelUsrGroup		char(1)
+	,@SelCulture		char(1)
+	,@SelCompany		char(1)
+	,@SelAgent		char(1)
+	,@SelBroker		char(1)
+	,@SelCustomer		char(1)
+	,@SelInvestor		char(1)
+	,@SelMember		char(1)
+	,@SelVendor		char(1)
+	,@SelLender		char(1)
+	,@SelBorrower		char(1)
+	,@SelGuarantor		char(1)
+	,@SelProject		char(1)
+	,@RowAuthorityId	smallint
+SELECT @fClause='FROM dbo.Template b79 (NOLOCK)'
+SELECT @sClause='SELECT DISTINCT ' + CASE WHEN @topN IS NULL OR @topN <= 0 THEN '' ELSE ' TOP ' + CONVERT(varchar(10),@topN) END + ' TemplateId79=b79.TemplateId, TemplateId79Text=b79.TemplateName, MatchCount=COUNT(1) OVER ()'
+SELECT @oClause='ORDER BY b79.TemplateName'
+SELECT @wClause='WHERE 1=1', @bUsr='Y'
+SELECT @pp = @Usrs
+WHILE @pp <> '' AND datalength(@pp) > 0
+BEGIN
+	EXEC RODesign.dbo.Pop1Int @pp OUTPUT,@UsrId OUTPUT
+	IF @bUsr='Y'
+	BEGIN
+		SELECT @bUsr='N'
+		SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.ScreenFilter WHERE ScreenFilterId=@screenFilterId AND ApplyToMst='Y'
+		IF @@ROWCOUNT <> 0
+		BEGIN
+		    SELECT @filterClause=replace(@filterClause,'@Usrs', REPLACE(REPLACE(@Usrs,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@RowAuthoritys', REPLACE(REPLACE(@RowAuthoritys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Customers', REPLACE(REPLACE(@Customers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Vendors', REPLACE(REPLACE(@Vendors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Members', REPLACE(REPLACE(@Members,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Investors', REPLACE(REPLACE(@Investors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Agents', REPLACE(REPLACE(@Agents,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Brokers', REPLACE(REPLACE(@Brokers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@UsrGroups', REPLACE(REPLACE(@UsrGroups,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Companys', REPLACE(REPLACE(@Companys,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Projects', REPLACE(REPLACE(@Projects,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Borrowers', REPLACE(REPLACE(@Borrowers,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Lenders', REPLACE(REPLACE(@Lenders,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@Guarantors', REPLACE(REPLACE(@Guarantors,CHAR(191),','), '''',''''''))
+		    SELECT @filterClause=replace(@filterClause,'@KeyId', ISNULL(REPLACE(REPLACE(@Key,CHAR(191),','), '''',''''''),'NULL'))
+		    SELECT @filterClause=replace(@filterClause,'@currCompanyId', CONVERT(varchar,@currCompanyId))
+		    SELECT @filterClause=replace(@filterClause,'@currProjectId', CONVERT(varchar,@currProjectId))
+		 SELECT @filterClause=replace(@filterClause,'@currUsrId', CONVERT(varchar,RODesign.dbo.fGetCurrUsrId(@Usrs)))
+		    SELECT @wClause=@wClause + ' AND ' + @filterClause
+		END
+		IF @useGlobalFilter='Y'
+		BEGIN
+			SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND ScreenId=@screenId
+			IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b79.')
+			ELSE
+			BEGIN
+				SELECT @filterClause=rtrim(FilterClause) FROM RODesign.dbo.GlobalFilter WHERE UsrId=@UsrId AND FilterDefault='Y'
+				IF @@ROWCOUNT <> 0 SELECT @fClause=@fClause + ' ' + replace(@filterClause,'~~.','b79.')
+			END
+		END
+	END
+END
+SELECT @tClause = ''
+IF @tClause <> '' SELECT @wClause = @wClause + ' AND (' + right(@tClause,len(@tClause)-4) + ')'
+IF @key is not null SELECT @wClause = @wClause + ' AND (b79.TemplateId = ' + RODesign.dbo.fSanitizeKeyVal(@key,1) + ')'
+
+SELECT @FilterTxt = REPLACE(REPLACE(REPLACE(REPLACE(@FilterTxt,'[','[[]'),'%','[%]'),'_','[_]'), '''','''''') 
+IF @FilterTxt is not null AND @FilterTxt <> '' SELECT @wClause = @wClause + ' AND (b79.TemplateName LIKE N''%' + REPLACE(@FilterTxt,' ','%') + '%'') '
+EXEC (@sClause + ' ' + @fClause + ' ' + @wClause + ' ' + @oClause)
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.GetLisAdmWebRule80') AND type='P')
 EXEC('CREATE PROCEDURE dbo.GetLisAdmWebRule80 AS SELECT 1')
 GO
@@ -37593,7 +49861,7 @@ IF @CultureId <> @DefCultureId
 SELECT @sClause = 'INSERT #menu (RootQId, ParentQId, QId, ParentId, MenuIndex, MenuId, MenuText, ScreenId, ReportId, WizardId, NavigateUrl, QueryStr, IconUrl, Popup, GroupTitle, ReactQuickMenu)'
 + ' SELECT null, null, '''', a.ParentId, a.MenuIndex, a.MenuId, b.MenuText, a.ScreenId, a.ReportId, a.WizardId'
 + ' , NavigateUrl = CASE WHEN c.ProgramName IS NOT NULL THEN c.ProgramName + ''.aspx?csy=' + convert(varchar,@SystemId) + ''''
-+ ' WHEN d.ReportTypeCd in (''S'',''R'',''T'',''E'') THEN ''SqlReport.aspx?csy=' + convert(varchar,@SystemId) + '&msy=' + convert(varchar,@SystemId) + '&rpt='' + convert(varchar,d.ReportId)'
++ ' WHEN d.ReportTypeCd in (''S'',''R'',''T'',''E'',''M'') THEN ''SqlReport.aspx?csy=' + convert(varchar,@SystemId) + '&msy=' + convert(varchar,@SystemId) + '&rpt='' + convert(varchar,d.ReportId)'
 + ' WHEN f.StaticPgId IS NOT NULL THEN ''ShowPage.aspx?csy=' + convert(varchar,@SystemId) + '&msy=' + convert(varchar,@SystemId) + '&pg='' + convert(varchar,f.StaticPgId)'
 + ' WHEN d.ProgramName IS NOT NULL THEN d.ProgramName + ''.aspx?csy=' + convert(varchar,@SystemId) + ''''
 + ' WHEN e.ProgramName IS NOT NULL THEN e.ProgramName + ''.aspx?csy=' + convert(varchar,@SystemId) + ''''
@@ -38984,17 +51252,17 @@ BEGIN
 		IF @masterTable = 'Y'
 		BEGIN
 			SELECT @pKeyMCol = @columnName, @pKeyMVar =  '@' + @columnName + CONVERT(VARCHAR(10),@tableId)
-			SELECT @whereMClause = ' WHERE ' + @columnName + ' = ' + @pKeyMVar
+			SELECT @whereMClause = ' WHERE ' + '[' + @columnName + ']' + ' = ' + @pKeyMVar
 			IF @columnIdentity = 'Y'
 			BEGIN
 				SELECT @insM3Clause = ' SELECT ' + @pKeyMVar + ' = @@IDENTITY'
 			END
 			ELSE
 			BEGIN
-				IF @insM1Clause = space(0) SELECT @insM1Clause = @pKeyMCol ELSE SELECT @insM1Clause = @insM1Clause + @cma + @pKeyMCol
+				IF @insM1Clause = space(0) SELECT @insM1Clause = '[' + @pKeyMCol + ']' ELSE SELECT @insM1Clause = @insM1Clause + @cma + '[' + @pKeyMCol + ']'
 				IF @insM2Clause = space(0) SELECT @insM2Clause = @pKeyMVar ELSE SELECT @insM2Clause = @insM2Clause + @cma + @pKeyMVar
 			END
-			IF @insD1Clause = space(0) SELECT @insD1Clause = @pKeyMCol ELSE SELECT @insD1Clause = @insD1Clause + @cma + @pKeyMCol
+			IF @insD1Clause = space(0) SELECT @insD1Clause = '[' + @pKeyMCol + ']' ELSE SELECT @insD1Clause = @insD1Clause + @cma + '[' + @pKeyMCol + ']'
 			IF @insD2Clause = space(0) SELECT @insD2Clause = @pKeyMVar ELSE SELECT @insD2Clause = @insD2Clause + @cma + @pKeyMVar
 			SELECT @spAddSql = @spAddSql + ' DECLARE ' + @varName +  ' SELECT ' + @pKeyMVar + '=' + @qtn
 			SELECT @spDelSql = @spDelSql + ' DECLARE ' + @varName + ', @UsrId int, @CurrDb varchar(50) ' +  ' SELECT ' + @pKeyMVar + '=' + @qtn + ' ,@UsrId = ?, @CurrDb = DB_NAME() ' + CASE WHEN @logDelete = 'N' THEN '' ELSE ' EXEC ' + @dbDesDatabase + '.dbo.LogDelete @UsrId, @CurrDb, ''' + @dbDesDatabase + ''',''' + @dbAppDatabase + ''',''' + @tableName + ''',''' + @whereMClause + ''',' + @pKeyMVar + ',''' +@varName+''',''' + @pKeyMVar + ''',''' + @numericData + '''' END
@@ -39005,14 +51273,14 @@ BEGIN
 		ELSE
 		BEGIN
 			SELECT @pKeyDCol = @columnName, @pKeyDVar =  '@' + @columnName + CONVERT(VARCHAR(10),@tableId)
-			SELECT @whereDClause = ' WHERE ' + @columnName + ' = ' + @pKeyDVar
+			SELECT @whereDClause = ' WHERE ' + '[' + @columnName + ']' + ' = ' + @pKeyDVar
 			IF @columnIdentity = 'Y'
 			BEGIN
 				SELECT @insD3Clause = ' SELECT ' + @pKeyDVar + ' = @@IDENTITY'
 			END
 			ELSE
 			BEGIN
-				IF @insD1Clause = space(0) SELECT @insD1Clause = @pKeyDCol ELSE SELECT @insD1Clause = @insD1Clause + @cma + @pKeyDCol
+				IF @insD1Clause = space(0) SELECT @insD1Clause = '[' +  @pKeyDCol + ']' ELSE SELECT @insD1Clause = @insD1Clause + @cma + '[' + @pKeyDCol + ']'
 				IF @insD2Clause = space(0) SELECT @insD2Clause = @pKeyDVar ELSE SELECT @insD2Clause = @insD2Clause + @cma + @pKeyDVar
 			END
 			SELECT @spAdtSql = @spAdtSql + ' DECLARE ' + @varName +  ' SELECT ' + @pKeyDVar + '=' + @qtn
@@ -39029,49 +51297,53 @@ BEGIN
 		BEGIN
 			IF @tableName = @mstTable
 			BEGIN
-				IF @insM1Clause = space(0) SELECT @insM1Clause = @columnName ELSE SELECT @insM1Clause = @insM1Clause + @cma + @columnName
+				/* pontential reserve name chosen for column name 2023.2.2 gary */
+				IF @insM1Clause = space(0) SELECT @insM1Clause = + '[' + @columnName + ']' ELSE SELECT @insM1Clause = @insM1Clause + @cma + '[' + @columnName + ']'
 				IF @systemValue IS NULL OR @systemValue = space(0)
 					IF @insM2Clause = space(0) SELECT @insM2Clause = @qtn ELSE SELECT @insM2Clause = @insM2Clause + @cma + @qtn
 				ELSE
 					IF @insM2Clause = space(0) SELECT @insM2Clause = CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END ELSE SELECT @insM2Clause = @insM2Clause + @cma + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
 				IF @systemValue IS NULL OR @systemValue = space(0)
-					IF @setMClause = space(0) SELECT @setMClause = @columnName + '=' + @qtn ELSE SELECT @setMClause = @setMClause + @cma + @columnName + '=' + @qtn
+					IF @setMClause = space(0) SELECT @setMClause = '[' + @columnName + ']' + '=' + @qtn ELSE SELECT @setMClause = @setMClause + @cma + '[' + @columnName + ']' + '=' + @qtn
 				ELSE
-					IF @setMClause = space(0) SELECT @setMClause = @columnName + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END ELSE SELECT @setMClause = @setMClause + @cma + @columnName + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
+					IF @setMClause = space(0) SELECT @setMClause = '[' + @columnName + ']' + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' 
+					ELSE @systemValue END ELSE SELECT @setMClause = @setMClause + @cma + '[' + @columnName + ']' + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
 			END
 			ELSE IF @displayName IN ('ComboBox','DropDownList','ListBox','RadioButtonList') OR @ddlRefColumnId IS NULL
 			BEGIN
 				IF @systemValue IS NULL OR @systemValue = space(0) SELECT @sClause = @qtn ELSE SELECT @sClause = + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
-				IF @systemValue IS NULL OR @systemValue = space(0) SELECT @uClause = @columnName + '=' + @qtn 
-				ELSE SELECT @uClause = @columnName + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
+				IF @systemValue IS NULL OR @systemValue = space(0) SELECT @uClause =  '[' + @columnName + ']' + '=' + @qtn 
+				ELSE SELECT @uClause =  '[' + @columnName + ']'+ '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
 				IF NOT EXISTS (SELECT 'true' FROM #mst WHERE otherTable = @tableName)
-					INSERT #mst (otherTable,iClause,sClause,uClause) SELECT @tableName, @pKeyMCol + @cma + @columnName, @pKeyMVar + @cma + @sClause, @uClause
+					INSERT #mst (otherTable,iClause,sClause,uClause) SELECT @tableName, '[' + @pKeyMCol + ']' + @cma + '[' + @columnName + ']', @pKeyMVar + @cma + @sClause, @uClause
 				ELSE
-					UPDATE #mst SET iClause = iClause + @cma + @columnName, sClause = sClause + @cma + @sClause,  uClause = uClause + @cma + @uClause
+					UPDATE #mst SET iClause = iClause + @cma + '[' + @columnName + ']', sClause = sClause + @cma + @sClause,  uClause = uClause + @cma + @uClause
 			END
 		END
 		ELSE
 		BEGIN
 			IF @tableName = @dtlTable
 			BEGIN
-				IF @insD1Clause = space(0) SELECT @insD1Clause = @columnName ELSE SELECT @insD1Clause = @insD1Clause + @cma + @columnName
+				IF @insD1Clause = space(0) SELECT @insD1Clause =  '[' + @columnName + ']' ELSE SELECT @insD1Clause = @insD1Clause + @cma +  '[' + @columnName + ']'
 				IF @systemValue IS NULL OR @systemValue = space(0)
 					IF @insD2Clause = space(0) SELECT @insD2Clause = @qtn ELSE SELECT @insD2Clause = @insD2Clause + @cma + @qtn
 				ELSE
 					IF @insD2Clause = space(0) SELECT @insD2Clause = + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END ELSE SELECT @insD2Clause = @insD2Clause + @cma + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
 				IF @systemValue IS NULL OR @systemValue = space(0)
-					IF @setDClause = space(0) SELECT @setDClause = @columnName + '=' + @qtn ELSE SELECT @setDClause = @setDClause + @cma + @columnName + '=' + @qtn
+					IF @setDClause = space(0) SELECT @setDClause =  '[' + @columnName + ']' + '=' + @qtn ELSE SELECT @setDClause = @setDClause + @cma +  '[' + @columnName + ']' + '=' + @qtn
 				ELSE
-					IF @setDClause = space(0) SELECT @setDClause = @columnName + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END ELSE SELECT @setDClause = @setDClause + @cma + @columnName + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
+					IF @setDClause = space(0) SELECT @setDClause =  '[' + @columnName + ']' + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' 
+					ELSE @systemValue END ELSE SELECT @setDClause = @setDClause + @cma +  '[' + @columnName + ']' + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
 			END
 			ELSE IF @displayName IN ('ComboBox','DropDownList','ListBox','RadioButtonList') OR @ddlRefColumnId IS NULL
 			BEGIN
 				IF @systemValue IS NULL OR @systemValue = space(0) SELECT @sClause = @qtn ELSE SELECT @sClause = CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
-				IF @systemValue IS NULL OR @systemValue = space(0) SELECT @uClause = @columnName + '=' + @qtn ELSE SELECT @uClause = @columnName + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
+				IF @systemValue IS NULL OR @systemValue = space(0) SELECT @uClause =  '[' + @columnName + ']' + '=' + @qtn 
+				ELSE SELECT @uClause = '[' +  @columnName + ']' + '=' + CASE WHEN @DefAlways <> 'Y' THEN 'COALESCE(' + @qtn + ',' +  @systemValue + ')' ELSE @systemValue END
 				IF NOT EXISTS (SELECT 'true' FROM #dtl WHERE otherTable = @tableName)
-					INSERT #dtl (otherTable,iClause,sClause,uClause) SELECT @tableName, @pKeyDCol + @cma + @columnName, @pKeyDVar + @cma + @sClause, @uClause
+					INSERT #dtl (otherTable,iClause,sClause,uClause) SELECT @tableName, '[' +  @pKeyDCol + ']' + @cma + '[' + @columnName + ']', @pKeyDVar + @cma + @sClause, @uClause
 				ELSE
-					UPDATE #dtl SET iClause = iClause + @cma + @columnName, sClause = sClause + @cma + @sClause,  uClause = uClause + @cma + @uClause
+					UPDATE #dtl SET iClause = iClause + @cma + '[' + @columnName + ']', sClause = sClause + @cma + @sClause,  uClause = uClause + @cma + @uClause
 			END
 		END
 	END
@@ -40777,7 +53049,7 @@ BEGIN
 		IF @@ROWCOUNT <> 1 RAISERROR('Please specify search column and try again.',18,2) WITH SETERROR
 		--IF @searchTableName <> @tableName RAISERROR('Search column %s of table %s must belong to the master table %s, operation aborted.',18,2,@columnName,@searchTableName,@tableName) WITH SETERROR
 		SELECT @from1Clause = REPLACE(@fromClause,@tableName,@searchTableName)
-		SELECT @select1Clause = @columnName + CONVERT(VARCHAR(10),@tableId) + '=' + @tableAbbr + '.' + @dbColumnName
+		SELECT @select1Clause =  @columnName  + CONVERT(VARCHAR(10),@tableId) + '=' + @tableAbbr + '.' + @dbColumnName
 			+ ', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'Text=' + @tableAbbr+'.'+@searchColumnName
 			+ ISNULL(', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'TextR=' + @tableAbbr+'.'+@searchIdRName,'')
 			+ ISNULL(', ' + @columnName + CONVERT(VARCHAR(10),@tableId) + 'Dtl=' + @tableAbbr+'.'+@searchDtlName,'')
@@ -41168,6 +53440,10 @@ DECLARE		 @proc3Name		varchar(200)
 		,@ddlKeyTableDb		varchar(50)
 		,@ddlRefTableDb		varchar(50)
 		,@DefaultValue		nvarchar(100)
+		/* alternative sort order for grid, assuming the in the same table of key/ref table */
+		,@ddlSrtColumnName	varchar(50)
+		,@sortOrder			int
+
 SET NOCOUNT ON
 SELECT @parameter1Names='', @parameter1Types='', @parameter1SByte='', @calling1Params='', @param1Sql='', @paramKeySql='', @declare1Sql=''
 , @parameter2Types='', @parameter2SByte='', @parameter2DByte='', @select3Clause='', @from3Clause='', @allClause='', @selfClause=''
@@ -41219,6 +53495,8 @@ DECLARE objCursor CURSOR FOR
 			WHEN x8.TableId is not null AND @multiDesignDb='N' THEN @sysDatabase
 			ELSE '' END
 		,replace(a.DefaultValue,'''',space(0))
+		,x18.ColumnName -- assume sort column is the same table as ref column
+		,a.SortOrder
 	FROM dbo.ScreenObj a
 		LEFT OUTER JOIN dbo.DbColumn b ON a.ColumnId = b.ColumnId
 		LEFT OUTER JOIN dbo.DbTable c ON b.TableId = c.TableId
@@ -41242,6 +53520,7 @@ DECLARE objCursor CURSOR FOR
 		LEFT OUTER JOIN dbo.DbTable x15 ON x14.TableId = x15.TableId
 		LEFT OUTER JOIN RODesign.dbo.Systems x16 ON x15.SystemId = x16.SystemId
 		LEFT OUTER JOIN (SELECT DISTINCT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
+		LEFT OUTER JOIN dbo.DbColumn x18 ON a.DdlSrtColumnId = x18.ColumnId
 	WHERE a.ScreenId = @ScreenId ORDER BY a.TabIndex
 FOR READ ONLY
 OPEN objCursor
@@ -41249,7 +53528,7 @@ FETCH NEXT FROM objCursor INTO @ScreenObjId, @masterTable, @tableId, @tableAbbr,
 , @dataTypeSysName, @dataTypeSByteOle, @dataTypeDByteOle, @numericData, @displayName, @displayMode, @pKey, @allowNulls
 , @ddlKeyTableId, @ddlKeyTableAbbr, @ddlKeyTableName, @ddlKeyColumnName, @ddlRefTableId, @ddlRefTableAbbr, @ddlRefTableName, @ddlRefColumnName
 , @ddlAdnTableId, @ddlAdnTableAbbr, @ddlAdnTableName, @ddlAdnColumnName, @ddlFtrTableId, @ddlFtrTableAbbr, @ddlFtrTableName, @ddlFtrColumnName
-, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue
+, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue, @ddlSrtColumnName,@sortOrder
 WHILE @@FETCH_STATUS = 0
 BEGIN
 	IF @tableId is NOT NULL AND @masterTable <> 'Y' AND @from3Clause = ''
@@ -41327,6 +53606,7 @@ BEGIN
 				IF @joinColumn2 <> @ddlRefColumnName AND @ddlKeyTableName = @ddlRefTableName SELECT @from3Clause = @from3Clause + ',' + @ddlRefColumnName
 				IF @joinColumn2 <> @ddlKeyColumnName SELECT @from3Clause = @from3Clause + ',' + @ddlKeyColumnName
 				IF @ddlAdnColumnName IS NOT NULL AND @ddlFtrTableId = @TableId SELECT @from3Clause = @from3Clause + ',' + @ddlAdnColumnName
+				IF @ddlSrtColumnName IS NOT NULL SELECT @from3Clause = @from3Clause + ',' + @ddlSrtColumnName
 				SELECT @from3Clause = @from3Clause + ' FROM ' + @ddlKeyTableName + ' (NOLOCK))' + @ddlKeyTableAbbr + ' ON '
 				+ case when @ddlKeyTableName = @ddlRefTableName then @tableAbbr + '.' + @dbColumnName else @ddlRefTableAbbr + '.' + @joinColumn1 end + ' = ' + @ddlKeyTableAbbr + '.' + @joinColumn2
 				+ case when @ddlAdnColumnName IS NOT NULL AND @ddlFtrColumnName IS NOT NULL AND @ddlFtrTableId = @TableId then ' AND ' + @ddlFtrTableAbbr + '.' + @ddlFtrColumnName + ' = ' + @ddlKeyTableAbbr + '.' + @ddlAdnColumnName else '' end
@@ -41362,6 +53642,20 @@ BEGIN
 				ELSE
 					SELECT @select3Clause = @select3Clause + '=' 
 															+ @ddlKeyTableAbbr + '.' + @ddlRefColumnName
+				/* only output this if sort order is specified */
+				IF ISNULL(@ddlSrtColumnName,'') <> '' AND @sortOrder IS NOT NULL
+				BEGIN
+					IF right(@select3Clause,4) <> ' end' SELECT @select3Clause = @select3Clause + ''''''
+					SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
+					SELECT @select3Clause = @select3Clause + @columnName + CONVERT(VARCHAR,@tableId) + 'Srt'
+					IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
+						SELECT @select3Clause = @select3Clause  + '='''' + case when charindex(''''' + @ddlKeyTableAbbr + ' '''',@fClause) > 0 then ''''' 
+																							+ @ddlKeyTableAbbr + '.' + @ddlSrtColumnName
+																							+ ''''' else ''''null'''' end'
+					ELSE
+						SELECT @select3Clause = @select3Clause + '=' 
+																+ @ddlKeyTableAbbr + '.' + @ddlSrtColumnName
+				END
 			END
 			ELSE
 			BEGIN
@@ -41426,7 +53720,8 @@ BEGIN
 				SELECT @select3Clause = @select3Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
 			SELECT @CultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
-			SELECT @select3Clause = @select3Clause + @columnName + '=''''''''' + isnull(@DefaultValue,isnull(ColumnHeader,space(0))) + ''''''''''
+			/* allow use of reserve word for column name 2023.2.2 gary */
+			SELECT @select3Clause = @select3Clause + '[' + @columnName + ']' + '=''''''''' + isnull(@DefaultValue,isnull(ColumnHeader,space(0))) + ''''''''''
 				FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = @CultureId
 		END
 	END
@@ -41448,7 +53743,7 @@ BEGIN
 	, @dataTypeSysName, @dataTypeSByteOle, @dataTypeDByteOle, @numericData, @displayName, @displayMode, @pKey, @allowNulls
 	, @ddlKeyTableId, @ddlKeyTableAbbr, @ddlKeyTableName, @ddlKeyColumnName, @ddlRefTableId, @ddlRefTableAbbr, @ddlRefTableName, @ddlRefColumnName
 	, @ddlAdnTableId, @ddlAdnTableAbbr, @ddlAdnTableName, @ddlAdnColumnName, @ddlFtrTableId, @ddlFtrTableAbbr, @ddlFtrTableName, @ddlFtrColumnName
-	, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue
+	, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue, @ddlSrtColumnName,@sortOrder
 END
 CLOSE objCursor
 DEALLOCATE objCursor
@@ -41585,6 +53880,9 @@ DECLARE		 @proc1Name		varchar(200)
 		,@ddlKeyTableDb		varchar(50)
 		,@ddlRefTableDb		varchar(50)
 		,@DefaultValue		nvarchar(100)
+		/* alternative sort order for grid, assuming the in the same table of key/ref table */
+		,@ddlSrtColumnName	varchar(50)
+		,@sortOrder			int
 SET NOCOUNT ON
 SELECT @parameter1Names='', @parameter1Types='', @parameter1SByte='', @calling1Params='', @param1Sql='', @declare1Sql='', @pop1Sql=''
 SELECT @select1Clause='', @fromClause='', @allClause='', @selfClause=''
@@ -41632,6 +53930,8 @@ DECLARE objCursor CURSOR FOR
 			WHEN x8.TableId is not null AND @multiDesignDb='N' THEN @sysDatabase
 			ELSE '' END
 		,replace(a.DefaultValue,'''',space(0))
+		,x18.ColumnName -- assume sort column is the same table as ref column
+		,a.SortOrder
 	FROM dbo.ScreenObj a
 		LEFT OUTER JOIN dbo.DbColumn b ON a.ColumnId = b.ColumnId
 		LEFT OUTER JOIN dbo.DbTable c ON b.TableId = c.TableId
@@ -41655,13 +53955,14 @@ DECLARE objCursor CURSOR FOR
 		LEFT OUTER JOIN dbo.DbTable x15 ON x14.TableId = x15.TableId
 		LEFT OUTER JOIN RODesign.dbo.Systems x16 ON x15.SystemId = x16.SystemId
 		LEFT OUTER JOIN (SELECT DISTINCT t1.ColumnId, t2.ColumnName FROM dbo.ScreenObj t1 LEFT OUTER JOIN dbo.DbColumn t2 ON t1.DdlKeyColumnId = t2.ColumnId) x17 ON a.DdlFtrColumnId = x17.ColumnId
+		LEFT OUTER JOIN dbo.DbColumn x18 ON a.DdlSrtColumnId = x18.ColumnId
 	WHERE a.ScreenId = @ScreenId ORDER BY a.TabIndex
 FOR READ ONLY
 OPEN objCursor
 FETCH NEXT FROM objCursor INTO @ScreenObjId, @tableId, @tableAbbr, @tableName, @columnId, @columnName, @dbColumnName, @DataTypeSqlName, @displayName, @displayMode, @allowNulls
 	, @ddlKeyTableId, @ddlKeyTableAbbr, @ddlKeyTableName, @ddlKeyColumnName, @ddlRefTableId, @ddlRefTableAbbr, @ddlRefTableName, @ddlRefColumnName
 	, @ddlAdnTableId, @ddlAdnTableAbbr, @ddlAdnTableName, @ddlAdnColumnName, @ddlFtrTableId, @ddlFtrTableAbbr, @ddlFtrTableName, @ddlFtrColumnName
-	, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue
+	, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue, @ddlSrtColumnName, @sortOrder
 WHILE @@FETCH_STATUS = 0
 BEGIN
 	SELECT @CultureId = CultureId FROM RODesign.dbo.VwCulture WHERE CultureDefault = 'Y'
@@ -41709,6 +54010,7 @@ BEGIN
 			IF @joinColumn2 <> @ddlRefColumnName AND @ddlKeyTableName = @ddlRefTableName SELECT @fromClause = @fromClause + ',' + @ddlRefColumnName
 			IF @joinColumn2 <> @ddlKeyColumnName SELECT @fromClause = @fromClause + ',' + @ddlKeyColumnName
 			IF @ddlAdnColumnName IS NOT NULL AND @ddlFtrTableId = @TableId SELECT @fromClause = @fromClause + ',' + @ddlAdnColumnName
+			IF @ddlSrtColumnName IS NOT NULL SELECT @fromClause = @fromClause + ',' + @ddlSrtColumnName
 			SELECT @fromClause = @fromClause + ' FROM ' + @ddlKeyTableName + ' (NOLOCK))' + @ddlKeyTableAbbr + ' ON '
 			+ case when @ddlKeyTableName = @ddlRefTableName then @tableAbbr + '.' + @dbColumnName else @ddlRefTableAbbr + '.' + @joinColumn1 end + ' = ' + @ddlKeyTableAbbr + '.' + @joinColumn2
 			+ case when @ddlAdnColumnName IS NOT NULL AND @ddlFtrColumnName IS NOT NULL AND @ddlFtrTableId = @TableId then ' AND ' + @ddlFtrTableAbbr + '.' + @ddlFtrColumnName + ' = ' + @ddlKeyTableAbbr + '.' + @ddlAdnColumnName else '' end
@@ -41723,7 +54025,7 @@ BEGIN
 				IF right(@select1Clause,4) <> ' end' SELECT @select1Clause = @select1Clause + ''''''
 				SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
 			END
-			SELECT @select1Clause = @select1Clause + @columnName + CONVERT(VARCHAR,@tableId)
+			SELECT @select1Clause = @select1Clause + @columnName  + CONVERT(VARCHAR,@tableId)
 			IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
 				SELECT @select1Clause = @select1Clause + '='''' + case when charindex(''''' + @ddlKeyTableAbbr + ' '''',@fClause) > 0 then ''''' + @ddlKeyTableAbbr + '.' + @ddlKeyColumnName + ''''' else ''''null'''' end'
 			ELSE
@@ -41741,6 +54043,21 @@ BEGIN
 			ELSE
 				SELECT @select1Clause = @select1Clause + '=' 
 														+ @ddlKeyTableAbbr + '.' + @ddlRefColumnName
+
+			/* only output this if sort order is specified */
+			IF ISNULL(@ddlSrtColumnName,'') <> '' AND @sortOrder IS NOT NULL
+			BEGIN
+				IF right(@select1Clause,4) <> ' end' SELECT @select1Clause = @select1Clause + ''''''
+				SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
+				SELECT @select1Clause = @select1Clause + @columnName + CONVERT(VARCHAR,@tableId) + 'Srt'
+				IF @ddlKeyTableDb <> '' AND @ddlTableAbbr <> @pKeyTableAbbr AND @ddlKeyTableDb <> 'RODesign' AND @ddlKeyTableDb <> 'ROCmon'
+					SELECT @select1Clause = @select1Clause  + '='''' + case when charindex(''''' + @ddlKeyTableAbbr + ' '''',@fClause) > 0 then ''''' 
+																						+ @ddlKeyTableAbbr + '.' + @ddlSrtColumnName
+																						+ ''''' else ''''null'''' end'
+				ELSE
+					SELECT @select1Clause = @select1Clause + '=' 
+															+ @ddlKeyTableAbbr + '.' + @ddlSrtColumnName
+			END
 		END
 		ELSE
 		BEGIN
@@ -41788,9 +54105,11 @@ BEGIN
 			SELECT @select1Clause = @select1Clause + CHAR(13) + CHAR(10) + '+ '''', '
 		END
 		IF @displayName = 'TextBox'
-			SELECT @select1Clause = @select1Clause + @columnName + '='''''''''''''''''
+			/* allow use of reserve word for column name 2023.2.2 gary */
+			SELECT @select1Clause = @select1Clause + '[' + @columnName + ']' + '='''''''''''''''''
 		ELSE	-- Get the label instead.
-			SELECT @select1Clause = @select1Clause + @columnName + '=''''''''' + isnull(@DefaultValue,isnull(ColumnHeader,space(0))) + '''''''''' FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = @CultureId
+			/* allow use of reserve word for column name 2023.2.2 gary */
+			SELECT @select1Clause = @select1Clause + '[' + @columnName + ']'  +'=''''''''' + isnull(@DefaultValue,isnull(ColumnHeader,space(0))) + '''''''''' FROM dbo.ScreenObjHlp WHERE ScreenObjId = @ScreenObjId AND CultureId = @CultureId
 	END
 	/* The following takes care of dynamic hyperlinks. Don't forget to add " AND @masterTable = 'Y'" for GetScreenLis1ById */
 	IF @displayName = 'HyperLink' AND @ddlKeyColumnName is not null AND @ddlKeyTableId is not null
@@ -41809,7 +54128,7 @@ BEGIN
 	FETCH NEXT FROM objCursor INTO @ScreenObjId, @tableId, @tableAbbr, @tableName, @columnId, @columnName, @dbColumnName, @DataTypeSqlName, @displayName, @displayMode, @allowNulls
 		, @ddlKeyTableId, @ddlKeyTableAbbr, @ddlKeyTableName, @ddlKeyColumnName, @ddlRefTableId, @ddlRefTableAbbr, @ddlRefTableName, @ddlRefColumnName
 		, @ddlAdnTableId, @ddlAdnTableAbbr, @ddlAdnTableName, @ddlAdnColumnName, @ddlFtrTableId, @ddlFtrTableAbbr, @ddlFtrTableName, @ddlFtrColumnName
-		, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue
+		, @pullColumn, @tableDb, @ddlKeyTableDb, @ddlRefTableDb, @DefaultValue, @ddlSrtColumnName, @sortOrder
 END
 CLOSE objCursor
 DEALLOCATE objCursor
@@ -42183,8 +54502,8 @@ BEGIN
 				SELECT @select1Clause = @select1Clause + ', ' + @ddlKeyTableAbbr + '.Active', @select2Clause = @select2Clause + ', Active=null'
 			IF @ddlSrtColumnName is not null
 			BEGIN
-				SELECT @select1Clause = @select1Clause + ', ' + @ddlRefTableAbbr + '.' + @ddlSrtColumnName
-					, @select2Clause = @select2Clause + ', ' + @ddlSrtColumnName + '=null'
+				SELECT @select1Clause = @select1Clause + ', ' + @columnName + ISNULL(CONVERT(VARCHAR(10),@tableId),'') + 'Srt=' + @ddlRefTableAbbr + '.' + @ddlSrtColumnName
+					, @select2Clause = @select2Clause + ', ' + @columnName + ISNULL(CONVERT(VARCHAR(10),@tableId),'') + 'Srt=null'
 					, @orderClause = @ddlRefTableAbbr + '.' + @ddlSrtColumnName
 				IF @ddlSrtColumnName = @ddlRefColumnName SELECT @orderClause = @orderClause + ' desc'
 			END
@@ -42775,20 +55094,26 @@ BEGIN
 			,@Tbl			varchar(50)
 			,@fClause		varchar(8000)
 			,@MainTbl		char(1)
+			,@DdlSrtColumnId	int -- alternative sorting for ref column
+			,@ColumnId			int -- sort order should be using output column name, not from
+			,@DdlKeyColumnId	int
+			,@DisplayName	varchar(50)
+			,@DisplayMode	varchar(50)
 	SELECT @sOrderBy = ''
 	EXEC RODesign.dbo.MultiDesignDb @screenId, @MultiDb OUTPUT
 	DECLARE sort_cursor CURSOR FAST_FORWARD FOR
 		SELECT CASE WHEN c.MultiDesignDb='N' THEN s.dbAppDatabase+'.dbo.'+c.TableName WHEN @MultiDb='N' THEN @sysDatabase+'.dbo.'+c.TableName ELSE 'dbo.'+c.TableName END
-			, b.ColumnName, a.DdlRefColumnId, a.SortOrder
+			, b.ColumnName, a.DdlRefColumnId, a.SortOrder, a.DdlSrtColumnId, a.ColumnId, a.DdlKeyColumnId, d.TypeName, d.TypeDesc
 		FROM dbo.ScreenObj a
 			INNER JOIN dbo.DbColumn b ON a.ColumnId = b.ColumnId
 			INNER JOIN dbo.DbTable c ON b.TableId = c.TableId
 			INNER JOIN RODesign.dbo.Systems s ON c.SystemId = s.SystemId
+			LEFT OUTER JOIN RODesign.dbo.CtDisplayType d ON a.DisplayModeId = d.TypeId
 		WHERE a.ScreenId = @screenId AND a.SortOrder is not null AND MasterTable = @masterTable
 		ORDER BY abs(a.SortOrder)
 	FOR READ ONLY
 	OPEN sort_cursor
-	FETCH NEXT FROM sort_cursor INTO @TableName, @ColumnName, @DdlRefColumnId, @SortOrder
+	FETCH NEXT FROM sort_cursor INTO @TableName, @ColumnName, @DdlRefColumnId, @SortOrder, @DdlSrtColumnId, @ColumnId, @DdlKeyColumnId, @DisplayName, @DisplayMode
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 		IF @sOrderBy <> '' SELECT @sOrderBy = @sOrderBy + ', '
@@ -42800,7 +55125,7 @@ BEGIN
 			FROM dbo.DbColumn a
 				INNER JOIN dbo.DbTable b ON a.TableId = b.TableId
 				INNER JOIN RODesign.dbo.Systems s ON b.SystemId = s.SystemId
-				WHERE a.ColumnId = @DdlRefColumnId
+				WHERE a.ColumnId = ISNULL(@DdlSrtColumnId, @DdlRefColumnId) -- use sort column is specified
 		/* in case more than one column has the same dropdown */
 		SELECT @fClause = replace(@fromClause,'''',space(0)), @Tbl = ''
 		SELECT @MainTbl = 'Y'
@@ -42819,9 +55144,20 @@ BEGIN
 			ELSE
 				SELECT @Tbl = SUBSTRING(@fClause, @pos + LEN(@TableName) + 10, @len), @fClause = right(@fClause,len(@fClause)-(@pos+LEN(@TableName)+10)+1)
 		END
-		SELECT @sOrderBy = @sOrderBy + @Tbl + '.' + @ColumnName
+		SELECT @sOrderBy = @sOrderBy 
+					  /* above brute force to find table abbr doesn't work for same table referenced twice in ddl columns(with different ref column or different sort) 
+					   * use naming convention used in GetScreenLis?ById
+					   * 'x' + ColumnId(in the master/detail table) 
+					   * only do this for ddl columns for now
+					   */
+					+ CASE WHEN @DdlKeyColumnId IS NOT NULL AND @ColumnId IS NOT NULL AND @DdlRefColumnId IS NOT NULL 
+							AND lower(@DisplayName) IN ('combobox','dropdownlist','radiobuttonlist')
+							--AND @DdlSrtColumnId IS NOT NULL 
+						THEN 'x' + CONVERT(varchar, @ColumnId) 
+					  ELSE @Tbl END --use above brute force result
+					+ '.' + @ColumnName
 		IF @SortOrder < 0 SELECT @sOrderBy = @sOrderBy + ' DESC'
-		FETCH NEXT FROM sort_cursor INTO @TableName, @ColumnName, @DdlRefColumnId, @SortOrder
+		FETCH NEXT FROM sort_cursor INTO @TableName, @ColumnName, @DdlRefColumnId, @SortOrder, @DdlSrtColumnId, @ColumnId, @DdlKeyColumnId, @DisplayName, @DisplayMode
 	END
 	CLOSE sort_cursor
 	DEALLOCATE sort_cursor
@@ -43149,8 +55485,8 @@ BEGIN
 	BEGIN
 		SELECT @sql = ' DELETE FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri WHERE NOT EXISTS (SELECT 1 FROM ' + @dbDesDatabase + '.dbo.Screen a'
 		+ ' WHERE a.ScreenId = ' + @dbDesDatabase + '.dbo.ScreenLstCri.ScreenId)'
-		+ ' UPDATE ' + @dbDesDatabase + '.dbo.ScreenLstCri SET ScreenId = a.ScreenId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
-		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ScreenLstCri b ON a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' DELETE ' + @dbDesDatabase + '.dbo.ScreenLstCri FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ScreenLstCri b ON a.ScreenCriId = b.ScreenCriId AND a.ScreenId <> b.ScreenId AND b.UsrId = ' + convert(varchar,@UsrId)
 		+ ' INSERT ' + @dbDesDatabase + '.dbo.ScreenLstCri (UsrId, ScreenId, ScreenCriId)'
 		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ScreenId, a.ScreenCriId FROM ' + @dbDesDatabase + '.dbo.ScreenCri a'
 		+ ' WHERE NOT EXISTS (SELECT 1 FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE a.ScreenCriId = b.ScreenCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
@@ -43160,8 +55496,8 @@ BEGIN
 		+ ' AND NOT EXISTS (SELECT 1 FROM ' + @dbDesDatabase + '.dbo.ScreenLstCri b WHERE b.UsrId = ' + convert(varchar,@UsrId) + ' AND a.ScreenId = b.ScreenId AND b.ScreenCriId = 0)'
 		+ ' DELETE FROM ' + @dbDesDatabase + '.dbo.ReportLstCri WHERE NOT EXISTS (SELECT 1 FROM ' + @dbDesDatabase + '.dbo.Report a'
 		+ ' WHERE a.ReportId = ' + @dbDesDatabase + '.dbo.ReportLstCri.ReportId)'
-		+ ' UPDATE ' + @dbDesDatabase + '.dbo.ReportLstCri SET ReportId = a.ReportId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
-		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ReportLstCri b ON a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId)
+		+ ' DELETE ' + @dbDesDatabase + '.dbo.ReportLstCri FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
+		+ ' INNER JOIN ' + @dbDesDatabase + '.dbo.ReportLstCri b ON a.ReportCriId = b.ReportCriId AND a.ReportId <> b.ReportId AND b.UsrId = ' + convert(varchar,@UsrId)
 		+ ' INSERT ' + @dbDesDatabase + '.dbo.ReportLstCri (UsrId, ReportId, ReportCriId)'
 		+ ' SELECT ' + convert(varchar,@UsrId) + ', a.ReportId, a.ReportCriId FROM ' + @dbDesDatabase + '.dbo.ReportCri a'
 		+ ' WHERE NOT EXISTS (SELECT 1 FROM ' + @dbDesDatabase + '.dbo.ReportLstCri b WHERE a.ReportCriId = b.ReportCriId AND b.UsrId = ' + convert(varchar,@UsrId) + ')'
@@ -45634,6 +57970,74 @@ BEGIN
 END
 CLOSE run_cursor
 DEALLOCATE run_cursor
+
+/* set default for Input* or Modified* object */
+UPDATE o
+SET 
+DefAlways = CASE WHEN o.ColumnName LIKE 'modified%' THEN 'Y' ELSE 'N' END
+,SystemValue = ISNULL(SystemValue, CASE WHEN o.ColumnName like 'modifiedOn%' or o.ColumnName like 'InputOn%' THEN 'getutcdate()' ELSE NULL END)
+,DefaultValue = ISNULL(DefaultValue, CASE WHEN o.ColumnName like 'modifiedBy%' or o.ColumnName like 'InputBy%' THEN 'LUser.UsrId.ToString()' ELSE NULL END)
+,DefAfter = CASE WHEN o.ColumnName like 'modifiedBy%' OR o.ColumnName LIKE 'inputby%' THEN 'Y' ELSE 'N' END
+FROM
+dbo.ScreenObj o
+WHERE
+(o.ColumnName like 'input%'
+or
+o.ColumnName like 'modified%'
+)
+AND
+o.ScreenObjId = @ScreenObjId
+
+
+/* add obj permission for input* or modified* if default not defined */
+
+INSERT INTO dbo.ColOvrd
+ ([ScreenObjId]
+           ,[ScreenId]
+           ,[ColVisible]
+           ,[ColReadOnly]
+           ,[ColExport]
+           ,[Priority]
+)
+SELECT
+o.ScreenObjId
+,o.ScreenId
+,'Y'
+,'Y'
+,'Y'
+,100
+from
+dbo.ScreenObj o
+LEFT OUTER JOIN dbo.ColOvrd a ON a.ScreenObjId = o.ScreenObjId AND ColReadOnly = 'Y' and A.Priority = 100 AND a.PermId IS NULL
+WHERE 
+(columnname like 'input%' or columnname like '%modified%')
+and
+o.ScreenObjId = @ScreenObjId
+and
+a.ColOvrdId IS NULL
+
+IF @@ROWCOUNT = 1
+BEGIN
+	/* new default inserted */
+	DECLARE @ColOvrId int
+	SELECT
+	@ColOvrId = a.ColOvrdId
+	FROM
+	dbo.ScreenObj o
+	INNER JOIN dbo.ColOvrd a ON a.ScreenObjId = o.ScreenObjId AND ColReadOnly = 'Y' and A.Priority = 100 AND a.PermId IS NULL
+	WHERE 
+	(columnname like 'input%' or columnname like '%modified%')
+	and
+	o.ScreenObjId = @ScreenObjId
+
+	IF @ColOvrId IS NOT NULL
+	BEGIN
+		/* do update etc. */
+		EXEC @ret = dbo.Cr_ChkAuthCol @ColOvrId
+	END
+
+END
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -48082,7 +60486,7 @@ BEGIN
 	ELSE
 		SELECT @ParamDtl = @ParamDtl + 'IF @O' + @SqlCol + ' IS NOT NULL' + CHAR(13) + CHAR(10)
 	SELECT @ParamDtl = @ParamDtl + 'INSERT ' + @sysDatabase + '.dbo.ScrAuditDtl (ScrAuditId,ScreenObjId,ScreenObjDesc,ColumnId,ColumnDesc,Changed' + CASE WHEN @CudAction='A' THEN 'To,ChangedFr)' ELSE 'Fr,ChangedTo)' END + CHAR(13) + CHAR(10)
-	+ CHAR(9) + 'SELECT @ScrAuditId,' + CONVERT(varchar(10),@ScreenObjId) + ',''''' + ISNULL(@ColumnHeader,'') + ''''',' + CONVERT(varchar(10),@ColumnId) + ',''''' + @SqlCol + ''''','
+	+ CHAR(9) + 'SELECT @_ScrAuditId,' + CONVERT(varchar(10),@ScreenObjId) + ',''''' + ISNULL(@ColumnHeader,'') + ''''',' + CONVERT(varchar(10),@ColumnId) + ',''''' + @SqlCol + ''''','
 	+ CASE WHEN CHARINDEX('char',LOWER(@SqlTyp)) > 0 THEN '@O' + @SqlCol 
 			WHEN CHARINDEX('date',LOWER(@SqlTyp)) > 0 THEN 'CONVERT(varchar(10),@O' + @SqlCol + ',102)' 
 			/* decimal can be very large and varchar is varchar 10 is no different than 4000 2020.3.27 gary */
@@ -48109,8 +60513,8 @@ ELSE
 SELECT @ProcedureSql = @ProcedureSql + 'SELECT @SearchCol=' + @SearchSql + @ParamSql + ' FROM ' + @TableName + ' WHERE ' + @PkeyCol + '=@' + @PkeyCol + CHAR(13) + CHAR(10)
 IF @UpdTest <> '' AND @CudAction='U' SELECT @ProcedureSql = @ProcedureSql + 'IF ' + RIGHT(@UpdTest,LEN(@UpdTest)-4) + CHAR(13) + CHAR(10) + 'BEGIN' + CHAR(13) + CHAR(10)
 SELECT @ProcedureSql = @ProcedureSql + 'INSERT ' + @sysDatabase + '.dbo.ScrAudit (CudAction,ScreenId,MasterTable,TableId,RowId,RowDesc,ChangedBy,ChangedOn)' + CHAR(13) + CHAR(10)
-+ CHAR(9) + 'SELECT ''''' + @CudAction + ''''',' + CONVERT(varchar(10),@ScreenId) + ',''''' + @MasterTable + ''''',' + CONVERT(varchar(10),@TableId) + ',@' + @PkeyCol + ',ISNULL(@SearchCol,''''''''),@UserId,getutcdate()' + CHAR(13) + CHAR(10)
-+ 'SELECT @ScrAuditId = @@IDENTITY' + CHAR(13) + CHAR(10) + @ParamDtl
++ CHAR(9) + 'SELECT ''''' + @CudAction + ''''',' + CONVERT(varchar(10),@ScreenId) + ',''''' + @MasterTable + ''''',' + CONVERT(varchar(10),@TableId) + ',@' + @PkeyCol + ',ISNULL(@SearchCol,''''''''),@_UserId,getutcdate()' + CHAR(13) + CHAR(10)
++ 'SELECT @_ScrAuditId = @@IDENTITY' + CHAR(13) + CHAR(10) + @ParamDtl
 IF @UpdTest <> '' AND @CudAction='U' SELECT @ProcedureSql = @ProcedureSql + 'END' + CHAR(13) + CHAR(10)
 SELECT @ProcedureSql = @ProcedureSql + 'RETURN 0' + CHAR(13) + CHAR(10)
 
@@ -48123,9 +60527,9 @@ BEGIN
 	SELECT @ProcedureSql = 'CREATE PROCEDURE dbo.' + @ProcedureName + CHAR(13) + CHAR(10)
 	+ ' @' + @PkeyCol + CHAR(9) + CHAR(9) + @PKeyTyp + CHAR(13) + CHAR(10)
 	+ CASE WHEN @CudAction='U' THEN @ParamUpd ELSE '' END
-	+ ',@UserId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
+	+ ',@_UserId' + CHAR(9) + CHAR(9) + 'int' + CHAR(13) + CHAR(10)
 	+ '/* WITH ENCRYPTION */' + CHAR(13) + CHAR(10) + 'AS' + CHAR(13) + CHAR(10) + 'SET NOCOUNT ON' + CHAR(13) + CHAR(10)
-	+ 'DECLARE	 @ScrAuditId' + CHAR(9) + CHAR(9) + 'bigint' + CHAR(13) + CHAR(10)
+	+ 'DECLARE	 @_ScrAuditId' + CHAR(9) + CHAR(9) + 'bigint' + CHAR(13) + CHAR(10)
 	 + CHAR(9) + CHAR(9) + ',@SearchCol' + CHAR(9) + CHAR(9) + 'nvarchar(2000)' + CHAR(13) + CHAR(10) + @ProcedureSql
 	IF @ProcedureSql IS NULL
 	BEGIN
@@ -48662,6 +61066,28 @@ RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
 GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetServerRuleContent') AND type='P')
+EXEC('CREATE PROCEDURE dbo.SetServerRuleContent AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+/* Called Deployment Process */
+ALTER PROCEDURE [dbo].[SetServerRuleContent]
+/* WITH ENCRYPTION */
+AS
+/* wipe out server rule content */
+SET NOCOUNT ON
+UPDATE r
+SET RuleCode = NULL
+FROM
+dbo.ServerRule r
+
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.SetWizNeedRegen') AND type='P')
 EXEC('CREATE PROCEDURE dbo.SetWizNeedRegen AS SELECT 1')
 GO
@@ -48947,6 +61373,108 @@ IF EXISTS (SELECT 1 FROM dbo.UtRptMemCriDtl WHERE RptMemCriId = @RptMemCriId AND
 	UPDATE dbo.UtRptMemCriDtl SET MemCriteria = @MemCriteria WHERE RptMemCriId = @RptMemCriId AND ReportCriId = @ReportCriId
 ELSE
 	INSERT dbo.UtRptMemCriDtl (RptMemCriId, ReportCriId, MemCriteria) SELECT @RptMemCriId, @ReportCriId, @MemCriteria
+RETURN 0
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.utSyncUsrGroupMenuPrm') AND type='P')
+EXEC('CREATE PROCEDURE dbo.utSyncUsrGroupMenuPrm AS SELECT 1')
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_NULLS ON
+GO
+ALTER PROCEDURE [dbo].[utSyncUsrGroupMenuPrm]
+ @FromUsrGroupId	int
+,@ToUsrGroupId		int
+,@mode	varchar(50)
+/* WITH ENCRYPTION */
+AS
+/* sync menu permission setup from one group to another
+ * @mode - 'S', sync remove all existing and duplicate from the from group
+ * @mode - 'M', merge into existing setup(keep to if not defined in from), merge as 'D' if both existing and one of them is 'D'
+ * if passing in -1 as the from with 'S', it would effectively REMOVE all existing to group settings
+ */
+select
+*
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+WHERE PermKeyId = 8 AND PermId = @ToUsrGroupId
+
+select
+*
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+WHERE PermKeyId = 8 AND PermId = @FromUsrGroupId
+
+IF @mode = 'S'
+BEGIN
+/* remove all existing in the to group */
+delete mp
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+WHERE PermKeyId = 8 AND PermId = @ToUsrGroupId
+
+/* copy from the from group */
+INSERT INTO dbo.MenuPrm
+(MenuId, GrantDeny, PermKeyId, PermId)
+SELECT
+mp.MenuId, mp.GrantDeny, mp.PermKeyId, @ToUsrGroupId
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+WHERE PermKeyId = 8 AND PermId = @FromUsrGroupId
+
+select
+*
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+WHERE PermKeyId = 8 AND PermId = @ToUsrGroupId
+
+END
+ELSE IF @mode = 'M'
+BEGIN
+/* update to 'D' if one of them is 'D', i.e. deny always take precedence if defined */
+update mp
+SET GrantDeny = CASE WHEN mp.GrantDeny = 'D' THEN 'D' ELSE mpf.GrantDeny END
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+INNER JOIN dbo.MenuPrm mpf ON mpf.MenuId = mp.MenuId AND mpf.PermKeyId = 8 AND mpf.PermId = @FromUsrGroupId
+WHERE mp.PermKeyId = 8 AND mp.PermId = @ToUsrGroupId
+
+/* copy those that is not already exist in the to group */
+INSERT INTO dbo.MenuPrm
+(MenuId, GrantDeny, PermKeyId, PermId)
+SELECT
+mp.MenuId, mp.GrantDeny, mp.PermKeyId, @ToUsrGroupId
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+LEFT OUTER JOIN dbo.MenuPrm mpf ON mpf.MenuId = mp.MenuId AND mpf.PermKeyId = 8 AND mpf.PermId = @ToUsrGroupId
+WHERE mp.PermKeyId = 8 AND mp.PermId = @FromUsrGroupId
+AND mpf.MenuPrmId IS NULL
+END
+
+select
+*
+from
+dbo.MenuPrm mp
+INNER JOIN dbo.Menu m on m.MenuId = mp.MenuId
+INNER JOIN dbo.MenuHlp mh ON mh.MenuId = m.MenuId AND mh.CultureId = 1
+WHERE PermKeyId = 8 AND PermId = @ToUsrGroupId
+
 RETURN 0
 GO
 SET QUOTED_IDENTIFIER OFF
@@ -52643,8 +65171,14 @@ IF @Oid is not null SELECT @a1 = @a1 + ' INSERT dbo.#sync SELECT sc.NAME, st.nam
 SELECT @a2 = 'DECLARE cur2 CURSOR FAST_FORWARD FOR'
 + ' SELECT b.ColumnName, b.PrevColName, c.DataTypeSqlName, b.Columnlength, replace(b.DefaultValue,'''''''''''''''',''''''''''''''''''''''''), isnull(b.ColumnScale,0)'
 + ' , b.AllowNulls, b.ColumnIdentity, b.PrimaryKey, b.IsIndexU, b.IsIndex, b.ColumnIndex'
-+ ' , CASE WHEN d.DataType is null OR d.DataType = c.DataTypeSqlName OR charindex(''''text'''',d.DataType) > 0 THEN b.ColumnName ELSE ''''CONVERT('''' + c.DataTypeSqlName + '
-+ ' CASE WHEN charindex(''''char'''',d.DataType) > 0 OR charindex(''''binary'''',d.DataType) > 0 THEN ''''('''' + CONVERT(varchar,b.ColumnLength) + '''')'''' ELSE '''''''' END + '''','''' + b.ColumnName + '''')'''' END'
+/* this is the target columns for the INSERT INTO new_table SELECT x,y,z FROM tmp_table 
+ * source conversion to target is done here
+ * dilibrately make it 'CONvERT' for easier tracking
+*/
++ ' , CASE WHEN d.DataType is null OR d.DataType = c.DataTypeSqlName OR charindex(''''text'''',d.DataType) > 0 THEN b.ColumnName ELSE ''''CONvERT('''' + c.DataTypeSqlName + '
++ ' CASE WHEN charindex(''''char'''',d.DataType) > 0 OR charindex(''''binary'''',d.DataType) > 0 THEN ''''('''' + CONVERT(varchar,b.ColumnLength) + '''')'''''
+/* decimal must have the precision or else it would be treated as Decimal(0,0) on conversion, zero out everything */
++ ' WHEN charindex(''''decimal'''',c.DataTypeName) > 0 THEN ''''('''' + CONVERT(varchar,b.ColumnLength) + '''','''' + CONVERT(varchar,ISNULL(b.ColumnScale,0)) + '''')'''' ELSE '''''''' END + '''','''' + b.ColumnName + '''')'''' END'
 + ' , CASE WHEN b.PrevColName is null OR d.DataType is null OR d.DataType = c.DataTypeSqlName OR charindex(''''text'''',d.DataType) > 0 THEN b.PrevColName ELSE ''''CONVERT('''' + c.DataTypeSqlName + '
 + ' CASE WHEN charindex(''''char'''',d.DataType) > 0 OR charindex(''''binary'''',d.DataType) > 0 THEN ''''('''' + CONVERT(varchar,b.ColumnLength) + '''')'''' ELSE '''''''' END + '''','''' + b.PrevColName + '''')'''' END'
 + ' FROM ' + @DesDb + '.dbo.DbColumn b'

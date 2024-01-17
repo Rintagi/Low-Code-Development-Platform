@@ -462,6 +462,7 @@ namespace RO
                         + (objErr != null ? "Original Error: " + Environment.NewLine + (objErr != null ? objErr.Message : message) + Environment.NewLine : message + Environment.NewLine)
                         + (objErr != null ? "Original Stack Trace: " + (objErr != null ? objErr.StackTrace : "no stack trace") + Environment.NewLine : "")
                         + "Machine: " + Environment.MachineName + Environment.NewLine
+                        + "DBServer: " + Config.DesDatabase + Environment.NewLine
                         + "AppPath: " + applicationPath + Environment.NewLine
                         + (objErr != null ? "url: " + (request != null ? request.Url.AbsolutePath : url) + Environment.NewLine : url + Environment.NewLine)
                         + (objErr != null ? "From: " + (request != null ? request.UserHostAddress : "uknown source") + Environment.NewLine : "")
@@ -511,6 +512,7 @@ namespace RO
                     request != null ? request.Url.PathAndQuery : (info != null ? info["Host"] : "")
                     , string.IsNullOrEmpty(xOriginalURL) ? "" : " Incoming " + xOriginalURL);
                 string machine = string.Format("Machine: {0}\r\n\r\n", Environment.MachineName);
+                string dbServer = string.Format("DB Server: {0}\r\n\r\n", Config.DesServer);
                 string userAgent = string.Format("UserAgent: {0}\r\n\r\n", request != null ? request.UserAgent : "");
                 string roVersion = string.Format("RO Version: {0}\r\n\r\n", ROVersion);
                 string currentTime = string.Format("Server Time: {0} \r\n\r\n UTC: {1} \r\n\r\n", DateTime.Now.ToString("O"), DateTime.UtcNow.ToString("O"));
@@ -539,6 +541,7 @@ namespace RO
                             + host 
                             + path
                             + machine
+                            + dbServer
                             + currentTime
                             + roVersion
                             + "";

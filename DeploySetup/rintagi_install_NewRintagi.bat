@@ -5,7 +5,8 @@ if "%1"=="" goto usage
 goto :eof
 
 :usage
-@echo "%0 <InstallExeName>"
-
+@echo "usage: %0 <InstallExeName>"
+goto :noexit
 :eof
-EXIT 0
+REM EXIT 0
+:noexit

@@ -1,4 +1,4 @@
-1~@~3~@~Usr~@~Adm - User Particulars and Credentials~@~N~@~N~@~~@~This captures all login users information.~@~~@~55~@~2018-10-23 22:56:21.183~@~2018-10-23 15:56:48.240
+1~@~3~@~Usr~@~Adm - User Particulars and Credentials~@~N~@~N~@~~@~This captures all login users information.~@~~@~55~@~2018-10-23 22:56:21.183~@~2022-06-21 04:40:32.313
 3~@~3~@~DbTable~@~Adm - Data Table Characteristic~@~Y~@~N~@~~@~This captures all data table information.~@~~@~55~@~2015-11-14 18:56:23.620~@~2015-11-14 10:56:39.540
 5~@~3~@~DbColumn~@~Adm - Data Table Columns~@~Y~@~N~@~~@~This captures all data columns information.~@~~@~55~@~2014-07-13 22:51:07.463~@~2014-07-13 15:51:28.337
 6~@~3~@~CtDataType~@~Adm - Data Type~@~N~@~N~@~~@~This is a code table capturing the data types.~@~~@~55~@~2015-07-23 16:48:56.460~@~2015-07-23 09:49:04.037
@@ -8,7 +8,8 @@
 15~@~3~@~Screen~@~Adm - Screen Definition~@~Y~@~N~@~~@~This captures the characteristics and definitions of screen.~@~~@~55~@~2019-05-31 23:48:36.090~@~2019-05-31 16:48:58.767
 16~@~3~@~ScreenHlp~@~Adm - Screen Default Messages~@~Y~@~N~@~~@~This captures culture specific screen messages.~@~~@~55~@~2018-10-14 02:01:18.580~@~2018-10-14 10:01:57.950
 17~@~3~@~CtScreenType~@~Adm - Screen Type~@~N~@~N~@~~@~This captures screen type information.~@~~@~54~@~2007-01-06 23:30:18.670~@~
-18~@~3~@~CtDisplayType~@~Adm - Display Type Code Table~@~N~@~N~@~~@~This is a code table capturing the display types for input screen.~@~~@~55~@~2012-09-19 23:46:35.220~@~2021-04-14 00:22:25.620
+18~@~3~@~VwScDisplayType~@~Adm - Screen Display Type View~@~N~@~Y~@~CREATE VIEW [dbo].[VwScDisplayType] AS SELECT TypeId, TypeName, TypeDesc, DisplayDesc, DisplayDefault 
+FROM dbo.CtDisplayType WHERE TypeId NOT IN (44)~@~This is a view table capturing the display types for input screen.~@~~@~12~@~2022-10-04 15:26:57.493~@~2021-04-14 00:22:00.000
 19~@~3~@~ScreenTab~@~Adm - Screen Tab Folder~@~Y~@~N~@~~@~This captures all available screen tabs information.~@~~@~55~@~2015-06-16 19:10:56.633~@~2015-06-16 09:53:10.000
 20~@~3~@~DbKey~@~Adm - Data Table Foreign Keys~@~Y~@~N~@~~@~This captures all foreign keys information.~@~~@~54~@~2007-03-04 10:52:12.623~@~
 21~@~3~@~ScreenObjHlp~@~Adm - Screen Object Messages~@~Y~@~N~@~~@~This captures culture specific screen column labels.~@~~@~55~@~2015-02-10 18:36:33.783~@~2015-02-05 00:32:33.000
@@ -113,11 +114,11 @@ WHERE ObjectType = 'S'
 192~@~3~@~ReleaseDtl~@~Adm - Release Detail~@~N~@~N~@~~@~This captures all release detail information for execution purpose.~@~~@~55~@~2009-10-28 19:39:07.933~@~2009-10-28 19:39:58.450
 193~@~3~@~CtReleaseType~@~Adm - Release Type~@~N~@~N~@~~@~~@~~@~55~@~2008-01-18 14:52:28.123~@~2008-01-18 14:52:28.123
 194~@~3~@~ClientTier~@~Adm - Client Tier~@~N~@~N~@~~@~This table captures all information about the client tier.~@~~@~55~@~2016-01-12 19:05:45.217~@~2016-01-12 11:05:52.303
-195~@~3~@~DataTier~@~Adm - Data Tier~@~N~@~N~@~~@~~@~~@~55~@~2016-01-12 19:06:02.883~@~2016-01-12 11:06:06.223
+195~@~3~@~DataTier~@~Adm - Data Tier~@~N~@~N~@~~@~~@~~@~2~@~2023-07-03 12:58:15.997~@~2023-07-03 12:58:23.357
 196~@~3~@~RuleTier~@~Adm - Rule Tier~@~N~@~N~@~~@~~@~~@~55~@~2016-01-12 19:05:13.413~@~2016-01-12 11:05:28.213
 197~@~3~@~CtOsType~@~Adm - Operating System Type~@~N~@~N~@~~@~~@~~@~55~@~2008-01-18 14:52:28.123~@~2008-01-18 14:52:28.123
 198~@~3~@~CtSProcOnly~@~Adm - S.Proc. Only Type~@~N~@~N~@~~@~This is a code table capturing the deployment type for the database.~@~~@~55~@~2008-01-18 14:52:28.123~@~2008-01-18 14:52:28.123
-199~@~3~@~Entity~@~Adm - Entity Info~@~N~@~N~@~~@~This table captures all the information relating to namespace, installation, etc.~@~~@~55~@~2012-08-09 21:52:26.823~@~2012-08-09 21:52:42.063
+199~@~3~@~Entity~@~Adm - Entity Info~@~N~@~N~@~~@~This table captures all the information relating to namespace, installation, etc.~@~~@~2~@~2023-05-08 03:24:18.287~@~2023-05-08 03:24:35.163
 203~@~3~@~CtReportType~@~Adm - Report Type~@~N~@~N~@~~@~This captures report type information.~@~~@~55~@~2008-02-06 07:29:18.827~@~
 204~@~3~@~RptTemplate~@~Adm - Report template document~@~Y~@~N~@~~@~This table captures all files for document merging purpose.  The columns of this table is exactly the same for all document tables.~@~~@~55~@~2009-10-26 21:02:25.233~@~2009-10-26 21:48:25.800
 205~@~3~@~CtRptChaType~@~Adm - Report Chart Type~@~N~@~N~@~~@~This is a code table capturing the report chart types.~@~~@~55~@~2008-02-13 08:38:33.903~@~2008-02-13 00:59:47.000
@@ -174,8 +175,8 @@ SELECT ProfileNm = [name] FROM msdb.dbo.sysmail_profile
 253~@~3~@~AppZipId~@~Administration - AppZipId Doc~@~N~@~N~@~~@~This table captures upload of all document types.~@~~@~55~@~2012-01-17 22:37:21.433~@~2012-01-17 22:35:46.000
 254~@~3~@~TbdRule~@~Adm - To Be Done Rules~@~Y~@~N~@~~@~This table captures all the descriptions of the business rules to be implemented.~@~~@~55~@~2012-02-23 08:11:28.517~@~2012-02-23 08:07:49.000
 256~@~3~@~CtAndOr~@~Adm - And / Or Code Table~@~N~@~N~@~~@~~@~~@~55~@~2012-04-06 16:21:26.017~@~2012-04-06 15:57:45.000
-258~@~3~@~VwDisplayType~@~Adm - Display Type View~@~N~@~Y~@~CREATE VIEW [dbo].[VwDisplayType] AS SELECT TypeId, TypeName, TypeDesc, DisplayDefault FROM dbo.CtDisplayType WHERE TypeId IN (1,3,4,5,17,18,20,33,35,38,40,44,52)
-~@~This is a view on the code table for the criteria display types.~@~~@~55~@~2016-06-09 16:11:28.810~@~
+258~@~3~@~VwRpDisplayType~@~Adm - Report Display Type View~@~N~@~Y~@~CREATE VIEW [dbo].[VwDisplayType] AS SELECT TypeId, TypeName, TypeDesc, DisplayDefault FROM dbo.CtDisplayType WHERE TypeId IN (1,3,4,5,17,18,20,33,35,38,40,44,52)
+~@~This is a view on the code table for the criteria display types.~@~~@~12~@~2022-10-04 15:17:43.860~@~
 259~@~3~@~StaticPg~@~Adm - Static Page~@~Y~@~N~@~~@~Static html pages.~@~~@~55~@~2013-07-28 21:04:43.557~@~2013-07-28 14:04:48.620
 260~@~3~@~StaticCs~@~Adm - Static CSS~@~Y~@~N~@~~@~Shared CSS for Static pages.~@~~@~55~@~2012-09-26 10:19:53.473~@~2012-09-26 10:22:21.510
 261~@~3~@~StaticJs~@~Adm - Static Javascript~@~Y~@~N~@~~@~Shared JavaScript for Static pages.~@~~@~55~@~2012-09-26 10:22:07.183~@~2012-09-26 10:22:13.090
@@ -226,7 +227,7 @@ SELECT UsrId, LoginName, UsrName, MemberId, Active, PicMed FROM dbo.Usr WHERE In
 /* Do not change this view table or the deployment will fail */~@~~@~~@~55~@~2015-03-12 21:47:59.547~@~2015-03-11 22:22:52.000
 1288~@~3~@~VwUsrAudit~@~Adm - User Login Audit View~@~N~@~Y~@~CREATE VIEW dbo.VwUsrAudit AS
 SELECT AttemptDt, IpAddress, LoginName, ValidUser = CASE WHEN UsrId is NULL THEN 'N' ELSE 'Y' END, LoginSuccess FROM dbo.UsrAudit
-~@~~@~~@~55~@~2015-09-15 02:38:25.377~@~2015-03-15 12:35:05.000
+~@~~@~~@~2~@~2022-10-13 03:06:22.540~@~2015-03-15 12:35:00.000
 1289~@~3~@~CtCrudType~@~Adm - CRUD Type code~@~N~@~N~@~~@~This is a code table indicating the CRUD type for server rules.~@~~@~55~@~2015-08-14 20:43:17.807~@~2015-08-14 13:28:41.000
 1291~@~3~@~VwNumSuccess~@~Adm - Login Summary View~@~N~@~Y~@~CREATE VIEW [dbo].[VwNumSuccess] AS
 SELECT LoginName, LoginSuccess, NumAttempt = count(1) FROM dbo.UsrAudit GROUP BY LoginName, LoginSuccess
@@ -351,3 +352,7 @@ FROM dbo.Usr~@~~@~~@~2~@~2020-03-04 17:54:11.960~@~2017-05-09 11:05:51.000
 1328~@~3~@~VwMIMEType~@~Adm - MIME Type~@~N~@~N~@~~@~~@~~@~2~@~2020-12-11 12:54:19.130~@~2020-12-11 04:53:44.000
 1329~@~3~@~CompPref~@~Adm - Company Preference~@~N~@~N~@~~@~This captures all company preferences information.~@~~@~2~@~2021-02-24 14:11:05.760~@~2021-02-24 06:11:12.463
 1330~@~3~@~VwTimeZoneInfo~@~Adm - Time Zone Info~@~N~@~N~@~~@~~@~~@~2~@~2021-11-23 05:42:24.560~@~2021-11-22 21:41:34.000
+1331~@~3~@~TemplatePrm~@~Adm - Template Permission~@~Y~@~N~@~~@~This captures the template permission to each report item. ~@~~@~2~@~2022-08-30 05:54:17.450~@~2022-08-30 05:54:27.637
+1333~@~3~@~UsrAudit~@~Adm - User Login Audit~@~N~@~N~@~CREATE VIEW dbo.VwUsrAudit AS
+SELECT AttemptDt, IpAddress, LoginName, ValidUser = CASE WHEN UsrId is NULL THEN 'N' ELSE 'Y' END, LoginSuccess FROM dbo.UsrAudit
+~@~~@~~@~2~@~2022-10-13 03:05:18.580~@~2022-10-13 03:05:26.410

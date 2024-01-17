@@ -196,10 +196,10 @@ IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.i
 CREATE  UNIQUE INDEX IU_Usr ON Usr(LoginName)
 GO
 
-IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_UsrAudit' AND o.name = 'UsrAudit')
-    DROP INDEX UsrAudit.IX_UsrAudit 
+IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_LoginName' AND o.name = 'Usr')
+    DROP INDEX Usr.IX_LoginName 
 
-CREATE INDEX IX_UsrAudit ON UsrAudit(LoginName)
+CREATE INDEX IX_LoginName ON Usr(LoginName) INCLUDE (UsrEmail,UsrName,UsrGroupLs,CompanyLs,ProjectLs)
 GO
 
 IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_UsrGroup_UsrGroupName' AND o.name = 'UsrGroup')

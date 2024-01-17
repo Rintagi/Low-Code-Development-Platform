@@ -115,6 +115,7 @@ namespace RO.Web
         protected CurrTar CTar { get; set; }
 
         protected List<string> _CurrentScreenCriteria = null;
+        protected Func<Exception, bool> suppressedErrorTrace;
 
         protected string loginHandle;
         protected abstract byte GetSystemId();
@@ -1328,7 +1329,7 @@ namespace RO.Web
             catch (Exception e)
             {
                 string supportEmail = Config.TechSuppEmail;
-                if (supportEmail != "none" && supportEmail != string.Empty)
+                if (supportEmail != "none" && supportEmail != string.Empty && (suppressedErrorTrace == null || !suppressedErrorTrace(e)))
                 {
                     try
                     {
@@ -1764,30 +1765,44 @@ namespace RO.Web
 
         protected void _MkScreenIn(int screenId, string screenCriId, string sp, string multiDesign, bool refresh)
         {
-            var context = HttpContext.Current;
-            var cache = context.Cache;
-            string cacheKey = "_ScreenInCri_" + GetSystemId().ToString() + "_" + screenId.ToString() + "_" + screenCriId;
-            int minutesToCache = screenInCriCacheMinutes; // 60;
-            if (cache[cacheKey] == null || refresh)
+            int tried = 0;
+            Action _mkScreenIn = null;
+
+            _mkScreenIn = () =>
             {
-                try
-                {
-                    /* this SHOULD NOT BE DONE ON ACCESS BUT GenScreen, the whole design of these Cri SP creation is WRONG !*/
-                    //(new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw,Config.DeployType == "DEV");
-                    (new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw, true);
-                    cache.Add(cacheKey, DateTime.UtcNow, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] { } : new string[] { loginHandle })
-                        , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
 
-                }
-                catch
+                var context = HttpContext.Current;
+                var cache = context.Cache;
+                string cacheKey = "_ScreenInCri_" + GetSystemId().ToString() + "_" + screenId.ToString() + "_" + screenCriId;
+                int minutesToCache = screenInCriCacheMinutes; // 60;
+                if (cache[cacheKey] == null || refresh)
                 {
-                    // can have race condition too !
-                }
-                // The MkGetScreenIn do a DROP then CREATE which can have time gap before it is being SEEN !!
-                // fixed in SP in MkGetScreenIn as CREATE IF NOT EXISTS
-                // System.Threading.Thread.Sleep(10);
-            }
+                    try
+                    {
+                        /* this SHOULD NOT BE DONE ON ACCESS BUT GenScreen, the whole design of these Cri SP creation is WRONG !*/
+                        //(new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw,Config.DeployType == "DEV");
+                        (new AdminSystem()).MkGetScreenIn(screenId.ToString(), screenCriId.ToString(), sp, LcAppDb, LcDesDb, multiDesign, LcSysConnString, LcAppPw, true);
+                        cache.Add(cacheKey, DateTime.UtcNow, new System.Web.Caching.CacheDependency(new string[] { }, loginHandle == null ? new string[] { } : new string[] { loginHandle })
+                            , System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(0, minutesToCache, 0), System.Web.Caching.CacheItemPriority.AboveNormal, null);
 
+                    }
+                    catch (Exception ex)
+                    {
+                        // can have race condition too !
+                        if (tried == 0)
+                        {
+                            tried += 1;
+                            ErrorTrace(ex, "error");
+                            _mkScreenIn();
+                        }
+                    }
+                    // The MkGetScreenIn do a DROP then CREATE which can have time gap before it is being SEEN !!
+                    // fixed in SP in MkGetScreenIn as CREATE IF NOT EXISTS
+                    // System.Threading.Thread.Sleep(10);
+                }
+            };
+
+            _mkScreenIn();
         }
         protected void _MkScreenIn(int screenId, DataRowView drv, bool refresh)
         {
@@ -2060,11 +2075,11 @@ namespace RO.Web
                     throw;
                 }
             }
-            else if (",DateUTC,DateTimeUTC,ShortDateTimeUTC,LongDateTimeUTC,".IndexOf("," + drv["DisplayMode"].ToString() + ",") >= 0)
+            else if (",CalendarUTC,DateUTC,DateTimeUTC,ShortDateTimeUTC,LongDateTimeUTC,".IndexOf("," + drv["DisplayMode"].ToString() + ",") >= 0)
             {
                 return val;
             }
-            else if (drv["DisplayName"].ToString().Contains("Date"))
+            else if (drv["DisplayName"].ToString().Contains("Date") || drv["DisplayName"].ToString().Contains("Calendar"))
             {
                 return val;
             }
@@ -2358,7 +2373,8 @@ namespace RO.Web
             {
                 var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
                                 .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(s => s.Trim())
+                                .Where(s => !string.IsNullOrEmpty(s.Trim()))
+                                .Select(s => s.Trim().Split(new char[]{':'},StringSplitOptions.RemoveEmptyEntries).FirstOrDefault())
                                 .Where(s => !string.IsNullOrEmpty(s))
                                 .ToArray();
                 // this is the closest to the browser being reported, can be internal if browser is fronted by proxy
@@ -2369,6 +2385,7 @@ namespace RO.Web
             }
             return null;
         }
+
         protected List<string> GetClientIpChain(HttpRequest Request)
         {
             try
@@ -2378,7 +2395,7 @@ namespace RO.Web
                     var proxied = (Request.Headers["X-Forwarded-For"] ?? "")
                                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                     .Where(s => !string.IsNullOrEmpty((s ?? "").Trim()))
-                                    .Select(s => new { addr = s, isPrivate = Common3.Utils.IsPrivateIp(s) })
+                                    .Select(s => new { addr = s.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(), isPrivate = Common3.Utils.IsPrivateIp(s) })
                                     .Aggregate(new { ipChain = new List<string>(), startNonLocal = new bool[1] { false } }
                                         , (a, i) =>
                                         {
@@ -3209,7 +3226,94 @@ namespace RO.Web
         #endregion
 
         #region webhook/http helper
-        protected virtual string InvokeWebHook(string url, string method = "GET", Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null)
+        protected void storeCookie(HttpWebResponse resp, Dictionary<string, string> cookies)
+        {
+            if (cookies != null && resp != null)
+            {
+                foreach (Cookie c in resp.Cookies)
+                {
+                    var name = c.Name;
+                    var value = c.Value;
+                    cookies[name] = value;
+                }
+            }
+        }
+        protected async virtual Task<string> InvokeWebHookAsync(string url, string method = "GET", Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, List<int> ignoreErrorStatus = null)
+        {
+            var uri = new Uri(url);
+            HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
+            wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
+                new CookieContainer(),
+                (cookieContainer, kvp) =>
+                {
+                    cookieContainer.Add(new Uri(uri.GetLeftPart(UriPartial.Authority)), new Cookie(kvp.Key, kvp.Value));
+                    return cookieContainer;
+                });
+            ;
+            wr.Headers = (headers ?? new Dictionary<string, string>()).Aggregate(
+                new WebHeaderCollection(),
+                (headerCollection, kvp) =>
+                {
+                    headerCollection[kvp.Key] = kvp.Value;
+                    return headerCollection;
+                });
+            wr.CookieContainer = new CookieContainer();
+            string result = null;
+            try
+            {
+                using (WebResponse resp = wr.GetResponse())
+                {
+                    using (Stream stream = resp.GetResponseStream())
+                    {
+                        using (StreamReader sr = new StreamReader(stream))
+                        {
+                            result = await sr.ReadToEndAsync();
+                            sr.Close();
+                        }
+                        stream.Close();
+                    }
+                    resp.Close();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (HttpWebResponse resp = ex.Response as HttpWebResponse)
+                {
+                    if (resp != null)
+                    {
+                        int statusCode = (int)resp.StatusCode;
+                        storeCookie(resp, cookies);
+                        using (Stream stream = resp.GetResponseStream())
+                        {
+                            if (stream != null)
+                            {
+                                using (StreamReader sr = new StreamReader(stream))
+                                {
+                                    result = sr.ReadToEnd();
+                                    sr.Close();
+                                }
+                                stream.Close();
+                            }
+                        }
+                        resp.Close();
+                        if (ignoreErrorStatus == null || !ignoreErrorStatus.Contains(statusCode))
+                        {
+                            throw new WebException(string.Format("{0}\r\n{1}({2})", ex.Message, result, url));
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("HTTP request faild on {0}", url), ex);
+            }
+            return result;
+        }
+        protected virtual string InvokeWebHook(string url, string method = "GET", Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, List<int> ignoreErrorStatus = null)
         {
             var uri = new Uri(url);
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -3248,25 +3352,39 @@ namespace RO.Web
             }
             catch (WebException ex)
             {
-                using (WebResponse resp = ex.Response)
+                using (HttpWebResponse resp = ex.Response as HttpWebResponse)
                 {
-                    using (Stream stream = resp.GetResponseStream())
+                    if (resp != null)
                     {
-                        using (StreamReader sr = new StreamReader(stream))
+                        int statusCode = (int)resp.StatusCode;
+                        storeCookie(resp, cookies);
+                        using (Stream stream = resp.GetResponseStream())
                         {
-                            result = sr.ReadToEnd();
-                            sr.Close();
+                            if (stream != null)
+                            {
+                                using (StreamReader sr = new StreamReader(stream))
+                                {
+                                    result = sr.ReadToEnd();
+                                    sr.Close();
+                                }
+                                stream.Close();
+                            }
                         }
-                        stream.Close();
+                        resp.Close();
+                        if (ignoreErrorStatus == null || !ignoreErrorStatus.Contains(statusCode))
+                        {
+                            throw new WebException(string.Format("{0}\r\n{1}({2})", ex.Message, result, url));
+                        }
                     }
-                    resp.Close();
-                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                    else
+                    {
+                        throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
             }
             return result;
         }
@@ -3283,10 +3401,10 @@ namespace RO.Web
             return HttpPostJSON(url, body, headers, cookies, "DELETE");
         }
 
-        protected virtual string HttpPostJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, string method = "POST")
+        protected virtual string HttpPostJSON(string url, string body, Dictionary<string, string> headers = null, Dictionary<string, string> cookies = null, string method = "POST", bool ignoreError = false)
         {
             var uri = new Uri(url);
-            byte[] bodyArray = System.Text.UTF8Encoding.UTF8.GetBytes(body);
+            byte[] bodyArray = body != null ? System.Text.UTF8Encoding.UTF8.GetBytes(body) : null;
             HttpWebRequest wr = (HttpWebRequest)HttpWebRequest.Create(url);
             wr.CookieContainer = (cookies ?? new Dictionary<string, string>()).Aggregate(
                 new CookieContainer(),
@@ -3308,11 +3426,14 @@ namespace RO.Web
             string result = null;
             try
             {
-                wr.ContentLength = bodyArray.Length;
-                using (Stream ws = wr.GetRequestStream())
+                if (bodyArray != null)
                 {
-                    ws.Write(bodyArray, 0, bodyArray.Length);
-                    ws.Close();
+                    wr.ContentLength = bodyArray.Length;
+                    using (Stream ws = wr.GetRequestStream())
+                    {
+                        ws.Write(bodyArray, 0, bodyArray.Length);
+                        ws.Close();
+                    }
                 }
 
                 using (WebResponse resp = wr.GetResponse())
@@ -3331,25 +3452,32 @@ namespace RO.Web
             }
             catch (WebException ex)
             {
-                using (WebResponse resp = ex.Response)
+                using (HttpWebResponse resp = ex.Response as HttpWebResponse)
                 {
-                    using (Stream stream = resp.GetResponseStream())
+                    storeCookie(resp, cookies);
+                    if (resp != null)
                     {
-                        using (StreamReader sr = new StreamReader(stream))
+                        using (Stream stream = resp.GetResponseStream())
                         {
-                            result = sr.ReadToEnd();
-                            sr.Close();
+                            if (stream != null)
+                            {
+                                using (StreamReader sr = new StreamReader(stream))
+                                {
+                                    result = sr.ReadToEnd();
+                                    sr.Close();
+                                }
+                                stream.Close();
+                            }
                         }
-                        stream.Close();
+                        resp.Close();
                     }
-                    resp.Close();
-                    throw new WebException(string.Format("{0}\r\n{1}", ex.Message, result));
+                    if (!ignoreError)
+                        throw new WebException(string.Format("{0}\r\n{1}({2})", ex.Message, result, url));
                 }
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request failed on {0}", url), ex);
             }
             return result;
         }
@@ -3418,8 +3546,7 @@ namespace RO.Web
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request faild on {0}", url), ex);
             }
             return result;
         }
@@ -3488,8 +3615,7 @@ namespace RO.Web
             }
             catch (Exception ex)
             {
-                if (ex == null) return result;
-                throw;
+                throw new Exception(string.Format("HTTP request faild on {0}", url), ex);
             }
             return result;
         }
@@ -3522,7 +3648,7 @@ namespace RO.Web
                 dataStream.Write(header, 0, header.Length);
                 if (content != null)
                 {
-                    dataStream.WriteAsync(content, 0, content.Length);
+                    dataStream.Write(content, 0, content.Length);
                 }
                 dataStream.Write(linBreak, 0, linBreak.Length);
             }
@@ -3585,6 +3711,10 @@ namespace RO.Web
                     else
                         return new Tuple<int, byte[], Dictionary<string, string>>((int)e.Status, System.Text.UTF8Encoding.UTF8.GetBytes(e.Message), null);
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("HTTP request faild on {0}", url), ex);
             }
         }
         #endregion
@@ -3654,6 +3784,28 @@ namespace RO.Web
         }
         #endregion
 
+        // {"ip":"209.121.64.187","ip_number":"3514384571","ip_version":4,"country_name":"Canada","country_code2":"CA","isp":"Telus Communications Inc.","response_code":"200","response_message":"OK"}
+        protected IpAddressInfo getIpLocation(string ipAddress)
+        {
+            string url = string.Format("https://api.iplocation.net/?ip={0}", ipAddress);
+            string result = InvokeWebHook(url);
+            var ipInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<IpAddressInfo>(result);
+            return ipInfo;
+        }
+
+        public struct IpAddressInfo
+        {
+            // this is only for api.iplocation.net return
+            public string ip;
+            public string ip_number;
+            public string ip_version;
+            public string country_name;  // Canada
+            public string country_code2; // CA
+            public string isp;
+            public string response_code;
+            public string response_message;
+        }
+
         protected DataTable GetLis(string getLisMethod, int systemId, int screenId, string searchStr, List<string> criteria, string filterId, string conn, string isSys, int topN, bool addRow = true)
         {
             // this is a system wide format and must be kept in sync with robot if there is any change of it
@@ -3685,10 +3837,31 @@ namespace RO.Web
                 var scrCriId = sp.Replace(regex.Replace(sp, ""), "").Replace("C", "");
                 int CriCnt = (new AdminSystem()).CountScrCri(scrCriId, isSys == "Y" ? "Y" : "N", LcSysConnString, LcAppPw);
                 _MkScreenIn(screenId, scrCriId, sp, isSys == "Y" ? "Y" : "N", true);
-                dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, CriCnt, requiredValid, topN,
-                searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2), "") : "", ui, uc,
-                isSys != "N" ? (string)null : LcAppConnString,
-                isSys != "N" ? null : LcAppPw);
+                int tried = 0;
+                Action _getDdl = null;
+
+                _getDdl = () =>
+                {
+                    try
+                    {
+                        dt = (new AdminSystem()).GetScreenIn(screenId.ToString(), sp, CriCnt, requiredValid, topN,
+                        searchStr.StartsWith("**") ? "" : searchStr, !searchStr.StartsWith("**"), searchStr.StartsWith("**") ? cleanup.Replace(searchStr.Substring(2), "") : "", ui, uc,
+                        isSys != "N" ? (string)null : LcAppConnString,
+                        isSys != "N" ? null : LcAppPw);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (tried == 0)
+                        {
+                            tried += 1;
+                            ErrorTrace(ex, "error");
+                            System.Threading.Thread.Sleep(10);
+                            _getDdl();
+                        }
+                        else throw;
+                    }
+                };
+                _getDdl();
             }
             else
             {
@@ -4503,9 +4676,14 @@ namespace RO.Web
             string tableName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlTableName(true) : (isMstTbl ? GetMstTableName(true) : "")) : null;
             string keyColumnName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlKeyColumnName(false) : (isMstTbl ? GetMstKeyColumnName(false) : "")) : "";
             string keyColumnUnderlyingName = GetScreenId() > 0 ? (isDtlTbl ? GetDtlKeyColumnName(true) : (isMstTbl ? GetMstKeyColumnName(true) : "")) : "";
-            Regex rxBaseCol = new Regex(tableId + "$");
+            Func<string, string> stripSubSecond = (s) =>
+            {
+                Regex rxSubSecond = new Regex("\\.[0-9]+");
+                return rxSubSecond.Replace(s, "");
+            };
             Func<string, DataRow, string> convertByteArrayToString = (columnName, dr) =>
             {
+                Regex rxBaseCol = new Regex(tableId + "$");
                 // technically wrong as there should be associating of colAuth with direct DB retrieval on content type, FIXME
                 string displayMode = colAuth == null || !colAuth.ContainsKey(columnName)
                                         ? "ImageButton"
@@ -4621,7 +4799,7 @@ namespace RO.Web
                                                 ? "TextBox"
                                                 : colAuth[columnName]["DisplayMode"].ToString();
                         rec[columnName] =
-                            colType == typeof(DateTime) ? (((DateTime)dr[columnName]).ToString("o") + (utcColumns == null || !utcColumns.Contains(columnName) ? "" : "Z")) :
+                            colType == typeof(DateTime) ? stripSubSecond(((DateTime)dr[columnName]).ToString("o") + (utcColumns == null || !utcColumns.Contains(columnName) ? "" : "Z")) :
                             colType == typeof(byte[]) ?
                                 (dr[columnName] != null
                                     ? convertByteArrayToString(columnName, dr)
@@ -4639,6 +4817,7 @@ namespace RO.Web
             }
             return ret;
         }
+
 
         protected List<SerializableDictionary<string, string>> DataTableToListOfObject(DataTable dt, bool includeBLOB, Dictionary<string, DataRow> colAuth)
         {
@@ -4712,7 +4891,7 @@ namespace RO.Web
                         )
                         continue;
 
-                    if (dr["DisplayMode"].ToString().Contains("Date"))
+                    if (dr["DisplayMode"].ToString().Contains("Date") || dr["DisplayMode"].ToString().Contains("Calendar"))
                     {
                         DateTime searchDate;
                         bool isDate = DateTime.TryParse(sFind, out searchDate);
@@ -5785,9 +5964,21 @@ namespace RO.Web
                 var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/tools/price-conversion");
                 var CmcAPIKey = Config.CMCAPIKey;
 
+                if (string.IsNullOrEmpty(CmcAPIKey)) throw new Exception("FxRate key has not been setup");
+
                 var queryString = HttpUtility.ParseQueryString(string.Empty);
                 queryString["amount"] = "1";
-                queryString["symbol"] = FrISOCurrencySymbol;
+                if (FrISOCurrencySymbol == "FTX")
+                {
+                    // must use id as there are duplicates
+                    // use https://pro-api.coinmarketcap.com/v1/cryptocurrency/map 
+                    // to get the actual id
+                    queryString["id"] = "2667";
+                }
+                else
+                {
+                    queryString["symbol"] = FrISOCurrencySymbol;
+                }
                 queryString["convert"] = ToISOCurrencySymbol;
 
                 URL.Query = queryString.ToString();
@@ -5847,6 +6038,11 @@ namespace RO.Web
         {
             if (val is DateTime) return ((DateTime)val).ToString("o");
             else return val == null ? "" : val.ToString();
+        }
+        
+        protected string convertISO8601(string date)
+        {
+            return string.IsNullOrEmpty(date) || !date.ToUpper().EndsWith("Z") ? date : DateTime.Parse(date, null, System.Globalization.DateTimeStyles.RoundtripKind).ToString();
         }
 
         protected IncludeBLOB GetBlobOption(string blobOption)

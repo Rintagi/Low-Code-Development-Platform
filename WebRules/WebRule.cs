@@ -301,9 +301,10 @@ namespace RO.WebRules
 			{
 				if (CrawlerCd == "GA")
 				{
-					// Get:
-					posttext = dt.Rows[0]["PreText"].ToString() + TrlCode + dt.Rows[0]["PostText"].ToString() + HttpUtility.UrlEncode(InStr.Replace("\\", "/"));
-					request = (HttpWebRequest)WebRequest.Create(new Uri(dt.Rows[0]["CrawlerURL"].ToString() + posttext));
+                    // Get:
+                    //posttext = dt.Rows[0]["PreText"].ToString() + TrlCode + dt.Rows[0]["PostText"].ToString() + HttpUtility.UrlEncode(InStr.Replace("\\", "/"));
+                    //request = (HttpWebRequest)WebRequest.Create(new Uri(dt.Rows[0]["CrawlerURL"].ToString() + posttext));
+                    return string.Empty;
 				}
                 else if (CrawlerCd == "GB")
                 {
@@ -711,13 +712,13 @@ namespace RO.WebRules
             client.Send(mm);
         }
 
-        public Tuple<int, string, string> sshPush(string pscpPath, string localSource, string removeTarget, string login, string sshKeyFile, string keyPassword, string hostKey = null)
+        public Tuple<int, string, string> sshPush(string pscpPath, string localSource, string remoteTarget, string login, string sshKeyFile, string keyPassword, string hostKey = null)
         {
             string sshPort = "22";
             string password = DecryptString(keyPassword);
             string recursive = Directory.Exists(localSource) ? "-r" : "";
             string withHostKey = string.IsNullOrEmpty(hostKey) ? "" : (" -hostkey " + hostKey);
-            string cmdArg = string.Format("-P {0} {1} -q -i \"{2}\" \"{3}\" \"{4}\"" + withHostKey, sshPort, recursive, sshKeyFile, localSource, removeTarget);
+            string cmdArg = string.Format("-P {0} {1} {5} -q -i \"{2}\" \"{3}\" \"{4}\"", sshPort, recursive, sshKeyFile, localSource, remoteTarget, withHostKey);
             StringBuilder sbStdErr = new StringBuilder();
             StringBuilder sbStdOut = new StringBuilder();
             int wrongPasswordCnt = 0;
@@ -778,13 +779,13 @@ namespace RO.WebRules
             var result = RO.Common3.Utils.WinProcEx(pscpPath, localSource, null, cmdArg, puttyPromptHandler, puttyPromptHandler, exitHandler);
             return new Tuple<int, string, string>(result.Item1.ExitCode, sbStdOut.ToString(), sbStdErr.ToString());
         }
-        public Tuple<int, string, string> sshRemoteCmd(string plinkPath, string localCmdFile, string removeTarget, string login, string sshKeyFile, string keyPassword, string hostKey = null)
+        public Tuple<int, string, string> sshRemoteCmd(string plinkPath, string localCmdFile, string remoteTarget, string login, string sshKeyFile, string keyPassword, string hostKey = null)
         {
             string sshPort = "22";
             string password = DecryptString(keyPassword);
             string cmdScript = string.Format("-m {0}", localCmdFile);
             string withHostKey = string.IsNullOrEmpty(hostKey) ? "" : (" -hostkey " + hostKey);
-            string cmdArg = string.Format("-P {0} {1} -i \"{2}\" \"{3}\"" + withHostKey, sshPort, cmdScript, sshKeyFile, removeTarget);
+            string cmdArg = string.Format("-P {0} {1} {4} -i \"{2}\" \"{3}\"", sshPort, cmdScript, sshKeyFile, remoteTarget, withHostKey);
             StringBuilder sbStdErr = new StringBuilder();
             StringBuilder sbStdOut = new StringBuilder();
             bool sessionConnected = false;
@@ -846,6 +847,11 @@ namespace RO.WebRules
 
             Action<object, EventArgs> exitHandler = (v, ws) =>
             {
+                // if the script run on remote has exit code > 0, nothing are captured and with only an exit code > 0 from WinProc(as failure)
+                // consider writing better remote script to deal with situation like that
+                // a typical case is 'curl -s http://localhost:someport' where the port is not open
+                // even if there are error message to the linux stderr, it is not passed over to plink and the return is just empty
+                // with 1 as the exit code
                 var x = v;
                 //ws.WriteLine("");
             };

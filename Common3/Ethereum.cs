@@ -33,6 +33,9 @@ using Nethereum.RPC.Reactive.Eth.Subscriptions;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Nethereum.Web3;
+using Nethereum.HdWallet;
+using Nethereum.Signer.Crypto;
+
 namespace RO.Common3.Ethereum.RPC
 {
     #region newtonsoft custom JSON coverter
@@ -624,6 +627,55 @@ namespace RO.Common3.Ethereum
         #endregion
     }
 
+    public class EthTxOptions
+    {
+        public EthereumAccount fromAccount;
+        public BigInteger AmountToSend;
+        public BigInteger? MaxFeePerGas;
+        public BigInteger? MaxPriorityFeePerGas;
+        public BigInteger? GasPrice;
+        public BigInteger? Nonce;
+        public BigInteger? GasLimit;
+
+        public T ApplyTo<T>(T functionParams, Nethereum.Web3.Web3 web3) where T : Nethereum.Contracts.FunctionMessage
+        {
+            functionParams.AmountToSend = AmountToSend;
+            functionParams.MaxFeePerGas = MaxFeePerGas;
+            functionParams.MaxPriorityFeePerGas = MaxPriorityFeePerGas;
+            functionParams.GasPrice = GasPrice;
+            functionParams.Nonce = Nonce;
+            functionParams.Gas = GasLimit;
+
+            // use whatever is there if specified
+            if (!string.IsNullOrEmpty(functionParams.FromAddress)) return functionParams;
+
+            if (web3.TransactionManager.Account == null)
+            {
+                if (fromAccount == null || string.IsNullOrEmpty(fromAccount.myAddress))
+                {
+                    if (web3.TransactionManager.Account == null || string.IsNullOrEmpty(web3.TransactionManager.Account.Address))
+                    {
+                        var roEthereum = new RO.Common3.Ethereum.Ethereum();
+                        functionParams.FromAddress = roEthereum.GetDefaultAccount(web3).Result;
+                    }
+                    else
+                    {
+                        functionParams.FromAddress = web3.TransactionManager.Account.Address;
+                    }
+                }
+                else
+                {
+                    functionParams.FromAddress = fromAccount.myAddress;
+                }
+            }
+            else
+            {
+                functionParams.FromAddress = web3.TransactionManager.Account.Address;
+            }
+            return functionParams;
+        }
+    }
+
     public class Eth2DepositJson
     {
         public string pubkey;
@@ -891,8 +943,9 @@ namespace RO.Common3.Ethereum
                         {
                             // tuple array
                             Nethereum.ABI.ArrayType a = parameter.ABIType as Nethereum.ABI.ArrayType;
-                            FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                            Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
+                            FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                            PropertyInfo typeP = a.GetType().GetProperty("ElementType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                            Nethereum.ABI.TupleType elementType = type != null ? type.GetValue(a) as Nethereum.ABI.TupleType : typeP.GetValue(a) as Nethereum.ABI.TupleType;
                             List<DTODynamicProperty> dtoProperties = elementType.Components.Select(param =>
                             {
                                 return new DTODynamicProperty()
@@ -907,7 +960,13 @@ namespace RO.Common3.Ethereum
                             parameterOutputProperty.Parameter.DecodedType = GetList(functionOutputDTO).GetType();
                         }
                         else
-                            parameterOutputProperty.Parameter.DecodedType = d[propertyName].GetType();
+                        {
+                            var dataType = d[propertyName].GetType().ToString();
+                            parameterOutputProperty.Parameter.DecodedType = dataType.EndsWith("[]") && parameter.ABIType.IsDynamic()
+                                //? (new List<byte[]>()).GetType() 
+                                                ? (parameter.DecodedType ?? d[propertyName].GetType())
+                                                : d[propertyName].GetType();
+                        } 
                         parameterObjects.Add(parameterOutputProperty);
                     }
                 }
@@ -946,12 +1005,12 @@ namespace RO.Common3.Ethereum
                 var parameter = (ParameterOutputProperty)parameterResult;
                 var propertyInfo = parameter.PropertyInfo;
                 var abiType = parameter.Parameter.Type;
-                var fieldName = string.IsNullOrEmpty(parameter.Parameter.Name) || !useAbiFieldName 
-                    ? string.Format(resultCount > 9 ? "p{0:D2}" : "p{0}", idx) 
-                                        + (string.IsNullOrEmpty(parameter.Parameter.Name) 
-                                            ? "" 
+                var fieldName = string.IsNullOrEmpty(parameter.Parameter.Name) || !useAbiFieldName
+                    ? string.Format(resultCount > 9 ? "p{0:D2}" : "p{0}", idx)
+                                        + (string.IsNullOrEmpty(parameter.Parameter.Name)
+                                            ? ""
                                             : "(" + parameter.Parameter.Name + ")"
-                                          ) 
+                                          )
                                     : parameter.Parameter.Name;
                 Func<List<Nethereum.ABI.FunctionEncoding.ParameterOutput>, Dictionary<string, object>> decodeTuple = null;
                 decodeTuple = ((List<Nethereum.ABI.FunctionEncoding.ParameterOutput> results) =>
@@ -984,6 +1043,10 @@ namespace RO.Common3.Ethereum
                 else if (abiType == "tuple" && sample is System.Dynamic.ExpandoObject && parameter.Result is List<Nethereum.ABI.FunctionEncoding.ParameterOutput>)
                 {
                     result[fieldName] = decodeTuple(parameter.Result as List<Nethereum.ABI.FunctionEncoding.ParameterOutput>);
+                }
+                else if (abiType.StartsWith("byte") && parameter.Result is List<byte[]>)
+                {
+                    result[fieldName] = (parameter.Result as List<byte[]>).Select(d => "0x" + (d.Length == 0 ? "" : BitConverter.ToString(d).Replace("-", "").ToLowerInvariant()));
                 }
                 else
                 {
@@ -1110,6 +1173,10 @@ namespace RO.Common3.Ethereum
     }
     public class Ethereum
     {
+        protected static Dictionary<string, Dictionary<BigInteger, DateTime>> ChainBlockTimestamp = new Dictionary<string, Dictionary<BigInteger, DateTime>>();
+        protected static Dictionary<string, Dictionary<string, Transaction>> ChainTransactions = new Dictionary<string, Dictionary<string, Transaction>>();
+        protected static Dictionary<string, Dictionary<string, Nethereum.RPC.Eth.DTOs.TransactionReceipt>> ChainTransactionReceipts = new Dictionary<string, Dictionary<string, Nethereum.RPC.Eth.DTOs.TransactionReceipt>>();
+
         private static byte[] salt = new MD5CryptoServiceProvider().ComputeHash(Encoding.ASCII.GetBytes(Guid.NewGuid().ToString().Replace("-", "")));
         private static Dictionary<string, string> cachedEthereumInfo = new Dictionary<string, string>();
         public int EthCallGas { get; set; }
@@ -1174,7 +1241,8 @@ namespace RO.Common3.Ethereum
             bool constant = new Regex("(\"constant\"\\w*:\\w*(true|false)\\w*)").IsMatch(abiJSON);
             bool payable = new Regex("(\"payable\"\\w*:\\w*(true|false)\\w*)").IsMatch(abiJSON);
 
-            if (constant || payable) return abiJSON;
+            // nethereum 3.x plus support newer solc output
+            if (constant || payable || rxMutability.IsMatch(abiJSON)) return abiJSON;
 
             string abi = rxMutability.Replace(abiJSON, (m =>
             {
@@ -1187,16 +1255,30 @@ namespace RO.Common3.Ethereum
             return abi;
 
         }
-
         public static string CreateEth2Validators(string depositEXE, string resultKeyFolder, string keyStorePassword, int validatorCount, string eth2Chain, string eth1WithdrawalAddress = null)
         {
             string mnemonic = "";
             bool waitingMnemonic = false;
+            List<string> errMsg = new List<string>();
+            Action<StreamWriter, Process> initHandler = (ws, proc) =>
+            {
+                //ws.WriteLine("");
+                //ws.WriteLine("");
+                //ws.WriteLine("");
+                ws.WriteLine(keyStorePassword);
+            };
 
             Action<string, Process, StreamWriter, string> depositPromptHandler = (v, proc, ws, src) =>
             {
                 string x = v;
-                if (v == "This is your seed phrase. Write it down and store it safely, it is the ONLY way to retrieve your deposit.")
+                if (v == "Repeat your keystore password for confirmation:")
+                {
+                }
+                else if (
+                    v == "This is your seed phrase. Write it down and store it safely, it is the ONLY way to retrieve your deposit."
+                    ||
+                    v == "This is your mnemonic (seed phrase). Write it down and store it safely. It is the ONLY way to retrieve your deposit."
+                    )
                 {
                     waitingMnemonic = true;
                 }
@@ -1205,7 +1287,83 @@ namespace RO.Common3.Ethereum
                     mnemonic = v;
                     waitingMnemonic = false;
                 }
-                else if (!string.IsNullOrEmpty(mnemonic) && !string.IsNullOrEmpty(v) && v == "Please type your mnemonic (separated by spaces) to confirm you have written it down")
+                else if (
+                    !string.IsNullOrEmpty(mnemonic)
+                    && !string.IsNullOrEmpty(v)
+                    &&
+                    (
+                    v == "Please type your mnemonic (separated by spaces) to confirm you have written it down"
+                    )
+                    )
+                {
+                    ws.WriteLine(mnemonic);
+                }
+                else if (v == "Creating your keys.")
+                {
+                }
+                else if (v == "Success!")
+                {
+                }
+                else if (v == "Your keys can be found at: .\\validator_keys")
+                {
+                }
+
+                else if (v == "Press any key when you have written down your mnemonic.")
+                {
+
+                }
+                else if (v == "Press any key.")
+                {
+                }
+                //ws.WriteLine("");
+            };
+            Action<string, Process, StreamWriter, string> stdErrHandler = (v, proc, ws, src) =>
+            {
+                string x = v;
+                //ws.WriteLine("");
+            };
+            Action<object, EventArgs> exitHandler = (v, ws) =>
+            {
+                var x = v;
+                errMsg.Append(x);
+                //ws.WriteLine("");
+            };
+
+            string eth1 = !string.IsNullOrEmpty(eth1WithdrawalAddress) ? " --eth1_withdrawal_address " + eth1WithdrawalAddress : string.Empty;
+            string lang = depositEXE.Contains("20") || true ? "--language english " : "";
+            string nonInteractive = depositEXE.Contains("20") ? "--non_interactive " : "";
+            string cmd_params = lang + "new-mnemonic"
+                                + " --chain " + eth2Chain
+                                + " --keystore_password " + keyStorePassword
+                                + " --mnemonic_language english"
+                                + " --num_validators " + validatorCount.ToString()
+                                + " --folder . "
+                                + eth1;
+            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, cmd_params, depositPromptHandler, stdErrHandler, exitHandler, initHandler);
+            Regex rx = new Regex("^mnemonic:");
+            return rx.Replace(mnemonic, "");
+        }
+        public static string CreateEth2Validators(string depositEXE, string resultKeyFolder, string mnemonic, string keyStorePassword, int startFrom, int validatorCount, string eth2Chain, string eth1WithdrawalAddress = null)
+        {
+            List<string> errMsg = new List<string>();
+            Action<StreamWriter, Process> initHandler = (ws, proc) =>
+            {
+                if (!depositEXE.Contains("20"))
+                    //ws.WriteLine(mnemonic);
+                    ws.WriteLine(mnemonic);
+            };
+            Action<string, Process, StreamWriter, string> depositPromptHandler = (v, proc, ws, src) =>
+            {
+                string x = v;
+                if (v == null) return;
+                else if (v == "Repeat your keystore password for confirmation:")
+                {
+                }
+                else if (v == "Please repeat the index to confirm:")
+                {
+                    ws.WriteLine(startFrom);
+                }
+                else if (v.StartsWith("Please enter your mnemonic separated by spaces (\" \"). Note: you only need to enter the first 4 letters of each word if you'd prefer.:"))
                 {
                     ws.WriteLine(mnemonic);
                 }
@@ -1223,57 +1381,27 @@ namespace RO.Common3.Ethereum
             Action<string, Process, StreamWriter, string> stdErrHandler = (v, proc, ws, src) =>
             {
                 string x = v;
+                errMsg.Append(x);
                 //ws.WriteLine("");
             };
             Action<object, EventArgs> exitHandler = (v, ws) =>
             {
                 var x = v;
-                //ws.WriteLine("");
+                //ws.WriteLine("");S
             };
 
             string eth1 = !string.IsNullOrEmpty(eth1WithdrawalAddress) ? " --eth1_withdrawal_address " + eth1WithdrawalAddress : string.Empty;
-
-            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, "new-mnemonic" + eth1 + " --chain " + eth2Chain + " --keystore_password " + keyStorePassword + "  --mnemonic_language english --num_validators " + validatorCount.ToString() + " --folder .", depositPromptHandler, stdErrHandler, exitHandler);
-            return mnemonic;
-        }
-        public static string CreateEth2Validators(string depositEXE, string resultKeyFolder, string mnemonic, string keyStorePassword, int startFrom, int validatorCount, string eth2Chain, string eth1WithdrawalAddress = null)
-        {
-            Action<StreamWriter, Process> initHandler = (ws, proc) =>
-            {
-                ws.WriteLine(mnemonic);
-            };
-            Action<string, Process, StreamWriter, string> depositPromptHandler = (v, proc, ws, src) =>
-            {
-                string x = v;
-                if (v == "Please enter your mnemonic separated by spaces (\" \"):")
-                {
-                    //ws.WriteLine(mnemonic);
-                }
-                else if (v == "Creating your keys.")
-                {
-                }
-                else if (v == "Success!")
-                {
-                }
-                else if (v == "Your keys can be found at: .\\validator_keys")
-                {
-                }
-                //ws.WriteLine("");
-            };
-            Action<string, Process, StreamWriter, string> stdErrHandler = (v, proc, ws, src) =>
-            {
-                string x = v;
-                //ws.WriteLine("");
-            };
-            Action<object, EventArgs> exitHandler = (v, ws) =>
-            {
-                var x = v;
-                //ws.WriteLine("");
-            };
-
-            string eth1 = !string.IsNullOrEmpty(eth1WithdrawalAddress) ? " --eth1_withdrawal_address " + eth1WithdrawalAddress : string.Empty;
-
-            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, "existing-mnemonic" + eth1 + " --chain " + eth2Chain + " --keystore_password " + keyStorePassword + " --validator_start_index " + startFrom.ToString() + " --num_validators " + validatorCount.ToString() + " --folder .", depositPromptHandler, stdErrHandler, exitHandler, initHandler);
+            string lang = depositEXE.Contains("20") || true ? "--language english " : "";
+            string mnemonic_param = depositEXE.Contains("20") ? " --mnemonic \"" + mnemonic + "\" " : "";
+            string cmd_params = lang + "existing-mnemonic"
+                                + mnemonic_param
+                                + " --chain " + eth2Chain
+                                + " --keystore_password " + keyStorePassword
+                                + " --validator_start_index " + startFrom.ToString()
+                                + " --num_validators " + validatorCount.ToString()
+                                + " --folder ."
+                                + eth1;
+            var result = RO.Common3.Utils.WinProcEx(depositEXE, resultKeyFolder, null, cmd_params, depositPromptHandler, stdErrHandler, exitHandler, initHandler);
             return mnemonic;
         }
 
@@ -1306,11 +1434,11 @@ namespace RO.Common3.Ethereum
             if (from != null) SetGethManagedAccount(from);
         }
 
-        private bool IsIpcClient(Nethereum.Web3.Web3 web3)
+        private static bool IsIpcClient(Nethereum.Web3.Web3 web3)
         {
             return web3.Client.GetType() == typeof(Nethereum.JsonRpc.IpcClient.IpcClient);
         }
-        public async Task<bool> UnlockAccount(Nethereum.Web3.Web3 web3, string address, string password, int? durationInSeconds = 300)
+        public static async Task<bool> UnlockAccount(Nethereum.Web3.Web3 web3, string address, string password, int? durationInSeconds = 300)
         {
             bool isUnLocked = false;
             Exception err = null;
@@ -1318,7 +1446,7 @@ namespace RO.Common3.Ethereum
             {
                 try
                 {
-                    isUnLocked = await this.IsAccountUnlocked(web3, address);
+                    isUnLocked = await IsAccountUnlocked(web3, address);
                     if (!isUnLocked)
                     {
                         return await web3.Personal.UnlockAccount.SendRequestAsync(address, password, new HexBigInteger(durationInSeconds.HasValue ? durationInSeconds.Value : 300));
@@ -1339,11 +1467,18 @@ namespace RO.Common3.Ethereum
 
         }
 
-        public async Task<bool> LockAccount(Nethereum.Web3.Web3 web3, string address)
+        public static async Task<bool> LockAccount(Nethereum.Web3.Web3 web3, string address)
         {
 
             return await web3.Personal.LockAccount.SendRequestAsync(address);
         }
+
+        public static async Task<string> NewAccount(Nethereum.Web3.Web3 web3, string password)
+        {
+            return await web3.Personal.NewAccount.SendRequestAsync(password);
+        }
+
+
         public string GetExecFromAccount(string web3EndPoint)
         {
             var fromAddress = nethereumAccount.myAddress;
@@ -1367,7 +1502,7 @@ namespace RO.Common3.Ethereum
             }
             return fromAddress;
         }
-        public async Task<bool> IsAccountUnlocked(Nethereum.Web3.Web3 web3, string address)
+        public static async Task<bool> IsAccountUnlocked(Nethereum.Web3.Web3 web3, string address)
         {
             try
             {
@@ -1382,31 +1517,31 @@ namespace RO.Common3.Ethereum
             }
         }
 
-        public async Task<bool> IsMining(Nethereum.Web3.Web3 web3)
+        public static async Task<bool> IsMining(Nethereum.Web3.Web3 web3)
         {
             var isMining = await web3.Eth.Mining.IsMining.SendRequestAsync();
             return isMining;
         }
-        public async Task<bool> StartMiner(Nethereum.Web3.Web3 web3)
+        public static async Task<bool> StartMiner(Nethereum.Web3.Web3 web3)
         {
             var gethWeb3 = new Nethereum.Geth.Web3Geth(web3.Client);
             return await gethWeb3.Miner.Start.SendRequestAsync();
         }
 
-        public async Task<bool> StopMiner(Nethereum.Web3.Web3 web3)
+        public static async Task<bool> StopMiner(Nethereum.Web3.Web3 web3)
         {
             var gethWeb3 = new Nethereum.Geth.Web3Geth(web3.Client);
             return await gethWeb3.Miner.Stop.SendRequestAsync();
         }
 
-        public KeyValuePair<string, string> CreateEthereumWallet(string password)
+        public static KeyValuePair<string, string> CreateEthereumWallet(string password, byte[] privateKey = null)
         {
             var service = new KeyStoreService();
 
             //Creating a new key 
-            var ecKey = EthECKey.GenerateKey();
+            var ecKey = privateKey == null ? EthECKey.GenerateKey() : new EthECKey(privateKey.ToHex(true));
             //We can use EthECKey to generate a new ECKey pair, this is using SecureRandom
-            var privateKey = ecKey.GetPrivateKeyAsBytes();
+            privateKey = privateKey ?? ecKey.GetPrivateKeyAsBytes();
             var genAddress = ecKey.GetPublicAddress();
 
             //instead of the default service we can use either
@@ -1431,10 +1566,45 @@ namespace RO.Common3.Ethereum
             return service.GetAddressFromKeyStore(keystoreJson);
         }
 
-        public static string[] CreateHDWallet()
+        public static Tuple<string[], string, string> CreateHDWallet(string seedPassword = null)
         {
-            // this should return a 12 word Mnemonic which is the 'seed' of HD wallet
-            return new string[12];
+            // this should return a 12/24 word Mnemonic which is the 'seed' of HD wallet, the first account private key and first address
+            var mnemonic = new NBitcoin.Mnemonic(NBitcoin.Wordlist.English, NBitcoin.WordCount.TwentyFour);
+            var hdWallet = new Nethereum.HdWallet.Wallet(mnemonic.DeriveSeed(seedPassword));
+            return new Tuple<string[], string, string>(mnemonic.Words, hdWallet.GetAccount(0).PrivateKey, hdWallet.GetAddresses(1)[0]);
+        }
+
+        public static Tuple<string, string> CreateKeystoreWallet(string password, string privateKey = null)
+        {
+            var key = privateKey == null ? Nethereum.Signer.EthECKey.GenerateKey() : new Nethereum.Signer.EthECKey(privateKey);
+            var address = key.GetPublicAddress();
+            var service = new Nethereum.KeyStore.KeyStoreService();
+
+            string keyStoreJson = service.EncryptAndGenerateDefaultKeyStoreAsJson(
+                        password, key.GetPrivateKeyAsBytes(), address);
+            return new Tuple<string, string>(keyStoreJson, address);
+        }
+
+        public static Tuple<string, string> CreateKeystoreWallet(string password, string[] mnemonic)
+        {
+            var hdWallet = new Nethereum.HdWallet.Wallet(string.Join(" ", mnemonic), null);
+            var account = hdWallet.GetAccount(0);
+            var key = account.PrivateKey;
+            var address = account.Address;
+            var service = new Nethereum.KeyStore.KeyStoreService();
+
+            string keyStoreJson = service.EncryptAndGenerateDefaultKeyStoreAsJson(
+                        password, key.HexToByteArray(), address);
+            return new Tuple<string, string>(keyStoreJson, address);
+        }
+
+        public static Tuple<string, string> CreateGethWallet(Nethereum.Web3.Web3 web3, string password = null)
+        {
+            return Task.Run(async () =>
+            {
+                password = password ?? Nethereum.Signer.EthECKey.GenerateKey().GetPrivateKey();
+                return new Tuple<string, string>(password, await NewAccount(web3, password));
+            }).Result;
         }
         public string GetERC20TokenABI()
         {
@@ -1729,6 +1899,19 @@ namespace RO.Common3.Ethereum
                 };
             }
             return nethereumAccount;
+        }
+
+        public static string SignMessage(string mnemonic, string message, string walletPassword = "")
+        {
+            var wallet = new Wallet(mnemonic, walletPassword);
+            var account0 = wallet.GetAccount(0);
+            var address0 = account0.Address;
+            var signer = new EthereumMessageSigner();
+            //var signature = signer.HashAndSign(System.Text.UTF8Encoding.UTF8.GetBytes(message), new EthECKey(account0.PrivateKey));
+            //var recoveredAddress = signer.HashAndEcRecover(message, signature);
+            var signature = signer.EncodeUTF8AndSign(message, new EthECKey(account0.PrivateKey));
+            var recoveredAddress = signer.EncodeUTF8AndEcRecover(message, signature);
+            return signature;
         }
 
         public string SignTransaction(string to, BigInteger ethInWei, BigInteger nounce, BigInteger gasPriceInWei, BigInteger gasLimit, string data, int? chainId = null)
@@ -2079,8 +2262,8 @@ namespace RO.Common3.Ethereum
             var txInfo = new
             {
                 TransactionHash = tx.TransactionHash,
-                To = tx.To,
-                From = tx.From,
+                To = !string.IsNullOrEmpty(tx.To) ? Nethereum.Util.AddressExtensions.ConvertToEthereumChecksumAddress(tx.To) : tx.To,
+                From = Nethereum.Util.AddressExtensions.ConvertToEthereumChecksumAddress(tx.From),
                 Value = BigInteger.Parse(tx.Value.ToString()),
                 GasPrice = tx.GasPrice.Value,
                 MaxFeePerGas = tx.MaxFeePerGas != null ? BigInteger.Parse(tx.MaxFeePerGas.ToString()) : (BigInteger?)null,
@@ -2092,8 +2275,8 @@ namespace RO.Common3.Ethereum
                 BlockNumber = txReceipt != null ? txReceipt.BlockNumber.Value : (BigInteger?)null,
                 Timestamp = timestamp,
                 Status = string.Format("{0}", txReceipt != null ? txReceipt.Status.Value : (BigInteger?)null),
-                ContractAddress = txReceipt != null && txReceipt.Status.Value > 0 ? txReceipt.ContractAddress : null,
-                Input = txReceipt != null && (string.IsNullOrEmpty(txReceipt.ContractAddress) || includeContractByteCode) ? tx.Input : null,
+                ContractAddress = txReceipt != null && txReceipt.Status.Value > 0 && !string.IsNullOrEmpty(txReceipt.ContractAddress) ? Nethereum.Util.AddressExtensions.ConvertToEthereumChecksumAddress(txReceipt.ContractAddress) : null,
+                Input = txReceipt != null && (!string.IsNullOrEmpty(txReceipt.ContractAddress) || includeContractByteCode) ? tx.Input : "<skipped>",
                 EffectiveGasPrice = txReceipt.EffectiveGasPrice != null ? BigInteger.Parse(txReceipt.EffectiveGasPrice.ToString()) : (BigInteger?)null,
                 Logs = DecodeEventLog(contractAbi,
                     txReceipt.Logs.Select(evt => evt.ToObject<Nethereum.RPC.Eth.DTOs.FilterLog>()).ToArray()
@@ -2124,7 +2307,7 @@ namespace RO.Common3.Ethereum
 
         public async Task<DateTime> GetBlockTimestampAsync(ulong blockNumber, Nethereum.Web3.Web3 web3)
         {
-            var ret = await GetBlockWithTransactionsAsync(web3, new BlockParameter(blockNumber));
+            var ret = await GetBlockWithTransactionsHashesAsync(web3, new BlockParameter(blockNumber));
             return UnixTimeToDateTime(ret.Timestamp.ToUlong());
         }
 
@@ -2295,7 +2478,18 @@ namespace RO.Common3.Ethereum
                     var paramAttributes = abi.InputParameters.Select<Nethereum.ABI.Model.Parameter, Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute>(
                         x => new Nethereum.ABI.FunctionEncoding.Attributes.ParameterAttribute(x.ABIType.Name, x.Name, x.Order, x.Indexed));
                     var result = eventDecoder.DecodeTopics(log.Topics, log.Data, memberTypeObject, paramAttributes, useAbiFieldName);
-                    result.Add("_LogInfo", new { EventName = abi.Name, EventSha3Sig = abi.Sha3Signature, BlockNumber = log.BlockNumber.Value, TransactionHash = log.TransactionHash, Address = log.Address });
+                    result.Add("_LogInfo", new
+                    {
+                        EventName = abi.Name
+                     ,
+                        EventSha3Sig = abi.Sha3Signature
+                     ,
+                        Address = log.Address
+                     ,
+                        LogIndex = log.LogIndex,
+                        BlockNumber = log.BlockNumber.Value,
+                        TransactionHash = log.TransactionHash
+                    });
                     output.Add(result);
                 }
                 else
@@ -2345,7 +2539,8 @@ namespace RO.Common3.Ethereum
         {
             var contract = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), null);
             var functionAbi = (from fx in contract.ContractABI.Functions
-                               where fx.Name == functionName && fx.InputParameters.Length == functParam.Length
+                               where (fx.Sha3Signature == functionName || fx.Name == functionName)
+                                     && (functParam == null || fx.InputParameters.Length == functParam.Length)
                                select fx).First();
             var memberTypeObject = memberTypeFactory();
             var functionDecoder = new FunctionOutputDecoder();
@@ -2374,8 +2569,11 @@ namespace RO.Common3.Ethereum
             if (functionName == "constructor") return DecodeConstructorInput(contractAbi, data, memberTypeFactory);
 
             var contractBuilder = new Nethereum.Contracts.ContractBuilder(contractAbi, "0x0");
-            var functionBuilder = contractBuilder.GetFunctionBuilder(functionName);
-            dynamic input = Ethereum.GetFunctionInputDTO(contractAbi, functionName);
+            var sig = data.HexToByteArray().Take(4).ToArray().ToHex(true);
+            var functionBuilder = string.IsNullOrEmpty(functionName)
+                ? contractBuilder.GetFunctionBuilderBySignature(sig)
+                : contractBuilder.GetFunctionBuilder(functionName);
+            //dynamic input = Ethereum.GetFunctionInputDTO(contractAbi, data.HexToByteArray());
             var functionInput = functionBuilder.DecodeInput(data);
             var functionDecoder = new FunctionOutputDecoder();
             
@@ -2442,8 +2640,10 @@ namespace RO.Common3.Ethereum
         public static string DecodeFunctionInput(string contractAbi, string functionName, string data)
         {
             var contractBuilder = new Nethereum.Contracts.ContractBuilder(contractAbi, "0x0");
-            dynamic input = Ethereum.GetFunctionInputDTO(contractAbi, functionName);
-            var result = DecodeFunctionInput(contractAbi, functionName, (data??"").Trim(), () => input);
+            dynamic input = string.IsNullOrEmpty(functionName)
+                ? Ethereum.GetFunctionInputDTO(contractAbi, data.HexToByteArray())
+                : Ethereum.GetFunctionInputDTO(contractAbi, functionName);
+            var result = DecodeFunctionInput(contractAbi, functionName, (data ?? "").Trim(), () => input);
             var retValJson = Newtonsoft.Json.JsonConvert.SerializeObject(result);
             return retValJson;
         }
@@ -2500,6 +2700,10 @@ namespace RO.Common3.Ethereum
         public async Task<Nethereum.RPC.Eth.DTOs.BlockWithTransactions> GetBlockWithTransactionsAsync(Nethereum.Web3.Web3 web3, Nethereum.RPC.Eth.DTOs.BlockParameter block = null)
         {
             return await web3.Eth.Blocks.GetBlockWithTransactionsByNumber.SendRequestAsync(block ?? Nethereum.RPC.Eth.DTOs.BlockParameter.CreateLatest());
+        }
+        public async Task<Nethereum.RPC.Eth.DTOs.BlockWithTransactionHashes> GetBlockWithTransactionsHashesAsync(Nethereum.Web3.Web3 web3, Nethereum.RPC.Eth.DTOs.BlockParameter block = null)
+        {
+            return await web3.Eth.Blocks.GetBlockWithTransactionsHashesByNumber.SendRequestAsync(block ?? Nethereum.RPC.Eth.DTOs.BlockParameter.CreateLatest());
         }
 
         public static List<T> DecodeEventLog<T>(string abiJson, Nethereum.RPC.Eth.DTOs.FilterLog[] eventLog) where T : new()
@@ -2568,6 +2772,24 @@ namespace RO.Common3.Ethereum
             var caller = contract.GetFunction(functionName);
             var callData = caller.GetData(TranslateCallInput(AbiJSONTranslate(abiJson), functionName, functionInput));
             return callData;
+        }
+
+        public async Task<string> ExecuteAsync(string to, string callData, Nethereum.Web3.Web3 web3, BigInteger gasLimit, BigInteger gasPriceInWei, BigInteger ethInWei, int chainId, BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null, bool hardLimit = false)
+        {
+            var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
+            var callInput = new CallInput()
+            {
+                To = to,
+                Data = callData,
+                From = myAddress,
+                ChainId = chainId.ToHexBigInteger(),
+                Value = ethInWei.ToHexBigInteger(),
+                Gas = EthCallGas.ToHexBigInteger()
+            };
+            var gasNeeded = await this.EstimateGasAsync(web3, callInput);
+            var gasBoosted = gasBoost(gasNeeded, hardLimit);
+            var finalGasLimit = hardLimit ? (gasLimit == 0 ? gasNeeded : (gasLimit)) : (gasBoosted < gasLimit ? gasLimit : gasBoosted);
+            return await SendTransactionAsync(web3, to, ethInWei, gasPriceInWei, finalGasLimit, callData, chainId, maxPriorityFeePerGas, nonce);
         }
 
         public async Task<string> ExecuteAsync(string abiJson, string contractAddress, Nethereum.Web3.Web3 web3, string functionName, BigInteger gasLimit, BigInteger gasPriceInWei, BigInteger ethInWei, object[] functionInput, int chainId, BigInteger? maxPriorityFeePerGas, BigInteger? nonce = null, bool hardLimit = false)
@@ -2652,12 +2874,12 @@ namespace RO.Common3.Ethereum
             }
             return revisedfunctParam;
         }
-        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BlockParameter block, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
+        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BlockParameter block, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false, bool asConstant = false)
         {
 
             var function = Ethereum.GetFunctionBuilder(contractAbi, functionName);
             var revisedFunctParam = NormalizedFunctParam(function.FunctionABI.InputParameters, functParam);
-
+            var isConstant = function.FunctionABI.Constant || asConstant;
             string result = null;
             var ethToSent = Ethereum.FromWei(ethInWeiToSent);
             try
@@ -2665,7 +2887,7 @@ namespace RO.Common3.Ethereum
                 result = System.Threading.Tasks.Task.Run(async () =>
                 {
                     var web3 = Ethereum.GetWeb3Client(web3EndPoint);
-                    if (function.FunctionABI.Constant)
+                    if (isConstant)
                     {
                         string ret = await CallAsync(contractAbi, contractAddress, web3, functionName, ethToSent, revisedFunctParam, block);
                         return ret;
@@ -2683,7 +2905,7 @@ namespace RO.Common3.Ethereum
                 else throw;
             }
 
-            if (function.FunctionABI.Constant)
+            if (isConstant)
             {
                 dynamic output = Ethereum.GetFunctionOutputDTO(contractAbi, functionName);
                 var retVal = Ethereum.DecodeFunctionOutput(contractAbi, result, functionName, revisedFunctParam, () => output, useAbiFieldName);
@@ -2695,9 +2917,9 @@ namespace RO.Common3.Ethereum
                 return result;
             }
         }
-        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false)
+        public string ExecuteEthereumFunction(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, BigInteger gasPriceInWei, int chainid, string ethInWeiToSent = "0", BigInteger? maxPriorityFeePerGas = null, BigInteger? nonce = null, bool hardLimit = false, int gasLimit = 0, bool useAbiFieldName = false, bool asConstant = false)
         {
-            return ExecuteEthereumFunction(web3EndPoint, contractAddress, contractAbi, functionName, functParam, BlockParameter.CreateLatest(), gasPriceInWei, chainid, ethInWeiToSent, maxPriorityFeePerGas, nonce, hardLimit, gasLimit, useAbiFieldName);
+            return ExecuteEthereumFunction(web3EndPoint, contractAddress, contractAbi, functionName, functParam, BlockParameter.CreateLatest(), gasPriceInWei, chainid, ethInWeiToSent, maxPriorityFeePerGas, nonce, hardLimit, gasLimit, useAbiFieldName, asConstant);
         }
 
         public BigInteger EstimateGas(string web3EndPoint, string contractAddress, string contractAbi, string functionName, object[] functParam, string ethInWeiToSent = "0", bool hardLimit = false, bool calcEthNeeded = true)
@@ -2728,7 +2950,10 @@ namespace RO.Common3.Ethereum
         public async Task<string> SendEtherAsync(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas, BigInteger? nonce)
         {
             var web3 = Ethereum.GetWeb3Client(web3EndPoint);
-            string txHash = await SendTransactionAsync(web3, toWalletAddress, ethInWei, gasPriceInWei, new BigInteger(21000), null, chainId, maxPriorityFeePerGas, nonce);
+            var myAddress = string.IsNullOrEmpty(nethereumAccount.myAddress) ? await GetDefaultAccount(web3) : nethereumAccount.myAddress;
+            BigInteger gasNeeded = await this.EstimateGasAsync(web3, new CallInput() { To = toWalletAddress, From = myAddress, Value = new HexBigInteger(ethInWei) });
+
+            string txHash = await SendTransactionAsync(web3, toWalletAddress, ethInWei, gasPriceInWei, gasNeeded, null, chainId, maxPriorityFeePerGas, nonce);
             return txHash;
         }
         public string SendEther(string web3EndPoint, string toWalletAddress, BigInteger ethInWei, BigInteger gasPriceInWei, int chainId, BigInteger? maxPriorityFeePerGas, BigInteger? nonce)
@@ -2750,7 +2975,7 @@ namespace RO.Common3.Ethereum
 
         }
 
-        public static Nethereum.Web3.Web3 GetWeb3Client(string web3url)
+        public static Nethereum.Web3.Web3 GetWeb3Client(string web3url, int waitForSeconds = 90)
         {
             if (!web3url.StartsWith("http:") && !web3url.StartsWith("https:") && !web3url.StartsWith("ws:") && !web3url.StartsWith("wss:"))
             {
@@ -2774,7 +2999,8 @@ namespace RO.Common3.Ethereum
             else
             {
                 // should use our own rpcClient(i.e. httpClient) if we need to control the HTTP request say additional headers(bear token, infura origin etc.)
-                Nethereum.JsonRpc.Client.RpcClient rpcClient = new Nethereum.JsonRpc.Client.RpcClient(new Uri(web3url));
+                Nethereum.JsonRpc.Client.RpcClient rpcClient = new RpcClient(new Uri(web3url));
+                Nethereum.JsonRpc.Client.RpcClient.ConnectionTimeout = new TimeSpan(0, 0, waitForSeconds);
                 var web3 = new Nethereum.Web3.Web3(rpcClient);
                 return web3;
             }
@@ -2906,67 +3132,122 @@ namespace RO.Common3.Ethereum
         {
             return new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), "0x0");
         }
-        public static Dictionary<string, Nethereum.ABI.Model.FunctionABI> GetFunctionDef(string abiJson)
+        public static string[] GetStructDef(string abiJson)
+        {
+            var structures = new Dictionary<string, string[]>();
+            var rxStruct = new Regex("struct\\s+[^.]*\\.");
+            var rxArray = new Regex("\\[.*\\]");
+            var contract = Ethereum.GetContractBuilder(AbiJSONTranslate(abiJson));
+            Action<Nethereum.ABI.Model.Parameter[]> extractStruct = null;
+            extractStruct = (parameters) =>
+            {
+                foreach (var p in parameters)
+                {
+                    string pTypeName = rxArray.Replace(p.InternalType ?? p.ABIType.Name, "");
+                    if (p.ABIType is Nethereum.ABI.TupleType)
+                    {
+                        var components = (p.ABIType as Nethereum.ABI.TupleType).Components;
+                        extractStruct(components);
+                        var elements = components.Select(p1 => (p1.InternalType ?? p1.ABIType.CanonicalName) + " " + p1.Name);
+                        structures[pTypeName] = elements.ToArray();
+                    }
+                    else if (p.ABIType.Name.StartsWith("tuple["))
+                    {
+                        Nethereum.ABI.ArrayType a = p.ABIType as Nethereum.ABI.ArrayType;
+                        FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        PropertyInfo typeP = a.GetType().GetProperty("ElementType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        Nethereum.ABI.TupleType elementType = type != null ? type.GetValue(a) as Nethereum.ABI.TupleType : typeP.GetValue(a) as Nethereum.ABI.TupleType;
+                        var components = elementType.Components;
+                        extractStruct(components);
+                        var elements = elementType.Components.Select(p1 => (p1.InternalType ?? p1.ABIType.CanonicalName) + " " + p1.Name);
+                        structures[pTypeName] = elements.ToArray();
+                    }
+                }
+            };
+            foreach (var f in contract.ContractABI.Functions)
+            {
+                extractStruct(f.InputParameters);
+                extractStruct(f.OutputParameters);
+            }
+            foreach (var e in contract.ContractABI.Events)
+            {
+                extractStruct(e.InputParameters);
+            }
+            if (contract.ContractABI.Constructor != null)
+            {
+                extractStruct(contract.ContractABI.Constructor.InputParameters);
+            }
+            var solidityStruct = structures.Keys.Select(k =>
+            {
+                string structDef = string.Format("{0} {{ {1}; }}"
+                    , rxStruct.Replace(k, "struct ")
+                    , string.Join(";", structures[k].Select(t => rxStruct.Replace(t, "")).ToArray()));
+                return structDef;
+            }).ToArray();
+            //return structures;
+            return solidityStruct;
+        }
+        public static string decodeParameters(Nethereum.ABI.Model.Parameter[] parameters, bool forSig, bool expandStruct, bool forEvent)
+        {
+            var rxStruct = new Regex("struct\\s+[^.]*\\.");
+            var rxArray = new Regex("\\[.*\\]");
+            return string.Join(",", parameters.Select(pp =>
+            {
+                string ppTypeName = rxStruct.Replace(pp.InternalType ?? pp.ABIType.CanonicalName, "");
+                if (pp.ABIType is Nethereum.ABI.TupleType)
+                {
+                    //string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    if (expandStruct) ppTypeName = "tuple";
+                    Nethereum.ABI.TupleType cc = pp.ABIType as Nethereum.ABI.TupleType;
+                    return ((forSig ? "" : ppTypeName)
+                            + (expandStruct || forSig ? "(" + decodeParameters(cc.Components, forSig, expandStruct, forEvent) + ")" : "")
+                            + (forSig ? "" : (pp.ABIType.IsDynamic() && !forEvent && !expandStruct ? " calldata" : "") + (pp.Indexed ? " indexed" : "") + " " + pp.Name)).Trim();
+                }
+                else if (pp.ABIType.Name.StartsWith("tuple["))
+                {
+
+                    // tuple array
+                    //string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    if (expandStruct) ppTypeName = "tuple";
+                    Nethereum.ABI.ArrayType a = pp.ABIType as Nethereum.ABI.ArrayType;
+                    var arraySuffix = ppTypeName.Replace(rxArray.Replace(ppTypeName, ""), "");
+                    FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    PropertyInfo typeP = a.GetType().GetProperty("ElementType", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    Nethereum.ABI.TupleType elementType = type != null ? type.GetValue(a) as Nethereum.ABI.TupleType : typeP.GetValue(a) as Nethereum.ABI.TupleType;
+                    return ((forSig ? "" : ppTypeName)
+                            + (expandStruct || forSig ? "(" + decodeParameters(elementType.Components, forSig, expandStruct, forEvent) + ")" + arraySuffix : "")
+                            + (forSig
+                                ? ""
+                                : (pp.ABIType.IsDynamic() && !forEvent && !expandStruct ? " calldata" : "") + (pp.Indexed ? " indexed" : "") + " " + pp.Name)).Trim();
+                }
+                else
+                    return (pp.ABIType.CanonicalName
+                            + (forSig ? "" : (pp.ABIType.IsDynamic() && !forEvent && !expandStruct ? " calldata" : "" + (pp.Indexed ? " indexed" : ""))
+                            + " " + pp.Name)).Trim();
+            }).ToArray());
+        }
+
+        public static Dictionary<string, Nethereum.ABI.Model.FunctionABI> GetFunctionDef(string abiJson, bool expandStruct = false)
         {
             var contract = Ethereum.GetContractBuilder(AbiJSONTranslate(abiJson));
             //var sigEncoder = Ethereum.GetSignatureEncoder();
             var xx = new Nethereum.Util.Sha3Keccack();
-            Func<Nethereum.ABI.Model.Parameter, bool, string> decodeParam = (p, forSig) => {
-                string typeName = p.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                Func<Nethereum.ABI.Model.Parameter[], string> decodeTuple = null;
-                decodeTuple = ((Nethereum.ABI.Model.Parameter[] tuple_params) =>
-                {
-                    return string.Join(",", tuple_params.Select(pp =>
-                    {
-                        if (pp.ABIType is Nethereum.ABI.TupleType)
-                        {
-                            string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                            Nethereum.ABI.TupleType cc = pp.ABIType as Nethereum.ABI.TupleType;
-                            return ((forSig ? "" : ppTypeName) + "(" + decodeTuple(cc.Components) + ")" + (forSig ? "" : " " + pp.Name)).Trim();
-                        }
-                        else if (pp.ABIType.Name.StartsWith("tuple["))
-                        {
-                            // tuple array
-                            string ppTypeName = pp.InternalType.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                            Nethereum.ABI.ArrayType a = pp.ABIType as Nethereum.ABI.ArrayType;
-                            FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                            Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
-                            return ((forSig ? "" : ppTypeName) + "(" + decodeTuple(elementType.Components) + ")" + (forSig ? "" : " " + pp.Name)).Trim();
-                        }
-                        else
-                            return (pp.ABIType.CanonicalName + (forSig ? "" : " " + pp.Name)).Trim();
-                    }).ToArray());
-                });
-                if (p.ABIType is Nethereum.ABI.TupleType)
-                {
-                    Nethereum.ABI.TupleType c = p.ABIType as Nethereum.ABI.TupleType;
-                    return ((forSig ? "" : typeName) + "(" + decodeTuple(c.Components) + ")" + (forSig ? "" : " " + p.Name)).Trim();
-                }
-                else if (p.ABIType.Name.StartsWith("tuple["))
-                {
-                    // tuple array
-                    Nethereum.ABI.ArrayType a = p.ABIType as Nethereum.ABI.ArrayType;
-                    FieldInfo type = a.GetType().GetField("ElementType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    Nethereum.ABI.TupleType elementType = type.GetValue(a) as Nethereum.ABI.TupleType;
-                    return ((forSig ? "" : typeName) + "(" + decodeTuple(elementType.Components) + ")" + (forSig ? "" : " " + p.Name)).Trim();
-                }
-                else
-                    return (p.ABIType.CanonicalName + (forSig ? "" : " " + p.Name)).Trim();
-            };
-
 
             var functionDef = contract.ContractABI.Functions.Select(abi =>
             {
                 var sig = abi.Sha3Signature;
                 //var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
                 //var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + p.Name).Trim()).ToArray());
-                var callParamName = string.Join(",", abi.InputParameters.Select(p => decodeParam(p, true)).ToArray());
-                var callInterface = string.Join(",", abi.InputParameters.Select(p => decodeParam(p, false)).ToArray());
-                var returnInterface = string.Join(",", abi.OutputParameters.Select(p => decodeParam(p,false)).ToArray());
+                //var callParamName = string.Join(",", abi.InputParameters.Select(p => decodeParam(p, true)).ToArray());
+                //var callInterface = string.Join(",", abi.InputParameters.Select(p => decodeParam(p, false)).ToArray());
+                //var returnInterface = string.Join(",", abi.OutputParameters.Select(p => decodeParam(p,false)).ToArray());
+                var callParamName = decodeParameters(abi.InputParameters, true, expandStruct, false);
+                var callInterface = decodeParameters(abi.InputParameters, false, expandStruct, false);
+                var returnInterface = decodeParameters(abi.OutputParameters, false, expandStruct, false);
                 /* name format used to calc function sig(i.e. abi.Sha3Signature, keccak256(name).left(4bytes)), per ethereum spec */
                 var name = abi.Name + "(" + callParamName + ")";
                 /* function definition, for human */
-                var docName = abi.Name + "(" + callInterface + ")" + (!string.IsNullOrEmpty(returnInterface) ? " returns " + "(" + returnInterface + ")" : "");
+                var docName = abi.Name + "(" + callInterface + ")" + (expandStruct ? "" : " external") + (abi.Constant ? " view" : "") + (!string.IsNullOrEmpty(returnInterface) ? " returns " + "(" + returnInterface + ")" : "");
                 var yy = xx.CalculateHash(name).Substring(0, 4 * 2);
                 return new
                 {
@@ -2977,16 +3258,17 @@ namespace RO.Common3.Ethereum
             return functionDef;
         }
 
-        public static Dictionary<string, Nethereum.ABI.Model.ConstructorABI> GetConstructorDef(string className, string abiJson)
+        public static Dictionary<string, Nethereum.ABI.Model.ConstructorABI> GetConstructorDef(string className, string abiJson, bool expandStruct = false)
         {
             var contract = Ethereum.GetContractBuilder(AbiJSONTranslate(abiJson));
             var abi = contract.ContractABI.Constructor;
             if (abi != null)
             {
                 var contractClassName = className;
-                var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
-                var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + p.Name).Trim()).ToArray());
-                var returnInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + p.Name).Trim()).ToArray());
+                //var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
+                //var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + p.Name).Trim()).ToArray());
+                var callParamName = decodeParameters(abi.InputParameters, true, expandStruct, false);
+                var callInterface = decodeParameters(abi.InputParameters, false, expandStruct, false);
                 var name = contractClassName + "(" + callParamName + ")";
                 var docName = contractClassName + "(" + callInterface + ")";
                 return new Dictionary<string, Nethereum.ABI.Model.ConstructorABI>() {
@@ -2994,25 +3276,27 @@ namespace RO.Common3.Ethereum
                 };
             }
             else
-                return new Dictionary<string, Nethereum.ABI.Model.ConstructorABI>() {
-                    {className + "()", null}
+                return new Dictionary<string, Nethereum.ABI.Model.ConstructorABI>()
+                {
+                    //                    {"", null}
                 };
         }
 
-        public static Dictionary<string, Nethereum.ABI.Model.EventABI> GetEventDef(string abiJson)
+        public static Dictionary<string, Nethereum.ABI.Model.EventABI> GetEventDef(string abiJson, bool expandStruct = false)
         {
             var contract = Ethereum.GetContractBuilder(AbiJSONTranslate(abiJson));
             //var sigEncoder = Ethereum.GetSignatureEncoder();
-            //var xx = new Nethereum.Util.Sha3Keccack();
+            var xx = new Nethereum.Util.Sha3Keccack();
             var eventDef = contract.ContractABI.Events.Select(abi =>
             {
                 var sig = abi.Sha3Signature;
-                var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
-                var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + (p.Indexed ? "indexed " : "") + p.Name).Trim()).ToArray());
-                var returnInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + (p.Indexed ? "indexed" : "") + p.Name).Trim()).ToArray());
+                //var callParamName = string.Join(",", abi.InputParameters.Select(p => p.ABIType.CanonicalName).ToArray());
+                //var callInterface = string.Join(",", abi.InputParameters.Select(p => (p.ABIType.CanonicalName + ' ' + (p.Indexed ? "indexed " : "") + p.Name).Trim()).ToArray());
+                var callParamName = decodeParameters(abi.InputParameters, true, expandStruct, true);
+                var callInterface = decodeParameters(abi.InputParameters, false, expandStruct, true);
                 var name = abi.Name + "(" + callParamName + ")";
                 var docName = abi.Name + "(" + callInterface + ")";
-                //var yy = xx.CalculateHash(name);
+                var yy = xx.CalculateHash(name);
                 return new
                 {
                     eventName = docName,
@@ -3020,6 +3304,28 @@ namespace RO.Common3.Ethereum
                 };
             }).ToDictionary(e => e.eventName, e => e.eventAbi);
             return eventDef;
+        }
+
+        public static dynamic GetFunctionInputDTO(string abiJson, byte[] txData)
+        {
+
+            var contractBuilder = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), "0x0");
+            var sig = txData.Take(4).ToArray().ToHex(true);
+            var functionAbi = contractBuilder.GetFunctionAbiBySignature(sig);
+            dynamic functionInputDTO = new System.Dynamic.ExpandoObject();
+            var inputParams = functionAbi.InputParameters;
+            IDictionary<string, object> eo = functionInputDTO as IDictionary<string, object>;
+
+            foreach (var p in inputParams)
+            {
+                var defaultType = p.ABIType.GetDefaultDecodingType();
+                eo.Add(p.Name, p.ABIType.Name == "string" || p.ABIType.Name == "address"
+                        ? (object)""
+                        : p.ABIType.Name.StartsWith("byte") ? (object)new byte[1]
+                        : (object)Activator.CreateInstance(defaultType)
+                        );
+            }
+            return functionInputDTO;
         }
 
         public static dynamic GetFunctionInputDTO(string abiJson, string functionName)
@@ -3064,10 +3370,10 @@ namespace RO.Common3.Ethereum
             return functionInputDTO;
         }
 
-        public static string decodeFunctionOutput(string contractAbi, string functionName, List<object> functionParams, string result, bool useAbiFieldName)
+        public static string decodeFunctionOutput(string contractAbi, string functionName, string result, List<object> functionParams = null, bool useAbiFieldName = false)
         {
-            dynamic output = GetFunctionOutputDTO(contractAbi, functionName);
-            var retVal = DecodeFunctionOutput(contractAbi, result, functionName, functionParams.ToArray(), () => output, useAbiFieldName);
+            dynamic output = GetFunctionOutputDTO(AbiJSONTranslate(contractAbi), functionName);
+            var retVal = Ethereum.DecodeFunctionOutput(AbiJSONTranslate(contractAbi), result, functionName, functionParams != null ? functionParams.ToArray() : null, () => output, useAbiFieldName);
             var retValJson = Newtonsoft.Json.JsonConvert.SerializeObject(retVal);
             return retValJson;
         }
@@ -3075,7 +3381,9 @@ namespace RO.Common3.Ethereum
         public static dynamic GetFunctionOutputDTO(string abiJson, string functionName)
         {
             var contractBuilder = new Nethereum.Contracts.ContractBuilder(AbiJSONTranslate(abiJson), "0x0");
-            var functionBuilder = contractBuilder.GetFunctionBuilder(functionName);
+            var functionBuilder = functionName.StartsWith("0x")
+                ? contractBuilder.GetFunctionBuilderBySignature(functionName)
+                : contractBuilder.GetFunctionBuilder(functionName);
             dynamic functionOutputDTO = new System.Dynamic.ExpandoObject();
             var outputParams = functionBuilder.FunctionABI.OutputParameters;
             IDictionary<string, object> eo = functionOutputDTO as IDictionary<string, object>;
@@ -3085,7 +3393,7 @@ namespace RO.Common3.Ethereum
                 Type defaultType = p.ABIType.GetDefaultDecodingType();
                 var obj = p.ABIType.Name == "string" || p.ABIType.Name == "address"
                         ? (object)""
-                        : p.ABIType.Name.StartsWith("byte") ? (object)new byte[1]
+                        : p.ABIType.Name.StartsWith("byte") && !p.ABIType.Name.EndsWith("[]") ? (object)new byte[1]
                         : (object)Activator.CreateInstance(defaultType);
                 if (p.ABIType.IsDynamic()
                         && p.ABIType.Name != "string"
@@ -3093,7 +3401,7 @@ namespace RO.Common3.Ethereum
                         && p.ABIType.CanonicalName != "tuple"
                     )
                 {
-                    ((IList)obj).Add(p.ABIType.CanonicalName == "tuple[]" ? (object)new Dictionary<string, object>() : (object)"");
+                    ((IList)obj).Add(p.ABIType.CanonicalName == "tuple[]" ? (object)new Dictionary<string, object>() : (p.ABIType.Name.Contains("int") ? (object) new BigInteger(0) : (object)""));
                 }
                 eo.Add(string.IsNullOrEmpty(p.Name) ? "p" + idx.ToString() : p.Name, obj);
                 idx = idx + 1;
@@ -3149,7 +3457,7 @@ namespace RO.Common3.Ethereum
                                     if (p.Indexed)
                                     {
                                         object v = null;
-                                        if (f == null) v = null;
+                                        if (f == null || (f is string && string.IsNullOrEmpty(f as string))) v = null;
                                         else if (f is string)
                                         {
                                             if (string.IsNullOrEmpty((string)f)) v = null;
@@ -3268,6 +3576,18 @@ namespace RO.Common3.Ethereum
                         && (inputs[idx] is IEnumerable || inputs[idx] is IEnumerable<string>))
                 {
                     translated.Add((inputs[idx] as IEnumerable<object>).Select((object x) => Utils.HexToByteArray(x as string)).ToArray());
+                }
+                else if (p.ABIType.Name == "tuple[]") {
+                    var data = inputs[idx] as List<object>;
+                    var elemementType = p.ABIType.GetPropertyValue("ElementType") as Nethereum.ABI.TupleType;
+                    var translatedList = new List<object>();
+                    foreach (var x in data)
+                    {
+                        var y = x as List<object>;
+                        var translatedData = TranslateParamList(elemementType.Components, x != null ? (object[])y.ToArray() : x as object[]);
+                        translatedList.Add(translatedData);
+                    }
+                    translated.Add(translatedList);
                 }
                 else
                 {
@@ -3414,24 +3734,169 @@ namespace RO.Common3.Ethereum
         }
         */
 
-        public static DateTime UnixTimeToDateTime(int unixTime)
+        public static DateTime UnixTimeToDateTime(int unixTime, DateTimeKind kind = DateTimeKind.Utc)
         {
-            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0,  kind);
             return dateTime.AddSeconds(unixTime);
         }
 
-        public static DateTime UnixTimeToDateTime(ulong unixTime)
+        public static DateTime UnixTimeToDateTime(ulong unixTime, DateTimeKind kind = DateTimeKind.Utc)
         {
-            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0, kind);
             return dateTime.AddSeconds(unixTime);
         }
 
         public static int DateTimeToUnixTime(DateTime time)
         {
             System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return (time - dateTime).Seconds;
+            return (int) (time - dateTime).TotalSeconds;
         }
 
+        public static async Task<T> BinarySearchAsync<T,S>(Func<ulong, Task<T>> getAt, Func<T, S, int> comparer, ulong l, ulong r,  S searchFor)
+        {
+            ulong n = 0;
+            ulong count = 0;
+            while (l <= r)
+            {
+                n = (l + (r - l) / 2);
+                if (n == 0) n = 1;
+                count += 1;
+                T item = await getAt(n);
+                int c = comparer(item, searchFor);
+                if (c > 0) r = n - 1;
+                else if (c < 0) l = n + 1;
+                else break;
+            }
+            count += 1;
+            return await getAt(n);
+        }
+        public static async Task<Tuple<BigInteger, DateTime>> BlockNumberFromDateTimeAsync(Nethereum.Web3.IWeb3 web3, DateTime datetimeUtc) 
+        {
+            uint timestamp = (uint) DateTimeToUnixTime(datetimeUtc);
+            var ethGetBlockByNumber = new RO.Common3.Ethereum.RPC.EthGetBlockByNumber(web3.Client);
+            Func<ulong, ulong, ulong, ulong> calcBlockTime = (t0, t1, n) =>
+            {
+                return ((t1 >= t0 ? t1 - t0 : t0 - t1) + n / 2) / n;
+            };
+            Func<RPC.Block, RPC.Block, ulong> getBlockTime = (b0, b1) =>
+            {
+                return calcBlockTime(b0.Timestamp.ToUlong(), b1.Timestamp.ToUlong()
+                    , b1.Number.ToUlong() >= b0.Number.ToUlong() 
+                        ? b1.Number.ToUlong() - b0.Number.ToUlong() 
+                        : b0.Number.ToUlong() - b1.Number.ToUlong());
+            };
+            var latestBlock = await ethGetBlockByNumber.SendRequestAsync(BlockParameter.CreateLatest());
+            var latestBlockNumber = latestBlock.Number.ToUlong();
+            var latestBlockTimestamp = latestBlock.Timestamp.ToUlong();
+
+            if (timestamp >= latestBlockTimestamp) return new Tuple<BigInteger, DateTime>(new BigInteger(latestBlockNumber), UnixTimeToDateTime(latestBlockTimestamp));
+
+            var midBlock = await ethGetBlockByNumber.SendRequestAsync(new BlockParameter(latestBlockNumber / 2));
+            var midBlockNumber = midBlock.Number.ToUlong();
+            var midBlockTimestamp = midBlock.Timestamp.ToUlong();
+
+            if (timestamp == midBlockTimestamp) return new Tuple<BigInteger, DateTime>(new BigInteger(midBlockNumber), UnixTimeToDateTime(midBlockTimestamp));
+
+            ulong blockTime = getBlockTime(midBlock, latestBlock);
+            var lBlockNumber = midBlockTimestamp > timestamp ? 1 : midBlockNumber;
+            var rBlockNumber = midBlockTimestamp > timestamp ? midBlockNumber : latestBlockNumber;
+
+            Func<RPC.Block, ulong, ulong, ulong, Task<RPC.Block>> findFromRight = async (block, targetTimestamp, left, right) =>
+            {
+                ulong blockTimestamp = block.Timestamp.ToUlong();
+                ulong blockNumber = block.Number.ToUlong();
+                ulong priorBlockNumber = blockNumber;
+                ulong count = 0;
+                while (true) 
+                {
+                    ulong noOfBlocks = (
+                                        (targetTimestamp >= blockTimestamp ? targetTimestamp - blockTimestamp : blockTimestamp - targetTimestamp)
+                                        + blockTime/2) / blockTime;
+                    if (noOfBlocks == 0) noOfBlocks = 1;
+                    if (targetTimestamp >= blockTimestamp) {
+                        blockNumber += noOfBlocks;
+                        if (blockNumber > right) blockNumber = right;
+                    }
+                    else {
+                        if (blockNumber > noOfBlocks)
+                            blockNumber -= noOfBlocks;
+                        else
+                        {
+                            if (blockNumber > left) blockNumber = left;
+                            else break;
+                        }
+                    }
+                    count += 1;
+                    block = await ethGetBlockByNumber.SendRequestAsync(new BlockParameter(blockNumber));
+                    blockTime = calcBlockTime(blockTimestamp, blockTimestamp = block.Timestamp.ToUlong(), noOfBlocks);
+                    //blockTimestamp = block.Timestamp.ToUlong();
+                    if (blockTimestamp >= targetTimestamp)
+                    {
+                        if (blockTimestamp - targetTimestamp <= 2 * blockTime)
+                            break;
+                    }
+                    else if (blockNumber >= right) {
+                        return null;
+                    }
+                }
+                while (blockNumber > 1 && blockTimestamp > targetTimestamp)
+                {
+                    //ulong noOfBlocks = (blockTimestamp - targetTimestamp) / blockTime;
+                    //if (noOfBlocks == 0) noOfBlocks = 1;
+                    //else if (noOfBlocks >= blockNumber) noOfBlocks = blockNumber - 1;
+                    ulong noOfBlocks = 1;
+                    count += 1;
+                    var priorBlock = await ethGetBlockByNumber.SendRequestAsync(new BlockParameter(blockNumber - noOfBlocks));
+                    var priorBlockTimestamp = priorBlock.Timestamp.ToUlong();
+                    if (priorBlockTimestamp < targetTimestamp)
+                    {
+                        if (targetTimestamp - priorBlockTimestamp < blockTimestamp - targetTimestamp)
+                            return priorBlock;
+                        else
+                            break;
+                    }
+                    else {
+                        blockNumber = priorBlock.Number.ToUlong();
+                        block = priorBlock;
+                        blockTimestamp = priorBlock.Timestamp.ToUlong();
+                    }
+                }
+                return block;
+            };
+
+            //var x = await BinarySearchAsync<RPC.Block, ulong>(
+            //                async (i) =>
+            //                {
+            //                    return await ethGetBlockByNumber.SendRequestAsync(new BlockParameter(i));
+            //                }
+            //                , (block, t) =>
+            //                {
+            //                    var ts = block.Timestamp.ToUlong();
+            //                    return (int)ts - (int)t;
+            //                }
+            //                , lBlockNumber, rBlockNumber, timestamp);
+
+            var closest = await findFromRight(midBlock, timestamp, lBlockNumber, rBlockNumber);
+            
+            if (closest != null)
+            {
+                return new Tuple<BigInteger, DateTime>(closest.Number.ToUlong(), UnixTimeToDateTime(closest.Timestamp.ToUlong()));
+            }
+            else if (rBlockNumber == latestBlockNumber)
+            {
+                return new Tuple<BigInteger, DateTime>(latestBlockNumber, UnixTimeToDateTime(latestBlockTimestamp));
+            }
+            else
+            {
+                return new Tuple<BigInteger, DateTime>(1, UnixTimeToDateTime((await ethGetBlockByNumber.SendRequestAsync(BlockParameter.CreateEarliest())).Timestamp.ToUlong()));
+            }
+        }
+        public static async Task<System.Numerics.BigInteger> GetLatestBlockNumber(string web3UrlEndpoint)
+        {
+            var web3 = new Nethereum.Web3.Web3(web3UrlEndpoint);
+            var lastBlockNumber = await web3.Eth.Blocks.GetBlockNumber.SendRequestAsync();
+            return lastBlockNumber;
+        }
         public static string GetNodeStatus(string web3UrlEndpoint)
         {
             try
@@ -3586,6 +4051,7 @@ namespace RO.Common3.Ethereum
                 throw;
             }
         }
+
         public static async Task<Tuple<StreamingWebSocketClient, EthLogsObservableSubscription>> ERC20TransferWatcher(string contractAddress, string wsEndpoint, Action<Dictionary<string, string>> transferUpdater, Action<string> logger, Action<string> busyLogger)
         {
             try
@@ -3643,6 +4109,856 @@ namespace RO.Common3.Ethereum
                 return null;
             }
         }
+        public static string CreateContractInterfaceCode(string contractAbi, string interfaceName, bool withSig = false, bool expandstruct = false)
+        {
+            var functionDef = GetFunctionDef(contractAbi, expandstruct);
+            var eventDef = GetEventDef(contractAbi, expandstruct);
+            var constructorDef = GetConstructorDef(interfaceName, contractAbi, expandstruct);
+
+            string solidityCode = string.Format(
+                    (!expandstruct
+                        ? "interface {0} {{\r\n\r\n{5}\r\n\r\n//constructor\r\n//{4}\r\n\r\n// functions\r\n{1}\r\n\r\n// transactions\r\n{2}\r\n\r\n//events\r\n{3}\r\n}}"
+                        : "\r\n//constructor\r\n{4}\r\n\r\n// functions\r\n{1}\r\n\r\n// transactions\r\n{2}\r\n\r\n//events\r\n{3}\r\n"
+                        ),
+                    string.IsNullOrEmpty(interfaceName) ? "IChangeme" : interfaceName,
+                    string.Join("\r\n", functionDef.Where(f => f.Value.Constant).OrderBy(f => f.Key).Select(f => "function " + f.Key + ";" + (withSig ? " //sig:0x" + f.Value.Sha3Signature : "")).ToArray()),
+                    string.Join("\r\n", functionDef.Where(f => !f.Value.Constant).OrderBy(f => f.Key).Select(f => "function " + f.Key + ";" + (withSig ? " //sig:0x" + f.Value.Sha3Signature : "")).ToArray()),
+                    string.Join("\r\n", eventDef.OrderBy(evt => evt.Key).Select(evt => "event " + evt.Key + ";" + (withSig ? " //topic:0x" + evt.Value.Sha3Signature : "")).ToArray()),
+                    string.Join("\r\n", constructorDef.Select(c => c.Key).ToArray()) + (constructorDef.Keys.Count > 0 ? ";" : ""),
+                    string.Join("\r\n", GetStructDef(contractAbi))
+                    );
+            return solidityCode;
+        }
+        public static async Task<Dictionary<BigInteger, DateTime>> GetBlockTimestampsAsync(string rpcEndpointUrl, IEnumerable<BigInteger> blocks)
+        {
+            Dictionary<BigInteger, DateTime> blockTimestamp;
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+            string chainId = await RO.Common3.Ethereum.Ethereum.GetEthChainIdAsync(rpcEndpointUrl);
+            lock (ChainBlockTimestamp)
+            {
+                if (!ChainBlockTimestamp.ContainsKey(chainId))
+                {
+
+                    blockTimestamp = new Dictionary<BigInteger, DateTime>();
+                    ChainBlockTimestamp[chainId] = blockTimestamp;
+                }
+                else
+                {
+                    blockTimestamp = ChainBlockTimestamp[chainId];
+                }
+            }
+            var newBlocks = blocks.Where(blockNumber => !blockTimestamp.ContainsKey(blockNumber));
+
+            var getTimestamps = newBlocks.Select(blockNumber => roEthereum.GetBlockTimestampAsync((ulong)blockNumber, web3)).ToArray();
+            await Task.WhenAll(getTimestamps);
+            int ii = 0;
+            foreach (var b in newBlocks)
+            {
+                blockTimestamp[b] = getTimestamps[ii].Result;
+                ii += 1;
+            }
+            return blockTimestamp;
+        }
+        public static async Task<Dictionary<string, Transaction>> GetTransactionsAsync(string rpcEndpointUrl, IEnumerable<string> txHashes, bool withReceipts = false)
+        {
+            Dictionary<string, Transaction> transactions;
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+            string chainId = await RO.Common3.Ethereum.Ethereum.GetEthChainIdAsync(rpcEndpointUrl);
+            lock (ChainTransactions)
+            {
+                if (!ChainTransactions.ContainsKey(chainId))
+                {
+
+                    transactions = new Dictionary<string, Transaction>();
+                    ChainTransactions[chainId] = transactions;
+                }
+                else
+                {
+                    transactions = ChainTransactions[chainId];
+                }
+            }
+            var newTxns = txHashes.Where(txHash => !transactions.ContainsKey(txHash));
+            var getTxns = newTxns.Select(txHash => roEthereum.GetTransactionAsync(txHash, web3)).ToArray();
+            await Task.WhenAll(getTxns);
+            int ii = 0;
+            foreach (var b in newTxns)
+            {
+                transactions[b] = getTxns[ii].Result;
+                ii += 1;
+            }
+            return transactions;
+        }
+        public static async Task<Dictionary<string, Nethereum.RPC.Eth.DTOs.TransactionReceipt>> GetTransactionReceiptsAsync(string rpcEndpointUrl, IEnumerable<string> txHashes)
+        {
+            Dictionary<string, Nethereum.RPC.Eth.DTOs.TransactionReceipt> receipts;
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+            string chainId = await RO.Common3.Ethereum.Ethereum.GetEthChainIdAsync(rpcEndpointUrl);
+            lock (ChainTransactionReceipts)
+            {
+                if (!ChainTransactionReceipts.ContainsKey(chainId))
+                {
+
+                    receipts = new Dictionary<string, Nethereum.RPC.Eth.DTOs.TransactionReceipt>();
+                    ChainTransactionReceipts[chainId] = receipts;
+                }
+                else
+                {
+                    receipts = ChainTransactionReceipts[chainId];
+                }
+            }
+            var newTxns = txHashes.Where(txHash => !receipts.ContainsKey(txHash));
+            var getTxnReceipts = newTxns.Select(txHash => roEthereum.GetTransactionReceiptAsync(txHash, web3)).ToArray();
+            await Task.WhenAll(getTxnReceipts);
+            int ii = 0;
+            foreach (var b in newTxns)
+            {
+                receipts[b] = getTxnReceipts[ii].Result;
+                ii += 1;
+            }
+            return receipts;
+        }
+        public static Dictionary<BigInteger, DateTime> UpdChainBlockTimestamp(string chainId, IEnumerable<Tuple<BigInteger, DateTime>> blockTimestamps, bool replace = true)
+        {
+            lock (ChainBlockTimestamp)
+            {
+                Dictionary<BigInteger, DateTime> cachedBlockTimestamps;
+                if (ChainBlockTimestamp.ContainsKey(chainId))
+                {
+                    cachedBlockTimestamps = ChainBlockTimestamp[chainId];
+                }
+                else
+                {
+                    cachedBlockTimestamps = new Dictionary<BigInteger, DateTime>();
+                    ChainBlockTimestamp[chainId] = cachedBlockTimestamps;
+                }
+                foreach (var b in blockTimestamps)
+                {
+                    if (replace || !cachedBlockTimestamps.ContainsKey(b.Item1))
+                    {
+                        cachedBlockTimestamps[b.Item1] = b.Item2;
+                    }
+                }
+                return cachedBlockTimestamps;
+            }
+        }
+
+        #region MultiSigWallet(Gnosis)
+        public static async Task<List<BigInteger>> GetPendingMultiSigConfirmations(string rpcEndpointUrl, string multiSigWalletAddress, string account, BlockParameter fromBlock = null, BlockParameter toBlock = null)
+        {
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+            var submissionEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmissionEventDTO>(multiSigWalletAddress);
+            var filterAllSubmissionEvent = submissionEventHandler.CreateFilterInput(fromBlock, toBlock);
+            var submissionEvents = submissionEventHandler.GetAllChangesAsync(filterAllSubmissionEvent);
+
+            var confirmationEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.ConfirmationEventDTO>(multiSigWalletAddress);
+            var filterAllMyConfirmationEvent = confirmationEventHandler.CreateFilterInput(account, fromBlock, toBlock);
+            var myConfirmationEvents = confirmationEventHandler.GetAllChangesAsync(filterAllMyConfirmationEvent);
+
+            var tasks = new List<Task>() { 
+                submissionEvents,
+                myConfirmationEvents,
+            };
+            Dictionary<BigInteger, DateTime> blocks = new Dictionary<BigInteger, DateTime>();
+            HashSet<string> txHashes = new HashSet<string>();
+
+            await Task.WhenAll(tasks);
+            foreach (var x in submissionEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+            foreach (var x in myConfirmationEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            var blockNumbers = blocks.Keys.ToArray();
+            var lastBlockNumber = blockNumbers.Length > 0 ? blockNumbers.Max() : 0;
+            Dictionary<BigInteger, DateTime> blockTimestamp = await GetBlockTimestampsAsync(rpcEndpointUrl, blockNumbers);
+            var transactionInfos = await GetTransactionsAsync(rpcEndpointUrl, txHashes);
+            HashSet<BigInteger> txns = new HashSet<BigInteger>();
+            var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+
+            foreach (var e in submissionEvents.Result)
+            {
+                var txnId = e.Event.TransactionId;
+                txns.Add(txnId);
+            }
+            foreach (var e in myConfirmationEvents.Result)
+            {
+                var txnId = e.Event.TransactionId;
+                txns.RemoveWhere((x) => txnId == x);
+            }
+            return txns.ToList();
+        }
+        public static async Task<Tuple<BigInteger, Dictionary<BigInteger, List<Tuple<string, string>>>>> GetMultiSigTx(string rpcEndpointUrl, string multiSigWalletAddress, BlockParameter fromBlock = null, BlockParameter toBlock = null)
+        {
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+            var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+            var required = await multiSigWallet.RequiredQueryAsync();
+            var submissionEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmissionEventDTO>(multiSigWalletAddress);
+            var filterAllSubmissionEvent = submissionEventHandler.CreateFilterInput(fromBlock, toBlock);
+            var submissionEvents = submissionEventHandler.GetAllChangesAsync(filterAllSubmissionEvent);
+
+            var confirmationEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.ConfirmationEventDTO>(multiSigWalletAddress);
+            var filterAllMyConfirmationEvent = confirmationEventHandler.CreateFilterInput(fromBlock, toBlock);
+            var confirmationEvents = confirmationEventHandler.GetAllChangesAsync(filterAllMyConfirmationEvent);
+
+            var tasks = new List<Task>() { 
+                submissionEvents,
+                confirmationEvents,
+            };
+            Dictionary<BigInteger, DateTime> blocks = new Dictionary<BigInteger, DateTime>();
+            HashSet<string> txHashes = new HashSet<string>();
+
+            await Task.WhenAll(tasks);
+            foreach (var x in submissionEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+            foreach (var x in confirmationEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            var blockNumbers = blocks.Keys.ToArray();
+            var lastBlockNumber = blockNumbers.Length > 0 ? blockNumbers.Max() : 0;
+            Dictionary<BigInteger, DateTime> blockTimestamp = await GetBlockTimestampsAsync(rpcEndpointUrl, blockNumbers);
+            var transactionInfos = await GetTransactionsAsync(rpcEndpointUrl, txHashes);
+            Dictionary<BigInteger, List<Tuple<string, string>>> txns = new Dictionary<BigInteger, List<Tuple<string, string>>>();
+
+            foreach (var e in submissionEvents.Result)
+            {
+                var txnId = e.Event.TransactionId;
+                txns[txnId] = new List<Tuple<string, string>>();
+            }
+
+            foreach (var e in confirmationEvents.Result)
+            {
+                var txnId = e.Event.TransactionId;
+                var confirmedBy = e.Event.Sender;
+                var txHash = e.Log.TransactionHash;
+                List<Tuple<string, string>> confirmations = txns[txnId];
+                confirmations.Add(new Tuple<string, string>(confirmedBy, txHash));
+            }
+            return new Tuple<BigInteger, Dictionary<BigInteger, List<Tuple<string, string>>>>(required, txns);
+        }
+
+        public static async Task<Tuple<BigInteger, Dictionary<BigInteger, List<Tuple<string, string>>>>> GetMultiSigSubmissions(string rpcEndpointUrl, string multiSigWalletAddress, BlockParameter fromBlock = null, BlockParameter toBlock = null)
+        {
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+            var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+            var required = await multiSigWallet.RequiredQueryAsync();
+            var submissionEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmissionEventDTO>(multiSigWalletAddress);
+            var filterAllSubmissionEvent = submissionEventHandler.CreateFilterInput(fromBlock, toBlock);
+            var submissionEvents = submissionEventHandler.GetAllChangesAsync(filterAllSubmissionEvent);
+
+            var tasks = new List<Task>() { 
+                submissionEvents,
+            };
+            Dictionary<BigInteger, DateTime> blocks = new Dictionary<BigInteger, DateTime>();
+            HashSet<string> txHashes = new HashSet<string>();
+
+            await Task.WhenAll(tasks);
+            foreach (var x in submissionEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            var blockNumbers = blocks.Keys.ToArray();
+            var lastBlockNumber = blockNumbers.Length > 0 ? blockNumbers.Max() : 0;
+            Dictionary<BigInteger, DateTime> blockTimestamp = await GetBlockTimestampsAsync(rpcEndpointUrl, blockNumbers);
+            var transactionInfos = await GetTransactionsAsync(rpcEndpointUrl, txHashes);
+            Dictionary<BigInteger, List<Tuple<string, string>>> txns = new Dictionary<BigInteger, List<Tuple<string, string>>>();
+
+            foreach (var e in submissionEvents.Result)
+            {
+                var txnId = e.Event.TransactionId;
+                txns[txnId] = new List<Tuple<string, string>>();
+            }
+
+            return new Tuple<BigInteger, Dictionary<BigInteger, List<Tuple<string, string>>>>(required, txns);
+        }
+        public static async Task<Tuple<BigInteger, List<Tuple<BigInteger, string, bool, string, DateTime, BigInteger>>>> GetMultiSigConfirmations(string rpcEndpointUrl, string multiSigWalletAddress, BigInteger? txnId = null, BlockParameter fromBlock = null, BlockParameter toBlock = null)
+        {
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+            var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+            var requiredSignature = multiSigWallet.RequiredQueryAsync();
+            var confirmationEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.ConfirmationEventDTO>(multiSigWalletAddress);
+            var filterAllConfirmationEvent = confirmationEventHandler.CreateFilterInput((string)null, txnId, fromBlock, toBlock);
+            var confirmationEvents = confirmationEventHandler.GetAllChangesAsync(filterAllConfirmationEvent);
+
+            var revocationEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.RevocationEventDTO>(multiSigWalletAddress);
+            var filterAllRevocationEvent = revocationEventHandler.CreateFilterInput((string)null, txnId, fromBlock, toBlock);
+            var revocationEvents = revocationEventHandler.GetAllChangesAsync(filterAllRevocationEvent);
+
+            var tasks = new List<Task>() { 
+                requiredSignature,
+                confirmationEvents,
+                revocationEvents,
+            };
+            Dictionary<BigInteger, DateTime> blocks = new Dictionary<BigInteger, DateTime>();
+            HashSet<string> txHashes = new HashSet<string>();
+
+            await Task.WhenAll(tasks);
+            foreach (var x in confirmationEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+            foreach (var x in revocationEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            var blockNumbers = blocks.Keys.ToArray();
+            var lastBlockNumber = blockNumbers.Length > 0 ? blockNumbers.Max() : 0;
+            Dictionary<BigInteger, DateTime> blockTimestamp = await GetBlockTimestampsAsync(rpcEndpointUrl, blockNumbers);
+            var transactionInfos = await GetTransactionsAsync(rpcEndpointUrl, txHashes);
+            List<Tuple<BigInteger, string, bool, string, DateTime, BigInteger>> txns = new List<Tuple<BigInteger, string, bool, string, DateTime, BigInteger>>();
+
+            foreach (var e in confirmationEvents.Result)
+            {
+                var _txnId = e.Event.TransactionId;
+                var confirmedBy = e.Event.Sender;
+                var txHash = e.Log.TransactionHash;
+                var blockNumber = e.Log.BlockNumber;
+                txns.Add(new Tuple<BigInteger, string, bool, string, DateTime, BigInteger>(_txnId, confirmedBy, true, txHash, blockTimestamp[blockNumber], blockNumber));
+            }
+            foreach (var e in revocationEvents.Result)
+            {
+                var _txnId = e.Event.TransactionId;
+                var confirmedBy = e.Event.Sender;
+                var txHash = e.Log.TransactionHash;
+                var blockNumber = e.Log.BlockNumber;
+                txns.Add(new Tuple<BigInteger, string, bool, string, DateTime, BigInteger>(_txnId, confirmedBy, false, txHash, blockTimestamp[blockNumber], blockNumber));
+            }
+            return new Tuple<BigInteger, List<Tuple<BigInteger, string, bool, string, DateTime, BigInteger>>>(requiredSignature.Result, txns.ToList());
+        }
+        public static async Task<List<Tuple<BigInteger, bool, string, DateTime, BigInteger>>> GetMultiSigExecutions(string rpcEndpointUrl, string multiSigWalletAddress, BigInteger? txnId = null, BlockParameter fromBlock = null, BlockParameter toBlock = null)
+        {
+            Nethereum.Web3.Web3 web3 = new Nethereum.Web3.Web3(rpcEndpointUrl);
+
+            var executionEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.ExecutionEventDTO>(multiSigWalletAddress);
+            var filterAllExecutionEvent = executionEventHandler.CreateFilterInput(txnId, fromBlock, toBlock);
+            var executionEvents = executionEventHandler.GetAllChangesAsync(filterAllExecutionEvent);
+
+            var executionFailureEventHandler = web3.Eth.GetEvent<Contract.Contracts.MultiSigWallet.ContractDefinition.ExecutionFailureEventDTO>(multiSigWalletAddress);
+            var filterAllexecutionFailureEvent = executionFailureEventHandler.CreateFilterInput(txnId, fromBlock, toBlock);
+            var executionFailureEvents = executionFailureEventHandler.GetAllChangesAsync(filterAllexecutionFailureEvent);
+
+            var tasks = new List<Task>() { 
+                executionEvents,
+                executionFailureEvents,
+            };
+            Dictionary<BigInteger, DateTime> blocks = new Dictionary<BigInteger, DateTime>();
+            HashSet<string> txHashes = new HashSet<string>();
+
+            await Task.WhenAll(tasks);
+            foreach (var x in executionEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+            foreach (var x in executionFailureEvents.Result)
+            {
+                blocks[x.Log.BlockNumber] = DateTime.MinValue;
+            }
+
+            var roEthereum = new RO.Common3.Ethereum.Ethereum();
+            var blockNumbers = blocks.Keys.ToArray();
+            var lastBlockNumber = blockNumbers.Length > 0 ? blockNumbers.Max() : 0;
+            Dictionary<BigInteger, DateTime> blockTimestamp = await GetBlockTimestampsAsync(rpcEndpointUrl, blockNumbers);
+            var transactionInfos = await GetTransactionsAsync(rpcEndpointUrl, txHashes);
+            List<Tuple<BigInteger, bool, string, DateTime, BigInteger>> txns = new List<Tuple<BigInteger, bool, string, DateTime, BigInteger>>();
+            var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+
+            // always failure first
+            foreach (var e in executionFailureEvents.Result)
+            {
+                var _txnId = e.Event.TransactionId;
+                var txHash = e.Log.TransactionHash;
+                var blockNumber = e.Log.BlockNumber;
+                txns.Add(new Tuple<BigInteger, bool, string, DateTime, BigInteger>(_txnId, false, txHash, blockTimestamp[blockNumber], blockNumber));
+            }
+            foreach (var e in executionEvents.Result)
+            {
+                var _txnId = e.Event.TransactionId;
+                var txHash = e.Log.TransactionHash;
+                var blockNumber = e.Log.BlockNumber;
+                txns.Add(new Tuple<BigInteger, bool, string, DateTime, BigInteger>(_txnId, true, txHash, blockTimestamp[blockNumber], blockNumber));
+            }
+            return txns.ToList();
+        }
+
+        public static async Task<string> SubmitMultiSigTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, string destionationAddress, string hexData, EthTxOptions txOptions, bool allowPending = false)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                if (!allowPending)
+                {
+                    var currentTxn = await multiSigWallet.GetTransactionIdQueryAsync(
+                        destionationAddress,
+                        string.IsNullOrEmpty(hexData) ? null : Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(hexData));
+                    var hasPendingTx = currentTxn.TransactionId > 0 || currentTxn.IsTransaction;
+                    if (hasPendingTx)
+                    {
+                        throw new Exception(string.Format("there is already a pending multisig txn({0} for the same params({1}, {2})", currentTxn.TransactionId, destionationAddress, hexData));
+                    }
+                }
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction()
+                    {
+                        Destination = destionationAddress,
+                        Data = string.IsNullOrEmpty(hexData) ? null : Nethereum.Hex.HexConvertors.Extensions.HexByteConvertorExtensions.HexToByteArray(hexData),
+                    }, web3);
+                var submitTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction>();
+                var gas = await submitTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 2; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.SubmitTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> ConfirmMultiSigTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, BigInteger txnId, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.ConfirmTransactionFunction()
+                    {
+                        TransactionId = txnId
+                    }, web3);
+                var confirmTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.ConfirmTransactionFunction>();
+                var gas = await confirmTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.ConfirmTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> RevokeMultiSigTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, BigInteger txnId, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var txn = await multiSigWallet.TransactionsQueryAsync(txnId);
+                if (txn.Executed) throw new Exception(string.Format("{0} of MultiSigWallet {1} has already been executed", txnId, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.RevokeConfirmationFunction()
+                    {
+                        TransactionId = txnId
+                    }, web3);
+                var revokeTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.RevokeConfirmationFunction>();
+                var gas = await revokeTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.RevokeConfirmationRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> SubmitNewMultiSigTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, string destinationAddress, BigInteger value, string data, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction()
+                    {
+                        Destination = destinationAddress,
+                        Value = value,
+                        Data = string.IsNullOrEmpty(data) ? null : data.HexToByteArray()
+                    }, web3);
+                var submitTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction>();
+                var gas = await submitTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.SubmitTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> AddMultiSigOwnerTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, string ownerAddress, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                byte[] txData = (new Contract.Contracts.MultiSigWallet.ContractDefinition.AddOwnerFunction() { Owner = ownerAddress }).GetCallData();
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction()
+                    {
+                        Destination = multiSigWalletAddress,
+                        Value = 0,
+                        Data = txData
+                    }, web3);
+                var submitTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction>();
+                var gas = await submitTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.SubmitTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> RemoveMultiSigOwnerTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, string ownerAddress, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.RemoveOwnerFunction() { Owner = ownerAddress }.GetCallData();
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction()
+                    {
+                        Destination = multiSigWalletAddress,
+                        Value = 0,
+                        Data = txData
+                    }, web3);
+                var submitTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction>();
+                var gas = await submitTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.SubmitTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> ReplaceMultiSigOwnerTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, string oldOwnerAddress, string newOwnerAddress, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.ReplaceOwnerFunction() { FromAddress = oldOwnerAddress, NewOwner = newOwnerAddress }.GetCallData();
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction()
+                    {
+                        Destination = multiSigWalletAddress,
+                        Value = 0,
+                        Data = txData
+                    }, web3);
+                var submitTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction>();
+                var gas = await submitTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.SubmitTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> ChangeMultiSigRequirementTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, int requiredSigCount, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.ChangeRequirementFunction() { Required = requiredSigCount }.GetCallData();
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction()
+                    {
+                        Destination = multiSigWalletAddress,
+                        Value = 0,
+                        Data = txData
+                    }, web3);
+                var submitTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction>();
+                var gas = await submitTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.SubmitTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> ExecuteMultiSigTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, BigInteger txnId, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+
+                var txn = await multiSigWallet.TransactionsQueryAsync(txnId);
+                if (txn.Executed) throw new Exception(string.Format("{0} of MultiSigWallet {1} has already been executed", txnId, multiSigWalletAddress));
+                var isConfirmed = await multiSigWallet.IsConfirmedQueryAsync(txnId);
+                var hasConfirmed = await multiSigWallet.ConfirmationsQueryAsync(txnId, fromAddress);
+                if (!hasConfirmed) return await ConfirmMultiSigTx(web3, multiSigWalletAddress, txnId, txOptions);
+                if (!isConfirmed)
+                {
+                    throw new Exception(string.Format("{0} of MultiSigWallet {1} need other signer(s) to confirm, {2} has already confirmed it", txnId, multiSigWalletAddress, fromAddress));
+                }
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.ExecuteTransactionFunction()
+                    {
+                        TransactionId = txnId
+                    }, web3);
+                var confirmTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.ExecuteTransactionFunction>();
+                var gas = await confirmTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.ExecuteTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static async Task<string> RunMultiSigTx(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, BigInteger txnId, EthTxOptions txOptions)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                var fromAddress = txOptions.fromAccount.myAddress;
+                if (string.IsNullOrEmpty(fromAddress)) throw new Exception(string.Format("no from address specified for MultiSigWallet {1} tx", fromAddress, multiSigWalletAddress));
+
+                var isOwner = await multiSigWallet.IsOwnerQueryAsync(fromAddress);
+                if (!isOwner) throw new Exception(string.Format("{0} is not owner of MultiSigWallet {1}", fromAddress, multiSigWalletAddress));
+
+                var txn = await multiSigWallet.TransactionsQueryAsync(txnId);
+                if (txn.Executed) throw new Exception(string.Format("{0} of MultiSigWallet {1} has already been executed", txnId, multiSigWalletAddress));
+                var isConfirmed = await multiSigWallet.IsConfirmedQueryAsync(txnId);
+                var hasConfirmed = await multiSigWallet.ConfirmationsQueryAsync(txnId, fromAddress);
+                if (!hasConfirmed) return await ConfirmMultiSigTx(web3, multiSigWalletAddress, txnId, txOptions);
+                if (!isConfirmed)
+                {
+                    throw new Exception(string.Format("{0} of MultiSigWallet {1} need other signer(s) to confirm, {2} has already confirmed it", txnId, multiSigWalletAddress, fromAddress));
+                }
+                var callParams = txOptions.ApplyTo(
+                    new Contract.Contracts.MultiSigWallet.ContractDefinition.RunTransactionFunction
+                    {
+                        TransactionId = txnId
+                    }, web3);
+                var confirmTransaction = web3.Eth.GetContractTransactionHandler<Contract.Contracts.MultiSigWallet.ContractDefinition.RunTransactionFunction>();
+                var gas = await confirmTransaction.EstimateGasAsync(multiSigWalletAddress, callParams);
+                callParams.Gas = gas.Value * 4; // estimate gas can be wrong due to the try/catch double that
+                string txHash = await multiSigWallet.RunTransactionRequestAsync(callParams);
+                return txHash;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static Tuple<string, BigInteger, string, bool> MakeMultiSigTxData(string multiSigWalletAddress, string functionName, string txParams)
+        {
+            string[] _txParams = txParams.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+
+            Func<string, BigInteger, byte[], bool, Tuple<string, BigInteger, string, bool>> submitTrans = (destination, value, data, isCall) =>
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.SubmitTransactionFunction()
+                {
+                    Destination = destination,
+                    Value = value,
+                    Data = data
+                }.GetCallData();
+                return new Tuple<string, BigInteger, string, bool>(multiSigWalletAddress, value, txData.ToHex(true), isCall);
+                //return Newtonsoft.Json.JsonConvert.SerializeObject(new
+                //{
+                //    from = from,
+                //    to = multiSigWalletAddress,
+                //    data = txData.ToHex(true),
+                //    value = value
+                //});
+            };
+            if (functionName == "submitTransaction")
+            {
+                return submitTrans(_txParams[0].ToString(), System.Numerics.BigInteger.Parse(_txParams[1]), _txParams[2].HexToByteArray(), false);
+            }
+            else if (functionName == "confirmTransaction")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.ConfirmTransactionFunction
+                {
+                    TransactionId = System.Numerics.BigInteger.Parse(_txParams[0])
+                }.GetCallData();
+
+                return submitTrans(multiSigWalletAddress, 0, txData, false);
+            }
+            else if (functionName == "revokeConfirmation")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.RevokeConfirmationFunction
+                {
+                    TransactionId = System.Numerics.BigInteger.Parse(_txParams[0])
+                }.GetCallData();
+
+                return submitTrans(multiSigWalletAddress, 0, txData, false);
+            }
+            else if (functionName == "runTransaction")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.RunTransactionFunction
+                {
+                    TransactionId = System.Numerics.BigInteger.Parse(_txParams[0])
+                }.GetCallData();
+
+                return submitTrans(multiSigWalletAddress, 0, txData, false);
+            }
+            else if (functionName == "addOwner")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.AddOwnerFunction
+                {
+                    Owner = _txParams[0]
+                }.GetCallData();
+
+                return submitTrans(multiSigWalletAddress, 0, txData, false);
+            }
+            else if (functionName == "removeOwner")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.RemoveOwnerFunction
+                {
+                    Owner = _txParams[0]
+                }.GetCallData();
+                return submitTrans(multiSigWalletAddress, 0, txData, false);
+            }
+            else if (functionName == "replaceOwner")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.ReplaceOwnerFunction
+                {
+                    Owner = _txParams[0],
+                    NewOwner = _txParams[1]
+                }.GetCallData();
+                return submitTrans(multiSigWalletAddress, 0, txData, false);
+            }
+            else if (functionName == "changeRequirement")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.ChangeRequirementFunction
+                {
+                    Required = int.Parse(_txParams[0])
+                }.GetCallData();
+                return submitTrans(multiSigWalletAddress, 0, txData, false);
+            }
+            else if (functionName == "getOwners")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.GetOwnersFunction
+                {
+                }.GetCallData();
+                return submitTrans(multiSigWalletAddress, 0, txData, true);
+            }
+            else if (functionName == "required")
+            {
+                byte[] txData = new Contract.Contracts.MultiSigWallet.ContractDefinition.RequiredFunction
+                {
+                }.GetCallData();
+                return submitTrans(multiSigWalletAddress, 0, txData, true);
+            }
+
+            throw new Exception(string.Format("not a supported multi-sig transaction {0}", functionName));
+        }
+        public static async Task<Tuple<List<string>, int>> GetMultiSigSetup(Nethereum.Web3.Web3 web3, string multiSigWalletAddress)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                var owners = multiSigWallet.GetOwnersQueryAsync();
+                var required = multiSigWallet.RequiredQueryAsync();
+                await Task.WhenAll(new Task[] {
+                    owners, required
+                });
+                return new Tuple<List<string>, int>(owners.Result, int.Parse(required.Result.ToString()));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        public static async Task<List<string>> GetMultiSigConfirmedAddress(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, BigInteger txnId)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                return await multiSigWallet.GetConfirmationsQueryAsync(txnId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public static async Task<Tuple<string, BigInteger, string, bool>> GetMultiSigTransaction(Nethereum.Web3.Web3 web3, string multiSigWalletAddress, BigInteger txnId)
+        {
+            try
+            {
+                var multiSigWallet = new Contract.Contracts.MultiSigWallet.MultiSigWalletService(web3, multiSigWalletAddress);
+                var tx = await multiSigWallet.TransactionsQueryAsync(txnId);
+                return new Tuple<string, BigInteger, string, bool>(tx.Destination, tx.Value, tx.Data.ToHex(true), tx.Executed);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public static Tuple<string, string> GetMultiSigContractInfo()
+        {
+            var byteCode = Contract.Contracts.MultiSigWallet.ContractDefinition.MultiSigWalletDeployment.BYTECODE;
+            var abi = Contract.Contracts.MultiSigWallet.MultiSigWalletService.ABI;
+            return new Tuple<string, string>(abi, byteCode);
+        }
+
+        #endregion 
 
     }
 

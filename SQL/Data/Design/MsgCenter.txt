@@ -739,3 +739,8 @@
 882~@~69~@~114~@~Le mot de passe doit être composé de 8 à 32 caractères contenant au moins une majuscule, une minuscule et un caractère numérique.
 883~@~72~@~114~@~Veuillez supprimer la colonne de recherche "% 1s" de l'écran de référencement "% 2s" et réessayer.
 884~@~73~@~114~@~Veuillez supprimer la colonne des critères d'écran "% 1s" de l'écran de référence "% 2s" et réessayer.
+885~@~2~@~2~@~Veuillez ne pas spécifier de colonne ou de bouton spécifique pour cet événement et réessayer.
+886~@~4~@~2~@~Veuillez ne spécifier qu'une colonne pour cet événement et réessayer.
+887~@~11~@~2~@~Veuillez supprimer la colonne d'écran « %1s » de l'écran de référence « %2s » et réessayez.
+888~@~72~@~2~@~Veuillez supprimer la colonne de recherche « %1s » de l'écran de référence « %2s » et réessayer.
+889~@~73~@~2~@~Veuillez supprimer la colonne de critères d'écran « %1s » de l'écran de référence « %2s » et réessayez.

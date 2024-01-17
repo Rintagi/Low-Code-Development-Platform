@@ -83,7 +83,10 @@ namespace RO.Rule3
             //    Robot.ModifyCsproj(true, clientProgramPath + @"Web.csproj", @"reports\" + programName + "Module.ascx.cs", clientFrwork, string.Empty);
             //}
 			FileInfo fi = null;
-			fi = new FileInfo(clientProgramPath + programName + ".aspx"); if (fi.Exists) {fi.Delete();}
+            // normalize expected value
+            clientProgramPath = clientProgramPath.EndsWith("\\") || clientProgramPath.EndsWith("/") ? clientProgramPath : clientProgramPath + "\\";
+            
+            fi = new FileInfo(clientProgramPath + programName + ".aspx"); if (fi.Exists) { fi.Delete(); }
 			fi = new FileInfo(clientProgramPath + programName + ".aspx.cs"); if (fi.Exists) {fi.Delete();}
 			fi = new FileInfo(clientProgramPath + @"reports\" + programName + "Module.ascx"); if (fi.Exists) {fi.Delete();}
 			fi = new FileInfo(clientProgramPath + @"reports\" + programName + "Module.ascx.cs"); if (fi.Exists) {fi.Delete();}
@@ -228,12 +231,25 @@ namespace RO.Rule3
         private void CreateProgC(string GenPrefix, DataRow dw, Int32 reportId, string reportTitle, string dbAppDatabase, DataView dvCri, DataView dvObj, DataView dvGrp, CurrPrj CPrj, CurrSrc CSrc, string clientProgramPath, string clientFrwork)
 		{
 			StreamWriter sw = null;
-			// Create rdl report format for SQL Reporting Service:
+            // normalize expected value
+            clientProgramPath = clientProgramPath.EndsWith("\\") || clientProgramPath.EndsWith("/") ? clientProgramPath : clientProgramPath + "\\";
+
+            // Create rdl report format for SQL Reporting Service:
 			if (dw["ReportTypeCd"].ToString() == "S")
-			{
-				sw = new StreamWriter(clientProgramPath + @"reports\" + dw["ProgramName"].ToString() + "Report.rdl");
-				try { sw.Write(MakeRdl(GenPrefix, dw, reportId, dbAppDatabase, dvCri, dvObj, CSrc)); }
-				finally { sw.Close(); }
+			{   
+                try {
+				    sw = new StreamWriter(clientProgramPath + @"reports\" + dw["ProgramName"].ToString() + "Report.rdl");
+                    sw.Write(MakeRdl(GenPrefix, dw, reportId, dbAppDatabase, dvCri, dvObj, CSrc)); 
+                }
+                catch (Exception ex)
+                {
+                    if (ex is System.IO.IOException) {
+                        var message = string.Format("{0}, check Client Tier Path configuration({1})", ex.Message, clientProgramPath);
+                        throw new Exception(message,ex);
+                    }
+                    else throw;
+                }
+				finally { if (sw != null) sw.Close(); }
 			}
 			else if ("C,G,X".IndexOf(dw["ReportTypeCd"].ToString()) >= 0)
 			{
@@ -1842,6 +1858,7 @@ namespace RO.Rule3
 			sb.Append("			DataRow dr = ds.Tables[\"Dt" + dw["ProgramName"].ToString() + "In\"].NewRow();" + Environment.NewLine);
             sb.Append("			TimeZoneInfo tzinfo = Session[\"Cache:tzInfo\"] as TimeZoneInfo ?? TimeZoneInfo.Local;" + Environment.NewLine);
             sb.Append("			dr[\"tzInfo\"] = tzinfo.StandardName;" + Environment.NewLine);
+            sb.Append("			dr[\"tzUtcOffset\"] = string.Format(\"{0:+00;-00;+00}:{1:00}\", tzinfo.BaseUtcOffset.Hours, tzinfo.BaseUtcOffset.Minutes);" + Environment.NewLine);
             sb.Append(Environment.NewLine);
             bool hasMultiSelect = dvCri.Table.AsEnumerable().Where(dr => dr["DisplayName"].ToString() == "ListBox").Count() > 0;
             bool hasAutoListBox = dvCri.Table.AsEnumerable().Where(dr => dr["DisplayMode"].ToString() == "AutoListBox").Count() > 0;
@@ -1895,7 +1912,10 @@ namespace RO.Rule3
 				{
 					if ("Calendar".IndexOf(drv["DisplayName"].ToString()) >= 0)
 					{
-						sb.Append("			if (c" + drv["ColumnName"].ToString() + ".SelectedDate > DateTime.Parse(\"0001-01-01\")) {dr[\"" + drv["ColumnName"].ToString() + "\"] = c" + drv["ColumnName"].ToString() + ".SelectedDate;}" + Environment.NewLine);
+                        if ("CalendarUTC".IndexOf(drv["DisplayMode"].ToString()) >= 0)
+						    sb.Append("			if (c" + drv["ColumnName"].ToString() + ".SelectedDate > DateTime.Parse(\"0001-01-01\")) {dr[\"" + drv["ColumnName"].ToString() + "\"] = base.SetDateTimeUTC(c" + drv["ColumnName"].ToString() + ".SelectedDate.ToString(\"yyyy/MM/dd\"), !bUpdate);}" + Environment.NewLine);
+                        else
+                            sb.Append("			if (c" + drv["ColumnName"].ToString() + ".SelectedDate > DateTime.Parse(\"0001-01-01\")) {dr[\"" + drv["ColumnName"].ToString() + "\"] = c" + drv["ColumnName"].ToString() + ".SelectedDate.ToString(\"yyyy/MM/dd\");}" + Environment.NewLine);
 					}
 					else
 					{
@@ -2120,7 +2140,9 @@ namespace RO.Rule3
 				sb.Append("			cViewer.ReportSource = rp;" + Environment.NewLine);
 				sb.Append("			if (cViewerWidth.Value != string.Empty) { cViewer.Width = Unit.Pixel(int.Parse(cViewerWidth.Value)); }" + Environment.NewLine);
 				sb.Append("			cViewer.Visible = true;" + Environment.NewLine);
+                sb.Append("#pragma warning disable 0612 // Type or member is obsolete" + Environment.NewLine);
                 sb.Append("			cViewer.DisplayGroupTree = false;" + Environment.NewLine);
+                sb.Append("#pragma warning restore 0612 // Type or member is obsolete" + Environment.NewLine);
                 sb.Append("			if (sendToPrinter) { rp.PrintToPrinter(1,false,0,0); }" + Environment.NewLine);
                 sb.Append("			if (eExport == exportTo.TXT)" + Environment.NewLine);
 				sb.Append("			{" + Environment.NewLine);
@@ -2861,6 +2883,7 @@ namespace RO.Rule3
 			sb.Append("		{" + Environment.NewLine);
 			sb.Append("			DataColumnCollection columns = dt.Columns;" + Environment.NewLine);
             sb.Append("			columns.Add(\"tzInfo\", typeof(string));" + Environment.NewLine);
+            sb.Append("			columns.Add(\"tzUtcOffset\", typeof(string));" + Environment.NewLine);
             foreach (DataRowView drv in dvCri)
 			{
 				sb.Append("			columns.Add(\"" + drv["ColumnName"].ToString() + "\", typeof(" + drv["DataTypeSysName"].ToString() + "));" + Environment.NewLine);

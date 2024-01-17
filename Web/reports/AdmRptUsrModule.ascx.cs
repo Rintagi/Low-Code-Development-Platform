@@ -31,6 +31,7 @@ namespace RO.Common3.Data
 		{
 			DataColumnCollection columns = dt.Columns;
 			columns.Add("tzInfo", typeof(string));
+			columns.Add("tzUtcOffset", typeof(string));
 			columns.Add("Active", typeof(String));
 			columns.Add("UsrGroupId", typeof(Int32));
 			columns.Add("CompanyId", typeof(Int32));
@@ -402,6 +403,7 @@ namespace RO.Web
 			DataRow dr = ds.Tables["DtAdmRptUsrIn"].NewRow();
 			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
 			dr["tzInfo"] = tzinfo.StandardName;
+			dr["tzUtcOffset"] = string.Format("{0:+00;-00;+00}:{1:00}", tzinfo.BaseUtcOffset.Hours, tzinfo.BaseUtcOffset.Minutes);
 
 			if (cActive.SelectedIndex >= 0 && cActive.SelectedValue != string.Empty) {dr["Active"] = cActive.SelectedValue;}
 			if (IsPostBack && cActive.SelectedValue == string.Empty) { throw new ApplicationException("Criteria column: Active should not be empty. Please rectify and try again.");};
@@ -537,7 +539,9 @@ namespace RO.Web
 			cViewer.ReportSource = rp;
 			if (cViewerWidth.Value != string.Empty) { cViewer.Width = Unit.Pixel(int.Parse(cViewerWidth.Value)); }
 			cViewer.Visible = true;
+#pragma warning disable 0612 // Type or member is obsolete
 			cViewer.DisplayGroupTree = false;
+#pragma warning restore 0612 // Type or member is obsolete
 			if (sendToPrinter) { rp.PrintToPrinter(1,false,0,0); }
 			if (eExport == exportTo.TXT)
 			{

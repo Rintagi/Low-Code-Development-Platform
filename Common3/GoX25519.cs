@@ -888,12 +888,8 @@ namespace GoX25519
         private static long Load3(IReadOnlyList<byte> bytes)
         {
             long r = bytes[0];
-#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
-            r |= bytes[1] << 8;
-#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
-#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
-            r |= bytes[2] << 16;
-#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
+            r |= ((uint) bytes[1]) << 8;
+            r |= ((uint) bytes[2]) << 16;
             return r;
         }
 

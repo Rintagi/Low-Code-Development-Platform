@@ -323,3 +323,6 @@
 1509~@~FK_CompPref_Company~@~1329~@~7694~@~132~@~1158
 1510~@~FK_CompPref_Systems~@~1329~@~7697~@~45~@~367
 1511~@~FK_Systems_Systems~@~45~@~7702~@~45~@~7702
+1512~@~FK_TemplatePrm_CtEveryone~@~1331~@~7707~@~229~@~1878
+1513~@~FK_TemplatePrm_VwPermKey~@~1331~@~7704~@~230~@~1882
+1514~@~FK_TemplatePrm_VwPermKeyRow~@~1331~@~7703~@~1299~@~7405

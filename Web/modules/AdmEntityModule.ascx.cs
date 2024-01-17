@@ -43,6 +43,7 @@ namespace RO.Common3.Data
 			columns.Add("EntityName199", typeof(string));
 			columns.Add("EntityCode199", typeof(string));
 			columns.Add("DeployPath199", typeof(string));
+			columns.Add("LicenseFile199", typeof(string));
 			return dt;
 		}
 	}
@@ -268,8 +269,13 @@ namespace RO.Web
 
 		private void CheckAuthentication(bool pageLoad)
 		{
-          if (IsCronInvoked()) AnonymousLogin();
-          else CheckAuthentication(pageLoad, true);
+			if (IsCronInvoked())
+			{
+				AnonymousLogin();
+				LCurr.SystemId = 3;
+				LCurr.DbId = 3;
+			}
+			else CheckAuthentication(pageLoad, true);
 		}
 
 		private void SetButtonHlp()
@@ -560,6 +566,7 @@ namespace RO.Web
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + (char)9);}
 						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					foreach (DataRowView drv in dv)
@@ -568,6 +575,7 @@ namespace RO.Web
 						if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["EntityName199"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["EntityCode199"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["DeployPath199"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
+						if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append("\"" + drv["LicenseFile199"].ToString().Replace("\"","\"\"") + "\"" + (char)9);}
 						sb.Append(Environment.NewLine);
 					}
 					bExpNow.Value = "Y"; Session["ExportFnm"] = "AdmEntity.csv"; Session["ExportStr"] = (Config.ExportExcelCSV ? "sep=\t\n": "") + sb.Replace("\r\n","\n");
@@ -620,6 +628,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {iColCnt = iColCnt + 1;}
 					//Create Header
 					sb.Append(@"\trowd \irow0\irowband0\lastrow \ts15\trgaph108\trleft-108\trbrdrt\brdrs\brdrw10 \trbrdrl\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrh\brdrs\brdrw10 \trbrdrv\brdrs\brdrw10 ");
 					sb.Append(@"\trftsWidth1\trftsWidthB3\trautofit1\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\tblrsid2981395\tbllkhdrrows\tbllklastrow\tbllkhdrcols\tbllklastcol ");
@@ -633,6 +642,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[2]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[3]["ColumnHeader"].ToString() + @"\cell ");}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[4]["ColumnHeader"].ToString() + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(dtAu.Rows[5]["ColumnHeader"].ToString() + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append(@"\b0");
 					sb.Append("\r\n");
@@ -659,6 +669,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 					if (dtAu.Rows[2]["ColExport"].ToString() == "Y") {sb.Append(drv["EntityName199"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[3]["ColExport"].ToString() == "Y") {sb.Append(drv["EntityCode199"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					if (dtAu.Rows[4]["ColExport"].ToString() == "Y") {sb.Append(drv["DeployPath199"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
+					if (dtAu.Rows[5]["ColExport"].ToString() == "Y") {sb.Append(drv["LicenseFile199"].ToString().Replace("\r\n",@"\par ") + @"\cell ");}
 					sb.Append(@"}");
 					sb.Append("\r\n");
 					sb.Append(@"\pard \ql \li0\ri0\widctlpar\intbl\aspalpha\aspnum\adjustright\rin0\lin0 {");
@@ -1239,7 +1250,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			    else if (drv["DisplayName"].ToString() == "Calendar")
 			    {
 					cCalendar = (System.Web.UI.WebControls.Calendar)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = cCalendar.SelectedDate; }
+					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = drv["DisplayMode"].ToString() == "CalendarUTC" ? base.SetDateTimeUTC(cCalendar.SelectedDate.ToString("yyyy/MM/dd"), !bUpdate) : cCalendar.SelectedDate.ToString("yyyy/MM/dd"); }
 			    }
 			    else if (drv["DisplayName"].ToString() == "ComboBox")
 			    {
@@ -1380,8 +1391,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			DataTable dt = (DataTable)Session[KEY_dtAdmEntityGrid];
 			if (cAdmEntityGrid.EditIndex < 0 || (dt != null && UpdateGridRow(sender, new CommandEventArgs("Save", ""))))
 			{
-				DataTable dtSystems = (DataTable)Session[KEY_dtSystems];
-				Session[KEY_sysConnectionString] = Config.GetConnStr(dtSystems.Rows[cSystemId.SelectedIndex]["dbAppProvider"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["ServerName"].ToString(), dtSystems.Rows[cSystemId.SelectedIndex]["dbDesDatabase"].ToString(), "", dtSystems.Rows[cSystemId.SelectedIndex]["dbAppUserId"].ToString());
+				Session[KEY_sysConnectionString] = SysConnectStr(byte.Parse(cSystemId.SelectedValue));
 				Session[KEY_sysConnectionString + "Pwd"] = base.AppPwd(base.LCurr.DbId);
 				GetCriteria(GetScrCriteria());
 				PopAdmEntity103List(sender, e, false, null);
@@ -1581,6 +1591,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 						}
 					}
 					if (!(bFound && bUnique) && MatchCd != "1") {drv[CNam] = "Invalid>" + drv[CNam].ToString(); bErrNow.Value = "Y"; PreMsgPopup("Import has invalid data, please check for \"Invalid>\", rectify and try again.");}
+				}
+				if (!bFound && !string.IsNullOrEmpty(drv[CKey].ToString()))
+				{
+					drv[CNam] = "Invalid>" + drv[CKey].ToString(); bErrNow.Value = "Y"; PreMsgPopup("Import has invalid data, please check for \"Invalid>\", rectify and try again.");
+				    drv[CKey] = null;
 				}
 			}
 		}
@@ -1848,6 +1863,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 				cc = ((WebControl)lvi.FindControl("cDeployPath199"));
 				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
+				cc = ((WebControl)lvi.FindControl("cLicenseFile199"));
+				if ((cc.Attributes["OnChange"] == null || cc.Attributes["OnChange"].IndexOf("ChkPgDirty") < 0) && cc.Visible && cc.Enabled) {cc.Attributes["OnChange"] += "document.getElementById('" + bPgDirty.ClientID + "').value='Y'; ChkPgDirty();";}
 		}
 
 		protected void cAdmEntityGrid_OnItemDataBound(object sender, ListViewItemEventArgs e)
@@ -1959,6 +1976,13 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			cAdmEntityGrid_OnSorting(sender, new ListViewSortEventArgs("DeployPath199", SortDirection.Ascending));
 		}
 
+		protected void cLicenseFile199hl_Click(object sender, System.EventArgs e)
+		{
+			if (Session[KEY_lastSortCol] == null || (string)Session[KEY_lastSortCol] != "5") { Session.Remove(KEY_lastSortUrl); }
+			Session[KEY_lastSortTog] = "Y"; Session[KEY_lastSortCol] = "5"; Session[KEY_lastSortExp] = "LicenseFile199";Session[KEY_lastSortImg] = "cLicenseFile199hi";
+			cAdmEntityGrid_OnSorting(sender, new ListViewSortEventArgs("LicenseFile199", SortDirection.Ascending));
+		}
+
 		protected void cAdmEntityGrid_OnItemEditing(object sender, ListViewEditEventArgs e)
 		{
 			DataTable dt = (DataTable)Session[KEY_dtAdmEntityGrid];
@@ -2007,6 +2031,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (ml != null) { ml.Text = ColumnHeaderText(3); }
 		    ml = lvi.FindControl("cDeployPath199ml") as Label;
 		    if (ml != null) { ml.Text = ColumnHeaderText(4); }
+		    ml = lvi.FindControl("cLicenseFile199ml") as Label;
+		    if (ml != null) { ml.Text = ColumnHeaderText(5); }
 		}
 
 		protected void GridFill(ListViewItem lvi, DataTable dt, DataRow dr, bool bInsert)
@@ -2031,6 +2057,11 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			if (tb != null)
 			{
 				if (tb.Text != string.Empty) {dr["DeployPath199"] = tb.Text;} else {dr["DeployPath199"] = System.DBNull.Value;}
+			}
+			tb = (TextBox)lvi.FindControl("cLicenseFile199");
+			if (tb != null)
+			{
+				if (tb.Text != string.Empty) {dr["LicenseFile199"] = tb.Text;} else {dr["LicenseFile199"] = System.DBNull.Value;}
 			}
 		    DataTable dtImg = null;
 		    if (!string.IsNullOrEmpty(dr["EntityId199"].ToString()))
@@ -2225,6 +2256,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			dr["EntityName199"] = System.Data.OleDb.OleDbType.VarWChar.ToString();
 			dr["EntityCode199"] = System.Data.OleDb.OleDbType.VarChar.ToString();
 			dr["DeployPath199"] = System.Data.OleDb.OleDbType.VarChar.ToString();
+			dr["LicenseFile199"] = System.Data.OleDb.OleDbType.VarChar.ToString();
 			return dr;
 		}
 
@@ -2235,6 +2267,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			dr["EntityName199"] = "TextBox";
 			dr["EntityCode199"] = "TextBox";
 			dr["DeployPath199"] = "TextBox";
+			dr["LicenseFile199"] = "TextBox";
 			return dr;
 		}
 
@@ -2249,6 +2282,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 				dr["EntityName199"] = drv["EntityName199"].ToString().Trim();
 				dr["EntityCode199"] = drv["EntityCode199"].ToString().Trim();
 				dr["DeployPath199"] = drv["DeployPath199"].ToString().Trim();
+				dr["LicenseFile199"] = drv["LicenseFile199"].ToString().Trim();
+				if (bAdd && dtAuth.Rows[5]["ColReadOnly"].ToString() == "Y" && dr["LicenseFile199"].ToString() == string.Empty) {dr["LicenseFile199"] = System.DBNull.Value;}
 			}
 			return dr;
 		}
@@ -2270,6 +2305,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			hi = (System.Web.UI.WebControls.Image)cAdmEntityGrid.FindControl("cEntityName199hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmEntityGrid.FindControl("cEntityCode199hi"); if (hi != null) { hi.Visible = false; }
 			hi = (System.Web.UI.WebControls.Image)cAdmEntityGrid.FindControl("cDeployPath199hi"); if (hi != null) { hi.Visible = false; }
+			hi = (System.Web.UI.WebControls.Image)cAdmEntityGrid.FindControl("cLicenseFile199hi"); if (hi != null) { hi.Visible = false; }
 			if (Session[KEY_lastSortImg] != null)
 			{
 				hi = (System.Web.UI.WebControls.Image)cAdmEntityGrid.FindControl((string)Session[KEY_lastSortImg]);
@@ -2280,6 +2316,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 			IgnoreHeaderConfirm((LinkButton)cAdmEntityGrid.FindControl("cEntityName199hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmEntityGrid.FindControl("cEntityCode199hl"));
 			IgnoreHeaderConfirm((LinkButton)cAdmEntityGrid.FindControl("cDeployPath199hl"));
+			IgnoreHeaderConfirm((LinkButton)cAdmEntityGrid.FindControl("cLicenseFile199hl"));
 		}
 
 		private string GetButtonId(ListViewItem lvi)
@@ -2324,6 +2361,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (lb != null) { lb.Text = ColumnHeaderText(3); lb.ToolTip = ColumnToolTip(3); lb.Parent.Visible = GridColumnVisible(3); }
 		    lb = cAdmEntityGrid.FindControl("cDeployPath199hl") as LinkButton;
 		    if (lb != null) { lb.Text = ColumnHeaderText(4); lb.ToolTip = ColumnToolTip(4); lb.Parent.Visible = GridColumnVisible(4); }
+		    lb = cAdmEntityGrid.FindControl("cLicenseFile199hl") as LinkButton;
+		    if (lb != null) { lb.Text = ColumnHeaderText(5); lb.ToolTip = ColumnToolTip(5); lb.Parent.Visible = GridColumnVisible(5); }
 		    // Hide DeleteAll:
 			DataTable dtAuthRow = GetAuthRow();
 			if (dtAuthRow != null)
@@ -2346,6 +2385,8 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(3); }
 		    gc = cAdmEntityGrid.FindControl("cDeployPath199fl") as Label;
 		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(4); }
+		    gc = cAdmEntityGrid.FindControl("cLicenseFile199fl") as Label;
+		    if (gc != null) { gc.Parent.Visible = GridColumnVisible(5); }
 		}
 
 		protected void cbPostBack(object sender, System.EventArgs e)
@@ -2393,6 +2434,7 @@ osoft Word 11.0.6359;}{\info{\title [[ScreenTitle]]}{\author }{\operator }{\crea
 		private void PreMsgPopup(string msg, RoboCoder.WebControls.ComboBox cb, WebControl wc)
 		{
 		    if (string.IsNullOrEmpty(msg)) return;
+		    if (IsCronInvoked()) { ErrorTrace(new Exception(msg), bErrNow.Value == "N" ? "warning" : "error"); return; }
 		    int MsgPos = msg.IndexOf("RO.SystemFramewk.ApplicationAssert");
 		    string iconUrl = "images/warning.gif";
 		    string focusOnCloseId = cb != null ? cb.FocusID : (wc != null ? wc.ClientID : string.Empty);

@@ -1696,6 +1696,21 @@ TemplateId
 END
 
 GO
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.TemplatePrm') AND type='U')
+DROP TABLE dbo.TemplatePrm
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.TemplatePrm') and type='U')
+CREATE TABLE TemplatePrm ( 
+TemplatePrmId int IDENTITY(1,1) NOT NULL ,
+TemplateId int NOT NULL ,
+GrantDeny char (1) NOT NULL CONSTRAINT DF_TemplatePrm_GrantDeny DEFAULT ('G'),
+PermKeyId smallint NOT NULL ,
+PermId int NOT NULL ,
+CONSTRAINT PK_TemplatePrm PRIMARY KEY CLUSTERED (
+TemplatePrmId
+)
+)
+
+GO
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = object_id(N'dbo.Usage') and type='U')
 BEGIN
 IF EXISTS (SELECT i.name FROM sysindexes i INNER JOIN sysobjects o ON i.id = o.id WHERE i.name = 'IX_Usage_UsrId' AND o.name = 'Usage')

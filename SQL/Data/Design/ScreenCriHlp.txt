@@ -552,3 +552,15 @@
 1731~@~AdmScreenObj    10: Screen (ko-KR)~@~1086~@~28~@~화면
 1732~@~AdmScreenObj    10: Screen (fr-CA)~@~1086~@~114~@~Écran
 1733~@~AdmFlowchart    10: Company (en-US)~@~1087~@~1~@~Company
+1734~@~~@~63~@~2~@~Membre
+1735~@~~@~65~@~2~@~Travail à partir de (>=)
+1736~@~~@~66~@~2~@~Travailler jusqu'à (<=)
+1737~@~~@~67~@~2~@~Valeur comme
+1738~@~~@~70~@~2~@~Descriptif J'aime
+1739~@~~@~1070~@~2~@~IDENTIFIANT
+1740~@~~@~1073~@~2~@~Type de section
+1741~@~~@~1074~@~2~@~Filtrer
+1742~@~~@~1076~@~2~@~ID d'audit
+1743~@~~@~1077~@~2~@~11/12/ Règle
+1744~@~~@~1085~@~2~@~Filtrer
+1745~@~~@~1087~@~2~@~Compagnie

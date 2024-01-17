@@ -1,12 +1,13 @@
 5~@~1~@~Default to appropriate events for Screen Columns~@~Web Rule: Default to appropriate events for Screen Columns~@~Default to appropriate events for Screen Columns~@~80~@~1287~@~~@~1~@~if ("1".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"1");}~@~~@~~@~~@~~@~~@~~@~~@~~@~
 6~@~1~@~Default to appropriate events for buttons~@~Web Rule: Default to appropriate events for buttons~@~Default to appropriate events only for buttons~@~80~@~1288~@~~@~1~@~            if ("6".IndexOf(cEventId128.SelectedValue) < 0) {SetEventId128(cEventId128,"6");}~@~~@~~@~~@~~@~~@~~@~~@~~@~
-9~@~2~@~Prevent production access to stored procedure, also Rintai Paas Analyst~@~Server Rule: Prevent production access to stored procedure, also Rintai Paas Analyst~@~Make server rule content readonly on production system and for Rintagi Analyst plus confirm message.~@~14~@~~@~~@~9~@~if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled = false;}
+9~@~2~@~Prevent production access to stored procedure, also Rintai Paas Analyst~@~Server Rule: Prevent production access to stored procedure, also Rintai Paas Analyst~@~Make server rule content readonly on production system and for Rintagi Analyst plus confirm message.~@~14~@~~@~~@~9~@~                if (Config.DeployType == "PRD" || LImpr.UsrGroups == "1") {cRuleCode24.Enabled = false;}
 				else
 				{
 					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedure from the physical database for sure?');";}
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedure to physical database for sure?');";}
-				}~@~~@~~@~~@~~@~~@~~@~~@~~@~
+				}
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 12~@~4~@~Synchronize by the physical database~@~Data Table and Columns: Synchronize by the physical database~@~Synchronize by the physical database~@~2~@~1402~@~~@~1~@~			string tid = cAdmDbTable2List.SelectedValue;
 			WebRule wr = new WebRule();
 			if (cTableName3.Text == string.Empty) { bErrNow.Value = "Y"; PreMsgPopup("Please enter the table name to synchronize from and try again."); }
@@ -185,13 +186,14 @@
             {
                 bErrNow.Value = "Y"; PreMsgPopup("Application database and design database cannot be empty, please try again.");
             }~@~~@~~@~~@~~@~~@~~@~~@~~@~
-25~@~2~@~Prevent production access to stored procedure~@~Report Definition: Prevent production access to stored procedure~@~Make server rule content readonly on production system and add confirm message~@~67~@~~@~~@~9~@~if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled = false; cUpdCode22.Enabled = false; cXlsCode22.Enabled = false;}
+25~@~2~@~Prevent production access to stored procedure~@~Report Definition: Prevent production access to stored procedure~@~Make server rule content readonly on production system and add confirm message~@~67~@~~@~~@~9~@~                if (Config.DeployType == "PRD") {cRegCode22.Enabled = false; cValCode22.Enabled = false; cUpdCode22.Enabled = false; cXlsCode22.Enabled = false;}
 				else
 				{
 					if (cSyncByDb.Attributes["OnClick"] == null || cSyncByDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncByDb.Attributes["OnClick"] += "return confirm('Proceed to obtain stored procedures from the physical database for sure?');";}
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("_bConfirm") < 0) { cSyncToDb.Attributes["OnClick"] += "document.getElementById('" + bConfirm.ClientID + "').value='N';"; }
 					if (cSyncToDb.Attributes["OnClick"] == null || cSyncToDb.Attributes["OnClick"].IndexOf("return confirm") < 0) {cSyncToDb.Attributes["OnClick"] += "return confirm('Proceed to synchronize stored procedures to physical database for sure?');";}
-				}~@~~@~~@~~@~~@~~@~~@~~@~~@~
+				}
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 26~@~4~@~Obtain s.procs from the physical database~@~Report Definition: Obtain s.procs from the physical database~@~Obtain stored procedures from the physical database~@~67~@~1473~@~~@~1~@~            WebRule wr = new WebRule();
 			string err = string.Empty;
 			if (Config.AppNameSpace != "RO" && base.LCurr.DbId == 3) { bErrNow.Value = "Y"; PreMsgPopup("Please do not manipulate these administration stored procedures."); }
@@ -422,7 +424,8 @@
 				}
 				catch {}
 			}~@~~@~~@~~@~~@~~@~~@~~@~~@~
-66~@~2~@~Prevent web rule from being accessed~@~Web Rule: Prevent web rule from being accessed~@~Prevent web rule from being accessed for some systems.~@~80~@~~@~~@~18~@~if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionally blocked from you for the time being. Please contact administrator if you have any questions."); }~@~~@~~@~~@~~@~~@~~@~~@~~@~
+66~@~2~@~Prevent web rule from being accessed~@~Web Rule: Prevent web rule from being accessed~@~Prevent web rule from being accessed for some systems.~@~80~@~~@~~@~18~@~            if (LImpr.UsrGroups == "1") { throw new Exception("This function is intentionally blocked from you for the time being. Please contact administrator if you have any questions."); }
+~@~~@~~@~~@~~@~~@~~@~~@~~@~
 68~@~1~@~Prepare db for document management or workflow ststus plus hide/show appropriate fields~@~Screen Object: Prepare db for document management or workflow ststus plus hide/show appropriate fields~@~Prepare database for document management or workflow status plus hide/show appropriate fields.~@~10~@~81~@~~@~1~@~            if (",3,5,17,29,32,53,".IndexOf("," + cDisplayModeId14.SelectedValue + ",") >= 0)   // DropDownList, ListBox, RadioButtonList, DataGridLink or Document or WorkflowStatus
             {
                 cRefreshOnCUD14P1.Visible = true; cRefreshOnCUD14P2.Visible = true;

@@ -31,6 +31,7 @@ namespace RO.Common3.Data
 		{
 			DataColumnCollection columns = dt.Columns;
 			columns.Add("tzInfo", typeof(string));
+			columns.Add("tzUtcOffset", typeof(string));
 			columns.Add("MonthEnding", typeof(DateTime));
 			columns.Add("NumMonths", typeof(Int16));
 			return dt;
@@ -311,6 +312,7 @@ namespace RO.Web
 			DataRow dr = ds.Tables["DtAdmRptSredIn"].NewRow();
 			TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
 			dr["tzInfo"] = tzinfo.StandardName;
+			dr["tzUtcOffset"] = string.Format("{0:+00;-00;+00}:{1:00}", tzinfo.BaseUtcOffset.Hours, tzinfo.BaseUtcOffset.Minutes);
 
 			if (cMonthEnding.Text != string.Empty) {dr["MonthEnding"] = base.SetDateTimeUTC(cMonthEnding.Text, !bUpdate);}
 			if (IsPostBack && cMonthEnding.Text == string.Empty) { throw new ApplicationException("Criteria column: MonthEnding should not be empty. Please rectify and try again.");};
@@ -445,7 +447,9 @@ namespace RO.Web
 			cViewer.ReportSource = rp;
 			if (cViewerWidth.Value != string.Empty) { cViewer.Width = Unit.Pixel(int.Parse(cViewerWidth.Value)); }
 			cViewer.Visible = true;
+#pragma warning disable 0612 // Type or member is obsolete
 			cViewer.DisplayGroupTree = false;
+#pragma warning restore 0612 // Type or member is obsolete
 			if (sendToPrinter) { rp.PrintToPrinter(1,false,0,0); }
 			if (eExport == exportTo.TXT)
 			{

@@ -674,7 +674,7 @@ export class RintagiScreenRedux {
     const scope = (({ CompanyId, ProjectId, SystemId, CultureId, key }) => ({ CompanyId, ProjectId, SystemId, CultureId, key }))(user || {});
     const screenName = this.GetScreenName();
     const _this = this;
-    
+
     if (isInitialized && scopeKey && scopeKey >= user.key) {
       return new Promise(function (resolve, reject) {
         resolve({
@@ -768,37 +768,36 @@ export class RintagiScreenRedux {
       const filterId = ((options || {}).FilterId) || currentRedux.ScreenCriteria.FilterId;
       const isInitialized = currentRedux.initialized;
       const specificMstId = typeof mstId !== 'undefined' && mstId !== '_';
-//      const rememberedMst = GetCurrent(persistMstName);
+      //      const rememberedMst = GetCurrent(persistMstName);
       const rememberedMst = await GetCurrentAsync(persistMstName);
       const rememberedMstId = (mstId === "_") && (rememberedMst || {})[mstKeyColumeName];
       const _this = this;
-      const skipMetaData = (options || {}).SkipMetaData === true || (options || {}).SkipMetaData === 'Y'; 
-      const skipSupportingData = (options || {}).SkipSupportingData === true || (options || {}).SkipSupportingData === 'Y'; 
+      const skipMetaData = (options || {}).SkipMetaData === true || (options || {}).SkipMetaData === 'Y';
+      const skipSupportingData = (options || {}).SkipSupportingData === true || (options || {}).SkipSupportingData === 'Y';
 
       // shortcut due to programmer laziness
-      if (skipMetaData 
-        || skipSupportingData 
+      if (skipMetaData
+        || skipSupportingData
         // only first time and in some situation multiple download is better
         // for low latency network
         || (false && !isInitialized)
-        ) {
+      ) {
         const currentKeyId = specificMstId ? mstId
-        : (typeof mstId !== 'undefined'
-          ? (currentRedux.Mst || {})[mstKeyColumeName] || rememberedMstId
-          : undefined);
-
+          : (typeof mstId !== 'undefined'
+            ? (currentRedux.Mst || {})[mstKeyColumeName] || rememberedMstId
+            : undefined);
         return this.LoadInitPage({
-          MstId: mstId !== '!' ? currentKeyId : null, 
+          MstId: mstId !== '!' ? currentKeyId : null,
           TopN: topN,
           ...options,
-          FirstOrDefault: options.FirstOrDefault || (mstId && (mstId !== '_' || rememberedMstId)),          
+          FirstOrDefault: options.FirstOrDefault || (mstId && (mstId !== '_' || rememberedMstId)),
         })(dispatch, getState, { webApi })
-        .then(ret => {
-          return _this.LoadSearchList(src, mstId, options, searchStr, topN, filterId)(dispatch, getState, { webApi });
-        })
-        .catch(error => {
-          return Promise.reject(error);
-        })
+          .then(ret => {
+            return _this.LoadSearchList(src, mstId, options, searchStr, topN, filterId)(dispatch, getState, { webApi });
+          })
+          .catch(error => {
+            return Promise.reject(error);
+          })
       }
 
       return this.LoadPageStaticData(dispatch, apiService, user, currentRedux)
@@ -832,25 +831,25 @@ export class RintagiScreenRedux {
       const loadPageOptions = {
         ...options,
         SkipMetaData: options.SkipMetaData === true || options.SkipMetaData == 'Y' ? 'Y' : 'N',
-        SkipSupportingData: options.SkipSupportingData === true || options.SkipSupportingData == 'Y'  ? 'Y' : 'N',
-        SkipOnDemandData: options.SkipOnDemandData === true || options.SkipOnDemandData == 'Y'  ? 'Y' : 'N',
-        ReAuth: options.ReAuth === true || options.ReAuth == 'Y'  ? 'Y' : 'N',
-        FirstOrDefault: options.FirstOrDefault === true || options.FirstOrDefault == 'Y'  ? 'Y' : 'N',
+        SkipSupportingData: options.SkipSupportingData === true || options.SkipSupportingData == 'Y' ? 'Y' : 'N',
+        SkipOnDemandData: options.SkipOnDemandData === true || options.SkipOnDemandData == 'Y' ? 'Y' : 'N',
+        ReAuth: options.ReAuth === true || options.ReAuth == 'Y' ? 'Y' : 'N',
+        FirstOrDefault: options.FirstOrDefault === true || options.FirstOrDefault == 'Y' ? 'Y' : 'N',
       }
       dispatchWithNotification(dispatch, { type: GET_SEARCH_LIST.STARTED, payload: {} });
       const promises = Promise.all([
-          apiService.LoadInitPage(loadPageOptions),
-          ...(!options.SkipSupportingData && _this.GetCriDdlApiPromise(apiService, scope)),
-        ]);
-        
+        apiService.LoadInitPage(loadPageOptions),
+        ...(!options.SkipSupportingData && _this.GetCriDdlApiPromise(apiService, scope)),
+      ]);
+
       return promises
         .then(([ret, ...rest]) => {
           if (!options.skipMetaData) {
             const i = 0;
-            const ScreenCriDdl = 
+            const ScreenCriDdl =
               _this.ScreenCriDdlDef
-              .filter(c => c.payloadDdlName)
-              .reduce((a, v, i) => { a[v.payloadDdlName] = rest[i].data.data; return a; }, {})
+                .filter(c => c.payloadDdlName)
+                .reduce((a, v, i) => { a[v.payloadDdlName] = rest[i].data.data; return a; }, {})
             const payload = {
               SystemLabel: objectListToDict(ret.data.SystemLabels || [], "LabelKey", (v) => (v.LabelText)),
               AuthCol: ret.data.AuthCol,
@@ -858,22 +857,22 @@ export class RintagiScreenRedux {
               ColumnLabel: objectListToDict(ret.data.ColumnDef, (v) => (v.ColumnName + v.TableId), (v) => (v)),
               ScreenHlp: (ret.data.ScreenHlp || [])[0] || {},
               ScreenFilter: ret.data.ScreenFilter,
-              ScreenCriteria: objectListToDict(ret.data.ScreenCriteria || [], "ColumnName", (v) => (v)), 
+              ScreenCriteria: objectListToDict(ret.data.ScreenCriteria || [], "ColumnName", (v) => (v)),
               ScreenButtonHlp: ret.data.ScreenButtonHlp,
-              Label: objectListToDict(ret.data.Labels|| [], "LabelKey", (v) => (v.LabelText)),
+              Label: objectListToDict(ret.data.Labels || [], "LabelKey", (v) => (v.LabelText)),
               NewMst: ret.data.NewMst || {},
               NewDtl: ret.data.NewDtl || {},
               ScopeKey: scope.key || Date.now(),
               ...(ret.data.Ddl || {}),
               ScreenCriDdl: ScreenCriDdl,
             }
-            
+
             dispatchWithNotification(dispatch, {
               type: LOAD_PAGE.SUCCEEDED,
               payload: payload
-            });  
+            });
           }
-          
+
           dispatchWithNotification(dispatch, {
             type: GET_SEARCH_LIST.SUCCEEDED,
             payload: {
@@ -907,9 +906,9 @@ export class RintagiScreenRedux {
     return (async (dispatch, getState, { webApi }) => {
       const apiService = (webApi || {})[webServiceName] || this.GetWebService();
       const current = getState()[screenName] || {};
+      const { dtlId, reloadMst, reloadMstList, reloadDtl, refreshCri } = options;
       const rememberedMst = await GetCurrentAsync(persistMstName);
-      const rememberedMstId = (mstId === "_") && (rememberedMst || {})[mstKeyColumeName];
-      const { dtlId, reloadMst, reloadMstList, reloadDtl } = options;
+      const rememberedMstId = (mstId === "_" || (refreshCri)) && (rememberedMst || {})[mstKeyColumeName];
       const specificKeyId = typeof mstId !== 'undefined' && mstId !== '_';
       const currKeyId = specificKeyId ? mstId
         : (typeof mstId !== 'undefined'
@@ -935,7 +934,11 @@ export class RintagiScreenRedux {
               () => {
                 //this.LoadMst(currKeyId || mstId, src, options)(dispatch, getState, { webApi });
                 const _currKeyId = mstId === '!' ? ((((SearchList || {}).data || {}).data || [])[0] || {}).key : currKeyId;
-                this.LoadMst((mstId === '!' && !_currKeyId) ? 0 : (_currKeyId || mstId), src, options)(dispatch, getState, { webApi });
+                const refreshedMstId = (mstId === '!' && !_currKeyId) ? 0 : (_currKeyId || mstId || (refreshCri && rememberedMstId));
+                this.LoadMst(refreshedMstId, src, options)(dispatch, getState, { webApi })
+                .catch(err =>{
+                  log.debug(`fail to reload mst after search list refresh ${refreshedMstId}`);
+                })
                 return Promise.resolve(SearchList);
               }
             )
@@ -966,7 +969,7 @@ export class RintagiScreenRedux {
       const current = getState()[screenName] || {};
       const rememberedMst = await GetCurrentAsync(persistMstName);
       const rememberedDtl = (await GetCurrentAsync(persistDtlName) || {}).dtl;
-      const rememberedMstId = (await GetCurrentAsync(persistDtlName) || {}).mstId;
+      const rememberedMstId = (rememberedMst || {})[mstKeyColumeName] || (rememberedDtl || {}).mstId;
       const selectedMst = this.GetDefaultMst((current.SearchList || {}).data, current);
       const newMst = current.NewMst || {};
       const newDtl = current.NewDtl || {};
@@ -1015,6 +1018,12 @@ export class RintagiScreenRedux {
             (err) => {
               dispatchWithNotification(dispatch, { type: GET_MST.FAILED, payload: {} })
               dispatchWithNotification(dispatch, { type: GET_DTL_LIST.FAILED, payload: {} })
+              const isAccessDenied = !!(err.errMsg || '').match(/access denied.*/);
+              if (rememberedMstId === keyId && rememberedMstId && isAccessDenied) {
+                // flush remembered, probably no longer valid(deleted/acl changed etc.)
+                RememberCurrentAsync(persistMstName, null);
+                RememberCurrentAsync(persistDtlName, null);
+              }
               return Promise.reject(err);
             }
           )
@@ -1022,14 +1031,20 @@ export class RintagiScreenRedux {
             log.debug(error);
             dispatchWithNotification(dispatch, { type: GET_MST.FAILED, payload: {} })
             dispatchWithNotification(dispatch, { type: GET_DTL_LIST.FAILED, payload: {} })
-            return Promise.reject(error);
+            const isAccessDenied = !!(error.errMsg || '').match(/access denied.*/);
+            if (rememberedMstId === keyId && rememberedMstId && isAccessDenied) {
+              // flush remembered, probably no longer valid(deleted/acl changed etc.)
+              RememberCurrentAsync(persistMstName, null);
+              RememberCurrentAsync(persistDtlName, null);
+            }
+          return Promise.reject(error);
           })
       }
       else {
         const useCopy = rememberedMst && !rememberedMst[mstKeyColumeName] && (keyId || mstId);
         const revisedMst = keyId ? currMst : (useCopy || refreshCri ? (rememberedMst || newMst) : newMst);
-        dispatchWithNotification(dispatch, { type: GET_MST.SUCCEEDED, payload: { Mst: revisedMst, Src: src } })
-        dispatchWithNotification(dispatch, { type: GET_DTL_LIST.SUCCEEDED, payload: { Dtl: keyId ? currentDtlList : useCopy || refreshCri ? currentDtlList : [], Src: src } })
+        dispatchWithNotification(dispatch, { type: GET_MST.SUCCEEDED, payload: { Mst: revisedMst, Src: src } });
+        dispatchWithNotification(dispatch, { type: GET_DTL_LIST.SUCCEEDED, payload: { Dtl: keyId ? currentDtlList : useCopy || refreshCri ? currentDtlList : [], Src: src } });
         this.BackFillMstAsyncColumns(keyId ? currMst : useCopy || refreshCri ? rememberedMst : newMst, dispatch, getState, { webApi }, options);
         if (dtlId) {
           const dtl = await this.GetDtl(currentDtlList, dtlId, -1, revisedMst);
@@ -1193,11 +1208,11 @@ export class RintagiScreenRedux {
       const _options = {
         ...rest
       }
-      
+
       return apiService.SaveData(
-          Object.keys(_mst || {}).reduce((a, k, i) => { a[k] = Array.isArray(_mst[k]) ? null : _mst[k]; return a;}, {})
-          , _dtl.map(o => Object.keys(o || {}).reduce((a, k, i) => { a[k] = Array.isArray(o[k]) ? null : o[k]; return a;}, {}))
-          , { ...rest })
+        Object.keys(_mst || {}).reduce((a, k, i) => { a[k] = Array.isArray(_mst[k]) ? null : _mst[k]; return a; }, {})
+        , _dtl.map(o => Object.keys(o || {}).reduce((a, k, i) => { a[k] = Array.isArray(o[k]) ? null : o[k]; return a; }, {}))
+        , { ...rest })
         .then(
           (ret => {
             dispatchWithNotification(dispatch, { type: SAVE_MST.SUCCEEDED, payload: { Mst: ret.data.mst, keepDtl: keepDtl, message: ret.data.message, deferredRelease: true, } });
@@ -1438,7 +1453,7 @@ export class RintagiScreenRedux {
       });
 
   }
-  BackFillMstAsyncColumns(mst, dispatch, getState, { webApi }, options={}) {
+  BackFillMstAsyncColumns(mst, dispatch, getState, { webApi }, options = {}) {
     const mstId = (mst || {})[this.GetMstKeyColumnName()];
     const _this = this;
     const skipDocList = options.SkipDocList;
@@ -1456,6 +1471,7 @@ export class RintagiScreenRedux {
       .filter(v => !v.isFileObject || mstId)
       .forEach(v => {
         const name = "Get" + v.columnName;
+        console.log(`back fill ${name} `, mst)
         this.SearchActions[name](
           (mst || {})[this.GetMstKeyColumnName()]
           , null
@@ -1517,6 +1533,7 @@ export class RintagiScreenRedux {
     const tableColumnName = columnDef.tableColumnName;
     const actionType = _this.GetActionType(columnDef.actionTypeName);
     return ((mstId, dtlId, mst = {}, dtl = {}) => {
+      console.log(`get on demand column content`, columnName, mstId);
       return ((dispatch, getState, { webApi }) => {
         const apiService = webApi[webServiceName] || _this.GetWebService();
         const api = apiService[columnDef.apiServiceName];

@@ -15,6 +15,7 @@ namespace RO.Access3
         public abstract DataTable GetColumnInfo(string tbName, CurrSrc CSrc);
         public abstract DataTable GetPKInfo(string tbName, CurrSrc CSrc);
         public abstract DataTable GetFKInfo(string tbName, bool IsFrSource, CurrSrc CSrc, CurrTar CTar);
+        public abstract DataTable ExecSP(string spName, CurrSrc CSrc);
         public abstract object ExecScript(string DataTier, string CmdName, string IsqlFile, bool IsFrSource, CurrSrc CSrc, CurrTar CTar, string dbConnectionString, string dbPassword, Func<object, string, bool> processResult);
     }
 }

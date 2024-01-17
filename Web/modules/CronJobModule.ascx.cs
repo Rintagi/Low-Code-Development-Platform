@@ -166,6 +166,8 @@ public partial class CronJobModule : RO.Web.ModuleBase
                             if (dr["Active"].ToString() != "Y"
                                 ||
                                 (!string.IsNullOrEmpty(RunCronJobModules) && !RunCronJobModules.Contains(dr["dbDesDatabase"].ToString()))
+                                ||
+                                !Config.RunCronJob
                                 ) 
                                 continue;
                             dbDesDataBase = dr["dbDesDatabase"].ToString();

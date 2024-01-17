@@ -184,7 +184,7 @@ namespace RO.Web
                     int.TryParse(dtRptHlp.Rows[0]["CommandTimeOut"].ToString(), out CommandTimeOut);
                 }
                 catch { }
-                if (dtRptHlp.Rows[0]["ReportTypeCd"].ToString() == "E" || dtRptHlp.Rows[0]["ReportTypeCd"].ToString() == "R")
+                if (dtRptHlp.Rows[0]["ReportTypeCd"].ToString() == "E" || dtRptHlp.Rows[0]["ReportTypeCd"].ToString() == "R" || dtRptHlp.Rows[0]["ReportTypeCd"].ToString() == "M") 
                 {
                     cExpPdfButton.Visible = false;
                     cPrintButton.Visible = false;
@@ -473,12 +473,12 @@ namespace RO.Web
 					base.SetCriBehavior(cCheckBox, null, cLabel, dtCriHlp.Rows[ii]);
 					if (dt.Rows[ii]["LastCriteria"].ToString() != string.Empty) { cCheckBox.Checked = base.GetBool(dt.Rows[ii]["LastCriteria"].ToString()); }
 				}
-                else
-                {
-                    cTextBox = (TextBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-                    base.SetCriBehavior(cTextBox, null, cLabel, dtCriHlp.Rows[ii]);
-                    cTextBox.Text = dt.Rows[ii]["LastCriteria"].ToString();
-                }
+				else
+				{
+					cTextBox = (TextBox)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
+					base.SetCriBehavior(cTextBox, null, cLabel, dtCriHlp.Rows[ii]);
+					cTextBox.Text = dt.Rows[ii]["LastCriteria"].ToString(); 
+				}
 				ii = ii + 1;
 			}
 		}
@@ -565,15 +565,23 @@ namespace RO.Web
                             cExpPdfButton.Visible = base.GetBool(drv["ButtonVisible"].ToString()); Session[KEY_bExpPdfVisible] = base.GetBool(drv["ButtonVisible"].ToString()); cExpPdfButton.ToolTip = drv["ButtonToolTip"].ToString();
                         }
                     }
-                    if (drv["ButtonTypeName"].ToString() == "ExpDoc")
+                    if (drv["ButtonTypeName"].ToString() == "ExpDoc" || drv["ButtonTypeName"].ToString() == "ExpXml")
                     {
-                        if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "T")
+                        string reportTypeCd = GetReportHlp().Rows[0]["ReportTypeCd"].ToString();
+                        if (reportTypeCd == "T")
                         {
                             cExpDocButton.Visible = false; Session[KEY_bExpDocVisible] = false;
                         }
                         else
                         {
-                            cExpDocButton.CssClass = "ButtonImg ExpDocButtonImg"; cExpDocButton.Text = drv["ButtonName"].ToString();
+                            if (reportTypeCd == "M" && drv["ButtonTypeName"].ToString() == "ExpXml")
+                            {
+                                cExpDocButton.CssClass = "ButtonImg ExpXmlButtonImg"; cExpDocButton.Text = drv["ButtonName"].ToString();
+                            }
+                            else
+                            {
+                                cExpDocButton.CssClass = "ButtonImg ExpDocButtonImg"; cExpDocButton.Text = drv["ButtonName"].ToString();
+                            }
                             cExpDocButton.Visible = base.GetBool(drv["ButtonVisible"].ToString()); Session[KEY_bExpDocVisible] = base.GetBool(drv["ButtonVisible"].ToString()); cExpDocButton.ToolTip = drv["ButtonToolTip"].ToString();
                         }
                     }
@@ -905,7 +913,8 @@ namespace RO.Web
 			DataColumnCollection columns = dt.Columns;
 			DataView dvCri = GetSqlCriteria();
             columns.Add("tzInfo",typeof(string));
-			foreach (DataRowView drv in dvCri)
+            columns.Add("tzUtcOffset", typeof(string));
+            foreach (DataRowView drv in dvCri)
 			{
 				if (drv["DataTypeSysName"].ToString() == "DateTime") { columns.Add(drv["ColumnName"].ToString(), typeof(DateTime)); }
 				else if (drv["DataTypeSysName"].ToString() == "Byte") { columns.Add(drv["ColumnName"].ToString(), typeof(Byte)); }
@@ -936,6 +945,7 @@ namespace RO.Web
 			DataView dvCri = GetSqlCriteria();
             TimeZoneInfo tzinfo = Session["Cache:tzInfo"] as TimeZoneInfo ?? TimeZoneInfo.Local;
             dr["tzInfo"] = tzinfo.StandardName;
+            dr["tzUtcOffset"] = string.Format("{0:+00;-00;+00}:{1:00}", tzinfo.BaseUtcOffset.Hours, tzinfo.BaseUtcOffset.Minutes);
 			foreach (DataRowView drv in dvCri)
 			{
 				if (drv["DisplayName"].ToString() == "ListBox")
@@ -984,7 +994,7 @@ namespace RO.Web
 				else if (drv["DisplayName"].ToString() == "Calendar")
 				{
 					cCalendar = (System.Web.UI.WebControls.Calendar)cCriteria.FindControl("x" + drv["ColumnName"].ToString());
-					if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = cCalendar.SelectedDate; }
+                    if (cCalendar != null && cCalendar.SelectedDate > DateTime.Parse("0001-01-01")) { dr[drv["ColumnName"].ToString()] = drv["DisplayMode"].ToString() == "CalendarUTC" ? base.SetDateTimeUTC(cCalendar.SelectedDate.ToString("yyyy/MM/dd"), !bUpd) : cCalendar.SelectedDate.ToString("yyyy/MM/dd"); }
 				}
 				else if (drv["DisplayName"].ToString() == "ComboBox")
 				{
@@ -1432,14 +1442,18 @@ namespace RO.Web
             try
             {
                 if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "S") { DoSqlRptLocal(ds, fmt); }
-                else if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "R") { DoRtfRpt(ds); }
+                else if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "R" || GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "M") { DoRtfRpt(ds); }
                 else if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "B") { LoadGauge(ds); }
                 else if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "X") { DoXlsRpt(ds); }	// Need to disable programs generared by Genreport in the future.
                 else if (GetReportHlp().Rows[0]["ReportTypeCd"].ToString() == "E") { DoXlsTmplRpt(ds); }
                 cCriPanel.Visible = false; cCriteria.Visible = false; cClearCriButton.Visible = false;
                 cShowCriButton.Visible = (bool)Session[KEY_bShCriVisible];
             }
-            catch (Exception err) { PreMsgPopup(err.Message + (err.InnerException != null ? " " + err.InnerException.Message : "")); return; }
+            catch (Exception err) 
+            {
+                PreMsgPopup(err.Message + (err.InnerException != null ? " " + err.InnerException.Message : "")); 
+                return; 
+            }
         }
 
 		public void cViewButton_Click(object sender, System.EventArgs e)
@@ -1476,31 +1490,59 @@ namespace RO.Web
             ScriptManager.RegisterStartupScript(cMsgContent, typeof(Label), "Popup", script, false);
         }
 
-		private void DoSqlRptLocal(DataSet ds, string fmt)
-		{
-			DataView dvCri = GetSqlCriteria();
-			DataView dvObj = GetSqlColumns();
-            // must change pf pms count changed
-			int ii = dvCri.Count + dvObj.Count + 21;
-			dvObj.RowFilter = "RptObjTypeCd = 'P'"; ii = ii + dvObj.Count; dvObj.RowFilter = string.Empty;
-			cViewer.ProcessingMode = ProcessingMode.Local;
-			cViewer.LocalReport.EnableHyperlinks = true;
-			cViewer.LocalReport.EnableExternalImages = true;
+        private string GetRDLC(DataTable dtRpt)
+        {
+            System.Collections.Generic.KeyValuePair<string, byte[]> template = new KeyValuePair<string, byte[]>();
+            if (dtRpt.Columns.Contains("TemplateId"))
+            {
+                template = GetTemplate(dtRpt.Rows[0]["TemplateId"].ToString(), "");
+            }
+            else if (dtRpt.Columns.Contains("TemplateName"))
+            {
+                template = GetTemplate("", dtRpt.Rows[0]["TemplateName"].ToString());
+            }
+            else
+            {
+                // default based on template name or program name with .rdlc override if exist
+                DataTable dtHlp = GetReportHlp();
+                string rdlName = dtHlp.Rows[0]["TemplateName"].ToString();
+                if (string.IsNullOrEmpty(rdlName)) rdlName = dtHlp.Rows[0]["ProgramName"].ToString() + "Report.rdl";
+                string fileName = Request.MapPath("reports\\" + rdlName);
+                if (File.Exists(fileName + "c")) rdlName = rdlName + "c"; // use custom-build .rdlc instead of generated .rdl
+                template = GetTemplate("", rdlName);
+            }
+            if (template.Value != null)
+            {
+                return System.Text.UTF8Encoding.UTF8.GetString(template.Value);
+            }
+            else
+            {
+                throw new Exception("failed to load/locate template");
+            }
+        }
+
+        private void loadRDLC(DataTable dtRpt)
+        {
+            // this function transform data source binding as well as relatively image url(for logo etc.) to hosting url
+            
+            // load the proper rdlc content
+            string rdlcXML = GetRDLC(dtRpt);
+            
             // internal accessible from asp.net context
             string urlBase =
                 !string.IsNullOrWhiteSpace(Config.IntBaseUrl) && !string.IsNullOrEmpty(Request.Headers["X-Forwarded-For"])
-                    ? Config.IntBaseUrl 
-                    //: Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
+                    ? Config.IntBaseUrl
+                //: Request.Url.AbsoluteUri.Replace(Request.Url.Query, "").Replace(Request.Url.Segments[Request.Url.Segments.Length - 1], "");
                     : base.IntUrlBase;
+
             System.Xml.XmlDocument rpt = new System.Xml.XmlDocument();
-            string fileName = Request.MapPath("reports\\" + GetReportHlp().Rows[0]["ProgramName"].ToString() + "Report.rdl");
-            if (File.Exists(fileName + "c")) { rpt.Load(fileName + "c"); } else { rpt.Load(fileName); }     // Run custom-built report if exists.
-			System.Xml.XmlNamespaceManager ns = new System.Xml.XmlNamespaceManager(rpt.NameTable);
-			ns.AddNamespace("x", rpt.DocumentElement.NamespaceURI);
-			System.Xml.XmlNodeList images = rpt.SelectNodes("//x:Image[x:Source='External']/x:Value", ns);
+            rpt.LoadXml(rdlcXML);
+            System.Xml.XmlNamespaceManager ns = new System.Xml.XmlNamespaceManager(rpt.NameTable);
+            ns.AddNamespace("x", rpt.DocumentElement.NamespaceURI);
+            System.Xml.XmlNodeList images = rpt.SelectNodes("//x:Image[x:Source='External']/x:Value", ns);
             urlBase = urlBase + (urlBase.EndsWith("/") ? "" : "/");
-			foreach (System.Xml.XmlNode n in images)
-			{
+            foreach (System.Xml.XmlNode n in images)
+            {
                 if (!(n.InnerText.StartsWith("http:") || n.InnerText.StartsWith("https:")))
                 {
                     if (!n.InnerText.StartsWith("="))
@@ -1512,7 +1554,7 @@ namespace RO.Web
                         n.InnerText = n.InnerText.Replace("~/", urlBase);
                     }
                 }
-			}
+            }
             System.Xml.XmlNodeList datasourcename = rpt.SelectNodes("//x:DataSetName", ns);
             foreach (System.Xml.XmlNode n in datasourcename)
             {
@@ -1523,12 +1565,6 @@ namespace RO.Web
             {
                 n.Attributes["Name"].Value = LcAppDb;
             }
-            //System.Xml.XmlNode reportParametersLayout = rpt.SelectSingleNode("//x:ReportParametersLayout", ns);
-            //if (reportParametersLayout != null)
-            //{
-            //    reportParametersLayout.RemoveAll();
-            //}
-
 
             using (MemoryStream ms = new MemoryStream())
             {
@@ -1549,6 +1585,18 @@ namespace RO.Web
                 //ms.Seek(0, SeekOrigin.Begin);
                 //cViewer.LocalReport.LoadReportDefinition(ms);
             } 
+        }
+
+		private void DoSqlRptLocal(DataSet ds, string fmt)
+		{
+			DataView dvCri = GetSqlCriteria();
+			DataView dvObj = GetSqlColumns();
+            // must change pf pms count changed
+			int ii = dvCri.Count + dvObj.Count + 21;
+			dvObj.RowFilter = "RptObjTypeCd = 'P'"; ii = ii + dvObj.Count; dvObj.RowFilter = string.Empty;
+			cViewer.ProcessingMode = ProcessingMode.Local;
+			cViewer.LocalReport.EnableHyperlinks = true;
+			cViewer.LocalReport.EnableExternalImages = true;
             
             DataRow dr = ds.Tables["DtSqlReportIn"].Rows[0];
 			string sNull = null;
@@ -1613,6 +1661,7 @@ namespace RO.Web
 				}
 				pms[ii] = new ReportParameter("L_" + drv["ColumnName"].ToString(), drv["ColumnHeader"].ToString()); ii = ii + 1;
 			}
+            loadRDLC(dt);
 			cViewer.LocalReport.SetParameters(pms);
 			string reportName = "SqlReport";
 			if (dt.Columns.Contains("ReportName")) { reportName = dt.Rows[0]["ReportName"].ToString(); }
@@ -1697,19 +1746,31 @@ namespace RO.Web
             if (!string.IsNullOrEmpty(TemplateId))
             {
                 DataTable dtTemplate = (new SqlReportSystem()).GetDocImage(QueryStr["rpt"].ToString(), Int16.Parse(TemplateId), LcSysConnString, LcAppPw);
-                return new KeyValuePair<string, byte[]>(dtTemplate.Rows[0]["TemplateName"].ToString(), dtTemplate.Rows[0]["DocImage"] as byte[]);
+                if (dtTemplate.Rows.Count == 0) throw new Exception(string.Format("Cannot find template for Id {0}", TemplateId));
+                var templateContent = dtTemplate.Rows[0]["DocImage"] as byte[];
+                var templateName = dtTemplate.Rows[0]["TemplateName"].ToString();
+                if (templateContent == null) throw new Exception(string.Format("Template content({1}) for Id {0} is empty", TemplateId, templateName));
+                return new KeyValuePair<string, byte[]>(templateName, templateContent);
             }
             else if (!string.IsNullOrEmpty(TemplateName))
             {
-                using (FileStream fs = new FileStream(Request.MapPath("reports\\" + TemplateName), FileMode.Open, FileAccess.Read, FileShare.Read))
-                using (BinaryReader br = new BinaryReader(fs))
+                var templateFilePath = Request.MapPath("reports\\" + TemplateName);
+                try
                 {
-                    byte[] content = new byte[fs.Length];
-                    br.Read(content, 0, (int)fs.Length);
-                    return new KeyValuePair<string, byte[]>(TemplateName, content);
+                    using (FileStream fs = new FileStream(templateFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (BinaryReader br = new BinaryReader(fs))
+                    {
+                        byte[] content = new byte[fs.Length];
+                        br.Read(content, 0, (int)fs.Length);
+                        return new KeyValuePair<string, byte[]>(TemplateName, content);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(string.Format("failed to read local file template content {0}", TemplateName), ex);
                 }
             }
-            return new KeyValuePair<string, byte[]>();
+            throw new Exception(string.Format("both TemplateId and TemplateName are empty, cannot produce report"));
 
         }
         private void DoXlsTmplRpt(DataSet ds)
@@ -1738,7 +1799,10 @@ namespace RO.Web
                 string templateName = template.Key;
                 ExportToStream(reportName + templateName.Substring(templateName.IndexOf("."), templateName.Length - templateName.IndexOf(".")), content);
             }
-
+            else
+            {
+                throw new Exception("no Excel xml/xlsx template specified/found");
+            }
         }
         private byte[] MergeToExcel2003WorkSheet(byte[] worksheetXML, DataTable dt)
         {
@@ -2288,14 +2352,16 @@ namespace RO.Web
 			Int16 iPrev = -1;
 			Int16 iCurr;
 			int ii = 0;
+            string extension = ".rtf";
 			string ss = string.Empty;
-			while (ii < dt.Rows.Count)
-			{
-				if (dt.Columns.Contains("TemplateId")) { try { iCurr = Int16.Parse(dt.Rows[ii]["TemplateId"].ToString()); } catch { iCurr = 0; } } else { iCurr = 0; }
+            while (ii < dt.Rows.Count)
+            {
+                if (dt.Columns.Contains("TemplateId")) { try { iCurr = Int16.Parse(dt.Rows[ii]["TemplateId"].ToString()); } catch { iCurr = 0; } } else { iCurr = 0; }
+                if (dt.Columns.Contains("TemplateExt")) { extension = dt.Rows[ii]["TemplateExt"].ToString(); }
 				if (iCurr != iPrev)
 				{
 					dtTemplate = (new SqlReportSystem()).GetDocImage(QueryStr["rpt"].ToString(), iCurr, LcSysConnString, LcAppPw);
-					ss = UTF8Encoding.UTF8.GetString((byte[])dtTemplate.Rows[0]["DocImage"]);
+                    ss = UTF8Encoding.UTF8.GetString((byte[])dtTemplate.Rows[0]["DocImage"]);
 					ss = CleanDoc(true, ss, "[", "[", 1);			// Clean up garbage between [[;
 					ss = CleanDoc(true, ss, "]", "]", 1);			// Clean up garbage between ]];
 					ss = CleanDoc(false, ss, "[[", "]]", 2);		// Clean up garbage among column tags;
@@ -2305,7 +2371,7 @@ namespace RO.Web
 				ii = ii + 1;
 			}
 			sb.Replace("}{\\rtf1", "\\page ");
-			ExportToStream(reportName + ".rtf", sb);
+			ExportToStream(reportName + extension, sb);
 		}
 
 		private void DoXlsRpt(DataSet ds)
@@ -2406,6 +2472,7 @@ namespace RO.Web
 			Response.ClearContent();
             if (sFileName.EndsWith(".xls") || sFileName.EndsWith(".xlsx")) Response.ContentType = "application/vnd.ms-excel";
             else if (sFileName.EndsWith(".rtf")) Response.ContentType = "text/rtf";
+            else if (sFileName.EndsWith(".xml")) Response.ContentType = "application/xml";
             else Response.ContentType = "APPLICATION/OCTET-STREAM";
             Response.AppendHeader("Content-Disposition", "Attachment; Filename=" + sFileName);
 			byte[] streamByte = new byte[oStream.Length];

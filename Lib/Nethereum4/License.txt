@@ -1,0 +1,6 @@
+These assemblies are taken from Nuget package and distributed as static file for non-nuget dependent purpose. The sources are from the following nuget package
+
+-Nethereum
+-QRCoder
+
+Please refer to their respective package/source for license info. At the time of distribution, they are MIT

@@ -1,0 +1,247 @@
+﻿using System;
+using System.IO;
+
+namespace OpenAI.Images
+{
+    public sealed class ImageEditRequest : AbstractBaseImageRequest, IDisposable
+    {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="imagePath">
+        /// The image to edit. Must be a valid PNG file, less than 4MB, and square.
+        /// If mask is not provided, image must have transparency, which will be used as the mask.
+        /// </param>
+        /// <param name="prompt">
+        /// A text description of the desired image(s). The maximum length is 1000 characters.
+        /// </param>
+        /// <param name="numberOfResults">
+        /// The number of images to generate. Must be between 1 and 10.
+        /// </param>
+        /// <param name="size">
+        /// The size of the generated images. Must be one of 256x256, 512x512, or 1024x1024.
+        /// </param>
+        /// <param name="user">
+        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+        /// </param>
+        /// <param name="responseFormat">
+        /// The format in which the generated images are returned.
+        /// Must be one of url or b64_json.
+        /// <para/> Defaults to <see cref="ResponseFormat.Url"/>
+        /// </param>
+        public ImageEditRequest(
+            string imagePath,
+            string prompt,
+            int numberOfResults = 1,
+            ImageSize size = ImageSize.Large,
+            string user = null,
+            ResponseFormat responseFormat = ResponseFormat.Url)
+            : this(imagePath, null, prompt, numberOfResults, size, user, responseFormat)
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="imagePath">
+        /// The image to edit. Must be a valid PNG file, less than 4MB, and square.
+        /// If mask is not provided, image must have transparency, which will be used as the mask.
+        /// </param>
+        /// <param name="maskPath">
+        /// An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where image should be edited.
+        /// Must be a valid PNG file, less than 4MB, and have the same dimensions as image.
+        /// </param>
+        /// <param name="prompt">
+        /// A text description of the desired image(s). The maximum length is 1000 characters.
+        /// </param>
+        /// <param name="numberOfResults">
+        /// The number of images to generate. Must be between 1 and 10.
+        /// </param>
+        /// <param name="size">
+        /// The size of the generated images. Must be one of 256x256, 512x512, or 1024x1024.
+        /// </param>
+        /// <param name="user">
+        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+        /// </param>
+        /// <param name="responseFormat">
+        /// The format in which the generated images are returned.
+        /// Must be one of url or b64_json.
+        /// <para/> Defaults to <see cref="ResponseFormat.Url"/>
+        /// </param>
+        public ImageEditRequest(
+            string imagePath,
+            string maskPath,
+            string prompt,
+            int numberOfResults = 1,
+            ImageSize size = ImageSize.Large,
+            string user = null,
+            ResponseFormat responseFormat = ResponseFormat.Url)
+            : this(
+                File.OpenRead(imagePath),
+                Path.GetFileName(imagePath),
+                string.IsNullOrWhiteSpace(maskPath) ? null : File.OpenRead(maskPath),
+                string.IsNullOrWhiteSpace(maskPath) ? null : Path.GetFileName(maskPath),
+                prompt,
+                numberOfResults,
+                size,
+                user,
+                responseFormat)
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="image">
+        /// The image to edit. Must be a valid PNG file, less than 4MB, and square.
+        /// If mask is not provided, image must have transparency, which will be used as the mask.
+        /// </param>
+        /// <param name="imageName">Name of the image file.</param>
+        /// <param name="prompt">
+        /// A text description of the desired image(s). The maximum length is 1000 characters.
+        /// </param>
+        /// <param name="numberOfResults">
+        /// The number of images to generate. Must be between 1 and 10.
+        /// </param>
+        /// <param name="size">
+        /// The size of the generated images. Must be one of 256x256, 512x512, or 1024x1024.
+        /// </param>
+        /// <param name="user">
+        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+        /// </param>
+        /// <param name="responseFormat">
+        /// The format in which the generated images are returned.
+        /// Must be one of url or b64_json.
+        /// <para/> Defaults to <see cref="ResponseFormat.Url"/>
+        /// </param>
+        public ImageEditRequest(
+            Stream image,
+            string imageName,
+            string prompt,
+            int numberOfResults = 1,
+            ImageSize size = ImageSize.Large,
+            string user = null,
+            ResponseFormat responseFormat = ResponseFormat.Url)
+            : this(image, imageName, null, null, prompt, numberOfResults, size, user, responseFormat)
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="image">
+        /// The image to edit. Must be a valid PNG file, less than 4MB, and square.
+        /// If mask is not provided, image must have transparency, which will be used as the mask.
+        /// </param>
+        /// <param name="imageName">Name of the image file.</param>
+        /// <param name="mask">
+        /// An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where image should be edited.
+        /// Must be a valid PNG file, less than 4MB, and have the same dimensions as image.
+        /// </param>
+        /// <param name="maskName">Name of the mask file.</param>
+        /// <param name="prompt">
+        /// A text description of the desired image(s). The maximum length is 1000 characters.
+        /// </param>
+        /// <param name="numberOfResults">
+        /// The number of images to generate. Must be between 1 and 10.
+        /// </param>
+        /// <param name="size">
+        /// The size of the generated images. Must be one of 256x256, 512x512, or 1024x1024.
+        /// </param>
+        /// <param name="user">
+        /// A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+        /// </param>
+        /// <param name="responseFormat">
+        /// The format in which the generated images are returned.
+        /// Must be one of url or b64_json.
+        /// <para/> Defaults to <see cref="ResponseFormat.Url"/>
+        /// </param>
+        public ImageEditRequest(
+            Stream image,
+            string imageName,
+            Stream mask,
+            string maskName,
+            string prompt,
+            int numberOfResults = 1,
+            ImageSize size = ImageSize.Large,
+            string user = null,
+            ResponseFormat responseFormat = ResponseFormat.Url)
+            : base(numberOfResults, size, responseFormat, user)
+        {
+            Image = image;
+
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                const string defaultImageName = "image.png";
+                imageName = defaultImageName;
+            }
+
+            ImageName = imageName;
+
+            if (mask != null)
+            {
+                Mask = mask;
+
+                if (string.IsNullOrWhiteSpace(maskName))
+                {
+                    const string defaultMaskName = "mask.png";
+                    maskName = defaultMaskName;
+                }
+
+                MaskName = maskName;
+            }
+
+            if (prompt.Length > 1000)
+            {
+                throw new ArgumentOutOfRangeException("prompt", "The maximum character length for the prompt is 1000 characters.");
+            }
+
+            Prompt = prompt;
+
+            if (numberOfResults > 10 || numberOfResults < 1)
+            {
+                throw new ArgumentOutOfRangeException("numberOfResults", "The number of results must be between 1 and 10");
+            }
+        }
+
+        ~ImageEditRequest() { Dispose(false); }
+
+        /// <summary>
+        /// The image to edit. Must be a valid PNG file, less than 4MB, and square.
+        /// If mask is not provided, image must have transparency, which will be used as the mask.
+        /// </summary>
+        public Stream Image { get; private set; }
+
+        public string ImageName { get; private set; }
+
+        /// <summary>
+        /// An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where image should be edited.
+        /// Must be a valid PNG file, less than 4MB, and have the same dimensions as image.
+        /// </summary>
+        public Stream Mask { get; private set; }
+
+        public string MaskName { get; private set; }
+
+        /// <summary>
+        /// A text description of the desired image(s). The maximum length is 1000 characters.
+        /// </summary>
+        public string Prompt { get; private set; }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (Image != null) Image.Close();
+                if (Image != null) Image.Dispose();
+                if (Mask != null) Mask.Dispose();
+                if (Mask != null) Mask.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+    }
+}

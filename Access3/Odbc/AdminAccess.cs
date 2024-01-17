@@ -1,28 +1,28 @@
 namespace RO.Access3.Odbc
 {
-	using System;
+    using System;
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
-	//using System.Data.OleDb;
+    //using System.Data.OleDb;
     using System.Data.Odbc;
-	using System.Drawing;
-	using System.Text;
-	using RO.Common3;
+    using System.Drawing;
+    using System.Text;
+    using RO.Common3;
     using RO.Common3.Data;
-	using RO.SystemFramewk;
+    using RO.SystemFramewk;
 
-	public class AdminAccess : AdminAccessBase, IDisposable
-	{
-		//private OleDbDataAdapter da;
+    public class AdminAccess : AdminAccessBase, IDisposable
+    {
+        //private OleDbDataAdapter da;
         OdbcDataAdapter da;
         private int _CommandTimeout = 1800;
         public AdminAccess(int CommandTimeout = 1800)
-		{
-			//da = new OleDbDataAdapter();
+        {
+            //da = new OleDbDataAdapter();
             da = new OdbcDataAdapter();
             _CommandTimeout = CommandTimeout;
-		}
+        }
 
         private static OdbcCommand TransformCmd(OdbcCommand cmd)
         {
@@ -45,31 +45,31 @@ namespace RO.Access3.Odbc
             // MSOLEDBSQL cannot handle extra precisions, only ms
             return new DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Millisecond);
         }
-		public override void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(true); // as a service to those who might inherit from us
-		}
+        public override void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(true); // as a service to those who might inherit from us
+        }
 
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!disposing)
-				return;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+                return;
 
-			if (da != null)
-			{
-				if(da.SelectCommand != null)
-				{
-					if( da.SelectCommand.Connection != null  )
-					{
-						da.SelectCommand.Connection.Dispose();
-					}
-					da.SelectCommand.Dispose();
-				}    
-				da.Dispose();
-				da = null;
-			}
-		}
+            if (da != null)
+            {
+                if (da.SelectCommand != null)
+                {
+                    if (da.SelectCommand.Connection != null)
+                    {
+                        da.SelectCommand.Connection.Dispose();
+                    }
+                    da.SelectCommand.Dispose();
+                }
+                da.Dispose();
+                da = null;
+            }
+        }
 
         // For screens:
 
@@ -101,74 +101,74 @@ namespace RO.Access3.Odbc
         }
 
         public override string SetCult(int UsrId, Int16 CultureId)
-		{
-			string rtn = string.Empty;
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = new OdbcCommand("SetCult", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = UsrId;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			if (dt != null && dt.Rows.Count > 0) { rtn = dt.Rows[0][0].ToString(); }
-			return rtn;
-		}
+        {
+            string rtn = string.Empty;
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("SetCult", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = UsrId;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt != null && dt.Rows.Count > 0) { rtn = dt.Rows[0][0].ToString(); }
+            return rtn;
+        }
 
-		public override byte GetCult(string lang)
-		{
-			byte rtn = 1;
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = new OdbcCommand("GetCult", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@lang", OdbcType.VarChar).Value = lang;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			if (dt != null && dt.Rows.Count > 0) { rtn = byte.Parse(dt.Rows[0][0].ToString()); }
-			return rtn;
-		}
+        public override byte GetCult(string lang)
+        {
+            byte rtn = 1;
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetCult", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@lang", OdbcType.VarChar).Value = lang;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            if (dt != null && dt.Rows.Count > 0) { rtn = byte.Parse(dt.Rows[0][0].ToString()); }
+            return rtn;
+        }
 
-		public override DataTable GetLang(Int16 CultureId)
-		{
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = new OdbcCommand("GetLang", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
+        public override DataTable GetLang(Int16 CultureId)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetLang", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
 
-		public override DataTable GetLastPageInfo(Int32 screenId, Int32 usrId, string dbConnectionString, string dbPassword)
-		{
+        public override DataTable GetLastPageInfo(Int32 screenId, Int32 usrId, string dbConnectionString, string dbPassword)
+        {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OdbcCommand cmd = new OdbcCommand("GetLastPageInfo", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = usrId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = usrId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
 
-		public override void UpdLastPageInfo(Int32 screenId, Int32 usrId, string lastPageInfo, string dbConnectionString, string dbPassword)
-		{
-			OdbcConnection cn =  new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
-			cn.Open();
-			OdbcCommand cmd = new OdbcCommand("UpdLastPageInfo", cn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = usrId;
-			if (Config.DoubleByteDb) {cmd.Parameters.Add("@LastPageInfo", OdbcType.NVarChar).Value = lastPageInfo;} else {cmd.Parameters.Add("@LastPageInfo", OdbcType.VarChar).Value = lastPageInfo;}
-			cmd.CommandTimeout = _CommandTimeout;
-			try {TransformCmd(cmd).ExecuteNonQuery();}
+        public override void UpdLastPageInfo(Int32 screenId, Int32 usrId, string lastPageInfo, string dbConnectionString, string dbPassword)
+        {
+            OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
+            cn.Open();
+            OdbcCommand cmd = new OdbcCommand("UpdLastPageInfo", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = usrId;
+            if (Config.DoubleByteDb) { cmd.Parameters.Add("@LastPageInfo", OdbcType.NVarChar).Value = lastPageInfo; } else { cmd.Parameters.Add("@LastPageInfo", OdbcType.VarChar).Value = lastPageInfo; }
+            cmd.CommandTimeout = _CommandTimeout;
+            try { TransformCmd(cmd).ExecuteNonQuery(); }
             catch (Exception e) { ApplicationAssert.CheckCondition(false, "UpdLastPageInfo", "", e.Message.ToString()); }
-			finally {cn.Close(); cmd.Dispose(); cmd = null;}
-			return;
-		}
+            finally { cn.Close(); cmd.Dispose(); cmd = null; }
+            return;
+        }
 
         public override DataTable GetLastCriteria(Int32 screenId, Int32 reportId, Int32 usrId, string dbConnectionString, string dbPassword)
         {
@@ -294,20 +294,20 @@ namespace RO.Access3.Odbc
             return rtn;
         }
 
-		public override string GetSchemaScrImp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
+        public override string GetSchemaScrImp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OdbcCommand cmd = new OdbcCommand("GetSchemaScrImp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			StringBuilder sb = new StringBuilder();
-			foreach(DataRow dr in dt.Rows){ sb.Append(dr[0].ToString()); }
-			return sb.ToString();
-		}
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            StringBuilder sb = new StringBuilder();
+            foreach (DataRow dr in dt.Rows) { sb.Append(dr[0].ToString()); }
+            return sb.ToString();
+        }
 
         public override string GetScrImpTmpl(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
         {
@@ -324,201 +324,201 @@ namespace RO.Access3.Odbc
             return sb.ToString();
         }
 
-		public override DataTable GetButtonHlp(Int32 screenId, Int32 reportId, Int32 wizardId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
+        public override DataTable GetButtonHlp(Int32 screenId, Int32 reportId, Int32 wizardId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OdbcCommand cmd = new OdbcCommand("GetButtonHlp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@ReportId", OdbcType.Numeric).Value = reportId;
-			cmd.Parameters.Add("@WizardId", OdbcType.Numeric).Value = wizardId;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@ReportId", OdbcType.Numeric).Value = reportId;
+            cmd.Parameters.Add("@WizardId", OdbcType.Numeric).Value = wizardId;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
 
-		public override DataTable GetClientRule(Int32 screenId, Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
+        public override DataTable GetClientRule(Int32 screenId, Int32 reportId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OdbcCommand cmd = new OdbcCommand("GetClientRule", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@ReportId", OdbcType.Numeric).Value = reportId;
-			cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@ReportId", OdbcType.Numeric).Value = reportId;
+            cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
 
-		public override DataTable GetScreenHlp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
-            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = null;
-			if (string.IsNullOrEmpty(dbConnectionString))
-			{
-				cmd = new OdbcCommand("GetScreenHlp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
-			}
-			else
-			{
-				cmd = new OdbcCommand("GetScreenHlp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			}
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count == 1, "GetScreenHlp", "Screen Issue", "Default help message not available for Screen #'" + screenId.ToString() + "' and Culture #'" + cultureId.ToString() + "'!");
-			return dt;
-		}
-
-		public override DataTable GetGlobalFilter(Int32 usrId, Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
-            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-            OdbcCommand cmd = new OdbcCommand("GetGlobalFilter", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@usrId", OdbcType.Numeric).Value = usrId;
-			cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
-
-		public override DataTable GetScreenFilter(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
-            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-            OdbcCommand cmd = new OdbcCommand("GetScreenFilter", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
-
-		public override DataTable GetScreenTab(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
-            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-            OdbcCommand cmd = new OdbcCommand("GetScreenTab", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetScreenTab", "Screen Issue", "Tab Folder Names not available for Screen #'" + screenId.ToString() + "' and Culture #'" + cultureId.ToString() + "'!");
-			return dt;
-		}
-
-		public override DataTable GetScreenCriHlp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
-		{
-			if ( da == null ) { throw new System.ObjectDisposedException( GetType().FullName ); }            
-			OdbcCommand cmd = new OdbcCommand("GetScreenCriHlp",new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
-			cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-            try { da.Fill(dt); }
-			catch(Exception e) {ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString());}
-			finally {cmd.Dispose(); cmd = null;}
-//			ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetScreenCriHlp", "Screen Issue", "Criteria Column Headers not available for Screen #'" + screenId.ToString() + "' and Culture #'" + cultureId.ToString() + "'!");
-			return dt;
-		}
-
-		public override void LogUsage(Int32 UsrId, string UsageNote, string EntityTitle, Int32 ScreenId, Int32 ReportId, Int32 WizardId, string Miscellaneous, string dbConnectionString, string dbPassword)
-		{
-			OdbcConnection cn =  new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
-			cn.Open();
-			OdbcCommand cmd = new OdbcCommand("LogUsage", cn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = UsrId;
-			if (string.IsNullOrEmpty(UsageNote))
-			{
-				cmd.Parameters.Add("@UsageNote", OdbcType.VarChar).Value = System.DBNull.Value;
-			}
-			else
-			{
-				if (Config.DoubleByteDb) {cmd.Parameters.Add("@UsageNote", OdbcType.NVarChar).Value = UsageNote;} 
-				else {cmd.Parameters.Add("@UsageNote", OdbcType.VarChar).Value = UsageNote;}
-			}
-			if (Config.DoubleByteDb) {cmd.Parameters.Add("@EntityTitle", OdbcType.NVarChar).Value = EntityTitle;} 
-			else {cmd.Parameters.Add("@EntityTitle", OdbcType.VarChar).Value = EntityTitle;}
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
-			cmd.Parameters.Add("@ReportId", OdbcType.Numeric).Value = ReportId;
-			cmd.Parameters.Add("@WizardId", OdbcType.Numeric).Value = WizardId;
-			if (string.IsNullOrEmpty(Miscellaneous))
-			{
-				cmd.Parameters.Add("@Miscellaneous", OdbcType.VarChar).Value = System.DBNull.Value;
-			}
-			else
-			{
-				cmd.Parameters.Add("@Miscellaneous", OdbcType.VarChar).Value = Miscellaneous;
-			}
-			cmd.CommandTimeout = _CommandTimeout;
-			try {TransformCmd(cmd).ExecuteNonQuery();}
-			catch(Exception e) {ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString());}
-			finally {cn.Close(); cmd.Dispose(); cmd = null;}
-			return;
-		}
-
-		public override DataTable GetInfoByCol(Int32 ScreenId, string ColumnName, string dbConnectionString, string dbPassword)
-		{
-            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-            OdbcCommand cmd = new OdbcCommand("GetInfoByCol", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
-			cmd.Parameters.Add("@ColumnName", OdbcType.VarChar).Value = ColumnName;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetInfoByCol", "Column not available", "Column '" + ColumnName + "' is not defined for Screen #'" + ScreenId.ToString() + "!");
-			return dt;
-		}
-
-		public override bool IsValidOvride(Credential cr, Int32 usrId)
-		{
-            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr()));
-			cn.Open();
-			OdbcCommand cmd = new OdbcCommand("IsValidOvride", cn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@OvrideId", OdbcType.Numeric).Value = Int32.Parse(cr.LoginName);
-			cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = usrId;
-			cmd.Parameters.Add("@UsrPassword", OdbcType.VarBinary).Value = cr.Password;
-			int rtn = Convert.ToInt32(TransformCmd(cmd).ExecuteScalar());
-			cmd.Dispose();
-			cmd = null;
-			cn.Close();
-			if (rtn == 0) {return false;} else {return true;}
-		}
-
-		public override DataTable GetMsg(int MsgId, Int16 CultureId, string dbConnectionString, string dbPassword)
-		{
+        public override DataTable GetScreenHlp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
             OdbcCommand cmd = null;
-			if (string.IsNullOrEmpty(dbConnectionString))
-			{
-				cmd = new OdbcCommand("GetMsg", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
-			}
-			else
-			{
-				cmd = new OdbcCommand("GetMsg", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			}
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@MsgId", OdbcType.Numeric).Value = MsgId;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
+            if (string.IsNullOrEmpty(dbConnectionString))
+            {
+                cmd = new OdbcCommand("GetScreenHlp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
+            }
+            else
+            {
+                cmd = new OdbcCommand("GetScreenHlp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            ApplicationAssert.CheckCondition(dt.Rows.Count == 1, "GetScreenHlp", "Screen Issue", "Default help message not available for Screen #'" + screenId.ToString() + "' and Culture #'" + cultureId.ToString() + "'!");
+            return dt;
+        }
+
+        public override DataTable GetGlobalFilter(Int32 usrId, Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetGlobalFilter", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@usrId", OdbcType.Numeric).Value = usrId;
+            cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+
+        public override DataTable GetScreenFilter(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetScreenFilter", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+
+        public override DataTable GetScreenTab(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetScreenTab", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetScreenTab", "Screen Issue", "Tab Folder Names not available for Screen #'" + screenId.ToString() + "' and Culture #'" + cultureId.ToString() + "'!");
+            return dt;
+        }
+
+        public override DataTable GetScreenCriHlp(Int32 screenId, Int16 cultureId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetScreenCriHlp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@screenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@cultureId", OdbcType.Numeric).Value = cultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            try { da.Fill(dt); }
+            catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
+            finally { cmd.Dispose(); cmd = null; }
+            //			ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetScreenCriHlp", "Screen Issue", "Criteria Column Headers not available for Screen #'" + screenId.ToString() + "' and Culture #'" + cultureId.ToString() + "'!");
+            return dt;
+        }
+
+        public override void LogUsage(Int32 UsrId, string UsageNote, string EntityTitle, Int32 ScreenId, Int32 ReportId, Int32 WizardId, string Miscellaneous, string dbConnectionString, string dbPassword)
+        {
+            OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
+            cn.Open();
+            OdbcCommand cmd = new OdbcCommand("LogUsage", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = UsrId;
+            if (string.IsNullOrEmpty(UsageNote))
+            {
+                cmd.Parameters.Add("@UsageNote", OdbcType.VarChar).Value = System.DBNull.Value;
+            }
+            else
+            {
+                if (Config.DoubleByteDb) { cmd.Parameters.Add("@UsageNote", OdbcType.NVarChar).Value = UsageNote; }
+                else { cmd.Parameters.Add("@UsageNote", OdbcType.VarChar).Value = UsageNote; }
+            }
+            if (Config.DoubleByteDb) { cmd.Parameters.Add("@EntityTitle", OdbcType.NVarChar).Value = EntityTitle; }
+            else { cmd.Parameters.Add("@EntityTitle", OdbcType.VarChar).Value = EntityTitle; }
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
+            cmd.Parameters.Add("@ReportId", OdbcType.Numeric).Value = ReportId;
+            cmd.Parameters.Add("@WizardId", OdbcType.Numeric).Value = WizardId;
+            if (string.IsNullOrEmpty(Miscellaneous))
+            {
+                cmd.Parameters.Add("@Miscellaneous", OdbcType.VarChar).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@Miscellaneous", OdbcType.VarChar).Value = Miscellaneous;
+            }
+            cmd.CommandTimeout = _CommandTimeout;
+            try { TransformCmd(cmd).ExecuteNonQuery(); }
+            catch (Exception e) { ApplicationAssert.CheckCondition(false, "", "", e.Message.ToString()); }
+            finally { cn.Close(); cmd.Dispose(); cmd = null; }
+            return;
+        }
+
+        public override DataTable GetInfoByCol(Int32 ScreenId, string ColumnName, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetInfoByCol", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
+            cmd.Parameters.Add("@ColumnName", OdbcType.VarChar).Value = ColumnName;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetInfoByCol", "Column not available", "Column '" + ColumnName + "' is not defined for Screen #'" + ScreenId.ToString() + "!");
+            return dt;
+        }
+
+        public override bool IsValidOvride(Credential cr, Int32 usrId)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr()));
+            cn.Open();
+            OdbcCommand cmd = new OdbcCommand("IsValidOvride", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@OvrideId", OdbcType.Numeric).Value = Int32.Parse(cr.LoginName);
+            cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = usrId;
+            cmd.Parameters.Add("@UsrPassword", OdbcType.VarBinary).Value = cr.Password;
+            int rtn = Convert.ToInt32(TransformCmd(cmd).ExecuteScalar());
+            cmd.Dispose();
+            cmd = null;
+            cn.Close();
+            if (rtn == 0) { return false; } else { return true; }
+        }
+
+        public override DataTable GetMsg(int MsgId, Int16 CultureId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = null;
+            if (string.IsNullOrEmpty(dbConnectionString))
+            {
+                cmd = new OdbcCommand("GetMsg", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
+            }
+            else
+            {
+                cmd = new OdbcCommand("GetMsg", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@MsgId", OdbcType.Numeric).Value = MsgId;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
         public override DataTable GetCronJob(int? jobId, string jobLink, string dbConnectionString, string dbPassword)
         {
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
@@ -557,8 +557,8 @@ namespace RO.Access3.Odbc
             cmd.CommandTimeout = _CommandTimeout;
             cmd.Transaction = tr;
             cmd.Parameters.Add("@jobId", OdbcType.Numeric).Value = jobId;
-            cmd.Parameters.Add("@lastRun", GetOdbcType("datetime")).Value = lastRun.HasValue ? (object) ToOleDbDatetime(lastRun.Value) : DBNull.Value;
-            cmd.Parameters.Add("@nextRun", GetOdbcType("datetime")).Value = nextRun.HasValue ? (object) ToOleDbDatetime(nextRun.Value) : DBNull.Value;
+            cmd.Parameters.Add("@lastRun", GetOdbcType("datetime")).Value = lastRun.HasValue ? (object)ToOleDbDatetime(lastRun.Value) : DBNull.Value;
+            cmd.Parameters.Add("@nextRun", GetOdbcType("datetime")).Value = nextRun.HasValue ? (object)ToOleDbDatetime(nextRun.Value) : DBNull.Value;
             cmd.Parameters[1].Size = 16;
             cmd.Parameters[1].Precision = 20;
             cmd.Parameters[1].Scale = 3;
@@ -610,73 +610,73 @@ namespace RO.Access3.Odbc
             }
         }
 
-		// Obtain translated label one at a time from the table "Label" on system dependent database.
+        // Obtain translated label one at a time from the table "Label" on system dependent database.
         public override string GetLabel(Int16 CultureId, string LabelCat, string LabelKey, string CompanyId, string dbConnectionString, string dbPassword)
-		{
-			string rtn = string.Empty;
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcConnection cn;
-			if (string.IsNullOrEmpty(dbConnectionString))
-			{
-				cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr()));
-			}
-			else
-			{
-				cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
-			}
-			cn.Open();
-			OdbcCommand cmd = new OdbcCommand("GetLabel", cn);
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId.ToString();
+        {
+            string rtn = string.Empty;
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcConnection cn;
+            if (string.IsNullOrEmpty(dbConnectionString))
+            {
+                cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr()));
+            }
+            else
+            {
+                cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword)));
+            }
+            cn.Open();
+            OdbcCommand cmd = new OdbcCommand("GetLabel", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId.ToString();
             cmd.Parameters.Add("@LabelCat", OdbcType.VarChar).Value = LabelCat;
             cmd.Parameters.Add("@LabelKey", OdbcType.VarChar).Value = LabelKey;
-			if (string.IsNullOrEmpty(CompanyId))
-			{
-				cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = System.DBNull.Value;
-			}
-			else
-			{
-				cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = CompanyId;
-			}
-			cmd.CommandTimeout = _CommandTimeout;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			try { da.Fill(dt); rtn = dt.Rows[0][0].ToString(); }
-			catch { }
-			finally { cn.Close(); cmd.Dispose(); cmd = null; }
-			return rtn;
-		}
+            if (string.IsNullOrEmpty(CompanyId))
+            {
+                cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = CompanyId;
+            }
+            cmd.CommandTimeout = _CommandTimeout;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            try { da.Fill(dt); rtn = dt.Rows[0][0].ToString(); }
+            catch { }
+            finally { cn.Close(); cmd.Dispose(); cmd = null; }
+            return rtn;
+        }
 
-		// Obtain translated labels as one category from the table "Label" on system dependent database.
-		public override DataTable GetLabels(Int16 CultureId, string LabelCat, string CompanyId, string dbConnectionString, string dbPassword)
-		{
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd;
-			if (string.IsNullOrEmpty(dbConnectionString))
-			{
-				cmd = new OdbcCommand("GetLabels", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
-			}
-			else
-			{
-				cmd = new OdbcCommand("GetLabels", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			}
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId.ToString();
-			cmd.Parameters.Add("@LabelCat", OdbcType.VarChar).Value = LabelCat;
-			if (string.IsNullOrEmpty(CompanyId))
-			{
-				cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = System.DBNull.Value;
-			}
-			else
-			{
-				cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = CompanyId;
-			}
-			cmd.CommandTimeout = _CommandTimeout;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			return dt;
-		}
+        // Obtain translated labels as one category from the table "Label" on system dependent database.
+        public override DataTable GetLabels(Int16 CultureId, string LabelCat, string CompanyId, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd;
+            if (string.IsNullOrEmpty(dbConnectionString))
+            {
+                cmd = new OdbcCommand("GetLabels", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
+            }
+            else
+            {
+                cmd = new OdbcCommand("GetLabels", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            }
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId.ToString();
+            cmd.Parameters.Add("@LabelCat", OdbcType.VarChar).Value = LabelCat;
+            if (string.IsNullOrEmpty(CompanyId))
+            {
+                cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = System.DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters.Add("@CompanyId", OdbcType.Numeric).Value = CompanyId;
+            }
+            cmd.CommandTimeout = _CommandTimeout;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
 
         public override DataTable GetScrCriteria(string screenId, string dbConnectionString, string dbPassword)
         {
@@ -784,7 +784,7 @@ namespace RO.Access3.Odbc
             cmd.Dispose();
             cmd = null;
             cn.Close();
-           return rtn;
+            return rtn;
         }
 
         public override void UpdScrCriteria(string screenId, string programName, DataView dvCri, Int32 usrId, bool isCriVisible, DataSet ds, string dbConnectionString, string dbPassword)
@@ -863,110 +863,110 @@ namespace RO.Access3.Odbc
             return;
         }
 
-		public override DataTable GetAuthRow(Int32 ScreenId, string RowAuthoritys, string dbConnectionString, string dbPassword)
-		{
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = new OdbcCommand("GetAuthRow", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
-			cmd.Parameters.Add("@RowAuthoritys", OdbcType.VarChar).Value = RowAuthoritys;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count == 1, "GetAuthRow", "Authorization Issue", "Authority levels have not been defined for Screen #'" + ScreenId.ToString() + "!");
+        public override DataTable GetAuthRow(Int32 ScreenId, string RowAuthoritys, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetAuthRow", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
+            cmd.Parameters.Add("@RowAuthoritys", OdbcType.VarChar).Value = RowAuthoritys;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            ApplicationAssert.CheckCondition(dt.Rows.Count == 1, "GetAuthRow", "Authorization Issue", "Authority levels have not been defined for Screen #'" + ScreenId.ToString() + "!");
             return dt;
-		}
+        }
 
-		public override DataTable GetAuthCol(Int32 ScreenId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
-		{
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = new OdbcCommand("GetAuthCol", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
-			cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
-			cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
-			cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
-			cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
-			cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
-			cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
-			cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
-			cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
-			cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
-			cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
-			cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
+        public override DataTable GetAuthCol(Int32 ScreenId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetAuthCol", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
+            cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
+            cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
+            cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
+            cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
+            cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
+            cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
+            cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
+            cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
+            cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
+            cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
+            cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
             cmd.Parameters.Add("@Borrowers", OdbcType.VarChar).Value = ui.Borrowers;
             cmd.Parameters.Add("@Guarantors", OdbcType.VarChar).Value = ui.Guarantors;
             cmd.Parameters.Add("@Lenders", OdbcType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OdbcType.Numeric).Value = uc.CompanyId;
-			cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
+            cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
             cmd.Parameters.Add("@RowAuthoritys", OdbcType.VarChar).Value = ui.RowAuthoritys;
             da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetAuthCol", "Authorization Issue", "Authority levels have not been defined for Screen #'" + ScreenId.ToString() + "!");
-			return dt;
-		}
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetAuthCol", "Authorization Issue", "Authority levels have not been defined for Screen #'" + ScreenId.ToString() + "!");
+            return dt;
+        }
 
-		public override DataTable GetAuthExp(Int32 ScreenId, Int16 CultureId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
-		{
-			if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = new OdbcCommand("GetAuthExp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
-			cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
-			cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
-			cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
-			cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
-			cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
-			cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
-			cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
-			cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
-			cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
-			cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
-			cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
+        public override DataTable GetAuthExp(Int32 ScreenId, Int16 CultureId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+            OdbcCommand cmd = new OdbcCommand("GetAuthExp", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
+            cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
+            cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
+            cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
+            cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
+            cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
+            cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
+            cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
+            cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
+            cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
+            cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
+            cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
             cmd.Parameters.Add("@Borrowers", OdbcType.VarChar).Value = ui.Borrowers;
             cmd.Parameters.Add("@Guarantors", OdbcType.VarChar).Value = ui.Guarantors;
             cmd.Parameters.Add("@Lenders", OdbcType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OdbcType.Numeric).Value = uc.CompanyId;
-			cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetAuthExp", "Authorization Issue", "Authority levels have not been defined for Screen #'" + ScreenId.ToString() + "!");
-			return dt;
-		}
+            cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetAuthExp", "Authorization Issue", "Authority levels have not been defined for Screen #'" + ScreenId.ToString() + "!");
+            return dt;
+        }
 
-		public override DataTable GetScreenLabel(Int32 ScreenId, Int16 CultureId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
-		{
+        public override DataTable GetScreenLabel(Int32 ScreenId, Int16 CultureId, UsrImpr ui, UsrCurr uc, string dbConnectionString, string dbPassword)
+        {
             //if (!dbConnectionString.Contains("Design")) checkValidLicense();
             if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
-			OdbcCommand cmd = new OdbcCommand("GetScreenLabel", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
-			cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
-			cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
-			cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
-			cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
-			cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
-			cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
-			cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
-			cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
-			cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
-			cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
-			cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
-			cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
+            OdbcCommand cmd = new OdbcCommand("GetScreenLabel", new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))));
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = ScreenId;
+            cmd.Parameters.Add("@CultureId", OdbcType.Numeric).Value = CultureId;
+            cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
+            cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
+            cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
+            cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
+            cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
+            cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
+            cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
+            cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
+            cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
+            cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
+            cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
             cmd.Parameters.Add("@Borrowers", OdbcType.VarChar).Value = ui.Borrowers;
             cmd.Parameters.Add("@Guarantors", OdbcType.VarChar).Value = ui.Guarantors;
             cmd.Parameters.Add("@Lenders", OdbcType.VarChar).Value = ui.Lenders;
             cmd.Parameters.Add("@currCompanyId", OdbcType.Numeric).Value = uc.CompanyId;
-			cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetScreenLabel", "Screen Issue", "Screen Column Headers not available for Screen #'" + ScreenId.ToString() + "' and Culture #'" + CultureId.ToString() + "'!");
-			return dt;
-		}
+            cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            ApplicationAssert.CheckCondition(dt.Rows.Count > 0, "GetScreenLabel", "Screen Issue", "Screen Column Headers not available for Screen #'" + ScreenId.ToString() + "' and Culture #'" + CultureId.ToString() + "'!");
+            return dt;
+        }
 
         public override DataTable GetDdl(Int32 screenId, string procedureName, bool bAddNew, bool bAll, int topN, string keyId, string dbConnectionString, string dbPassword, string filterTxt, UsrImpr ui, UsrCurr uc)
         {
@@ -1068,16 +1068,119 @@ namespace RO.Access3.Odbc
             {
                 if (!noTrans) cmd.Transaction = tr;
                 DataSet ds = new DataSet();
-                //dt.Load(TransformCmd(cmd).ExecuteReader());
-                da.Fill(ds);
+                string deadLockErr = "was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction";
+                Exception lastErr = new Exception("RunWrRule error"); // this one should never be the value
+                int reTry = 2;
+                for (var i = 0; i < reTry; i++)
+                {
+                    try
+                    {
+                        //dt.Load(TransformCmd(cmd).ExecuteReader());
+                        da.Fill(ds);
+                        /*
+                         * DO NOT USE DataAdapter Fill(DataTable) as error raised is not captured when the SP already return something(and the raiserror is done after that)
+                         * , i.e. not behave as one expect, Fill(DataSet) which would correctly capture the error thus we can rollback
+                        da.Fill(dt); 
+                        */
+                        if (!noTrans) tr.Commit();
+                        if (ds.Tables.Count > 0) return ds.Tables[0]; else return new DataTable();
+                    }
+                    catch (Exception ex)
+                    {
+                        lastErr = ex;
+                        // this only works for english
+                        if (i == reTry - 1 || ex.ToString().IndexOf(deadLockErr, StringComparison.InvariantCultureIgnoreCase) < 0 || !noTrans)
+                        {
+                            throw; // any error other than deadlock or retry count ex
+                        }
+                    }
+                }
+                throw lastErr;
+            }
+            catch (Exception e)
+            {
+                if (!noTrans) tr.Rollback();
+                throw new Exception(procedureName + ":" + e.Message);
+            }
+            finally
+            {
+                cn.Close();
+            }
+        }
 
-                /*
-                 * DO NOT USE DataAdapter Fill(DataTable) as error raised is not captured when the SP already return something(and the raiserror is done after that)
-                 * , i.e. not behave as one expect, Fill(DataSet) which would correctly capture the error thus we can rollback
-                da.Fill(dt); 
-                */
-                if (!noTrans) tr.Commit();
-                if (ds.Tables.Count > 0) return ds.Tables[0]; else return new DataTable();
+        public override DataSet RunWrRuleEx(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans)
+        {
+            if (da == null) { throw new System.ObjectDisposedException(GetType().FullName); }
+
+            OdbcConnection cn;
+            if (string.IsNullOrEmpty(dbConnectionString)) { cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())); } else { cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(dbConnectionString + DecryptString(dbPassword))); }
+            OdbcCommand cmd = new OdbcCommand(procedureName, cn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@ScreenId", OdbcType.Numeric).Value = screenId;
+            cmd.Parameters.Add("@Usrs", OdbcType.VarChar).Value = ui.Usrs;
+            cmd.Parameters.Add("@RowAuthoritys", OdbcType.VarChar).Value = ui.RowAuthoritys;
+            cmd.Parameters.Add("@Customers", OdbcType.VarChar).Value = ui.Customers;
+            cmd.Parameters.Add("@Vendors", OdbcType.VarChar).Value = ui.Vendors;
+            cmd.Parameters.Add("@Members", OdbcType.VarChar).Value = ui.Members;
+            cmd.Parameters.Add("@Investors", OdbcType.VarChar).Value = ui.Investors;
+            cmd.Parameters.Add("@Agents", OdbcType.VarChar).Value = ui.Agents;
+            cmd.Parameters.Add("@Brokers", OdbcType.VarChar).Value = ui.Brokers;
+            cmd.Parameters.Add("@UsrGroups", OdbcType.VarChar).Value = ui.UsrGroups;
+            cmd.Parameters.Add("@Companys", OdbcType.VarChar).Value = ui.Companys;
+            cmd.Parameters.Add("@Projects", OdbcType.VarChar).Value = ui.Projects;
+            cmd.Parameters.Add("@Cultures", OdbcType.VarChar).Value = ui.Cultures;
+            cmd.Parameters.Add("@Borrowers", OdbcType.VarChar).Value = ui.Borrowers;
+            cmd.Parameters.Add("@Guarantors", OdbcType.VarChar).Value = ui.Guarantors;
+            cmd.Parameters.Add("@Lenders", OdbcType.VarChar).Value = ui.Lenders;
+            cmd.Parameters.Add("@currCompanyId", OdbcType.Numeric).Value = uc.CompanyId;
+            cmd.Parameters.Add("@currProjectId", OdbcType.Numeric).Value = uc.ProjectId;
+            if (parameterXML == string.Empty)
+            {
+                cmd.Parameters.Add("@parameterXML", OdbcType.VarChar).Value = System.DBNull.Value;
+            }
+            else
+            {
+                if (Config.DoubleByteDb) { cmd.Parameters.Add("@parameterXML", OdbcType.NVarChar).Value = parameterXML; } else { cmd.Parameters.Add("@parameterXML", OdbcType.VarChar).Value = parameterXML; }
+            }
+            cmd.CommandTimeout = _CommandTimeout;
+            da.SelectCommand = TransformCmd(cmd);
+
+            cn.Open();
+            OdbcTransaction tr = noTrans ? null : cn.BeginTransaction();
+            try
+            {
+                if (!noTrans) cmd.Transaction = tr;
+                DataSet ds = new DataSet();
+                string deadLockErr = "was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction";
+                Exception lastErr = new Exception("RunWrRuleEx error"); // this one should never be the value
+                int reTry = 2;
+                for (var i = 0; i < reTry; i++)
+                {
+                    try
+                    {
+                        //dt.Load(TransformCmd(cmd).ExecuteReader());
+                        da.Fill(ds);
+                        /*
+                         * DO NOT USE DataAdapter Fill(DataTable) as error raised is not captured when the SP already return something(and the raiserror is done after that)
+                         * , i.e. not behave as one expect, Fill(DataSet) which would correctly capture the error thus we can rollback
+                        da.Fill(dt); 
+                        */
+                        if (!noTrans) tr.Commit();
+                        return ds;
+                    }
+                    catch (Exception ex)
+                    {
+                        lastErr = ex;
+                        // this only works for english
+                        if (i == reTry - 1 || ex.ToString().IndexOf(deadLockErr, StringComparison.InvariantCultureIgnoreCase) < 0 || !noTrans)
+                        {
+                            throw; // any error other than deadlock or retry count ex
+                        }
+
+                    }
+                }
+                throw lastErr;
+
             }
             catch (Exception e)
             {
@@ -1267,8 +1370,27 @@ namespace RO.Access3.Odbc
             cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = TransformCmd(cmd);
             DataTable dt = new DataTable();
-            da.Fill(dt);
-            return dt;
+            int reTry = 2;
+            Exception lastErr = new Exception("GetMstById error"); // this one should never be the value
+            string deadLockErr = "was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction";
+            for (var i = 0; i < reTry; i++)
+            {
+                try
+                {
+                    da.Fill(dt);
+                    return dt;
+                }
+                catch (Exception ex)
+                {
+                    lastErr = ex;
+                    // this only works for english
+                    if (i == reTry - 1 || ex.ToString().IndexOf(deadLockErr, StringComparison.InvariantCultureIgnoreCase) < 0)
+                    {
+                        throw; // any error other than deadlock or retry count ex
+                    }
+                }
+            }
+            throw lastErr;
         }
 
         /* Albeit rare, this overload shall take care of more than one column as primary key */
@@ -1290,8 +1412,27 @@ namespace RO.Access3.Odbc
             cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = TransformCmd(cmd);
             DataTable dt = new DataTable();
-            da.Fill(dt);
-            return dt;
+            int reTry = 2;
+            Exception lastErr = new Exception("GetMstById error"); // this one should never be the value
+            string deadLockErr = "was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction";
+            for (var i = 0; i < reTry; i++)
+            {
+                try
+                {
+                    da.Fill(dt);
+                    return dt;
+                }
+                catch (Exception ex)
+                {
+                    lastErr = ex;
+                    // this only works for english
+                    if (i == reTry - 1 || ex.ToString().IndexOf(deadLockErr, StringComparison.InvariantCultureIgnoreCase) < 0)
+                    {
+                        throw; // any error other than deadlock or retry count ex
+                    }
+                }
+            }
+            throw lastErr;
         }
 
         public override DataTable GetDtlById(Int32 screenId, string procedureName, string keyId, string dbConnectionString, string dbPassword, Int32 screenFilterId, UsrImpr ui, UsrCurr uc)
@@ -1337,8 +1478,27 @@ namespace RO.Access3.Odbc
             cmd.CommandTimeout = _CommandTimeout;
             da.SelectCommand = TransformCmd(cmd);
             DataTable dt = new DataTable();
-            da.Fill(dt);
-            return dt;
+            int reTry = 2;
+            Exception lastErr = new Exception("GetDtlById error"); // this one should never be the value
+            string deadLockErr = "was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction";
+            for (var i = 0; i < reTry; i++)
+            {
+                try
+                {
+                    da.Fill(dt);
+                    return dt;
+                }
+                catch (Exception ex)
+                {
+                    lastErr = ex;
+                    // this only works for english
+                    if (i == reTry - 1 || ex.ToString().IndexOf(deadLockErr, StringComparison.InvariantCultureIgnoreCase) < 0)
+                    {
+                        throw; // any error other than deadlock or retry count ex
+                    }
+                }
+            }
+            throw lastErr;
         }
 
         //private OleDbType GetOdbcType(string ColType)
@@ -1500,13 +1660,13 @@ namespace RO.Access3.Odbc
                 case "config.loginimage": rtn = Config.LoginImage; break;
                 default:
                     rtn = dis == null || !dis.Table.Columns.Contains(callp) || string.IsNullOrEmpty(row[callp].ToString())
-                            ? (object) row[callp].ToString()
-                            : dis[callp].ToString().ToLower() == "password" 
-                                ? (object) new Credential(string.Empty, row[callp].ToString().Trim()).Password
+                            ? (object)row[callp].ToString()
+                            : dis[callp].ToString().ToLower() == "password"
+                                ? (object)new Credential(string.Empty, row[callp].ToString().Trim()).Password
                                 : paramType.ToLower() == "varbinary"
                                     ? (dis[callp].ToString().ToLower() == "imagebutton" ? (object)row[callp] : (object)Convert.FromBase64String((string)row[callp].ToString()))
                                     : (object)row[callp].ToString()
-                                ;  
+                                ;
                     break;
             }
             return rtn;
@@ -1540,15 +1700,15 @@ namespace RO.Access3.Odbc
                             callp = Utils.PopFirstWord(callingParams, (char)44).Trim();
                             param = Utils.PopFirstWord(parameterNames, (char)44).Trim();
                             paramType = Utils.PopFirstWord(parameterTypes, (char)44).Trim();
-                            object val = 
-                                (callp ?? "").ToLower() == "Action.FiringEvent".ToLower() ? (object) firingEvent
+                            object val =
+                                (callp ?? "").ToLower() == "Action.FiringEvent".ToLower() ? (object)firingEvent
                                 : (callp ?? "").ToLower() == "Action.MasterTable".ToLower() ? (object)drv["MasterTable"].ToString()
                                 : (callp ?? "").ToLower() == "Action.BeforeCRUD".ToLower() ? (object)beforeCRUD
                                 : (callp ?? "").ToLower() == "Action.ServerRuleId".ToLower() ? (object)drv["ServerRuleId"].ToString()
                                 : GetCallParam(callp, LUser, LImpr, LCurr, row, dis, paramType);
-                            if (string.IsNullOrEmpty(callp) 
+                            if (string.IsNullOrEmpty(callp)
                                 || val == null
-                                || (val is string && string.IsNullOrEmpty(val as string)) 
+                                || (val is string && string.IsNullOrEmpty(val as string))
                                 || val as string == Convert.ToDateTime("0001.01.01").ToString())
                             {
                                 cmd.Parameters.Add("@" + param, GetOdbcType(paramType)).Value = System.DBNull.Value;
@@ -1616,9 +1776,9 @@ namespace RO.Access3.Odbc
             {
                 if (dc.ColumnName != pKeyCol && dc.ColumnName != pMKeyCol)
                 {
-                    if ("hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,label".IndexOf(disDt[dc.ColumnName].ToString().ToLower()) < 0 
-                        && !string.IsNullOrEmpty(typDt[dc.ColumnName].ToString()) 
-                        && !(disDt[dc.ColumnName].ToString().ToLower() == "imagebutton" 
+                    if ("hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,label".IndexOf(disDt[dc.ColumnName].ToString().ToLower()) < 0
+                        && !string.IsNullOrEmpty(typDt[dc.ColumnName].ToString())
+                        && !(disDt[dc.ColumnName].ToString().ToLower() == "imagebutton"
                         && typDt[dc.ColumnName].ToString().ToLower() == "varbinary"))
                     {
                         if (string.IsNullOrEmpty(row[dc.ColumnName].ToString().Trim()) || row[dc.ColumnName].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString())
@@ -1640,10 +1800,10 @@ namespace RO.Access3.Odbc
                     }
                 }
             }
-			da.SelectCommand = TransformCmd(cmd);
-			DataTable dt = new DataTable();
-			da.Fill(dt);
-			rtn = dt.Rows[0][0].ToString();
+            da.SelectCommand = TransformCmd(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            rtn = dt.Rows[0][0].ToString();
             cmd.Dispose();
             cmd = null;
             return rtn;
@@ -1662,11 +1822,11 @@ namespace RO.Access3.Odbc
             cmd.Parameters.Add("@" + pKeyCol, GetOdbcType(pKeyOle)).Value = row[pKeyCol].ToString().Trim();
             foreach (DataColumn dc in cols)
             {
-                if (dc.ColumnName != pKeyCol 
-                    && dc.ColumnName != pMKeyCol 
-                    && "hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,label".IndexOf(disDt[dc.ColumnName].ToString().ToLower()) < 0 
-                    && !string.IsNullOrEmpty(typDt[dc.ColumnName].ToString()) 
-                    && !(disDt[dc.ColumnName].ToString().ToLower() == "imagebutton" 
+                if (dc.ColumnName != pKeyCol
+                    && dc.ColumnName != pMKeyCol
+                    && "hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,label".IndexOf(disDt[dc.ColumnName].ToString().ToLower()) < 0
+                    && !string.IsNullOrEmpty(typDt[dc.ColumnName].ToString())
+                    && !(disDt[dc.ColumnName].ToString().ToLower() == "imagebutton"
                     && typDt[dc.ColumnName].ToString().ToLower() == "varbinary"))
                 {
                     if (string.IsNullOrEmpty(row[dc.ColumnName].ToString().Trim()) || row[dc.ColumnName].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString())
@@ -1772,8 +1932,8 @@ namespace RO.Access3.Odbc
             }
             foreach (DataColumn dc in ds.Tables[0].Columns)
             {
-                if (dc.ColumnName != pMKeyCol 
-                    && "hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,imagebutton,label".IndexOf(dis[dc.ColumnName].ToString().ToLower()) < 0 
+                if (dc.ColumnName != pMKeyCol
+                    && "hyperlink,imagelink,hyperpopup,imagepopup,datagridlink,imagebutton,label".IndexOf(dis[dc.ColumnName].ToString().ToLower()) < 0
                     && !string.IsNullOrEmpty(typ[dc.ColumnName].ToString()))
                 {
                     if (string.IsNullOrEmpty(row[dc.ColumnName].ToString().Trim()) || row[dc.ColumnName].ToString().Trim() == Convert.ToDateTime("0001.01.01").ToString())
@@ -2025,12 +2185,12 @@ namespace RO.Access3.Odbc
                         }
                     }
 
-                    if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3") 
-                    { 
+                    if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3")
+                    {
                         ii = 0; sRowFilter = "MasterTable = 'Y'"; dis = ds.Tables[0].Rows[1];
-                    } 
-                    else 
-                    { 
+                    }
+                    else
+                    {
                         ii = 1; sRowFilter = "MasterTable <> 'Y'"; dis = ds.Tables[1].Rows[1];
                     }
                     ii = ii + 1;
@@ -2083,13 +2243,13 @@ namespace RO.Access3.Odbc
                                 pDKeyOle = drv["DataTypeDByteOle"].ToString();
                             }
                         }
-                        if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3") 
-                        { 
-                            ii = 0; 
-                        } 
-                        else 
-                        { 
-                            ii = 1; 
+                        if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3")
+                        {
+                            ii = 0;
+                        }
+                        else
+                        {
+                            ii = 1;
                         }
                         DataRow typDt = ds.Tables[ii].Rows[0]; DataRow disDt = ds.Tables[ii].Rows[1]; DataColumnCollection cols = ds.Tables[ii].Columns;
                         ii = ii + 1;
@@ -2143,12 +2303,12 @@ namespace RO.Access3.Odbc
                     }
                     if ("I2,I3".IndexOf(dtScr.Rows[0]["ScreenTypeName"].ToString()) >= 0)
                     {
-                        if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3") 
-                        { 
+                        if (dtScr.Rows[0]["ScreenTypeName"].ToString() == "I3")
+                        {
                             ii = 0; sRowFilter = "MasterTable = 'Y'"; dis = ds.Tables[ii].Rows[1];
-                        } 
-                        else 
-                        { 
+                        }
+                        else
+                        {
                             ii = 1; sRowFilter = "MasterTable <> 'Y'"; dis = ds.Tables[ii].Rows[1];
                         }
                         ii = ii + 1;
@@ -2257,8 +2417,8 @@ namespace RO.Access3.Odbc
             {
                 if (drv["MasterTable"].ToString() == "Y")
                 {
-                     cmd.Parameters.Add("@" + drv["ColumnName"].ToString() + drv["TableId"].ToString(), GetOdbcType(drv["DataTypeDByteOle"].ToString())).Value = row[drv["ColumnName"].ToString() + drv["TableId"].ToString()].ToString().Trim();
-                     cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = LUser.UsrId.ToString();
+                    cmd.Parameters.Add("@" + drv["ColumnName"].ToString() + drv["TableId"].ToString(), GetOdbcType(drv["DataTypeDByteOle"].ToString())).Value = row[drv["ColumnName"].ToString() + drv["TableId"].ToString()].ToString().Trim();
+                    cmd.Parameters.Add("@UsrId", OdbcType.Numeric).Value = LUser.UsrId.ToString();
                 }
             }
             try
@@ -2469,11 +2629,13 @@ namespace RO.Access3.Odbc
 
                 if (dr != null && ds.Tables[0].Columns.Contains("tzInfo"))
                 {
-                    setupCmd.CommandText = string.Format("INSERT INTO #ReportTemp VALUES ('{0}','{1}')", "TZInfo", dr["tzInfo"].ToString().Replace("'","''"));
+                    setupCmd.CommandText = string.Format("INSERT INTO #ReportTemp VALUES ('{0}','{1}')", "TZInfo", dr["tzInfo"].ToString().Replace("'", "''"))
+                                            + (dr.Table.Columns.Contains("tzUtcOffset") ? string.Format(" INSERT INTO #ReportTemp VALUES ('{0}','{1}')", "TZUtcOffset", dr["tzUtcOffset"].ToString().Replace("'", "''")) : "")
+                                            ;
                     setupCmd.ExecuteNonQuery();
                 }
                 setupCmd.Dispose();
-                
+
                 OdbcCommand cmd = new OdbcCommand(procedureName, cn);
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -2786,7 +2948,7 @@ namespace RO.Access3.Odbc
                             ) // "-" or "$-" is a form of 0 in excel for certain numeric formatting
                         )
                     {
-                        cmd.Parameters.Add("@" + Robot.SmallCapToStart(drv["ColumnName"].ToString()) + drv["TableId"].ToString(), GetOdbcType(drv["DataTypeDByteOle"].ToString())).Value = 0;
+                        cmd.Parameters.Add("@" + Robot.SmallCapToStart(drv["ColumnName"].ToString()) + drv["TableId"].ToString(), GetOdbcType(drv["DataTypeDByteOle"].ToString())).Value = Config.ImportDashIsNull ? System.DBNull.Value : (object) 0;
                     }
                     else if (",numeric,decimal,double,".IndexOf(drv["DataTypeSByteOle"].ToString().ToLower()) >= 0 && row[ii].ToString().Trim().EndsWith("%"))
                     {
@@ -3219,7 +3381,7 @@ namespace RO.Access3.Odbc
             return outstandingReleaseContentSys;
         }
 
-        public override Dictionary<string,List<string>> HasOutstandRegen(string ns, string dbConnectionString, string dbPassword)
+        public override Dictionary<string, List<string>> HasOutstandRegen(string ns, string dbConnectionString, string dbPassword)
         {
             OdbcConnection cn = new OdbcConnection(Config.ConvertOleDbConnStrToOdbcConnStr(Config.ConvertOleDbConnStrToOdbcConnStr(GetDesConnStr())));
             ns = ns.Trim();
@@ -3234,7 +3396,7 @@ namespace RO.Access3.Odbc
                     + "WHERE s.SysProgram = 'Y' AND s.Active = 'Y' "
                     + "AND m.dbAppUserId = s.dbAppUserId AND m.dbAppServer = s.dbAppServer "
                     + "AND (m.SysProgram = 'N' OR '" + ns + "' = 'RO' ) "
-//                    + "AND m.SysProgram = 'N' "
+                    //                    + "AND m.SysProgram = 'N' "
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = s.dbDesDatabase) "
                     + "AND EXISTS (SELECT 1 FROM master.dbo.sysdatabases WHERE name = m.dbAppDatabase) ", cn);
 

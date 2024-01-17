@@ -345,14 +345,20 @@ namespace RO.Facade3
             }
         }
 
-        public DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans = false)
+        public DataTable RunWrRule(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans = false, int commandTimeout = 1800)
         {
-            using (AdminAccessBase dac = GetAdminAccess())
+            using (AdminAccessBase dac = GetAdminAccess(commandTimeout))
             {
                 return dac.RunWrRule(screenId, procedureName, dbConnectionString, dbPassword, parameterXML, ui, uc, noTrans);
             }
         }
-
+        public DataSet RunWrRuleEx(int screenId, string procedureName, string dbConnectionString, string dbPassword, string parameterXML, UsrImpr ui, UsrCurr uc, bool noTrans = false, int commandTimeout = 1800)
+        {
+            using (AdminAccessBase dac = GetAdminAccess(commandTimeout))
+            {
+                return dac.RunWrRuleEx(screenId, procedureName, dbConnectionString, dbPassword, parameterXML, ui, uc, noTrans);
+            }
+        }
         public DataTable GetExp(Int32 screenId, string procedureName, string useGlobalFilter, string dbConnectionString, string dbPassword, Int32 screenFilterId, DataView dvCri, UsrImpr ui, UsrCurr uc, DataSet ds)
         {
             using (AdminAccessBase dac = GetAdminAccess())

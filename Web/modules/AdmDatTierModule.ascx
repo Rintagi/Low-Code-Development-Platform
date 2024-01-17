@@ -179,7 +179,7 @@
     	</div>
     	<div class="r-tr">
     		<div id="cServerName195P1" class="r-td r-labelR" runat="server"><asp:Label id="cServerName195Label" CssClass="inp-lbl" runat="server" /></div>
-    		<div id="cServerName195P2" class="r-td r-content" runat="server"><asp:TextBox id="cServerName195" CssClass="inp-txt" MaxLength="20" runat="server" /><asp:RequiredFieldValidator id="cRFVServerName195" ControlToValidate="cServerName195" display="none" runat="server" /></div>
+    		<div id="cServerName195P2" class="r-td r-content" runat="server"><asp:TextBox id="cServerName195" CssClass="inp-txt" MaxLength="50" runat="server" /><asp:RequiredFieldValidator id="cRFVServerName195" ControlToValidate="cServerName195" display="none" runat="server" /></div>
     	</div>
     	<div class="r-tr">
     		<div id="cDesServer195P1" class="r-td r-labelR" runat="server"><asp:Label id="cDesServer195Label" CssClass="inp-lbl" runat="server" /></div>

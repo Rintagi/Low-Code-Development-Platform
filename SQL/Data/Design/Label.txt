@@ -803,3 +803,68 @@
 878~@~cSystem: 0010 ErrorTitle (en-US)~@~1~@~cSystem~@~ErrorTitle~@~Error~@~~@~10
 879~@~cSystem: 0010 InfoTitle (en-US)~@~1~@~cSystem~@~InfoTitle~@~Information~@~~@~10
 880~@~MyAccountModule: 0470 cForgetOTPAccessCode (en-US)~@~1~@~MyAccountModule~@~cForgetOTPAccessCode~@~ Remove Access Code Cache~@~~@~470
+881~@~MyAccountModule: 0170 NoEmailOnFileMsg (fr-FR)~@~2~@~MyAccountModule~@~NoEmailOnFileMsg~@~Enregistrement d'utilisateur introuvable ou inactif ou il n'y a pas d'e-mail dans le dossier, veuillez contacter le service client si vous avez des questions.~@~~@~170
+882~@~MyAccountModule: 0190 PasswordChangedMsg (fr-FR)~@~2~@~MyAccountModule~@~PasswordChangedMsg~@~Le mot de passe a été changé avec succès. Veuillez appuyer sur l'icône dans le coin supérieur gauche ou attendre la redirection automatique !~@~~@~190
+883~@~MyAccountModule: 0200 LoginInfoChangedMsg (fr-FR)~@~2~@~MyAccountModule~@~LoginInfoChangedMsg~@~Le profil de connexion a été modifié avec succès. Veuillez appuyer sur l'icône dans le coin supérieur gauche ou attendre la redirection automatique.~@~~@~200
+884~@~SamplePg: 0010 pgTitle (fr-FR)~@~2~@~SamplePg~@~pgTitle~@~Exemple de page statique~@~~@~10
+885~@~MyAccountModule: 0010 cCancelAccountLn (fr-FR)~@~2~@~MyAccountModule~@~cCancelAccountLn~@~Désactivez mon compte~@~~@~10
+886~@~MyAccountModule: 0010 cCancelAccountMsg (fr-FR)~@~2~@~MyAccountModule~@~cCancelAccountMsg~@~Appuyez sur OK pour continuer ou sur Annuler cette désactivation.~@~~@~10
+887~@~MyAccountModule: 0010 AccountCancelledMsg (fr-FR)~@~2~@~MyAccountModule~@~AccountCancelledMsg~@~Ce compte a été désactivé avec succès.~@~~@~10
+888~@~cGrid: 0008 Sort (fr-FR)~@~2~@~cGrid~@~Sort~@~Trier:~@~~@~8
+889~@~MyAccountModule: 0111 cTermsOfService (fr-FR)~@~2~@~MyAccountModule~@~cTermsOfService~@~J'ai lu et j'accepte les conditions d'utilisation.~@~~@~111
+890~@~MyAccountModule: 0335 GoogleLoginTitle (fr-FR)~@~2~@~MyAccountModule~@~GoogleLoginTitle~@~Veuillez sélectionner un compte pour vous connecter :~@~~@~335
+891~@~HelpModule: 0010 cHelpImg (fr-FR)~@~2~@~HelpModule~@~cHelpImg~@~AIDER~@~~@~10
+892~@~HomePg: 0002 (fr-FR)~@~2~@~HomePg~@~0002~@~Sur la plate-forme de développement d'applications d'entreprise à l'épreuve du temps~@~~@~
+893~@~MyAccountModule: 0010 cTwoFactorSecretKeyHelp (fr-FR)~@~2~@~MyAccountModule~@~cTwoFactorSecretKeyHelp~@~Scannez ce code QR avec votre application mobile ou entrez manuellement la clé secrète en dessous dans l'application~@~~@~10
+894~@~MyAccountModule: 0010 cTwoFactorSecretKeyLabel (fr-FR)~@~2~@~MyAccountModule~@~cTwoFactorSecretKeyLabel~@~Clef secrète~@~~@~10
+895~@~MyAccountModule: 0010 cTwoFactorSecretCodeHelp (fr-FR)~@~2~@~MyAccountModule~@~cTwoFactorSecretCodeHelp~@~Un code d'accès a été envoyé sur votre email, veuillez le saisir ci-dessous pour récupérer votre clé secrète~@~~@~10
+896~@~MyAccountModule: 0010 cTwoFactorSecretCodeLabel (fr-FR)~@~2~@~MyAccountModule~@~cTwoFactorSecretCodeLabel~@~Code d'accès~@~~@~10
+897~@~MyAccountModule: 0010 cOTPAccessCodeHelp (fr-FR)~@~2~@~MyAccountModule~@~cOTPAccessCodeHelp~@~Ce compte est protégé par une authentification à deux facteurs, veuillez entrer le code généré à partir de l'application mobile ou demander qu'il soit envoyé à votre adresse e-mail~@~~@~10
+898~@~MyAccountModule: 0010 cOTPAccessCodeLabel (fr-FR)~@~2~@~MyAccountModule~@~cOTPAccessCodeLabel~@~Code d'accès~@~~@~10
+899~@~MyAccountModule: 0010 cSendOTPAccessCodeBtn (fr-FR)~@~2~@~MyAccountModule~@~cSendOTPAccessCodeBtn~@~Envoyez-moi le code~@~~@~10
+900~@~MyAccountModule: 0010 cRememberOTPAccessCode (fr-FR)~@~2~@~MyAccountModule~@~cRememberOTPAccessCode~@~Ignorer l'authentification à deux facteurs sur ma machine actuelle pendant 90 jours~@~~@~10
+901~@~MyAccountModule: 0010 OTPAccessCodeEmailSubject (fr-FR)~@~2~@~MyAccountModule~@~OTPAccessCodeEmailSubject~@~Code d'accès pour~@~~@~10
+902~@~MyAccountModule: 0010 OTPAccessCodeEmailBody (fr-FR)~@~2~@~MyAccountModule~@~OTPAccessCodeEmailBody~@~Veuillez saisir ce code : {0} pour terminer la configuration de l'authentification à deux facteurs~@~~@~10
+903~@~MyAccountModule: 0010 OTPDisableEmailSubject (fr-FR)~@~2~@~MyAccountModule~@~OTPDisableEmailSubject~@~Authentification à deux facteurs pour~@~~@~10
+904~@~MyAccountModule: 0010 OTPDisableEmailBody (fr-FR)~@~2~@~MyAccountModule~@~OTPDisableEmailBody~@~L'authentification à deux facteurs a été désactivée pour votre compte. Veuillez supprimer le générateur de clé associé de vos applications mobiles. Si vous ne l'avez pas initié, veuillez réinitialiser votre compte immédiatement car il se peut qu'une intrusion se produise~@~~@~10
+905~@~MyAccountModule: 0010 OTPAccessCodeSent (fr-FR)~@~2~@~MyAccountModule~@~OTPAccessCodeSent~@~Le code d'accès a été envoyé à votre adresse e-mail enregistrée, veuillez suivre les instructions pour l'étape suivante~@~~@~10
+906~@~MyAccountModule: 0010 OTPRequiredEmail (fr-FR)~@~2~@~MyAccountModule~@~OTPRequiredEmail~@~Vous devez avoir un e-mail enregistré pour cette fonctionnalité~@~~@~10
+907~@~MyAccountModule: 0010 OTPEnableEmailBody (fr-FR)~@~2~@~MyAccountModule~@~OTPEnableEmailBody~@~Votre clé d'authentification à deux facteurs a été modifiée, veuillez supprimer l'ancien générateur de clé de votre application mobile et en créer un nouveau en suivant les instructions sur le site. Si vous ne l'avez pas initié, réinitialisez tout pour votre compte immédiatement car il peut y avoir une intrusion en cours~@~~@~10
+908~@~MyAccountModule: 0010 OTPAccessCodeIncorrectMsg (fr-FR)~@~2~@~MyAccountModule~@~OTPAccessCodeIncorrectMsg~@~Code d'accès incorrect~@~~@~10
+909~@~MyAccountModule: 0010 cEnableTwoFactorKey (fr-FR)~@~2~@~MyAccountModule~@~cEnableTwoFactorKey~@~Activer l'authentification à deux facteurs~@~~@~10
+910~@~MyAccountModule: 0010 cResentTwoFactorKey (fr-FR)~@~2~@~MyAccountModule~@~cResentTwoFactorKey~@~Code d'accès renvoyé~@~~@~10
+911~@~MyAccountModule: 0010 OTPEnableEmailSubject (fr-FR)~@~2~@~MyAccountModule~@~OTPEnableEmailSubject~@~Authentification à deux facteurs~@~~@~10
+912~@~MyAccountModule: 0190 PasswordChangedEmailBody (fr-FR)~@~2~@~MyAccountModule~@~PasswordChangedEmailBody~@~Votre mot de passe de connexion à ce site a été modifié. Si vous ne l'avez pas initié, veuillez nous contacter immédiatement car il peut y avoir une intrusion en cours.~@~~@~190
+913~@~MyAccountModule: 0190 PasswordChangedEmailSubject (fr-FR)~@~2~@~MyAccountModule~@~PasswordChangedEmailSubject~@~Changement de mot de passe~@~~@~190
+914~@~MyAccountModule: 0190 ProfileChangedEmailSubject (fr-FR)~@~2~@~MyAccountModule~@~ProfileChangedEmailSubject~@~Changement de profil de compte~@~~@~190
+915~@~MyAccountModule: 0190 ProfileChangedEmailBody (fr-FR)~@~2~@~MyAccountModule~@~ProfileChangedEmailBody~@~Le profil de votre compte a été modifié. Si vous ne l'avez pas initié, veuillez nous contacter immédiatement car il peut y avoir une intrusion en cours.~@~~@~190
+916~@~MyAccountModule: 0010 cShowTwoFactorKey (fr-FR)~@~2~@~MyAccountModule~@~cShowTwoFactorKey~@~Afficher la clé d'authentification à deux facteurs~@~~@~10
+917~@~MyAccountModule: 0010 OTPRetrieveEmailBody (fr-FR)~@~2~@~MyAccountModule~@~OTPRetrieveEmailBody~@~Vous venez de récupérer votre clé secrète d'authentification à deux facteurs. Si vous ne l'avez pas initié, réinitialisez tout pour votre compte immédiatement car il peut y avoir une intrusion en cours~@~~@~10
+918~@~MyAccountModule: 0010 cDisableTwoFactor (fr-FR)~@~2~@~MyAccountModule~@~cDisableTwoFactor~@~Désactiver l'authentification à deux facteurs~@~~@~10
+919~@~MyAccountModule: 0010 cResetTwoFactorKey (fr-FR)~@~2~@~MyAccountModule~@~cResetTwoFactorKey~@~Réinitialiser la clé d'authentification à deux facteurs~@~~@~10
+920~@~HomePg: 0003 (fr-FR)~@~2~@~HomePg~@~0003~@~Permettre à tout le monde de construire~@~~@~
+921~@~HomePg: 0004 (fr-FR)~@~2~@~HomePg~@~0004~@~Grands systèmes critiques qui durent~@~~@~
+922~@~MyAccountModule: 0340 cLinkMicrosoftBtn (fr-FR)~@~2~@~MyAccountModule~@~cLinkMicrosoftBtn~@~Associer un compte Microsoft~@~~@~340
+923~@~MyAccountModule: 0350 cUnlinkMicrosoftBtn (fr-FR)~@~2~@~MyAccountModule~@~cUnlinkMicrosoftBtn~@~Dissocier le compte Microsoft - {0}~@~~@~350
+924~@~MyAccountModule: 0360 cLinkGoogleBtn (fr-FR)~@~2~@~MyAccountModule~@~cLinkGoogleBtn~@~Associer un compte Google~@~~@~360
+925~@~MyAccountModule: 0370 cUnlinkGoogleBtn (fr-FR)~@~2~@~MyAccountModule~@~cUnlinkGoogleBtn~@~Dissocier le compte Google - {0}~@~~@~370
+926~@~MyAccountModule: 0390 cUnlinkFacebookBtn (fr-FR)~@~2~@~MyAccountModule~@~cUnlinkFacebookBtn~@~Dissocier le compte Facebook - {0}~@~~@~390
+927~@~MyAccountModule: 0380 cLinkFacebookBtn (fr-FR)~@~2~@~MyAccountModule~@~cLinkFacebookBtn~@~Associer un compte Facebook~@~~@~380
+928~@~MyAccountModule: 0400 cLinkWindowsBtn (fr-FR)~@~2~@~MyAccountModule~@~cLinkWindowsBtn~@~Associer un compte Windows~@~~@~400
+929~@~MyAccountModule: 0410 cUnlinkWindowsBtn (fr-FR)~@~2~@~MyAccountModule~@~cUnlinkWindowsBtn~@~Dissocier le compte Windows - {0}~@~~@~410
+930~@~MyAccountModule: 0430 LoginLinkAddedEmailBody (fr-FR)~@~2~@~MyAccountModule~@~LoginLinkAddedEmailBody~@~Votre compte {0} a été associé à {1} :{2} en tant qu'identité de connexion alternative à ce site. Si vous ne l'avez pas initié, veuillez nous contacter immédiatement car il peut y avoir une intrusion en cours.~@~~@~430
+931~@~MyAccountModule: 0440 LoginLinkRemovedEmailBody (fr-FR)~@~2~@~MyAccountModule~@~LoginLinkRemovedEmailBody~@~{0} :{1} a été supprimé de votre compte {2} en tant qu'identité de connexion alternative à ce site et vous ne pourrez plus l'utiliser pour vous connecter à ce site. Si vous ne l'avez pas initié, veuillez nous contacter immédiatement car il peut y avoir une intrusion en cours.~@~~@~440
+932~@~MyAccountModule: 0450 cRemoveLinkedLogin (fr-FR)~@~2~@~MyAccountModule~@~cRemoveLinkedLogin~@~Supprimer toutes les connexions liées après le changement de mot de passe~@~~@~450
+933~@~MyAccountModule: 0460 ProfileChangedEmailBodyForAdmin (fr-FR)~@~2~@~MyAccountModule~@~ProfileChangedEmailBodyForAdmin~@~Le profil du compte {0} a été modifié, il n'avait pas d'adresse e-mail enregistrée et l'authentification à deux facteurs est activée. Veuillez vérifier si nécessaire pour voir si cela est autorisé.~@~~@~460
+934~@~cSystem: 0010 PickFileBtnLabel (fr-FR)~@~2~@~cSystem~@~PickFileBtnLabel~@~Choisissez un fichier~@~~@~10
+935~@~cSystem: 0010 CancelFileBtnLabel (fr-FR)~@~2~@~cSystem~@~CancelFileBtnLabel~@~Annuler~@~~@~10
+936~@~cSystem: 0010 DeleteFileBtnLabel (fr-FR)~@~2~@~cSystem~@~DeleteFileBtnLabel~@~Effacer~@~~@~10
+937~@~cSystem: 0010 NewMasterLabel (fr-FR)~@~2~@~cSystem~@~NewMasterLabel~@~Nouveau Maître~@~~@~10
+938~@~cSystem: 0010 UnsavedPageMsg (fr-FR)~@~2~@~cSystem~@~UnsavedPageMsg~@~Vous avez des données non enregistrées sur cette page. Êtes-vous sûr de vouloir effectuer cette action ?~@~~@~10
+939~@~cSystem: 0010 FilterSearchLabel (fr-FR)~@~2~@~cSystem~@~FilterSearchLabel~@~Sur~@~~@~10
+940~@~cSystem: 0010 UnsavedPageTitle (fr-FR)~@~2~@~cSystem~@~UnsavedPageTitle~@~Modifications non enregistrées~@~~@~10
+941~@~cSystem: 0010 DeletePageMsg (fr-FR)~@~2~@~cSystem~@~DeletePageMsg~@~Êtes-vous sûr de vouloir supprimer ceci ?~@~~@~10
+942~@~cSystem: 0010 WarningTitle (fr-FR)~@~2~@~cSystem~@~WarningTitle~@~Avertissement~@~~@~10
+943~@~cSystem: 0010 ErrorTitle (fr-FR)~@~2~@~cSystem~@~ErrorTitle~@~Erreur~@~~@~10
+944~@~cSystem: 0010 InfoTitle (fr-FR)~@~2~@~cSystem~@~InfoTitle~@~Informations~@~~@~10
+945~@~MyAccountModule: 0470 cForgetOTPAccessCode (fr-FR)~@~2~@~MyAccountModule~@~cForgetOTPAccessCode~@~Supprimer le cache du code d'accès~@~~@~470

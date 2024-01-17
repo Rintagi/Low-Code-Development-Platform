@@ -1,0 +1,7 @@
+#run from Doc dir
+#below done once
+python -m venv venv
+#run below every time you want to use the python environment
+venv\scripts\activate
+#run as needed after activate
+pip install -r requirements.txt

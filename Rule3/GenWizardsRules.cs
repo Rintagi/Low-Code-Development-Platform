@@ -177,7 +177,9 @@ namespace RO.Rule3
 
 		private void CreateProgC(DataRow dw, Int32 wizardId, DataView dv, string wizardTitle, CurrPrj CPrj, CurrSrc CSrc, string clientProgramPath, string clientFrwork)
 		{
-			StreamWriter sw = new StreamWriter(clientProgramPath + dw["ProgramName"].ToString() + ".aspx");
+            // normalize expected value
+            clientProgramPath = clientProgramPath.EndsWith("\\") || clientProgramPath.EndsWith("/") ? clientProgramPath : clientProgramPath + "\\";
+            StreamWriter sw = new StreamWriter(clientProgramPath + dw["ProgramName"].ToString() + ".aspx");
 			try {sw.Write(MakeAspx(dw, wizardId, wizardTitle, CPrj, clientFrwork));} finally {sw.Close();}
 			if (clientFrwork == "1")
 			{

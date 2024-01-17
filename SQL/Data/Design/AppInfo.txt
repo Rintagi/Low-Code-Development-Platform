@@ -2890,4 +2890,81 @@ may need to add the following to web.config for assembly redirection
 5. update nethereum libs to 4.1.1
 6. more cleanup on UTC(time zone sensitive) used in screen and report
 7. add ethereum erc20 transfer event watcher(websocket instead of polling)~@~~@~en-US~@~
-12696~@~  11. 259~@~11~@~259~@~~@~~@~~@~~@~~@~~@~
+12696~@~  11. 259.20606~@~11~@~259~@~2022-06-06 00:00:00.000~@~~@~~@~1. sql report query timeout configurable at runtime
+2. add runWrRuleEx to return multiple tables(dataset)
+3. enhance ethereum helper to handle structure input/return(abi v2)
+4. add copywrite notice to third party library/source usage
+5. upgrade nethereum assembly
+6. make sql reporting service report template configurable at runtime(similar to RTF and Excel merge)
+7. remove datetime sub-second component when saving to DB(for odbc driver needs)
+8. enhance ethereum helper to generate interface sol source from abi~@~~@~en-US~@~
+12697~@~  11. 260.20620~@~11~@~260~@~2022-06-20 00:00:00.000~@~~@~~@~1. remove the problem of truncate last criteria table due to report criteria change
+2. enhance ethereum helper class to generate ethers.js compatible abi def format
+3. enhance ethereum helper class to generate solidity interface file with functions/events requires struct ~@~~@~en-US~@~
+12698~@~  11. 261.20830~@~11~@~261~@~2022-08-30 00:00:00.000~@~~@~~@~~@~~@~en-US~@~
+12699~@~  11. 262.20930~@~11~@~262~@~2022-09-30 00:00:00.000~@~~@~~@~Add LongDateUTC and ShortDateUTC.(removed)~@~~@~en-US~@~
+12700~@~  11. 263.21003~@~11~@~263~@~2022-10-03 00:00:00.000~@~~@~1. all screen should be re-gened~@~1. new template permission screen
+2. add dateUTC/shortdateUTC to default value generation
+3. prevent change to template permission screen
+4. fix filtered module list in mult-system screen
+5. enhancement to ethereum helper classes
+6. fix name clash issue in MkScrAudit SP
+7. all screen re-gen~@~~@~en-US~@~
+12701~@~  11. 264.21010~@~11~@~264~@~2022-10-10 00:00:00.000~@~~@~~@~1. add support of CalendarUTC for criteria control
+2. new translations~@~~@~en-US~@~
+12702~@~  11. 265.21012~@~11~@~265~@~2022-10-12 00:00:00.000~@~~@~~@~1. add/change primary key of UsrAudit table~@~~@~en-US~@~
+12703~@~  11. 266.21205~@~11~@~266~@~2022-12-05 00:00:00.000~@~~@~~@~1. improve ethereum helper to support metamask integration
+2. add help functions for suppressing dirty check for adhoc buttons/fields
+3. honour alternative sort column for grid dropdown/autocomplete control~@~~@~en-US~@~
+12704~@~  11. 267.21207~@~11~@~267~@~2022-12-07 00:00:00.000~@~~@~~@~1. improve report template exception handling~@~~@~en-US~@~
+12705~@~  11. 268.21208~@~11~@~268~@~2022-12-08 00:00:00.000~@~~@~~@~1. always show 're-run installer' when new module is added
+2. add optional stack tracing in GetExceptionMessage helper function~@~~@~en-US~@~
+12706~@~  11. 269.30202~@~11~@~269~@~2023-02-02 00:00:00.000~@~~@~~@~1. add handling of reserve word in column/screen column name, for generating SQL statements
+2. better handling of grid button tooltip~@~~@~en-US~@~
+12707~@~  11. 270.30203~@~11~@~270~@~2023-02-03 00:00:00.000~@~~@~~@~1. pass in time zone offset to SQL in case name doesn't match between OS and SQL server~@~~@~en-US~@~
+12708~@~  11. 271.30208~@~11~@~271~@~2023-02-08 00:00:00.000~@~~@~~@~1. enhance time zone support in report for newer OS and older SQL server~@~~@~en-US~@~
+12709~@~  11. 272.30209~@~11~@~272~@~2023-02-09 00:00:00.000~@~~@~~@~1. fix crystal report generation about passing in time zone offset~@~~@~en-US~@~
+12710~@~  11. 273.30213~@~11~@~273~@~2023-02-13 00:00:00.000~@~~@~~@~1. improve report generator error handling message on configuration issue
+2. revise installation helper scripts for crystal report~@~~@~en-US~@~
+12711~@~  11. 274.30213~@~11~@~274~@~2023-02-13 00:00:00.000~@~~@~~@~1. upgrade install script to use SSMS 19~@~~@~en-US~@~
+12712~@~  11. 275.30214~@~11~@~275~@~2023-02-14 00:00:00.000~@~~@~~@~1. improve deployment process(installer version 4.10.4.2)~@~~@~en-US~@~
+12713~@~  11. 276.30216~@~11~@~276~@~2023-02-16 00:00:00.000~@~~@~~@~1. fix popup dialog printing with large background image
+2. optimize installer creation time by only retrieve CmonD SP~@~~@~en-US~@~
+12714~@~  11. 277.30216~@~11~@~277~@~2023-02-16 00:00:00.000~@~~@~~@~1. setup proper LCurr content for cronjob(anonymous login)~@~~@~en-US~@~
+12715~@~  11. 278.30307~@~11~@~278~@~2023-03-07 00:00:00.000~@~~@~~@~1. sync user info between asp.net login and js login~@~~@~en-US~@~
+12716~@~  11. 279.30308~@~11~@~279~@~2023-03-08 00:00:00.000~@~~@~~@~1. revise class library setting to work around MSBUILD issue concerning netstandard.dll assembly dependency~@~~@~en-US~@~
+12717~@~  11. 280.30404~@~11~@~280~@~2023-04-04 00:00:00.000~@~~@~~@~1. fix generated GetLisXXX for grid with sorting specified in columns which is dropdown
+2. improve http helper calls
+3. more alignment of data of auth object(for web service usage) with asp.net~@~~@~en-US~@~
+12718~@~  11. 281.30405~@~11~@~281~@~2023-04-05 00:00:00.000~@~~@~~@~1. fix GetLisXX generation for same ddl ref table used more than once with different config(ref/sort)~@~~@~en-US~@~
+12719~@~  11. 282.30412~@~11~@~282~@~2023-04-12 00:00:00.000~@~~@~~@~1. add feature to remove server rule content on development DB when producing PDT package
+2. block deletion of entity unless dependent record has been deleted~@~~@~en-US~@~
+12720~@~  11. 283.30412~@~11~@~283~@~2023-04-12 00:00:00.000~@~~@~~@~1. revised installer template to warn not reading prerequisite before install
+2. separate prerequisite from readme/prerequisite file in installer~@~~@~en-US~@~
+12721~@~  11. 284.30412~@~11~@~284~@~2023-04-12 00:00:00.000~@~~@~~@~1. multi-design screen must setup proper systemId on init load for restricted module use case~@~~@~en-US~@~
+12722~@~  11. 285.30413~@~11~@~285~@~2023-04-13 00:00:00.000~@~~@~must upgrade CR runtime to .4000.(SP32/33)~@~1. reorder prerequisite output~@~~@~en-US~@~
+12723~@~  11. 286.30413~@~11~@~286~@~2023-04-13 00:00:00.000~@~~@~~@~1. only output non-empty prerequisite~@~~@~en-US~@~
+12724~@~  11. 287.30626~@~11~@~287~@~2023-06-26 00:00:00.000~@~~@~1. apppool has to be changed to integrated mode for picking up default.aspx/index.html ...~@~1. add license file location to entity for using alternative license file for installer creation
+2. remove VwTimeZoneInfo(not used anymore in report/screen SPs) as not all SQL server support it~@~~@~en-US~@~
+12725~@~  11. 288.30703~@~11~@~288~@~2023-07-03 00:00:00.000~@~~@~~@~1. extend server name in data tier to 50(for extra long domain based name)~@~~@~en-US~@~
+12726~@~  11. 289.30710~@~11~@~289~@~2023-07-10 00:00:00.000~@~~@~~@~1. change to installer project template to version 4.10.4.6(SQL server instance default and pre-req popup rule)~@~~@~en-US~@~
+12727~@~  11. 290.30918~@~11~@~290~@~2023-09-18 00:00:00.000~@~~@~~@~1. improve http helper functions to better support website crawling(form post etc.)~@~~@~en-US~@~
+12728~@~  11. 291.30927~@~11~@~291~@~2023-09-27 00:00:00.000~@~~@~~@~1. add opportunistic retry for non-transactional db query
+2. improve react template in handling deleted remembered record(in localStorage)~@~~@~en-US~@~
+12729~@~  11. 292.31016~@~11~@~292~@~2023-10-16 00:00:00.000~@~~@~~@~1. fix synctodb issue about decimal(no precision results in truncate/trim to zero)
+2. enhance client ip detection when behind proxy like IIS
+3. fix CMC fx fetch for FTX(use id instead of symbol due to duplicates)
+4. enhance ssh helper function~@~~@~en-US~@~
+12730~@~  11. 293.31124~@~11~@~293~@~2023-11-24 00:00:00.000~@~~@~~@~1. improve installer to handle namespace change in the form of RO -> RO2, template 4.10.4.9
+2. improve installer to handle non-fatal directory handling error
+3. improve http helper to trace unexpected error
+4. improve asmx to handle ISO8601 date field postback(double conversion issue)~@~~@~en-US~@~
+12731~@~  11. 294.31127~@~11~@~294~@~2023-11-27 00:00:00.000~@~~@~1. to enable old '-' behaviour in import, add <add key="ImportDashIsNull" value="Y" /> to web.config~@~1. add option to revert the '-' treatment in wizard/grid import (through web.config parameter ImportDashIsNull)~@~~@~en-US~@~
+12732~@~  11. 295.31204~@~11~@~295~@~2023-12-04 00:00:00.000~@~~@~~@~1. improve HTTP helper functions to better trace/report network level error beneath http 
+2. add web service function for verifying JWT token issued by RO~@~~@~en-US~@~
+12733~@~  11. 296.31229~@~11~@~296~@~2023-12-29 00:00:00.000~@~~@~~@~1. improve default input/modified* screen object setup~@~~@~en-US~@~
+12734~@~  11. 297.40103~@~11~@~297~@~2024-01-03 00:00:00.000~@~~@~~@~1. re-load user impersonation when company/project selection changes
+2. fix user last screen/project criteria init error for corner cases~@~~@~en-US~@~
+12735~@~  11. 298.40105~@~11~@~298~@~2024-01-05 00:00:00.000~@~~@~~@~1. add helper SP to sync menu permission by group
+2. attempt fix of race condition in criteria Ddl(SP not found) in web service~@~~@~en-US~@~
+12736~@~  11. 299~@~11~@~299~@~~@~~@~~@~~@~~@~~@~

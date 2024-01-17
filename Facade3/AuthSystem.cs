@@ -132,6 +132,16 @@ namespace RO.Facade3
         public byte DbId { get; set; }
         public string Resources { get; set; }
         public short PwdDuration { get; set; }
+        public short CultureId { get; set; }
+        public string Culture { get; set; }
+        public DateTime? PwdChgDt { get; set; }
+        public bool OTPValidated { get; set; }
+        public bool TwoFactorAuth { get; set; }
+        public bool HasPic { get; set; }
+        public string InternalUsr { get; set; }
+        public string TechnicalUsr { get; set; }
+        public short PwdWarn { get; set; }
+        public string Provider { get; set; }
     }
 
     public class RintagiLoginJWT
@@ -272,11 +282,19 @@ namespace RO.Facade3
                     LUser.DefProjectId = loginToken.DefProjectId;
                     LUser.DefSystemId = loginToken.DefSystemId;
                     LUser.UsrName = loginToken.UsrName;
-                    LUser.InternalUsr = "Y";
-                    LUser.CultureId = 1;
+                    LUser.InternalUsr = loginToken.InternalUsr;
+                    LUser.CultureId = loginToken.CultureId;
+                    LUser.Culture = loginToken.Culture;
                     LUser.HasPic = false;
                     LUser.PwdDuration = loginToken.PwdDuration;
-
+                    LUser.PwdChgDt = loginToken.PwdChgDt;
+                    LUser.OTPValidated = loginToken.OTPValidated;
+                    LUser.TwoFactorAuth = loginToken.TwoFactorAuth;
+                    LUser.TechnicalUsr = loginToken.TechnicalUsr;
+                    LUser.HasPic = loginToken.HasPic;
+                    LUser.PwdWarn = loginToken.PwdWarn;
+                    LUser.UsrEmail = loginToken.UsrEmail;
+                    LUser.Provider = loginToken.Provider;
                     LPref = (new LoginSystem()).GetUsrPref(LUser.UsrId, LCurr.CompanyId, LCurr.ProjectId, LCurr.SystemId);
 
                     string refreshTag = keepRefreshToken ? currentHandle : Guid.NewGuid().ToString().Replace("-", "").ToLower();
@@ -392,7 +410,16 @@ namespace RO.Facade3
                 DefProjectId = defProjectId,
                 DbId = curr.DbId,
                 Resources = resources,
-                PwdDuration = usr.PwdDuration
+                PwdDuration = usr.PwdDuration,
+                Culture = usr.Culture,
+                CultureId = usr.CultureId,
+                PwdChgDt = usr.PwdChgDt,
+                OTPValidated = usr.OTPValidated,
+                TwoFactorAuth = usr.TwoFactorAuth,
+                InternalUsr = usr.InternalUsr,
+                TechnicalUsr = usr.TechnicalUsr,
+                PwdWarn = usr.PwdWarn,
+                Provider = usr.Provider
             };
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(loginToken);
             SHA256CryptoServiceProvider hashsha256 = new SHA256CryptoServiceProvider();

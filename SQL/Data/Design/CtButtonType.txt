@@ -57,3 +57,4 @@
 75~@~S~@~MasterRec~@~Screen Navi MR~@~Y~@~Y~@~N~@~N~@~N
 76~@~S~@~DetailLst~@~Screen Navi DL~@~Y~@~Y~@~N~@~N~@~N
 77~@~S~@~DetailRec~@~Screen Navi DR~@~Y~@~Y~@~N~@~N~@~N
+78~@~R~@~ExpXml~@~Report Export Xml~@~Y~@~Y~@~L~@~L~@~N

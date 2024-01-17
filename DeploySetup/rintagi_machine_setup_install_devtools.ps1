@@ -44,9 +44,36 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 Write-Output "choco install git -y"
 choco install git -y
 
-#helpful and recommended even for non-developer BUT not really needed so here and not prerequesite 
-#SQL Server Management Sutdio
-Write-Output "choco install sql-server-management-studio --version=15.0.18330.0 -y"
-choco install sql-server-management-studio --version=15.0.18330.0
+#helpful and recommended even for non-developer and most likely needed when using SQL express(non-enterprise use)
+#SQL Server Management Sutdio 18.10(to support newer SQL server)
+#Write-Output "choco install sql-server-management-studio --version=15.0.18390.0 -y"
+#choco install sql-server-management-studio --version=15.0.18390.0
+#can't specify version as choco remove package from time to time
+Write-Output "choco install sql-server-management-studio"
+choco install sql-server-management-studio
+
+# crystal report viewer runtime(this take a long time as it is a full VS package for both 32/64 bit)
+# below are the 'main site' 
+# https://origin.softwaredownloads.sap.com/public/site/index.html
+# 64 bit runtime (SP 33)
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000001649962022
+# 32 bit runtime (SP 33)
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000001649922022
+# 32 bit  for VS(VS2019 or lower) must have VS installed
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000001649932022
+# 64 bit for VS(VS2022 only) must have VS installed(at the time of writing only SP32 works, not SP33)
+# https://origin-az.softwaredownloads.sap.com/public/file/0020000000661582022
+# all version should have 13.0.4000.0 as the assembly version if required in web.config
+
+Write-Output "use browser and go to https://origin-az.softwaredownloads.sap.com/public/file/0020000000661582022 to download crystal report for VS(64 bit, SP32 VS2022 only)"
+Write-Output "then run the exe"
+Write-Output "the assembly version number is 13.0.4000.0"
+Write-Output "or visit https://origin.softwaredownloads.sap.com/public/site/index.html if above fails(and find correct version, must be under crystal report for visual studio)"
+Write-Output "must also install the 32 bit runtime(part of the package) if you want to use the designer"
+Write-Output "must reboot to have the installation take effect"
+
+Write-Output "install msvc++ 2013 re-dist"
+Write-Output "this is needed if you need to use crystal report designer 64 bit for vs 2022"
+choco install MSVisualCplusplus2013-redist 1.1
 
 Write-Output "You have to reboot for nodejs installation to be initialized properly"

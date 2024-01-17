@@ -180,3 +180,20 @@
 275~@~43~@~1~@~Need Re-gen
 276~@~44~@~1~@~Has Prerequisite
 277~@~45~@~1~@~All
+278~@~27~@~2~@~Entré récemment (< 30 jours)
+279~@~28~@~2~@~Saisie entre 30 jours et 1 an
+280~@~29~@~2~@~Entré il y a un an
+281~@~30~@~2~@~Entré à tout moment
+282~@~31~@~2~@~3 mois récents
+283~@~32~@~2~@~Année à ce jour
+284~@~33~@~2~@~L'année dernière
+285~@~34~@~2~@~Toutes les dates
+286~@~35~@~2~@~Imité par moi
+287~@~37~@~2~@~A usurpé l'identité
+288~@~38~@~2~@~Tout
+289~@~39~@~2~@~Supprimer la génération de clients
+290~@~41~@~2~@~Supprimer la génération SP
+291~@~42~@~2~@~Générer un SP d'audit
+292~@~43~@~2~@~Besoin de régénération
+293~@~44~@~2~@~A un prérequis
+294~@~45~@~2~@~Tout

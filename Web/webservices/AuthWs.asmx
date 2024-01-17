@@ -483,6 +483,26 @@ public partial class AuthWs : AsmxBase
         SetJWTCookie(null, true);
         return new ApiResponse<SerializableDictionary<string, string>, object>() { status = "success", data = { } };
     }
+    
+    [WebMethod(EnableSession = false)]
+    public bool VerifyJWTToken(string token)
+    {
+        /* usage curl -s http://localhost/ro/webservices/AuthWs.asmx/VerifyJWTToken -H 'Content-Type: application/json' -d '{"token":"jwt_token_string"}' */
+        try
+        {
+            RintagiLoginJWT info = GetLoginUsrInfo(token);
+            var utc0 = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            var loginId = info.loginId;
+            var currTime = DateTime.Now.ToUniversalTime().Subtract(utc0).TotalSeconds;
+            var nbf = info.nbf - 20; // margin for multiple server clock skew(max 20s)
+            var expiredOn = info.exp + 20; // margin for multiple server clock skew(max 20s)
+            int remainingSeconds = expiredOn - (int)currTime;
+            return remainingSeconds > 0;
+        }
+        catch {
+            return false;
+        }
+    }
 
     protected LoginUsr SSOLogin(string SelectedLoginName, string ProviderLoginName, string Provider)
     {
@@ -812,7 +832,7 @@ public partial class AuthWs : AsmxBase
                         string emlSubject = dtEmail.Rows[0]["EmailSubject"].ToString();
                         string emlSenderTitle = dtEmail.Rows[0]["SenderName"].ToString();
                         string emlHtml = dtEmail.Rows[0]["EmailTempCnt"].ToString();
-                        string from = "no-reply@fintrux.com";
+                        string from = !string.IsNullOrEmpty(base.SysCustServEmail(base.LCurr.SystemId)) ? base.SysCustServEmail(base.LCurr.SystemId) : "no-reply@robocoder.com";
                         base.SendEmail(emlSubject, emlHtml, emailAddress, from, from, emlSenderTitle, true);
                     }
                     catch { }
